@@ -1,5 +1,5 @@
 <template>
-  <button class="flex items-center justify-center max-w-max text-center gap-1.5 rounded px-5 py-2 text-sm cursor-pointer transition-all duration-200 border" :class="[variant(color, type)]">
+  <button class="flex items-center justify-center max-w-max text-center gap-1.5 rounded px-5 py-2 cursor-pointer transition-all duration-200 border" :class="[variant(color, type)]">
     <component :is="icon" v-if="icon" class="h-3.5 w-3.5" />
     <span v-if="label">{{ label }}</span>
   </button>

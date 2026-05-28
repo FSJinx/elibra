@@ -20,6 +20,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from) => {
+  document.title = to.meta.title ?? 'e-Libra: The ISU-1 Library Management and Resource Monitoring System'
   if (to.meta.requiresFlow) {
     return { name: 'forbidden' }
   }

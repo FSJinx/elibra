@@ -1,12 +1,12 @@
 <template>
   <router-view />
   <modal-backdrop />
-  <popup-backdrop />
+  <elpop />
 </template>
 
 <script setup>
+import Elpop from './components/alerts/Elpop.vue'
 import ModalBackdrop from './components/commons/ModalBackdrop.vue'
-import PopupBackdrop from './components/commons/PopupBackdrop.vue'
 </script>
 
 <style scoped></style>

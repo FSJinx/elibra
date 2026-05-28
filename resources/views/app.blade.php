@@ -4,11 +4,12 @@
 <head>
     @vite(['resources/styles/app.css', 'resources/frontend/app.js'])
     <link rel="shortcut icon" href="/logo.svg" type="image/x-icon">
-    <title>e-Libra</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
 </head>
 
 <body class="relative">
-    <div id="app" class="relative max-w-screen"></div>
+    <div id="app" class="relative max-w-screen h-screen"></div>
 </body>
 
 </html>
