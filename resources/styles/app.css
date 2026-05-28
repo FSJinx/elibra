@@ -6,6 +6,7 @@
 /* Main Body Styling */
 html {
   box-sizing: border-box;
+  font-size: 15px;
 }
 
 *,

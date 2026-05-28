@@ -39,12 +39,9 @@
       <div class="grid grid-cols-2">
         <p class="my-auto">Anchor Button</p>
         <div class="flex flex-wrap items-center gap-2">
-          <AnchorButton label="View" icon="Eye" color="blue" type="outline" />
-          <AnchorButton label="Add" icon="Plus" color="purple" type="outline" />
-          <AnchorButton label="Submit" icon="Send" color="green" type="outline" />
-          <AnchorButton label="Delete" icon="Trash" color="red" type="outline" />
-          <AnchorButton label="Edit" icon="Pencil" color="yellow" type="outline" />
-          <AnchorButton label="Add" icon="Plus" color="default" type="outline" />
+          <AnchorButton label="View Admin" color="blue" type="outline" link="Admin" />
+          <AnchorButton label="View Librarian" color="purple" type="outline" />
+          <AnchorButton label="View Patron" color="default" type="outline" />
         </div>
       </div>
     </div>
@@ -55,7 +52,19 @@
       <div class="grid grid-cols-2">
         <p class="my-auto">Confirm Popup</p>
         <div class="flex flex-wrap items-center gap-2">
-          <Button label="Confirm" color="blue" type="soft" @click="success({ message: 'You successfully deleted your feelings.' })" />
+          <Button label="Confirm" color="green" type="soft" @click="elpop.confirm('You successfully deleted your feelings.')" />
+        </div>
+      </div>
+      <div class="grid grid-cols-2">
+        <p class="my-auto">Loading Popup</p>
+        <div class="flex flex-wrap items-center gap-2">
+          <Button label="Loading" color="blue" type="soft" @click="elpop.load()" />
+        </div>
+      </div>
+      <div class="grid grid-cols-2">
+        <p class="my-auto">Success Popup</p>
+        <div class="flex flex-wrap items-center gap-2">
+          <Button label="Success" color="green" type="soft" @click="elpop.showSuccess('You successfully deleted your feelings.')" />
         </div>
       </div>
     </div>
@@ -65,5 +74,5 @@
 <script setup>
 import AnchorButton from '@/components/buttons/AnchorButton.vue'
 import Button from '@/components/buttons/Button.vue'
-import { confirm, success } from '@/composables/usePopup'
+import elpop from '@/plugins/elpop'
 </script>
