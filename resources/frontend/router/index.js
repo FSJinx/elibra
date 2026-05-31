@@ -8,7 +8,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('../pages/PracticePage.vue'),
+      component: () => import('../pages/LandingPage.vue'),
     },
 
     // Admin Routes

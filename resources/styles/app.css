@@ -6,7 +6,7 @@
 /* Main Body Styling */
 html {
   box-sizing: border-box;
-  font-size: 15px;
+  font-size: 14px;
 }
 
 *,
@@ -15,9 +15,11 @@ html {
   box-sizing: inherit;
 }
 
+* {
+  scrollbar-width: thin;
+}
+
 body {
   margin: 0;
   padding: 0;
-  max-width: 100vw;
-  width: 100vw;
 }

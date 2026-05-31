@@ -6,7 +6,7 @@
       <p class="px-5">Seems like you're trying to access a page that's intended only for desktop.</p>
     </div>
   </div>
-  <div class="flex w-screen h-screen overflow-hidden bg-gray-50" v-else>
+  <div class="flex w-screen h-screen overflow-hidden" v-else>
     <SidebarView />
   </div>
 </template>

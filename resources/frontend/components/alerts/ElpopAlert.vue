@@ -2,7 +2,7 @@
   <teleport to="body">
     <transition name="popup">
       <div v-if="popup.show" class="elpop fixed inset-0 z-50 flex overflow-hidden bg-black/50" @click="popup.type === 'load' ? '' : elpop.close()">
-        <div class="popup-card relative flex flex-col justify-center items-center w-100 m-auto gap-3 h-max p-5 sm:w-125 rounded-lg bg-white shadow-xl overflow-hidden" :class="cardDesign" @click.stop>
+        <div class="popup-card relative flex flex-col justify-center items-center w-100 m-auto gap-3 h-max p-5 sm:w-125 rounded-lg bg-white shadow-xl overflow-hidden -translate-y-8 sm:-translate-y-5" :class="cardDesign" @click.stop>
           <div class="flex flex-col justify-center text-center h-38">
             <!-- TYPE -->
             <div class="flex justify-center text-xl font-bold w-full m-auto">
@@ -36,7 +36,7 @@
 
 <script setup>
 import images from '@/assets/images/index.js'
-import LoadingAnimation from '../LoadingAnimation.vue'
+import LoadingAnimation from '../animations/LoadingAnimation.vue'
 import elpopIcon from '@/assets/popups/index.js'
 import elpop from '@/plugins/elpop.js'
 import { computed, ref } from 'vue'

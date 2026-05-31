@@ -91,6 +91,15 @@ const elpop = {
       withButtons: true,
     })
   },
+
+  confirmLogout() {
+    this.close()
+    this.pop('error', {
+      title: 'Logout',
+      message: 'Are you sure you want to logout?',
+      withButtons: true,
+    })
+  },
 }
 
 export default elpop
