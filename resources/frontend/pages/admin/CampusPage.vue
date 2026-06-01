@@ -1,6 +1,4 @@
-<template>
-  <aside></aside>
-</template>
+<template>Campus</template>
 
 <script setup></script>
 

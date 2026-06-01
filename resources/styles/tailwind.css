@@ -4,9 +4,10 @@
   --font-sans: 'Inter', sans-serif;
 
   /* Colors */
-  --color-primary: #14824a;
-  --color-primary-light: rgb(184, 241, 209);
-  --color-primary-dark: #0d5932;
+  /* --color-primary: #14824a; */
+  --color-primary: #278f56;
+  --color-primary-light: #a1dfb9;
+  --color-primary-dark: #114427;
   --color-secondary: #0eb55c;
 }
 
@@ -20,6 +21,6 @@
   }
 
   .announcement-page-btn {
-    @apply text-center w-30 h-auto hover:bg-neutral-700/25 font-bold text-6xl duration-300 cursor-pointer rounded-sm;
+    @apply text-center w-30 h-full p-5 hover:bg-neutral-700/25 font-bold text-6xl duration-300 cursor-pointer rounded-sm;
   }
 }

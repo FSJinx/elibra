@@ -1,4 +1,10 @@
 const colors = {
+  primary: {
+    solid: 'bg-primary text-white border-primary hover:bg-primary',
+    soft: 'bg-primary text-primary border-primary hover:bg-primary',
+    outline: 'bg-white text-primary border-primary hover:bg-primary hover:text-white',
+  },
+
   blue: {
     solid: 'bg-blue-600 text-white border-blue-600 hover:bg-blue-700',
     soft: 'bg-blue-100 text-blue-600 border-blue-100 hover:bg-blue-200',

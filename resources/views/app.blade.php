@@ -9,7 +9,7 @@
 </head>
 
 <body class="relative">
-    <div id="app" class="relative max-w-screen h-screen"></div>
+    <div id="app" class="flex flex-col relative bg-gray-50"></div>
 </body>
 
 </html>

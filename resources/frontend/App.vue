@@ -1,12 +1,10 @@
 <template>
   <router-view />
-  <modal-backdrop />
-  <elpop />
+  <elpop-alert />
 </template>
 
 <script setup>
-import Elpop from './components/alerts/Elpop.vue'
-import ModalBackdrop from './components/commons/ModalBackdrop.vue'
+import ElpopAlert from './components/alerts/ElpopAlert.vue'
 </script>
 
 <style scoped></style>
