@@ -1,8 +1,8 @@
 <template>
-  <div class="logo flex items-center gap-1 select-none">
+  <router-link :to="{ name: 'Home' }" class="logo flex items-center gap-1 select-none">
     <img :src="images.logo" alt="e-Libra" class="w-auto" :class="[logoHeight]" v-if="withLogo" />
     <span class="font-extrabold text-primary" :class="[fontSize]" v-if="withLabel">e-Libra</span>
-  </div>
+  </router-link>
 </template>
 
 <script setup>
@@ -16,17 +16,15 @@ defineProps({
   withLogo: {
     type: Boolean,
     default: true,
-    required: true,
+    required: false,
   },
   withLabel: {
     type: Boolean,
     default: true,
-    required: true,
   },
   fontSize: {
     type: String,
     default: 'text-2xl',
-    required: true,
   },
   logoHeight: {
     /** @type {import('vue').PropType<Height>} */

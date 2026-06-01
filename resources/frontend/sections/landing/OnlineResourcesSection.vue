@@ -1,13 +1,13 @@
 <template>
   <section class="grid grid-cols-3 gap-5 p-13 bg-neutral-800 text-white">
-    <div class="border-x-10 border-primary px-5 py-3 flex flex-col">
+    <div class="border-x-10 border-primary px-5 py-3 flex flex-col col-span-3 sm:col-span-1">
       <h1 class="font-bold text-3xl mb-2">Online Resources</h1>
       <p class="text-neutral-300">Certain online resources require login credentials. Kindly request access from the student assistants or the librarian.</p>
     </div>
 
     <a :href="source.link" class="ores flex items-center justify-center bg-white p-2 max-h-125 rounded text-black relative overflow-hidden" v-for="source in sources" :key="source.name">
       <div class="cover bg-black/75 absolute bottom-0 left-0 flex items-end opacity-0 w-full h-full overflow-hidden transition-height duration-200 text-white text-2xl font-bold text-center transform translate-x-full">
-        <span class="w-full bg-primary overflow-hidden p-3">{{ source.name }}</span>
+        <span class="w-full h-max text-xs bg-primary overflow-hidden p-1 sm:p-3">{{ source.name }}</span>
       </div>
       <img :src="source.img" :alt="source.name" class="max-h-full max-w-full" />
     </a>

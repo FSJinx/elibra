@@ -1,5 +1,5 @@
 <template>
-  <section class="hero relative h-screen w-full overflow-hidden z-0">
+  <section class="hero relative h-screen w-full overflow-hidden z-0 pt-18">
     <!-- Background Image -->
     <div class="absolute inset-0 bg-no-repeat bg-center bg-cover opacity-10" :style="{ backgroundImage: `url(${images.gate})` }"></div>
 
