@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-import variant from '@/constants/ButtonColor'
+import variant from '@/constants/buttonColor'
 import { ref } from 'vue'
 
 /**

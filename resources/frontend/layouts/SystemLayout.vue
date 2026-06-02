@@ -34,7 +34,11 @@
         </template>
       </div>
 
-      <div class="h-full w-full overflow-auto p-3">
+      <div class="h-full w-full overflow-auto p-4">
+        <div class="flex flex-col gap-1 mb-5">
+          <h1 class="text-3xl font-medium">{{ route.meta.title }}</h1>
+          <p class="text-neutral-500 ml-0.5">{{ route.meta.description || 'No description for this page.' }}</p>
+        </div>
         <RouterView />
       </div>
     </main>

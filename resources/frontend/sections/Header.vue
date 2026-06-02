@@ -11,12 +11,12 @@
         </div>
       </div>
       <div class="ml-auto flex gap-5 items-center">
-        <div class="action-btns hidden md:flex gap-2 items-center" v-if="!user">
+        <div class="action-btns hidden md:flex gap-2 items-center" v-if="!my.id">
           <router-link :to="{path: ''}" class="text-primary px-4 py-2">Login</router-link>
           <Button type="solid" label="Register" color="primary" />
         </div>
     
-        <router-link v-else :to="{ name: 'Librarian' }">
+        <router-link v-else :to="{ name: roleHome[my.role] }">
           <UserCircle />
         </router-link>
         <Button type="outline" icon="Menu" class="flex md:hidden py-3 hover:bg-primary hover:border-primary" @click="toggleSideMenu" />
@@ -31,8 +31,15 @@ import images from '@/assets/images'
 import { reactive, ref } from 'vue'
 import BannerComponent from '@/components/public/BannerComponent.vue';
 import Button from '@/components/buttons/Button.vue';
+import { useUserStore } from '@/stores/user';
 
-const user = true;
+const my = useUserStore()
+
+const roleHome = {
+  admin: 'Admin',
+  librarian: 'Librarian',
+  patron: 'Patron',
+}
 
 const sideMenu = reactive({
   show: false,
