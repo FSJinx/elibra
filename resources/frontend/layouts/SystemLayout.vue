@@ -44,7 +44,7 @@
 <script setup>
 import images from '@/assets/images'
 import DesktopOnly from '@/pages/errors/DesktopOnly.vue'
-import Sidebar from '@/sections/admin/Sidebar.vue'
+import Sidebar from '@/sections/Sidebar.vue'
 import { isMobileDevice } from '@/utilities/mobileDetector'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'

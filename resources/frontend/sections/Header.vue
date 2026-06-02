@@ -16,7 +16,7 @@
           <Button type="solid" label="Register" color="primary" />
         </div>
     
-        <router-link v-else :to="{ name: 'Admin' }">
+        <router-link v-else :to="{ name: 'Librarian' }">
           <UserCircle />
         </router-link>
         <Button type="outline" icon="Menu" class="flex md:hidden py-3 hover:bg-primary hover:border-primary" @click="toggleSideMenu" />
