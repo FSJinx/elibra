@@ -1,7 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import adminRoutes from './adminRoutes'
+import librarianRoutes from './librarianRoutes'
 import errorRoutes from './errorRoutes'
 import { roleMap } from '@/constants/roleMap'
+import { useUserStore } from '@/stores/user'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -24,12 +26,9 @@ const router = createRouter({
 })
 
 export let lastRoute = null
-let user = {
-  name: 'John Doe',
-  role: 0,
-}
 
 router.beforeEach((to, from) => {
+  const my = useUserStore()
   lastRoute = from
   console.log('Last Page:', lastRoute.name)
 
@@ -39,7 +38,7 @@ router.beforeEach((to, from) => {
     return { name: 'ServiceUnavailable' }
   }
 
-  if (to.meta.requiresFlow && roleMap[user.role]?.name !== to.meta.role) {
+  if (to.meta.requiresFlow && roleMap[my.role]?.name !== to.meta.role) {
     return { name: 'Forbidden' }
   }
 })

@@ -51,11 +51,11 @@ const sidebar = {
         {
           name: 'Dashboard',
           icon: 'LayoutDashboard',
-          path: 'User Dashboard',
+          path: 'Librarian Dashboard',
         },
         {
-          name: 'Notification',
-          icon: 'Bell',
+          name: 'Collections',
+          icon: 'LibraryBig',
           path: '',
         },
         {
@@ -64,63 +64,13 @@ const sidebar = {
           path: '',
         },
         {
-          name: 'Notification',
-          icon: 'Bell',
+          name: 'Feedbacks',
+          icon: 'MessageSquareHeart',
           path: '',
         },
         {
-          name: 'Notification',
-          icon: 'Bell',
-          path: '',
-        },
-      ],
-    },
-    {
-      name: 'Files',
-      children: [
-        {
-          name: 'Dashboard',
-          icon: 'LayoutDashboard',
-          path: 'User Dashboard',
-        },
-        {
-          name: 'Notification',
-          icon: 'Bell',
-          path: '',
-        },
-        {
-          name: 'Dashboard',
-          icon: 'LayoutDashboard',
-          path: 'User Dashboard',
-        },
-        {
-          name: 'Notification',
-          icon: 'Bell',
-          path: '',
-        },
-        {
-          name: 'Dashboard',
-          icon: 'LayoutDashboard',
-          path: 'User Dashboard',
-        },
-        {
-          name: 'Notification',
-          icon: 'Bell',
-          path: '',
-        },
-        {
-          name: 'Dashboard',
-          icon: 'LayoutDashboard',
-          path: 'User Dashboard',
-        },
-        {
-          name: 'Notification',
-          icon: 'Bell',
-          path: '',
-        },
-        {
-          name: 'Notification',
-          icon: 'Bell',
+          name: 'Social',
+          icon: 'MessagesSquare',
           path: '',
         },
       ],
@@ -129,39 +79,79 @@ const sidebar = {
       name: 'Tools',
       children: [
         {
-          name: 'Dashboard',
-          icon: 'LayoutDashboard',
-          path: 'User Dashboard',
-        },
-        {
-          name: 'Notification',
-          icon: 'Bell',
+          name: 'AcaRepo',
+          icon: 'GraduationCap',
           path: '',
         },
         {
-          name: 'Dashboard',
-          icon: 'LayoutDashboard',
-          path: 'User Dashboard',
-        },
-        {
-          name: 'Notification',
-          icon: 'Bell',
+          name: 'Acquisition',
+          icon: 'PackagePlus',
           path: '',
         },
         {
-          name: 'Dashboard',
-          icon: 'LayoutDashboard',
-          path: 'User Dashboard',
-        },
-        {
-          name: 'Notification',
-          icon: 'Bell',
+          name: 'Circulation',
+          icon: 'RefreshCcw',
           path: '',
         },
         {
-          name: 'Dashboard',
-          icon: 'LayoutDashboard',
-          path: 'User Dashboard',
+          name: 'Reports & Export',
+          icon: 'FileSpreadsheet',
+          path: '',
+        },
+        {
+          name: 'Return Transaction',
+          icon: 'Undo2',
+          path: '',
+        },
+        {
+          name: 'Technical',
+          icon: 'Wrench',
+          path: '',
+        },
+      ],
+    },
+    {
+      name: 'Files',
+      children: [
+        {
+          name: 'Academic',
+          icon: 'GraduationCap',
+          path: '',
+        },
+        {
+          name: 'e-Resource',
+          icon: 'Laptop',
+          path: '',
+        },
+        {
+          name: 'Filipiniana',
+          icon: 'Flag',
+          path: '',
+        },
+        {
+          name: 'General',
+          icon: 'BookOpen',
+          path: '',
+        },
+        {
+          name: 'Museum',
+          icon: 'Landmark',
+          path: '',
+        },
+        {
+          name: 'Periodical',
+          icon: 'Newspaper',
+          path: '',
+        },
+        {
+          name: 'References',
+          icon: 'BookMarked',
+          path: '',
+        },
+        {
+          name: 'Serials',
+          icon: 'Files',
+          path: '',
         },
       ],
     },
@@ -169,13 +159,13 @@ const sidebar = {
       name: 'Bin',
       children: [
         {
-          name: 'Dashboard',
-          icon: 'LayoutDashboard',
-          path: 'User Dashboard',
+          name: 'Archived',
+          icon: 'Archive',
+          path: '',
         },
         {
-          name: 'Notification',
-          icon: 'Bell',
+          name: 'Condemned',
+          icon: 'Trash2',
           path: '',
         },
       ],
@@ -185,17 +175,17 @@ const sidebar = {
       children: [
         {
           name: 'User',
-          icon: 'LayoutDashboard',
+          icon: 'Users',
           path: '',
         },
         {
-          name: 'User',
-          icon: 'LayoutDashboard',
+          name: 'Library',
+          icon: 'Building2',
           path: '',
         },
         {
           name: 'Roles & Permissions',
-          icon: 'Bell',
+          icon: 'ShieldCheck',
           path: '',
         },
       ],

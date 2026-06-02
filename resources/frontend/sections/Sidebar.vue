@@ -1,18 +1,18 @@
 <template>
   <aside class="flex flex-col h-screen min-w-75 bg-white relative border-r border-gray-100">
-    <div class="flex items-center gap-2 border-b h-15" :class="[pad, border]">
+    <div class="flex items-center gap-2 border-b h-15 p-4" :class="[border]">
       <BannerComponent logo-height="h-7" font-size="text-xl" />
     </div>
 
     <!-- Sidebar Menu -->
-    <div class="sidebar overflow-auto mb-5">
-      <div class="flex flex-col" :class="[pad]" v-for="(sidebar, index) in menu[my.role]" :key="index">
+    <div class="sidebar overflow-auto">
+      <div class="flex flex-col p-3 py-3" v-for="(sidebar, index) in menu[my.role]" :key="index">
         <!-- Menu Title -->
-        <h1 class="font-semibold uppercase text-xs text-neutral-400 mb-3">{{ sidebar.name }}</h1>
+        <h1 class="font-semibold uppercase text-xs text-neutral-400 my-2">{{ sidebar.name }}</h1>
 
         <!-- Menu Items -->
-        <div class="flex flex-col gap-2" v-for="(child, index) in sidebar.children" :key="child.name">
-          <router-link :to="{ name: child.path }" class="flex items-center gap-3 rounded cursor-pointer hover:bg-secondary/10" :class="[pad]">
+        <div class="flex flex-col" v-for="(child, index) in sidebar.children" :key="child.name">
+          <router-link :to="{ name: child.path }" class="flex items-center gap-3 rounded cursor-pointer hover:bg-secondary/10 p-4">
             <component :is="child.icon" class="h-5 w-5"></component>
             <p class="text-sm">{{ child.name }}</p>
           </router-link>
@@ -58,11 +58,12 @@ import images from '@/assets/images'
 import BannerComponent from '@/components/public/BannerComponent.vue'
 import { roleMap } from '@/constants/roleMap'
 import menu from '@/constants/sidebar'
-import my from '@/stores/user'
+import { useUserStore } from '@/stores/user'
 import { reactive, ref } from 'vue'
 
-const pad = ref('p-3')
+const pad = ref('px-3 py-4')
 const border = ref('border-gray-200')
+const my = useUserStore()
 
 const state = reactive({
   show: false,

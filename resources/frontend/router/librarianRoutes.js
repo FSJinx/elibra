@@ -15,8 +15,8 @@ const librarianRoutes = [
       {
         path: 'library',
         name: 'Librarian User Management',
-        component: () => import('@/pages/librarian/CampusPage.vue'),
-        meta: { title: 'Campus Management', requiresFlow: true, maintenance: false },
+        component: () => import('@/pages/librarian/UserPage.vue'),
+        meta: { title: 'User Management', requiresFlow: true, maintenance: false },
       },
     ],
   },
