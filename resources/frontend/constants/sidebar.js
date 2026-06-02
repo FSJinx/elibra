@@ -1,6 +1,6 @@
 const sidebar = {
   // Admin Sidebar Menu
-  0: [
+  admin: [
     {
       name: 'General',
       children: [
@@ -12,12 +12,12 @@ const sidebar = {
         {
           name: 'Notification',
           icon: 'Bell',
-          path: '',
+          path: 'Admin Notification',
         },
         {
           name: 'Ticket Desk',
           icon: 'HeartHandshake',
-          path: '',
+          path: 'Admin Ticket Desk',
         },
       ],
     },
@@ -32,19 +32,19 @@ const sidebar = {
         {
           name: 'Users',
           icon: 'Users',
-          path: '',
+          path: 'Admin User Management',
         },
         {
           name: 'Roles & Permissions',
           icon: 'UserKey',
-          path: '',
+          path: 'Admin Roles and Permission',
         },
       ],
     },
   ],
 
   // Librarian Sidebar Menu
-  1: [
+  librarian: [
     {
       name: 'General',
       children: [

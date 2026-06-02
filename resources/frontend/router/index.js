@@ -38,7 +38,7 @@ router.beforeEach((to, from) => {
     return { name: 'ServiceUnavailable' }
   }
 
-  if (to.meta.requiresFlow && roleMap[my.role]?.name !== to.meta.role) {
+  if (to.meta.requiresFlow && my.role !== to.meta.role) {
     return { name: 'Forbidden' }
   }
 })

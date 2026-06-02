@@ -6,26 +6,28 @@
 
     <!-- Sidebar Menu -->
     <div class="sidebar overflow-auto">
-      <div class="flex flex-col p-3 py-3" v-for="(sidebar, index) in menu[my.role]" :key="index">
+      <div class="flex flex-col pt-1" v-for="(sidebar, index) in menu[my.role]" :key="index">
         <!-- Menu Title -->
-        <h1 class="font-semibold uppercase text-xs text-neutral-400 my-2">{{ sidebar.name }}</h1>
+        <h1 class="font-semibold uppercase text-xs text-neutral-400 m-2 my-3">{{ sidebar.name }}</h1>
 
         <!-- Menu Items -->
-        <div class="flex flex-col" v-for="(child, index) in sidebar.children" :key="child.name">
-          <router-link :to="{ name: child.path }" class="flex items-center gap-3 rounded cursor-pointer hover:bg-secondary/10 p-4">
+        <div class="px-3">
+          <router-link v-slot="{ isActive }" :to="{ name: child.path }" class="flex items-center p-4 pl-2 gap-3 rounded-sm cursor-pointer hover:bg-secondary/5 hover:border-primary" active-class=" border-l-3 border-primary bg-primary/5" v-for="(child, index) in sidebar.children" :key="child.name">
             <component :is="child.icon" class="h-5 w-5"></component>
             <p class="text-sm">{{ child.name }}</p>
+            <ArrowLeft class="h-4 w-4 ml-auto" stroke-width="1" v-if="isActive" />
           </router-link>
         </div>
       </div>
     </div>
 
+    <!-- Bottom Toggle Button -->
     <div class="h-21 border-t mt-auto z-2 bg-white" :class="[pad, border]">
       <span class="flex h-full items-center text-lg gap-2 rounded cursor-pointer select-none hover:bg-gray-200" :class="[pad]" @click="mini.toggleMini()">
         <img :src="images.isu" alt="" class="h-8 w-auto" />
-        <span class="flex flex-col justify-center gap-0.5">
+        <span class="flex flex-col justify-center w-[80%] gap-0.5">
           <p class="text-sm text-ellipsis whitespace-nowrap overflow-hidden w-[90%]">{{ my.fullname }}</p>
-          <p class="text-xs text-neutral-400">{{ roleMap[my.role].label.long }}</p>
+          <p class="text-xs text-neutral-400">{{ roleMap[my.role].long }}</p>
         </span>
         <ChevronUp class="ml-auto transition duration-200" :class="[state.show ? 'rotate-180' : '']" />
       </span>

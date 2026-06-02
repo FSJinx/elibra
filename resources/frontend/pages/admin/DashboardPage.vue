@@ -1,11 +1,11 @@
 <template>
-  <section class="h-screen">Dashboard</section>
-  <section class="h-screen">Dashboard</section>
-  <section class="h-screen">Dashboard</section>
-  <section class="h-screen">Dashboard</section>
-  <section class="h-screen">Dashboard</section>
+  <section class="">
+    <DashboardCards />
+  </section>
 </template>
 
-<script setup></script>
+<script setup>
+import DashboardCards from '@/sections/admin/general/dashboard/DashboardCards.vue'
+</script>
 
 <style scoped></style>

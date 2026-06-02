@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('campuses', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->string('code')->unique();
+            $table->string('code')->unique()->nullable();
             $table->string('address')->nullable();
             $table->string('heading')->nullable();
+            $table->enum('status', ['active', 'inactive'])->default('inactive');
 
             $table->timestamps();
             $table->softDeletes();
