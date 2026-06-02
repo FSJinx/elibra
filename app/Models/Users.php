@@ -4,12 +4,12 @@ namespace App\Models;
 
 use Database\Factories\UsersFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class Users extends Model
+class Users extends Authenticatable implements JWTSubject
 {
-    /** @use HasFactory<UsersFactory> */
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
@@ -29,4 +29,18 @@ class Users extends Model
         'password',
         'profile_picture_id',
     ];
+
+    protected $hidden = [
+        'password',
+    ];
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
 }
