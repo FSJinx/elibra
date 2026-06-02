@@ -14,7 +14,7 @@ class CampusController extends Controller
      */
     public function index()
     {
-        //
+        return Campus::all();
     }
 
     /**
