@@ -1,4 +1,5 @@
-const adminSidebar = {
+const sidebar = {
+  // Admin Sidebar Menu
   0: [
     {
       name: 'General',
@@ -41,6 +42,165 @@ const adminSidebar = {
       ],
     },
   ],
+
+  // Librarian Sidebar Menu
+  1: [
+    {
+      name: 'General',
+      children: [
+        {
+          name: 'Dashboard',
+          icon: 'LayoutDashboard',
+          path: 'User Dashboard',
+        },
+        {
+          name: 'Notification',
+          icon: 'Bell',
+          path: '',
+        },
+        {
+          name: 'Notification',
+          icon: 'Bell',
+          path: '',
+        },
+        {
+          name: 'Notification',
+          icon: 'Bell',
+          path: '',
+        },
+        {
+          name: 'Notification',
+          icon: 'Bell',
+          path: '',
+        },
+      ],
+    },
+    {
+      name: 'Files',
+      children: [
+        {
+          name: 'Dashboard',
+          icon: 'LayoutDashboard',
+          path: 'User Dashboard',
+        },
+        {
+          name: 'Notification',
+          icon: 'Bell',
+          path: '',
+        },
+        {
+          name: 'Dashboard',
+          icon: 'LayoutDashboard',
+          path: 'User Dashboard',
+        },
+        {
+          name: 'Notification',
+          icon: 'Bell',
+          path: '',
+        },
+        {
+          name: 'Dashboard',
+          icon: 'LayoutDashboard',
+          path: 'User Dashboard',
+        },
+        {
+          name: 'Notification',
+          icon: 'Bell',
+          path: '',
+        },
+        {
+          name: 'Dashboard',
+          icon: 'LayoutDashboard',
+          path: 'User Dashboard',
+        },
+        {
+          name: 'Notification',
+          icon: 'Bell',
+          path: '',
+        },
+        {
+          name: 'Notification',
+          icon: 'Bell',
+          path: '',
+        },
+      ],
+    },
+    {
+      name: 'Tools',
+      children: [
+        {
+          name: 'Dashboard',
+          icon: 'LayoutDashboard',
+          path: 'User Dashboard',
+        },
+        {
+          name: 'Notification',
+          icon: 'Bell',
+          path: '',
+        },
+        {
+          name: 'Dashboard',
+          icon: 'LayoutDashboard',
+          path: 'User Dashboard',
+        },
+        {
+          name: 'Notification',
+          icon: 'Bell',
+          path: '',
+        },
+        {
+          name: 'Dashboard',
+          icon: 'LayoutDashboard',
+          path: 'User Dashboard',
+        },
+        {
+          name: 'Notification',
+          icon: 'Bell',
+          path: '',
+        },
+        {
+          name: 'Dashboard',
+          icon: 'LayoutDashboard',
+          path: 'User Dashboard',
+        },
+      ],
+    },
+    {
+      name: 'Bin',
+      children: [
+        {
+          name: 'Dashboard',
+          icon: 'LayoutDashboard',
+          path: 'User Dashboard',
+        },
+        {
+          name: 'Notification',
+          icon: 'Bell',
+          path: '',
+        },
+      ],
+    },
+    {
+      name: 'Management',
+      children: [
+        {
+          name: 'User',
+          icon: 'LayoutDashboard',
+          path: '',
+        },
+        {
+          name: 'User',
+          icon: 'LayoutDashboard',
+          path: '',
+        },
+        {
+          name: 'Roles & Permissions',
+          icon: 'Bell',
+          path: '',
+        },
+      ],
+    },
+  ],
 }
 
-export default adminSidebar
+export default sidebar

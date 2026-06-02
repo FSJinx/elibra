@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('email')->nullable()->unique();
             $table->timestamp('email_verified_at')->nullable();
 
-            $table->enum('role', ['0', '1', '2']);
+            $table->enum('role', ['admin', 'librarian', 'patron']);
 
             $table->uuid('code')->unique()->nullable();
 

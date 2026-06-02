@@ -15,6 +15,9 @@ const router = createRouter({
     // Admin Routes
     ...adminRoutes,
 
+    // Librarian Routes
+    ...librarianRoutes,
+
     // Error Pages
     ...errorRoutes,
   ],
