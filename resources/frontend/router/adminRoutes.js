@@ -47,7 +47,7 @@ const adminRoutes = [
           {
             path: 'roles-and-permission',
             name: 'Admin Roles and Permission',
-            component: () => import('@/pages/admin/CampusPage.vue'),
+            component: () => import('@/pages/admin/RolesAndPermissionPage.vue'),
             meta: { title: 'Roles and Permission Management', requiresFlow: true, maintenance: false },
           },
         ],

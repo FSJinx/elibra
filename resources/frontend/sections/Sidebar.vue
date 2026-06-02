@@ -12,7 +12,7 @@
 
         <!-- Menu Items -->
         <div class="px-3">
-          <router-link v-slot="{ isActive }" :to="{ name: child.path }" class="flex items-center p-4 pl-2 gap-3 rounded-sm cursor-pointer hover:bg-secondary/5 hover:border-primary" active-class=" border-l-3 border-primary bg-primary/5" v-for="(child, index) in sidebar.children" :key="child.name">
+          <router-link v-slot="{ isActive }" :to="{ name: child.path }" class="flex items-center p-4 pl-2 gap-3 rounded-sm cursor-pointer hover:bg-secondary/5 hover:border-primary transition-all duration-50" active-class=" border-l-3 border-primary bg-primary/5" v-for="(child, index) in sidebar.children" :key="child.name">
             <component :is="child.icon" class="h-5 w-5"></component>
             <p class="text-sm">{{ child.name }}</p>
             <ArrowLeft class="h-4 w-4 ml-auto" stroke-width="1" v-if="isActive" />
