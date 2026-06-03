@@ -6,15 +6,32 @@ use App\Models\Campus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCampusRequest;
 use App\Http\Requests\UpdateCampusRequest;
+use Illuminate\Http\Request;
 
 class CampusController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Campus::all();
+        $search = $request->query('query');
+        $sort = $request->query('sort', []);
+        $order = $request->query('order');
+
+        $campus = Campus::query()
+        ->where('name', 'LIKE', '%' . $search . '%')
+        ->orWhere('code', 'LIKE', '%' . $search . '%')
+        ->orWhere('address', 'LIKE', '%' . $search . '%')
+        ;
+
+        if ($sort && is_array($sort)) {
+            foreach ($sort as $field) {
+                $campus->orderBy($field, $order ?? 'asc');
+            }
+        }
+
+        return json_encode($campus->get());
     }
 
     /**
