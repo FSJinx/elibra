@@ -1,6 +1,8 @@
 <template>
-  <button class="flex items-center justify-center text-center gap-1.5 rounded p-2 cursor-pointer transition-all duration-200 border" :class="[label || (label && icon) ? 'px-6 py-2' : 'px-3 py-2', variant(color, type), btnWidth[width]]">
-    <component :is="icon" v-if="icon" class="h-3.5 w-3.5" />
+  <button class="flex items-center justify-center text-center gap-1.5 rounded p-2 cursor-pointer transition-all duration-200 border" :class="[label || (label && icon) ? 'px-5 py-2 gap-2' : 'px-3 py-2', variant(color, type), btnWidth[width]]">
+    <span class="min-h-3 min-w-3" v-if="icon" >
+      <component :is="icon" class="h-4 w-4" />
+    </span>
     <span v-if="label">{{ label }}</span>
   </button>
 </template>

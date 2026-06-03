@@ -60,7 +60,7 @@ import images from '@/assets/images'
 import BannerComponent from '@/components/public/BannerComponent.vue'
 import { roleMap } from '@/constants/roleMap'
 import menu from '@/constants/sidebar'
-import { useUserStore } from '@/stores/user'
+import { useUserStore } from '@/stores/auth'
 import { reactive, ref } from 'vue'
 
 const pad = ref('px-3 py-4')

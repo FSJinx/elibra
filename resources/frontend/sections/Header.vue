@@ -31,7 +31,7 @@ import images from '@/assets/images'
 import { reactive, ref } from 'vue'
 import BannerComponent from '@/components/public/BannerComponent.vue';
 import Button from '@/components/buttons/Button.vue';
-import { useUserStore } from '@/stores/user';
+import { useUserStore } from '@/stores/auth';
 
 const my = useUserStore()
 
