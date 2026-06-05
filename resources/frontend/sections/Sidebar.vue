@@ -5,17 +5,19 @@
     </div>
 
     <!-- Sidebar Menu -->
-    <div class="sidebar overflow-auto">
-      <div class="flex flex-col pt-1" v-for="(sidebar, index) in menu[my.role]" :key="index">
+    <div class="sidebar overflow-y-auto">
+      <div class="flex flex-col py-1" v-for="(sidebar, index) in menu[my.role]" :key="index">
         <!-- Menu Title -->
         <h1 class="font-semibold uppercase text-xs text-neutral-400 m-2 my-3">{{ sidebar.name }}</h1>
 
         <!-- Menu Items -->
         <div class="px-3">
-          <router-link v-slot="{ isActive }" :to="{ name: child.path }" class="flex items-center p-4 pl-2 gap-3 rounded-sm cursor-pointer hover:bg-secondary/5 hover:border-primary transition-all duration-50" active-class=" border-l-3 border-primary bg-primary/5" v-for="(child, index) in sidebar.children" :key="child.name">
+          <router-link v-slot="{ isActive }" :to="{ name: child.path }" class="flex items-center p-4 pl-2 gap-3 rounded-sm cursor-pointer hover:bg-secondary/5 hover:border-primary transition-all duration-50" active-class="bg-secondary/10 " v-for="(child, index) in sidebar.children" :key="child.name">
+            <Transition name="activeArrow">
+              <ArrowRight class="h-4 w-4" stroke-width="1.5" v-if="isActive" />
+            </Transition>
             <component :is="child.icon" class="h-5 w-5"></component>
             <p class="text-sm">{{ child.name }}</p>
-            <ArrowLeft class="h-4 w-4 ml-auto" stroke-width="1" v-if="isActive" />
           </router-link>
         </div>
       </div>
@@ -99,6 +101,27 @@ const mini = {
 .mini-enter-to,
 .mini-leave-from {
   opacity: 1;
+}
+
+.activeArrow-enter-active,
+.activeArrow-leave-active {
+  transition: all 0.2s ease;
+}
+
+.activeArrow-enter-from,
+.activeArrow-leave-to {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+
+.activeArrow-leave-to {
+  transition-delay: opacity 0.2s ease;
+}
+
+.activeArrow-enter-to,
+.activeArrow-leave-from {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .mini-enter-active .mini-card,

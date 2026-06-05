@@ -1,84 +1,70 @@
 <template>
-  <header class="fixed inset-0 w-full h-18 top-0 bg-white shadow-xs z-10">
-    <div class="relative flex h-full w-full justify-center items-center px-5 sm:px-8">
-      <BannerComponent :with-label="true" :with-logo="true" logo-height="h-7" font-size="text-xl" />
-  
-      <div class="absolute navs hidden md:flex items-end gap-2">
-        <router-link :to="{ path: '#' }" class="flex text-center text-sm p-3 hover:text-secondary transition-all duration-150"  v-for="(nav, index) in navs" :key="index">
-          {{ nav.name }}
-        </router-link>
-        <div class="flex items-center justify-center gap-3"
-        </div>
+  <header class="fixed inset-x-0 top-0 flex justify-between w-screen z-10 transition-shadow duration-500 overflow-hidden" :class="{ 'shadow-md': scrollY > 10 }" :style="headerStyle">
+    <div class="flex items-center h-full gap-3">
+      <img :src="images.isu" alt="" class="h-11" />
+      <div class="flex flex-col justify-between overflow-hidden whitespace-nowrap">
+        <h1 class="text-2xl font-extrabold text-primary leading-6.5">e-Libra</h1>
+        <p class="text-sm hidden sm:inline">The ISU-One Library Management System of the <span class="font-bold text-primary">ISABELA STATE UNIVERSITY</span></p>
+        <p class="text-sm inline sm:hidden">The LMS of <span class="font-bold text-primary">ISABELA STATE UNIVERSITY</span></p>
       </div>
-      <div class="ml-auto flex gap-5 items-center">
-        <div class="action-btns hidden md:flex gap-2 items-center" v-if="!my.id">
-          <router-link :to="{path: ''}" class="text-primary px-4 py-2">Login</router-link>
-          <Button type="solid" label="Register" color="primary" />
-        </div>
-    
-        <router-link v-else :to="{ name: roleHome[my.role] }">
-          <UserCircle />
-        </router-link>
-        <Button type="outline" icon="Menu" class="flex md:hidden py-3 hover:bg-primary hover:border-primary" @click="toggleSideMenu" />
-      </div>
-
+    </div>
+    <div class="flex items-center justify-end p-4 gap-2">
+      <Button variant="outline-solid" color="primary" label="Login" />
+      <Button variant="solid" color="primary" label="Register" />
     </div>
   </header>
 </template>
 
 <script setup>
 import images from '@/assets/images'
-import { reactive, ref } from 'vue'
-import BannerComponent from '@/components/public/BannerComponent.vue';
-import Button from '@/components/buttons/Button.vue';
-import { useUserStore } from '@/stores/auth';
+import AnchorButton from '@/components/buttons/AnchorButton.vue'
+import Button from '@/components/buttons/Button.vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 
-const my = useUserStore()
+const scrollY = ref(0)
+const windowWidth = ref(typeof window !== 'undefined' ? window.innerWidth : 0)
 
-const roleHome = {
-  admin: 'Admin',
-  librarian: 'Librarian',
-  patron: 'Patron',
-}
+const headerStyle = computed(() => {
+  const scrollRange = 200
 
-const sideMenu = reactive({
-  show: false,
+  const maxHeight = 140 // h-35
+  const minHeight = 80 // h-20
+  const currentHeight = Math.max(minHeight, maxHeight - (scrollY.value * (maxHeight - minHeight)) / scrollRange)
+
+  const currentOpacity = Math.min(1, scrollY.value / scrollRange)
+
+  let currentPadding = 0
+
+  if (windowWidth.value >= 768) {
+    const maxPadding = 320
+    const minPadding = 20
+
+    currentPadding = Math.max(minPadding, maxPadding - (scrollY.value * (maxPadding - minPadding)) / scrollRange)
+  }
+
+  return {
+    height: `${currentHeight}px`,
+    backgroundColor: `rgba(255, 255, 255, ${currentOpacity})`,
+    paddingLeft: `${currentPadding}px`,
+    paddingRight: `${currentPadding}px`,
+  }
 })
 
-function toggleSideMenu() {
-  sideMenu.show = !sideMenu.show
+const handleScroll = () => {
+  scrollY.value = window.scrollY
 }
 
-const navs = ref([
-  {
-    name: 'Home',
-    link: '',
-  },
-  {
-    name: 'OPAC',
-    link: '',
-  },
-  {
-    name: 'AcaRepo',
-    link: '',
-  },
-  {
-    name: 'About',
-    link: '',
-  },
-  {
-    name: 'Contact Us',
-    link: '',
-  },
-])
+const handleResize = () => {
+  windowWidth.value = window.innerWidth
+}
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll, { passive: true })
+  window.addEventListener('resize', handleResize)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
+  window.removeEventListener('resize', handleResize)
+})
 </script>
-
-<style>
-.navs a {
-  outline: none;
-}
-
-.navs a:focus-within {
-  color: var(--color-primary)  ;
-}
-</style>

@@ -2,7 +2,7 @@ const colors = {
   primary: {
     solid: 'bg-primary text-white border-primary hover:bg-primary',
     soft: 'bg-primary text-primary border-primary hover:bg-primary',
-    outline: 'bg-white text-primary border-primary hover:bg-primary hover:text-white',
+    outline: 'bg-inherit text-primary border-primary hover:bg-primary hover:text-white',
   },
 
   blue: {
