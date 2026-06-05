@@ -28,3 +28,11 @@ body {
   margin: 0;
   padding: 0;
 }
+
+.modal-wrapper {
+  z-index: 1999;
+}
+
+.popup-wrapper {
+  z-index: 1999;
+}

@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import adminRoutes from './adminRoutes'
 import librarianRoutes from './librarianRoutes'
 import errorRoutes from './errorRoutes'
+import publicRoutes from './publicRoute'
+
 import { roleMap } from '@/constants/roleMap'
 import { useUserStore } from '@/stores/auth'
 
@@ -13,6 +15,14 @@ const router = createRouter({
       name: 'Home',
       component: () => import('../pages/LandingPage.vue'),
     },
+    {
+      path: '/practice',
+      name: 'Practice',
+      component: () => import('../pages/PracticePage.vue'),
+    },
+
+    // Public Routes
+    ...publicRoutes,
 
     // Admin Routes
     ...adminRoutes,

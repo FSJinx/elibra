@@ -1,7 +1,7 @@
 <template>
   <teleport to="body">
     <transition name="popup">
-      <div v-if="popup.show" class="elpop fixed inset-0 z-50 flex overflow-hidden bg-black/50" @click="popup.type === 'load' ? '' : elpop.close()">
+      <div v-if="popup.show" class="popup-wrapper elpop fixed inset-0 flex overflow-hidden bg-black/50" @click="popup.type === 'load' ? '' : elpop.close()">
         <div class="popup-card relative flex flex-col justify-center items-center w-100 m-auto gap-3 h-max p-5 sm:w-125 rounded-lg bg-white shadow-xl overflow-hidden -translate-y-8 sm:-translate-y-5" :class="cardDesign" @click.stop>
           <div class="flex flex-col justify-center text-center h-38">
             <!-- TYPE -->
@@ -42,6 +42,8 @@ import elpop from '@/plugins/elpop.js'
 import { computed, ref } from 'vue'
 import Button from '../buttons/Button.vue'
 
+const popup = elpop.state
+
 const bgColor = ref({
   success: 'bg-green-500',
   error: 'bg-red-500',
@@ -71,7 +73,6 @@ const cardDesign = computed(() => {
   return card
 })
 
-const popup = elpop.state
 </script>
 
 <style scoped>

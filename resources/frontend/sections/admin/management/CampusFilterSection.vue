@@ -5,20 +5,25 @@
     </div>
     <div class="flex items-center gap-2">
       <input id="search" type="text" class="p-2 px-4 border border-primary rounded leading-0" placeholder="Search here..." v-model="query" @input="search" />
-      <Button type="soft" label="New Campus" icon="Plus" color="green" />
+      <Button type="soft" label="New Campus" icon="Plus" color="green" @click="newCampus?.open()" />
       <Button type="solid" icon="RefreshCw" color="green" title="Refresh" />
     </div>
   </div>
+
+  <NewCampusModalComponent ref="newCampus" />
 </template>
 
 <script setup>
 import Button from '@/components/buttons/Button.vue'
 import SortSelect from '@/components/inputs/SortSelect.vue'
+import NewCampusModalComponent from '@/components/modals/NewCampusModalComponent.vue'
 import { ref, watch } from 'vue'
 
 const query = ref(null)
 const sort = ref(null)
 const order = ref('asc')
+
+const newCampus = ref(null)
 
 const emit = defineEmits(['search'])
 

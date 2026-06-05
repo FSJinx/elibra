@@ -2,7 +2,7 @@
   <DefaultLayout>
     <section class="flex items-center justify-center w-full h-screen pt-18">
       <div class="relative flex flex-col items-center w-[60%] h-[80%]">
-        <div v-for="(corner, index) in corners" :key="index" class="absolute border-primary" :style="{ ...corner.position, width: `${cornerLength}px`, height: `${cornerLength}px`, borderTopWidth: corner.borders.top ? `${borderSize}px` : '0', borderRightWidth: corner.borders.right ? `${borderSize}px` : '0', borderBottomWidth: corner.borders.bottom ? `${borderSize}px` : '0', borderLeftWidth: corner.borders.left ? `${borderSize}px` : '0' }" />
+        <!-- <div v-for="(corner, index) in corners" :key="index" class="absolute border-primary" :style="{ ...corner.position, width: `${cornerLength}px`, height: `${cornerLength}px`, borderTopWidth: corner.borders.top ? `${borderSize}px` : '0', borderRightWidth: corner.borders.right ? `${borderSize}px` : '0', borderBottomWidth: corner.borders.bottom ? `${borderSize}px` : '0', borderLeftWidth: corner.borders.left ? `${borderSize}px` : '0' }" /> -->
         <div class="flex flex-col gap-3 h-full w-[80%] items-center justify-center text-center">
           <slot />
           <div class="flex gap-3 mt-5">

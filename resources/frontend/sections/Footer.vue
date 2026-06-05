@@ -1,6 +1,6 @@
 <template>
-  <footer class="absolute bottom-0 bg-mist-800 text-white h-80 w-full z-10 overflow-x-hidden">
-    <section class="h-full flex flex-col justify-between">
+  <footer class="flex bg-mist-800 text-white h-80 w-full z-10 overflow-x-hidden">
+    <section class="h-full flex flex-col justify-between w-full">
       <div class="h-full flex justify-between items-center">
         <div class="flex gap-5 justify-end">
           <img :src="images.isu" alt="ISU Logo" class="h-25 ml-10" />
