@@ -13,8 +13,8 @@ class LibraryRoleSeeder extends Seeder
     public function run(): void
     {
         $libraryRoles = [
-            ['name' => 'head'],
-            ['name' => 'admin'],
+            ['name' => 'branch head'],
+            ['name' => 'library admin'],
             ['name' => 'general'],
             ['name' => 'circulation'],
             ['name' => 'technical'],
@@ -25,7 +25,7 @@ class LibraryRoleSeeder extends Seeder
             ['name' => 'periodical'],
             ['name' => 'museum'],
             ['name' => 'serials'],
-            ['name' => 'stafff'],
+            ['name' => 'staff'],
         ];
 
         foreach ($libraryRoles as $role) {

@@ -18,4 +18,19 @@ class Librarian extends Model
         'primary_role_id',
 
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(Users::class);
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(LibraryRole::class, 'primary_role_id');
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
+    }
 }

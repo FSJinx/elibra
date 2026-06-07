@@ -6,6 +6,7 @@ use App\Models\Users;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUsersRequest;
 use App\Http\Requests\UpdateUsersRequest;
+use Illuminate\Support\Facades\Hash;
 
 class UsersController extends Controller
 {
@@ -14,7 +15,7 @@ class UsersController extends Controller
      */
     public function index()
     {
-        //
+        return json_encode(Users::all());
     }
 
     /**
@@ -30,7 +31,15 @@ class UsersController extends Controller
      */
     public function store(StoreUsersRequest $request)
     {
-        //
+        $user = Users::create([
+        'first_name' => $request->first_name,
+        'last_name' => $request->last_name,
+        'username' => $request->username,
+        'password' => Hash::make($request->password),
+        'role' => $request->role,
+    ]);
+
+    return response()->json($user, 201);
     }
 
     /**
