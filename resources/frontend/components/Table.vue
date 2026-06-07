@@ -1,7 +1,7 @@
 <template>
-  <div class="w-full border border-gray-300 rounded-lg bg-white overflow-hidden max-h-full">
+  <div class="w-full border border-gray-300 rounded-lg bg-white shadow overflow-hidden max-h-full">
     <div class="max-h-140 overflow-y-auto">
-      <table class="table table-fixed w-full">
+      <table class="table table-autoo w-full">
         <thead class="sticky top-0 bg-gray-100 shadow">
           <tr class="text-secondary">
             <th class="p-4" v-for="head in table.header" :colspan="head.colspan ?? 1" :class="[{ 'hidden lg:table-cell': !head.important }, head.align ? alignMap[head.align] : 'text-center']" :key="head">{{ head.label }}</th>
@@ -22,7 +22,7 @@
           <!-- With Data -->
           <tr class="border-b border-gray-200 hover:bg-gray-100" v-for="(row, index) in table.data" :key="row?.id ?? index" v-else>
             <td class="p-4 text-center" :class="[{ 'hidden lg:table-cell': !column.important }, column.align ? alignMap[column.align] : 'text-center']" v-for="column in table.header">
-              <p class="" :class="[statusFormatter(column.key, row[column.key])]">{{ row[column.key] ?? 'None' }}</p>
+              <p class="" :class="[statusFormatter(column.key, row[column.key])]">{{ column.key === 'status' ? '●' : '' }} {{ row[column.key] ?? 'None' }}</p>
             </td>
             <td class="p-4">
               <div class="h-full w-full flex justify-center items-center gap-2">

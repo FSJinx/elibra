@@ -1,5 +1,5 @@
 <template>
-  <button class="flex items-center justify-center gap-1 text-center cursor-pointer border transition-all duration-200 leading-snug" :class="[btnDesign]" :type="props.type">
+  <button class="flex items-center justify-center gap-1 text-center cursor-pointer border transition-all duration-200" :class="[btnDesign]" :type="props.type">
     <SpinnerLoading size="sm" v-if="isLoading" />
 
     <component :is="icon" :class="iconSize" v-if="icon && !isLoading" />

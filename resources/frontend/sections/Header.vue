@@ -9,7 +9,7 @@
       </div>
     </div>
     <div class="flex items-center justify-end p-4 gap-2">
-      <Button variant="outline-solid" color="primary" label="Login" />
+      <LoginButton />
       <Button variant="solid" color="primary" label="Register" />
     </div>
   </header>
@@ -19,6 +19,7 @@
 import images from '@/assets/images'
 import AnchorButton from '@/components/buttons/AnchorButton.vue'
 import Button from '@/components/buttons/Button.vue'
+import LoginButton from '@/components/buttons/LoginButton.vue'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 
 const scrollY = ref(0)

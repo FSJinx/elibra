@@ -4,7 +4,7 @@ const adminRoutes = [
     name: 'Admin',
     redirect: { name: 'Admin Dashboard' },
     component: () => import('@/layouts/SystemLayout.vue'),
-    meta: { title: 'Admin', requiresFlow: true, role: 'admin' },
+    meta: { title: 'Admin', requiresFlow: true, role: 'admin,librarian' },
     children: [
       {
         path: 'general',

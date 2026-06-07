@@ -39,8 +39,11 @@ export let lastRoute = null
 
 router.beforeEach((to, from) => {
   const my = useUserStore()
+  const accessRoles = to.meta?.role
+
   lastRoute = from
   console.log('Last Page:', lastRoute.name)
+  console.log(`RBAC: ${accessRoles}`)
 
   document.title = to.meta.title ?? 'e-Libra: The ISU-1 Library Management and Resource Monitoring System'
 
@@ -48,7 +51,7 @@ router.beforeEach((to, from) => {
     return { name: 'ServiceUnavailable' }
   }
 
-  if (to.meta.requiresFlow && my.role !== to.meta.role) {
+  if (to.meta.requiresFlow && !accessRoles.split(',').includes(my.role)) {
     return { name: 'Forbidden' }
   }
 })

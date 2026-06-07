@@ -13,10 +13,16 @@ const librarianRoutes = [
         meta: { title: 'Dashboard', requiresFlow: true, maintenance: false },
       },
       {
-        path: 'library',
-        name: 'Librarian User Management',
-        component: () => import('@/pages/librarian/UserPage.vue'),
-        meta: { title: 'User Management', requiresFlow: true, maintenance: false },
+        path: 'management',
+        name: 'Management',
+        children: [
+          {
+            path: 'users',
+            name: 'Librarian User Management',
+            component: () => import('@/pages/librarian/UserPage.vue'),
+            meta: { title: 'User Management', requiresFlow: true, maintenance: false },
+          },
+        ],
       },
     ],
   },

@@ -1,6 +1,3 @@
-<script setup lang="ts">
-import BaseButton from '@/components/BaseButton.vue'
-</script>
 
 <template>
   <div class="flex flex-col w-full">
@@ -18,12 +15,12 @@ import BaseButton from '@/components/BaseButton.vue'
           <td>Solid Small Size Button</td>
           <td>
             <div class="flex flex-wrap items-center justify-center gap-2">
-              <BaseButton variant="solid" color="default" size="small" border="rounded" icon="Plus" />
-              <BaseButton variant="solid" color="primary" size="small" border="rounded" label="Login" />
-              <BaseButton variant="solid" color="green" size="small" border="rounded" label="Add" icon="Plus" />
-              <BaseButton variant="solid" color="blue" size="small" border="rounded" label="View" icon="eye" />
-              <BaseButton variant="solid" color="red" size="small" border="rounded" label="Delete" icon="trash2" />
-              <BaseButton variant="solid" color="yellow" size="small" border="rounded" label="Edit" icon="pencil" />
+              <Button variant="solid" color="default" size="small" border="rounded" icon="Plus" />
+              <Button variant="solid" color="primary" size="small" border="rounded" label="Login" />
+              <Button variant="solid" color="green" size="small" border="rounded" label="Add" icon="Plus" />
+              <Button variant="solid" color="blue" size="small" border="rounded" label="View" icon="eye" />
+              <Button variant="solid" color="red" size="small" border="rounded" label="Delete" icon="trash2" />
+              <Button variant="solid" color="yellow" size="small" border="rounded" label="Edit" icon="pencil" />
             </div>
           </td>
         </tr>
@@ -32,12 +29,12 @@ import BaseButton from '@/components/BaseButton.vue'
           <td>Solid Normal Size Button</td>
           <td>
             <div class="flex flex-wrap items-center justify-center gap-2">
-              <BaseButton variant="solid" color="default" size="default" border="rounded" icon="Plus" />
-              <BaseButton variant="solid" color="primary" size="default" border="rounded" label="Login" />
-              <BaseButton variant="solid" color="green" size="default" border="rounded" label="Add" icon="Plus" />
-              <BaseButton variant="solid" color="blue" size="default" border="rounded" label="View" icon="eye" />
-              <BaseButton variant="solid" color="red" size="default" border="rounded" label="Delete" icon="trash2" />
-              <BaseButton variant="solid" color="yellow" size="default" border="rounded" label="Edit" icon="pencil" />
+              <Button variant="solid" color="default" size="default" border="rounded" icon="Plus" />
+              <Button variant="solid" color="primary" size="default" border="rounded" label="Login" />
+              <Button variant="solid" color="green" size="default" border="rounded" label="Add" icon="Plus" />
+              <Button variant="solid" color="blue" size="default" border="rounded" label="View" icon="eye" />
+              <Button variant="solid" color="red" size="default" border="rounded" label="Delete" icon="trash2" />
+              <Button variant="solid" color="yellow" size="default" border="rounded" label="Edit" icon="pencil" />
             </div>
           </td>
         </tr>
@@ -46,12 +43,12 @@ import BaseButton from '@/components/BaseButton.vue'
           <td>Solid Large Size Button</td>
           <td>
             <div class="flex flex-wrap items-center justify-center gap-2">
-              <BaseButton variant="solid" color="default" size="large" border="rounded" icon="Plus" />
-              <BaseButton variant="solid" color="primary" size="large" border="rounded" label="Login" />
-              <BaseButton variant="solid" color="green" size="large" border="rounded" label="Add" icon="Plus" />
-              <BaseButton variant="solid" color="blue" size="large" border="rounded" label="View" icon="eye" />
-              <BaseButton variant="solid" color="red" size="large" border="rounded" label="Delete" icon="trash2" />
-              <BaseButton variant="solid" color="yellow" size="large" border="rounded" label="Edit" icon="pencil" />
+              <Button variant="solid" color="default" size="large" border="rounded" icon="Plus" />
+              <Button variant="solid" color="primary" size="large" border="rounded" label="Login" />
+              <Button variant="solid" color="green" size="large" border="rounded" label="Add" icon="Plus" />
+              <Button variant="solid" color="blue" size="large" border="rounded" label="View" icon="eye" />
+              <Button variant="solid" color="red" size="large" border="rounded" label="Delete" icon="trash2" />
+              <Button variant="solid" color="yellow" size="large" border="rounded" label="Edit" icon="pencil" />
             </div>
           </td>
         </tr>
@@ -60,12 +57,12 @@ import BaseButton from '@/components/BaseButton.vue'
           <td>Outline Small Size Button</td>
           <td>
             <div class="flex flex-wrap items-center justify-center gap-2">
-              <BaseButton variant="outline" color="default" size="small" border="rounded" icon="Plus" />
-              <BaseButton variant="outline" color="primary" size="small" border="rounded" label="Login" />
-              <BaseButton variant="outline" color="green" size="small" border="rounded" label="Add" icon="Plus" />
-              <BaseButton variant="outline" color="blue" size="small" border="rounded" label="View" icon="eye" />
-              <BaseButton variant="outline" color="red" size="small" border="rounded" label="Delete" icon="trash2" />
-              <BaseButton variant="outline" color="yellow" size="small" border="rounded" label="Edit" icon="pencil" />
+              <Button variant="outline" color="default" size="small" border="rounded" icon="Plus" />
+              <Button variant="outline" color="primary" size="small" border="rounded" label="Login" />
+              <Button variant="outline" color="green" size="small" border="rounded" label="Add" icon="Plus" />
+              <Button variant="outline" color="blue" size="small" border="rounded" label="View" icon="eye" />
+              <Button variant="outline" color="red" size="small" border="rounded" label="Delete" icon="trash2" />
+              <Button variant="outline" color="yellow" size="small" border="rounded" label="Edit" icon="pencil" />
             </div>
           </td>
         </tr>
@@ -74,12 +71,12 @@ import BaseButton from '@/components/BaseButton.vue'
           <td>Outline Normal Size Button</td>
           <td>
             <div class="flex flex-wrap items-center justify-center gap-2">
-              <BaseButton variant="outline" color="default" size="default" border="rounded" icon="Plus" />
-              <BaseButton variant="outline" color="primary" size="default" border="rounded" label="Login" />
-              <BaseButton variant="outline" color="green" size="default" border="rounded" label="Add" icon="Plus" />
-              <BaseButton variant="outline" color="blue" size="default" border="rounded" label="View" icon="eye" />
-              <BaseButton variant="outline" color="red" size="default" border="rounded" label="Delete" icon="trash2" />
-              <BaseButton variant="outline" color="yellow" size="default" border="rounded" label="Edit" icon="pencil" />
+              <Button variant="outline" color="default" size="default" border="rounded" icon="Plus" />
+              <Button variant="outline" color="primary" size="default" border="rounded" label="Login" />
+              <Button variant="outline" color="green" size="default" border="rounded" label="Add" icon="Plus" />
+              <Button variant="outline" color="blue" size="default" border="rounded" label="View" icon="eye" />
+              <Button variant="outline" color="red" size="default" border="rounded" label="Delete" icon="trash2" />
+              <Button variant="outline" color="yellow" size="default" border="rounded" label="Edit" icon="pencil" />
             </div>
           </td>
         </tr>
@@ -88,12 +85,12 @@ import BaseButton from '@/components/BaseButton.vue'
           <td>Outline Large Size Button</td>
           <td>
             <div class="flex flex-wrap items-center justify-center gap-2">
-              <BaseButton variant="outline" color="default" size="large" border="rounded" icon="Plus" />
-              <BaseButton variant="outline" color="primary" size="large" border="rounded" label="Login" />
-              <BaseButton variant="outline" color="green" size="large" border="rounded" label="Add" icon="Plus" />
-              <BaseButton variant="outline" color="blue" size="large" border="rounded" label="View" icon="eye" />
-              <BaseButton variant="outline" color="red" size="large" border="rounded" label="Delete" icon="trash2" />
-              <BaseButton variant="outline" color="yellow" size="large" border="rounded" label="Edit" icon="pencil" />
+              <Button variant="outline" color="default" size="large" border="rounded" icon="Plus" />
+              <Button variant="outline" color="primary" size="large" border="rounded" label="Login" />
+              <Button variant="outline" color="green" size="large" border="rounded" label="Add" icon="Plus" />
+              <Button variant="outline" color="blue" size="large" border="rounded" label="View" icon="eye" />
+              <Button variant="outline" color="red" size="large" border="rounded" label="Delete" icon="trash2" />
+              <Button variant="outline" color="yellow" size="large" border="rounded" label="Edit" icon="pencil" />
             </div>
           </td>
         </tr>
@@ -102,12 +99,12 @@ import BaseButton from '@/components/BaseButton.vue'
           <td>Outline Small Size Button</td>
           <td>
             <div class="flex flex-wrap items-center justify-center gap-2">
-              <BaseButton variant="outline-solid" color="default" size="small" border="rounded" icon="Plus" />
-              <BaseButton variant="outline-solid" color="primary" size="small" border="rounded" label="Login" />
-              <BaseButton variant="outline-solid" color="green" size="small" border="rounded" label="Add" icon="Plus" />
-              <BaseButton variant="outline-solid" color="blue" size="small" border="rounded" label="View" icon="eye" />
-              <BaseButton variant="outline-solid" color="red" size="small" border="rounded" label="Delete" icon="trash2" />
-              <BaseButton variant="outline-solid" color="yellow" size="small" border="rounded" label="Edit" icon="pencil" />
+              <Button variant="outline-solid" color="default" size="small" border="rounded" icon="Plus" />
+              <Button variant="outline-solid" color="primary" size="small" border="rounded" label="Login" />
+              <Button variant="outline-solid" color="green" size="small" border="rounded" label="Add" icon="Plus" />
+              <Button variant="outline-solid" color="blue" size="small" border="rounded" label="View" icon="eye" />
+              <Button variant="outline-solid" color="red" size="small" border="rounded" label="Delete" icon="trash2" />
+              <Button variant="outline-solid" color="yellow" size="small" border="rounded" label="Edit" icon="pencil" />
             </div>
           </td>
         </tr>
@@ -116,12 +113,12 @@ import BaseButton from '@/components/BaseButton.vue'
           <td>Outline Normal Size Button</td>
           <td>
             <div class="flex flex-wrap items-center justify-center gap-2">
-              <BaseButton variant="outline-solid" color="default" size="default" border="rounded" icon="Plus" />
-              <BaseButton variant="outline-solid" color="primary" size="default" border="rounded" label="Login" />
-              <BaseButton variant="outline-solid" color="green" size="default" border="rounded" label="Add" icon="Plus" />
-              <BaseButton variant="outline-solid" color="blue" size="default" border="rounded" label="View" icon="eye" />
-              <BaseButton variant="outline-solid" color="red" size="default" border="rounded" label="Delete" icon="trash2" />
-              <BaseButton variant="outline-solid" color="yellow" size="default" border="rounded" label="Edit" icon="pencil" />
+              <Button variant="outline-solid" color="default" size="default" border="rounded" icon="Plus" />
+              <Button variant="outline-solid" color="primary" size="default" border="rounded" label="Login" />
+              <Button variant="outline-solid" color="green" size="default" border="rounded" label="Add" icon="Plus" />
+              <Button variant="outline-solid" color="blue" size="default" border="rounded" label="View" icon="eye" />
+              <Button variant="outline-solid" color="red" size="default" border="rounded" label="Delete" icon="trash2" />
+              <Button variant="outline-solid" color="yellow" size="default" border="rounded" label="Edit" icon="pencil" />
             </div>
           </td>
         </tr>
@@ -130,12 +127,12 @@ import BaseButton from '@/components/BaseButton.vue'
           <td>Outline Large Size Button</td>
           <td>
             <div class="flex flex-wrap items-center justify-center gap-2">
-              <BaseButton variant="outline-solid" color="default" size="large" border="rounded" icon="Plus" />
-              <BaseButton variant="outline-solid" color="primary" size="large" border="rounded" label="Login" />
-              <BaseButton variant="outline-solid" color="green" size="large" border="rounded" label="Add" icon="Plus" />
-              <BaseButton variant="outline-solid" color="blue" size="large" border="rounded" label="View" icon="eye" />
-              <BaseButton variant="outline-solid" color="red" size="large" border="rounded" label="Delete" icon="trash2" />
-              <BaseButton variant="outline-solid" color="yellow" size="large" border="rounded" label="Edit" icon="pencil" />
+              <Button variant="outline-solid" color="default" size="large" border="rounded" icon="Plus" />
+              <Button variant="outline-solid" color="primary" size="large" border="rounded" label="Login" />
+              <Button variant="outline-solid" color="green" size="large" border="rounded" label="Add" icon="Plus" />
+              <Button variant="outline-solid" color="blue" size="large" border="rounded" label="View" icon="eye" />
+              <Button variant="outline-solid" color="red" size="large" border="rounded" label="Delete" icon="trash2" />
+              <Button variant="outline-solid" color="yellow" size="large" border="rounded" label="Edit" icon="pencil" />
             </div>
           </td>
         </tr>
@@ -143,3 +140,7 @@ import BaseButton from '@/components/BaseButton.vue'
     </table>
   </div>
 </template>
+
+<script setup lang="ts">
+import Button from '@/components/buttons/Button.vue';
+</script>

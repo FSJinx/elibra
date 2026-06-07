@@ -1,5 +1,5 @@
 <template>
-  <Button class="text-primary px-4 py-2" @click="login?.open()" label="Login" color="primary" type="outline" />
+  <Button variant="outline-solid" color="primary" label="Login" @click="login?.open()" />
 
   <LoginModal ref="login" />
 </template>
