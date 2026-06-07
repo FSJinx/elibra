@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class AdminSeeder extends Seeder
 {
@@ -18,7 +19,7 @@ class AdminSeeder extends Seeder
             'middle_initial' => 'M',
             'username' => 'infra',
             'email' => 'infra@gmail.com',
-            'password' => bcrypt('infra12345'),
+            'password' => bcrypt('elibra2026'),
         ]);
     }
 }
