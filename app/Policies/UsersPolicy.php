@@ -5,13 +5,14 @@ namespace App\Policies;
 use Illuminate\Auth\Access\Response;
 use App\Models\Users;
 use App\Models\User;
+use Illuminate\Foundation\Auth\User as AuthUser;
 
 class UsersPolicy
 {
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user): bool
+    public function viewAny(AuthUser $user): bool
     {
         return false;
     }
@@ -19,7 +20,7 @@ class UsersPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Users $users): bool
+    public function view(AuthUser $user, Users $users): bool
     {
         return false;
     }
@@ -27,7 +28,7 @@ class UsersPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function create(AuthUser $user): bool
     {
         return false;
     }
@@ -35,7 +36,7 @@ class UsersPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Users $users): bool
+    public function update(AuthUser $user, Users $users): bool
     {
         return false;
     }
@@ -43,7 +44,7 @@ class UsersPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Users $users): bool
+    public function delete(AuthUser $user, Users $users): bool
     {
         return false;
     }
@@ -51,7 +52,7 @@ class UsersPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Users $users): bool
+    public function restore(AuthUser $user, Users $users): bool
     {
         return false;
     }
@@ -59,7 +60,7 @@ class UsersPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Users $users): bool
+    public function forceDelete(AuthUser $user, Users $users): bool
     {
         return false;
     }

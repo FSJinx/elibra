@@ -22,4 +22,14 @@ class Patron extends Model
         'patron_type_id',
         'remarks',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(Users::class);
+    }
+
+    public function patronType()
+    {
+        return $this->belongsTo(PatronType::class);
+    }
 }

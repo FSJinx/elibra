@@ -6,6 +6,9 @@ use App\Models\Librarian;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreLibrarianRequest;
 use App\Http\Requests\UpdateLibrarianRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use App\Models\Users;
 
 class LibrarianController extends Controller
 {
@@ -14,15 +17,20 @@ class LibrarianController extends Controller
      */
     public function index()
     {
-        //
+        return Librarian::with([
+            'user',
+            'role',
+            'branch'
+        ])->get();
+
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+       //
     }
 
     /**
@@ -30,7 +38,24 @@ class LibrarianController extends Controller
      */
     public function store(StoreLibrarianRequest $request)
     {
-        //
+        $user = Users::create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'username' => $request->username,
+            'password' => Hash::make($request->password),
+            'role' => 'librarian',
+        ]);
+
+        $librarian = Librarian::create([
+            'user_id' => $user->id,
+            'branch_id' => $request->branch_id,
+            'primary_role_id' => $request->primary_role_id,
+        ]);
+
+        return response()->json([
+            'user' => $user,
+            'librarian' => $librarian,
+        ], 201); 
     }
 
     /**

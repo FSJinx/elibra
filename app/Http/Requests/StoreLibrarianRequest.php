@@ -12,7 +12,7 @@ class StoreLibrarianRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +23,12 @@ class StoreLibrarianRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'username' => 'required|string|max:255|unique:users,username',
+            'password' => 'required|string|min:8',
+            'branch_id' => 'required|exists:branches,id',
+            'primary_role_id' => 'required|exists:library_roles,id',
         ];
     }
 }

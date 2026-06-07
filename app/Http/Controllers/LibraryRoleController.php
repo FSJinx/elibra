@@ -14,7 +14,7 @@ class LibraryRoleController extends Controller
      */
     public function index()
     {
-        //
+        return LibraryRole::all();
     }
 
     /**
@@ -30,7 +30,10 @@ class LibraryRoleController extends Controller
      */
     public function store(StoreLibraryRoleRequest $request)
     {
-        //
+        return LibraryRole::create([
+            'name' => $request->name,
+            'description' => $request->description,
+        ]);
     }
 
     /**
