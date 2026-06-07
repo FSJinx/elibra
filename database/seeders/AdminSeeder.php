@@ -12,6 +12,13 @@ class AdminSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        \App\Models\Users::create([
+            'last_name' => 'Castillo',
+            'first_name' => 'Wendell',
+            'middle_initial' => 'M',
+            'username' => 'infra',
+            'email' => 'infra@gmail.com',
+            'password' => bcrypt('infra12345'),
+        ]);
     }
 }

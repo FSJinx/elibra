@@ -12,6 +12,20 @@ class Users extends Authenticatable implements JWTSubject
 {
     use HasFactory, SoftDeletes;
 
+     protected $hidden = [
+        'password',
+    ];
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
+
     protected $fillable = [
         'last_name',
         'first_name',
@@ -30,17 +44,13 @@ class Users extends Authenticatable implements JWTSubject
         'profile_picture_id',
     ];
 
-    protected $hidden = [
-        'password',
-    ];
-
-    public function getJWTIdentifier()
+    public function librarian()
     {
-        return $this->getKey();
+        return $this->hasOne(Librarian::class, 'user_id');
     }
 
-    public function getJWTCustomClaims()
+    public function patron()
     {
-        return [];
+        return $this->hasOne(Patron::class, 'user_id');
     }
 }
