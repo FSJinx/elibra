@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Users;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUsersRequest;
 use App\Http\Requests\UpdateUsersRequest;
+use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class UsersController extends Controller
@@ -13,9 +13,54 @@ class UsersController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return json_encode(Users::all());
+        $user = auth('api')->user();
+        $role = $request->role; // Tiyakin na walang space ang pagpasa nito mula sa Vue ('librarian')
+
+        // I-eager load ang malalalim na relasyon para iwas sa N+1 query problem
+        $users = User::query()->with(['librarian.branch.campus', 'patron.program.department.campus']);
+
+        if ($user->role === 'librarian') {
+            $campusId = $user->librarian?->branch?->campus_id;
+
+            if (! $campusId) {
+                return response()->json(['status' => 'error', 'message' => 'Librarian has no assigned campus.'], 400);
+            }
+
+            // 1. I-GROUP NATIN ANG CAMPUS FILTER GAMIT ANG 'OR'
+            $users->where(function ($mainQuery) use ($campusId) {
+                // Option A: Kung siya ay librarian sa campus na ito
+                $mainQuery->whereHas('librarian.branch', function ($query) use ($campusId) {
+                    $query->where('campus_id', $campusId);
+                })
+                // Option B: O kaya naman siya ay patron sa campus na ito
+                    ->orWhereHas('patron.program.department', function ($query) use ($campusId) {
+                        $query->where('campus_id', $campusId);
+                    });
+            });
+
+            // 2. IBALIK NATIN ANG ROLE FILTERING (Para sa dropdown sa frontend)
+            if ($role && ($role === 'librarian' || $role === 'patron')) {
+                $users->where('role', $role);
+            } else {
+                // Kung walang piniling role sa filter, ipakita pareho ang mga librarian at patron sa campus na yon (bawal admin)
+                $users->where('role', '!=', 'admin');
+            }
+
+        } elseif ($user->role === 'admin') {
+            // Kung admin, walang campus isolation. Pero pwede pa rin siya mag-filter ng role kung gusto niya.
+            if ($role) {
+                $users->where('role', $role);
+            }
+        } else {
+            return response()->json(['status' => 'error', 'message' => 'Forbidden'], 403);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $users->get(),
+        ]);
     }
 
     /**
@@ -31,21 +76,21 @@ class UsersController extends Controller
      */
     public function store(StoreUsersRequest $request)
     {
-        $user = Users::create([
-        'first_name' => $request->first_name,
-        'last_name' => $request->last_name,
-        'username' => $request->username,
-        'password' => Hash::make($request->password),
-        'role' => $request->role,
-    ]);
+        $user = User::create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'username' => $request->username,
+            'password' => Hash::make($request->password),
+            'role' => $request->role,
+        ]);
 
-    return response()->json($user, 201);
+        return response()->json($user, 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Users $users)
+    public function show(User $users)
     {
         //
     }
@@ -53,7 +98,7 @@ class UsersController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Users $users)
+    public function edit(User $users)
     {
         //
     }
@@ -61,7 +106,7 @@ class UsersController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateUsersRequest $request, Users $users)
+    public function update(UpdateUsersRequest $request, User $users)
     {
         //
     }
@@ -69,7 +114,7 @@ class UsersController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Users $users)
+    public function destroy(User $users)
     {
         //
     }

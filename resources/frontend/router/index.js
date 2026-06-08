@@ -14,6 +14,12 @@ const router = createRouter({
       path: '/',
       name: 'Home',
       component: () => import('../pages/LandingPage.vue'),
+      // redirect: { name: 'Login' },
+    },
+    {
+      path: '/login',
+      name: 'Login',
+      component: () => import('@/pages/auth/LoginPage.vue'),
     },
     {
       path: '/practice',
@@ -37,13 +43,11 @@ const router = createRouter({
 
 export let lastRoute = null
 
-router.beforeEach((to, from) => {
+router.beforeEach(async (to, from) => {
   const my = useUserStore()
   const accessRoles = to.meta?.role
 
   lastRoute = from
-  console.log('Last Page:', lastRoute.name)
-  console.log(`RBAC: ${accessRoles}`)
 
   document.title = to.meta.title ?? 'e-Libra: The ISU-1 Library Management and Resource Monitoring System'
 
@@ -52,7 +56,11 @@ router.beforeEach((to, from) => {
   }
 
   if (to.meta.requiresFlow && !accessRoles.split(',').includes(my.role)) {
-    return { name: 'Forbidden' }
+    if (my.token && !my.role) {
+      await my.getUser()
+    } else {
+      return { name: 'Forbidden' }
+    }
   }
 })
 

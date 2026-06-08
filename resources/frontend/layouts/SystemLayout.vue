@@ -8,8 +8,10 @@
         <img :src="images.isu" class="h-9 w-auto mr-3" />
 
         <div class="flex flex-col">
-          <h4 class="font-bold text-lg text-primary">Isabela State University - Global</h4>
-          <p class="text-neutral-500">Library Management System</p>
+          <h4 class="font-bold text-lg text-primary">Isabela State University - {{ campus }}</h4>
+          <p class="text-neutral-500">
+            Primary Role: <span class="font-bold capitalize">{{ my.librarian.sub_roles?.primary_role?.name }}</span>
+          </p>
         </div>
 
         <div class="ml-auto flex flex-col text-end">
@@ -55,8 +57,16 @@ import { useRoute } from 'vue-router'
 
 import formatDate from '@/utilities/date'
 import formatTime from '@/utilities/time'
+import { useUserStore } from '@/stores/auth'
 
 const time = ref(formatTime('full'))
+const my = useUserStore()
+
+const campus = computed(() => {
+  if (my.role === 'librarian') {
+    return my.campus?.name
+  }
+})
 
 let interval
 

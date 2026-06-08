@@ -27,20 +27,14 @@ return new class extends Migration
             $table->string('email')->nullable()->unique();
             $table->timestamp('email_verified_at')->nullable();
 
+            $table->string('username')->nullable()->unique();
+            $table->string('password');
+
             $table->enum('role', ['admin', 'librarian', 'patron']);
-
             $table->uuid('code')->unique()->nullable();
-
             $table->enum('status', ['active', 'inactive', 'suspended', 'expired'])->default('active');
 
-            $table->unsignedTinyInteger('login_attempts')
-                ->default(0);
-
-            $table->string('username')
-                ->nullable()
-                ->unique();
-
-            $table->string('password');
+            $table->unsignedTinyInteger('login_attempts')->default(0);
 
             $table->unsignedBigInteger('profile_picture_id')->nullable();
 

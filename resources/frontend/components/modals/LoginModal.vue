@@ -1,5 +1,5 @@
 <template>
-  <ModalLayout ref="login" :hasInputs="!!(username || password)">
+  <ModalLayout ref="login" :hasInputs="!!hasInputs">
     <section class="flex flex-col items-center p-10 gap-2">
       <div class="flex flex-col items-center mb-3 gap-3">
         <div class="flex items-center gap-1 h-15 mb-1">
@@ -11,16 +11,10 @@
       </div>
 
       <form @submit.prevent="submit" class="flex flex-col w-full gap-4 mt-5">
-        <div class="flex flex-col gap-2">
-          <label for="username" class="text-sm text-primary">Username/ID-Number/Email</label>
-          <input type="text" class="bg-white rounded-sm shadow border border-primary px-3 py-2" placeholder="juandelacruz" v-model="username" />
-        </div>
-        <div class="flex flex-col gap-2">
-          <label for="username" class="text-sm text-primary">Password</label>
-          <input type="password" class="bg-white rounded-sm shadow border border-primary px-3 py-2" placeholder="************" v-model="password" />
-        </div>
-        <a href="#" class="text-sm hover:underline underline-offset-2 text-primary text-end mr-1">Forgot Password?</a>
-        <Button type="solid" color="primary" label="Login" />
+        <BaseInput label="Username" name="username" placeholder="Username / Email / ID Number" type="username" required autocomplete v-model="username" />
+        <BaseInput label="Password" name="password" placeholder="Enter your password" type="password" required v-model="password" />
+        <router-link to="#" class="text-sm hover:underline underline-offset-2 text-primary text-end mr-1 ml-auto">Forgot Password?</router-link>
+        <Button type="solid" color="primary" label="Login" :isLoading="isLoading" />
         <span class="text-center text-sm">A patron but doesn't have an account yet? <a href="" class="text-primary hover:underline">Create now</a></span>
       </form>
     </section>
@@ -32,14 +26,48 @@ import { ref, watch } from 'vue'
 import ModalLayout from '@/layouts/ModalLayout.vue'
 import images from '@/assets/images'
 import Button from '../buttons/Button.vue'
+import BaseInput from '../BaseInput.vue'
+import api from '@/plugins/axios.js'
+import { useUserStore } from '@/stores/auth.js'
+import elpop from '@/plugins/elpop.js'
 
 const login = ref(null)
 const username = ref('')
 const password = ref('')
+const isLoading = ref(false)
+const hasInputs = ref(username.value || password.value)
 
-function submit() {
-  console.log('Username: ', username.value)
-  console.log('Password: ', password.value)
+const my = useUserStore()
+
+async function submit() {
+  isLoading.value = true
+
+  await api
+    .post('/auth/login', {
+      username: username.value,
+      password: password.value,
+    })
+    .then(async (res) => {
+      if (res.data.status === 'success') {
+        my.setToken(res.data.token)
+
+        my.home()
+        resetModal()
+      }
+    })
+    .catch((err) => {
+      elpop.error(err.response.data.message)
+    })
+
+  isLoading.value = false
+}
+
+function resetModal() {
+  username.value = ''
+  password.value = ''
+  hasInputs.value = false
+
+  login.value?.close()
 }
 
 defineExpose({

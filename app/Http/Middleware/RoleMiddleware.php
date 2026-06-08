@@ -13,12 +13,12 @@ class RoleMiddleware
      *
      * @param  Closure(Request): (Response)  $next
      */
-    public function handle(Request $request, Closure $next, $role): Response
+    public function handle(Request $request, Closure $next, ...$role): Response
     {
         $user = auth('api')->user();
 
         // Ligtas na check: Kung walang user O hindi admin ang role, block agad!
-        if (!$user || $user->role != $role) {
+        if (! $user || ! in_array($user->role, $role)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 

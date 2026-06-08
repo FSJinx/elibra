@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Programs;
 use Illuminate\Database\Seeder;
 
 class ProgramsSeeder extends Seeder
@@ -12,6 +12,10 @@ class ProgramsSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        Programs::create([
+            'name' => 'bachelor of science in information technology',
+            'code' => 'bsit',
+            'department_id' => 1,
+        ]);
     }
 }

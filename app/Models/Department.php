@@ -17,4 +17,14 @@ class Department extends Model
         'code',
         'campus_id',
     ];
+
+    public function program()
+    {
+        return $this->hasMany(Programs::class);
+    }
+
+    public function campus()
+    {
+        return $this->belongsTo(Campus::class, 'campus_id');
+    }
 }

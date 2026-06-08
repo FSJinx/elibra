@@ -1,90 +1,104 @@
 <template>
-  <button class="flex items-center justify-center gap-1 text-center cursor-pointer border transition-all duration-200" :class="[btnDesign]" :type="props.type">
-    <SpinnerLoading size="sm" v-if="isLoading" />
+  <button class="flex items-center justify-center gap-1 text-center border transition-all duration-200" :class="[btnDesign, { [`${setHover} cursor-pointer`]: !isLoading && !disabled }]" :type="props.type" :disabled="isLoading || disabled">
+    <BarsLoading size="sm" v-if="isLoading" class="mr-2" />
 
-    <component :is="icon" :class="iconSize" v-if="icon && !isLoading" />
-    <span v-if="label" class="">{{ label }}</span>
+    <template v-else>
+      <component :is="icon" :class="iconSize" v-if="icon && !isLoading" />
+      <span v-if="label" class="">{{ label }}</span>
+    </template>
   </button>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
 import SpinnerLoading from '../loading/SpinnerLoading.vue'
+import BubbleLoading from '../loading/BubbleLoading.vue'
+import BarsLoading from '../loading/BarsLoading.vue'
 
-//#region Prop Definition
-/**
- * @typedef { 'solid' | 'outline' | 'outline-solid' } Variants
- * @typedef { 'rounded' | 'circle' } Border
- * @typedef { 'small' | 'default' | 'large' } Sizes
- * @typedef { 'button' | 'submit' } Type
- * @typedef { 'primary' | 'default' | 'blue' | 'green' | 'red' | 'yellow' } Color
- */
-//#endregion
+const props = withDefaults(
+  defineProps<{
+    // Content
+    label?: string
+    icon?: string
 
-const props = defineProps({
-  // Content
-  label: String,
-  icon: String,
+    // Design
+    variant?: 'solid' | 'outline' | 'outline-solid'
+    border?: 'rounded' | 'circle'
+    size?: 'small' | 'default' | 'large'
+    type?: 'button' | 'submit'
+    color?: 'primary' | 'default' | 'blue' | 'green' | 'red' | 'yellow'
 
-  // Design
-  variant: {
-    /** @type {import('vue').PropType<Variants>} */
-    type: String,
-    default: 'solid',
+    //   State
+    isLoading?: boolean
+    disabled?: boolean
+  }>(),
+  {
+    variant: 'solid',
+    rounded: 'rounded',
+    size: 'default',
+    type: 'button',
+    color: 'default',
   },
-  border: {
-    /** @type {import('vue').PropType<Border>} */
-    type: String,
-    default: 'rounded',
-  },
-  size: {
-    /**type {import('vue').PropType<Sizes>} */
-    type: String,
-    default: 'default',
-  },
-  type: {
-    /** @type {import('vue').PropType<Type>} */
-    type: String,
-    default: 'button',
-  },
-  color: {
-    /** @type {import('vue').PropType<Color>} */
-    type: String,
-    default: 'default',
-  },
-
-  //   State
-  isLoading: { type: Boolean, default: false },
-  disabled: { type: Boolean, default: false },
-})
+)
 
 const btnDesign = computed(() => [getVariant.value, getSize.value, getBorder.value])
 
 const getVariant = computed(() => {
   const colors = {
     solid: {
-      default: 'text-white bg-gray-500 border-gray-500 hover:bg-gray-600',
-      primary: 'text-white bg-primary border-primary hover:bg-green-700',
-      green: 'text-white bg-green-500 border-green-500 hover:bg-green-600',
-      blue: 'text-white bg-blue-500 border-blue-500 hover:bg-blue-600',
-      red: 'text-white bg-red-500 border-red-500 hover:bg-red-600',
-      yellow: 'text-white bg-yellow-500 border-yellow-500 hover:bg-yellow-600',
+      default: 'text-white bg-gray-500 border-gray-500',
+      primary: 'text-white bg-primary border-primary',
+      green: 'text-white bg-green-500 border-green-500',
+      blue: 'text-white bg-blue-500 border-blue-500',
+      red: 'text-white bg-red-500 border-red-500',
+      yellow: 'text-white bg-yellow-500 border-yellow-500',
     },
     outline: {
-      default: 'text-gray-700 bg-gray-50 border-gray-400 hover:bg-gray-100',
-      primary: 'text-primary bg-white border-primary hover:bg-primary/5',
-      green: 'text-green-500 bg-white border-green-500 hover:bg-green-50',
-      blue: 'text-blue-500 bg-white border-blue-500 hover:bg-blue-50',
-      red: 'text-red-500 bg-white border-red-500 hover:bg-red-50',
-      yellow: 'text-yellow-600 bg-white border-yellow-500 hover:bg-yellow-50',
+      default: 'text-gray-700 bg-gray-50 border-gray-400',
+      primary: 'text-primary bg-white border-primary',
+      green: 'text-green-500 bg-white border-green-500',
+      blue: 'text-blue-500 bg-white border-blue-500',
+      red: 'text-red-500 bg-white border-red-500',
+      yellow: 'text-yellow-600 bg-white border-yellow-500',
     },
     'outline-solid': {
-      default: 'text-gray-700 bg-gray-50 border-gray-400 hover:bg-gray-500 hover:text-white',
-      primary: 'text-primary bg-white border-primary  hover:bg-primary hover:text-white',
-      green: 'text-green-500 bg-white border-green-500  hover:bg-green-500 hover:text-white',
-      blue: 'text-blue-500 bg-white border-blue-500  hover:bg-blue-500 hover:text-white',
-      red: 'text-red-500 bg-white border-red-500  hover:bg-red-500 hover:text-white',
-      yellow: 'text-yellow-600 bg-white border-yellow-500  hover:bg-yellow-500 hover:text-white',
+      default: 'text-gray-700 bg-gray-50 border-gray-400',
+      primary: 'text-primary bg-white border-primary ',
+      green: 'text-green-500 bg-white border-green-500 ',
+      blue: 'text-blue-500 bg-white border-blue-500 ',
+      red: 'text-red-500 bg-white border-red-500 ',
+      yellow: 'text-yellow-600 bg-white border-yellow-500 ',
+    },
+  }
+
+  return colors[props.variant ?? 'solid'][props.isLoading || props.disabled ? 'default' : props.color]
+})
+
+const setHover = computed(() => {
+  const colors = {
+    solid: {
+      default: 'hover:bg-gray-600',
+      primary: 'hover:bg-green-700',
+      green: 'hover:bg-green-600',
+      blue: 'hover:bg-blue-600',
+      red: 'hover:bg-red-600',
+      yellow: 'hover:bg-yellow-600',
+    },
+    outline: {
+      default: 'hover:bg-gray-100',
+      primary: 'hover:bg-primary/5',
+      green: 'hover:bg-green-50',
+      blue: 'hover:bg-blue-50',
+      red: 'hover:bg-red-50',
+      yellow: 'hover:bg-yellow-50',
+    },
+    'outline-solid': {
+      default: 'hover:bg-gray-500 hover:text-white',
+      primary: 'hover:bg-primary hover:text-white',
+      green: 'hover:bg-green-500 hover:text-white',
+      blue: 'hover:bg-blue-500 hover:text-white',
+      red: 'hover:bg-red-500 hover:text-white',
+      yellow: 'hover:bg-yellow-500 hover:text-white',
     },
   }
 

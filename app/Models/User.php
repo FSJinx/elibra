@@ -2,17 +2,16 @@
 
 namespace App\Models;
 
-use Database\Factories\UsersFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class Users extends Authenticatable implements JWTSubject
+class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, SoftDeletes;
 
-     protected $hidden = [
+    protected $hidden = [
         'password',
     ];
 

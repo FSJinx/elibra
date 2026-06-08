@@ -66,11 +66,26 @@ const elpop = {
     })
   },
 
-  showSuccess(message = 'Success', timer = 2000) {
+  success(message = 'Success', timer = 2000) {
     this.close()
 
     this.pop('success', {
       title: 'Success',
+      message,
+      duration: timer,
+    })
+
+    this.popupDuration = setTimeout(() => {
+      this.close()
+      this.popupDuration = null
+    }, timer)
+  },
+
+  error(message = 'Error', timer = 2000) {
+    this.close()
+
+    this.pop('error', {
+      title: 'Error',
       message,
       duration: timer,
     })

@@ -17,19 +17,25 @@ class Patron extends Model
         'external_organization',
         'date_joined',
         'account_expiry',
-        'user_id',
-        'program_id',
-        'patron_type_id',
         'remarks',
+
+        'user_id',
+        'patron_type_id',
+        'program_id',
     ];
 
     public function user()
     {
-        return $this->belongsTo(Users::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function patronType()
     {
-        return $this->belongsTo(PatronType::class);
+        return $this->belongsTo(PatronType::class, 'patron_type_id');
+    }
+
+    public function program()
+    {
+        return $this->belongsTo(Programs::class, 'program_id');
     }
 }

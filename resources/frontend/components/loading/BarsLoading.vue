@@ -1,19 +1,37 @@
 <template>
-  <div class="bubble-wrapper flex items-center gap-1 w-max" role="status" aria-label="loading">
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
+  <div class="bubble-wrapper flex items-center gap-1 w-max h-6" role="status" aria-label="loading">
+    <div class="bubble" :class="[color]"></div>
+    <div class="bubble" :class="[color]"></div>
+    <div class="bubble" :class="[color]"></div>
+    <div class="bubble" :class="[color]"></div>
+    <div class="bubble" :class="[color]"></div>
   </div>
 </template>
 
-<script setup></script>
+<script setup lang="ts">
+import { computed } from 'vue'
+
+const props = withDefaults(
+  defineProps<{
+    color?: 'primary' | 'default'
+  }>(),
+  {
+    color: 'default',
+  },
+)
+const color = computed(() => {
+  const colors = {
+    default: 'bg-gray-200',
+    primary: 'bg-primary',
+  }
+
+  return colors[props.color]
+})
+</script>
 
 <style scoped>
 .bubble {
-  width: 15px;
-  background-color: var(--color-primary);
+  width: 10px;
 
   animation: bubble 1.5s linear infinite;
 }

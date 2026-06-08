@@ -14,6 +14,14 @@ class Programs extends Model
     protected $fillable = [
         'name',
         'code',
+        'department_id'
     ];
     
+    public function patron() {
+        return $this->hasMany(Patron::class);
+    }
+
+    public function department() {
+        return $this->belongsTo(Department::class, 'department_id');
+    }
 }

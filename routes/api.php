@@ -6,26 +6,25 @@ use App\Http\Controllers\CampusController;
 use App\Http\Controllers\LibrarianController;
 use App\Http\Controllers\PatronController;
 use App\Http\Controllers\UsersController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
-
-
-
-
 
 // Authentication Routes
 Route::group(['prefix' => '/auth'], function () {
+    Route::get('', [AuthController::class, 'index']);
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/registration', [AuthController::class, 'registration']);
 });
 
+Route::get('/campus', [CampusController::class, 'index']);
 
-
+// Users Route
+Route::group(['prefix' => '/users', 'middleware' => ['auth:api', 'role:admin,librarian']], function () {
+    Route::get('', [UsersController::class, 'index']);
+});
 
 // Admin Routes
 Route::group(['prefix' => '/admin', 'middleware' => ['auth:api', 'role:admin']], function () {
-    
+
     Route::group(['prefix' => 'get'], function () {
         Route::get('user', [AdminController::class, 'getUser']);
     });
@@ -37,7 +36,7 @@ Route::group(['prefix' => '/admin', 'middleware' => ['auth:api', 'role:admin']],
 
 // Librarian Routes
 Route::group(['prefix' => '/librarian', 'middleware' => ['auth:api', 'role:librarian']], function () {
-    
+
     Route::group(['prefix' => 'get'], function () {
         Route::get('user', [AdminController::class, 'getUser']);
     });
@@ -49,7 +48,7 @@ Route::group(['prefix' => '/librarian', 'middleware' => ['auth:api', 'role:libra
 
 // Patron Routes
 Route::group(['prefix' => '/patron', 'middleware' => ['auth:api', 'role:patron']], function () {
-    
+
     Route::group(['prefix' => 'get'], function () {
         Route::get('user', [AdminController::class, 'getUser']);
     });
@@ -58,10 +57,6 @@ Route::group(['prefix' => '/patron', 'middleware' => ['auth:api', 'role:patron']
         Route::post('user', [AdminController::class, 'storeUser']);
     });
 });
-
-
-
-Route::get('/campus', [CampusController::class, 'index']);
 
 // Route::middleware('jwt.auth')->group(function () {
 
@@ -87,4 +82,3 @@ Route::get('/campus', [CampusController::class, 'index']);
 //     });
 
 // });
-

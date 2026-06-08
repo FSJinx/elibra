@@ -24,12 +24,12 @@
     </div>
 
     <!-- Bottom Toggle Button -->
-    <div class="h-21 border-t mt-auto z-2 bg-white" :class="[pad, border]">
-      <span class="flex h-full items-center text-lg gap-2 rounded cursor-pointer select-none hover:bg-gray-200" :class="[pad]" @click="mini.toggleMini()">
+    <div class="h-21 border-t mt-auto z-2 bg-white p-3" :class="[border]">
+      <span class="flex h-full items-center text-lg gap-2 p-3 rounded cursor-pointer select-none hover:bg-gray-200" @click="mini.toggleMini()" ref="miniBtn">
         <img :src="images.isu" alt="" class="h-8 w-auto" />
         <span class="flex flex-col justify-center w-[80%] gap-0.5">
-          <p class="text-sm text-ellipsis whitespace-nowrap overflow-hidden w-[90%]">{{ my.fullname }}</p>
-          <p class="text-xs text-neutral-400">{{ roleMap[my.role].long }}</p>
+          <p class="text-sm text-ellipsis whitespace-nowrap overflow-hidden capitalize w-[90%]">{{ my.fullName }}</p>
+          <p class="text-xs text-neutral-400">{{ roleMap[my.role]?.long }}</p>
         </span>
         <ChevronUp class="ml-auto transition duration-200" :class="[state.show ? 'rotate-180' : '']" />
       </span>
@@ -37,19 +37,24 @@
 
     <!-- Mini Popup -->
     <Transition name="mini">
-      <div class="flex items-end pb-21 justify-center h-full w-full absolute bottom-0 left-0 bg-black/20 z-1" :class="[pad]" v-if="state.show" @click="mini.toggleMini()">
-        <div class="mini-card w-full bg-white rounded-lg p-2 mb-3 transform" @click.stop>
+      <div class="flex items-end pb-21 justify-center h-full w-full absolute bottom-0 left-0 bg-black/20 z-1" :class="[pad]" v-if="state.show">
+        <div class="mini-card flex flex-col gap-2 w-full bg-white rounded-lg p-2 mb-3 transform" ref="miniRef">
           <div class="flex flex-col items-center justify-center gap-2 py-4">
             <img :src="images.isu" alt="" class="h-20 w-20" />
-            <p class="text-sm font-bold">Administrator</p>
+            <p class="text-sm font-bold capitalize">{{ my.fullName }}</p>
+            <p class="text-xs">{{ `@${my.username ?? 'No username'}  |  ${roleMap[my.role].short}` }}</p>
           </div>
-          <span class="flex items-center w-full gap-3 rounded cursor-pointer hover:bg-green-100" :class="[pad]">
+          <span class="flex items-center w-full gap-3 p-3 rounded cursor-pointer hover:bg-gray-200">
             <UserCircle class="h-5 w-5" />
             <p class="text-sm">Profile</p>
           </span>
-          <span class="flex items-center w-full gap-3 rounded cursor-pointer hover:bg-green-100" :class="[pad]">
+          <span class="flex items-center w-full gap-3 p-3 rounded cursor-pointer hover:bg-gray-200">
             <Settings class="h-5 w-5" />
             <p class="text-sm">Settings</p>
+          </span>
+          <span class="flex items-center w-full gap-3 p-3 rounded cursor-pointer border border-red-500 text-red-500 hover:bg-red-500 hover:text-white">
+            <DoorOpen class="h-5 w-5" />
+            <p class="text-sm">Logout</p>
           </span>
         </div>
       </div>
@@ -60,14 +65,19 @@
 <script setup>
 import images from '@/assets/images'
 import BannerComponent from '@/components/public/BannerComponent.vue'
-import { roleMap } from '@/constants/roleMap'
 import menu from '@/constants/sidebar'
+
+import { roleMap } from '@/constants/roleMap'
 import { useUserStore } from '@/stores/auth'
+import { onClickOutside } from '@vueuse/core'
 import { reactive, ref } from 'vue'
 
 const pad = ref('px-3 py-4')
 const border = ref('border-gray-200')
 const my = useUserStore()
+
+const miniRef = ref(null)
+const miniBtn = ref(null)
 
 const state = reactive({
   show: false,
@@ -79,12 +89,28 @@ const mini = {
   toggleMini() {
     state.show = !state.show
   },
+
+  closeMini() {
+    state.show = false
+  },
 }
+
+onClickOutside(
+  miniRef,
+  () => {
+    if (state.show) mini.closeMini()
+  },
+  { ignore: [miniBtn] },
+)
 </script>
 
 <style>
 ::-webkit-scrollbar {
   width: 0;
+}
+
+.mini-card span {
+  transition: all 0.1s ease;
 }
 
 /* Overlay */

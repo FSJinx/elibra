@@ -21,7 +21,7 @@ class Librarian extends Model
 
     public function user()
     {
-        return $this->belongsTo(Users::class);
+        return $this->belongsTo(User::class);
     }
 
     public function role()
@@ -31,6 +31,11 @@ class Librarian extends Model
 
     public function branch()
     {
-        return $this->belongsTo(Branch::class);
+        return $this->belongsTo(Branch::class, 'branch_id');
+    }
+
+    public function primary_role()
+    {
+        return $this->belongsTo(LibraryRole::class, 'primary_role_id');
     }
 }

@@ -14,4 +14,8 @@ class LibraryRole extends Model
     protected $fillable = [
         'name',
     ];
+
+    public function librarian() {
+        return $this->hasMany(Librarian::class);
+    }
 }

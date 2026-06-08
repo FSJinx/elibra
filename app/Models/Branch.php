@@ -23,4 +23,14 @@ class Branch extends Model
         'branch_head_id',
         'campus_id',
     ];
+
+    public function campus()
+    {
+        return $this->belongsTo(Campus::class);
+    }
+
+    public function librarian()
+    {
+        return $this->hasMany(Librarian::class);
+    }
 }

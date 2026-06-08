@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Department;
 use Illuminate\Database\Seeder;
 
 class DepartmentSeeder extends Seeder
@@ -12,6 +12,10 @@ class DepartmentSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        Department::create([
+            'name' => 'College of Computing Studies, Information, and Communication Technology',
+            'code' => 'ccsict',
+            'campus_id' => 1,
+        ]);
     }
 }
