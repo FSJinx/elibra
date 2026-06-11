@@ -5,7 +5,7 @@ import errorRoutes from './errorRoutes'
 import publicRoutes from './publicRoute'
 
 import { roleMap } from '@/constants/roleMap'
-import { useUserStore } from '@/stores/auth'
+import { authStore } from '@/stores/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,7 +44,7 @@ const router = createRouter({
 export let lastRoute = null
 
 router.beforeEach(async (to, from) => {
-  const my = useUserStore()
+  const my = authStore()
   const accessRoles = to.meta?.role
 
   lastRoute = from
@@ -55,8 +55,8 @@ router.beforeEach(async (to, from) => {
     return { name: 'ServiceUnavailable' }
   }
 
-  if (to.meta.requiresFlow && !accessRoles.split(',').includes(my.role)) {
-    if (my.token && !my.role) {
+  if (to.meta.requiresFlow && !accessRoles.split(',').includes(my.user?.role)) {
+    if (my.token && !my.user?.role) {
       await my.getUser()
     } else {
       return { name: 'Forbidden' }

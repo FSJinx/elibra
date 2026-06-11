@@ -22,52 +22,57 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import ModalLayout from '@/layouts/ModalLayout.vue'
 import images from '@/assets/images'
 import Button from '../buttons/Button.vue'
 import BaseInput from '../BaseInput.vue'
 import api from '@/plugins/axios.js'
-import { useUserStore } from '@/stores/auth.js'
+import { authStore } from '@/stores/auth.js'
 import elpop from '@/plugins/elpop.js'
 
 const login = ref(null)
 const username = ref('')
 const password = ref('')
 const isLoading = ref(false)
-const hasInputs = ref(username.value || password.value)
 
-const my = useUserStore()
+const my = authStore()
+
+const hasInputs = computed(() => {
+  return username.value.length > 0 || password.value.length > 0
+})
 
 async function submit() {
   isLoading.value = true
 
-  await api
-    .post('/auth/login', {
+  try {
+    const login = await api.post('/auth/login', {
       username: username.value,
       password: password.value,
     })
-    .then(async (res) => {
-      if (res.data.status === 'success') {
-        my.setToken(res.data.token)
 
-        my.home()
+    if (login && login.data.status === 'success') {
+      await my.setToken(login.data.data.token)
+      await my.getUser()
+
+      my.home()
+
+      Promise.resolve(() => {
         resetModal()
-      }
-    })
-    .catch((err) => {
-      elpop.error(err.response.data.message)
-    })
-
-  isLoading.value = false
+      })
+    }
+  } catch (err) {
+  } finally {
+    isLoading.value = false
+  }
 }
 
 function resetModal() {
   username.value = ''
   password.value = ''
-  hasInputs.value = false
 
   login.value?.close()
+  console.log('A reset is triggered')
 }
 
 defineExpose({

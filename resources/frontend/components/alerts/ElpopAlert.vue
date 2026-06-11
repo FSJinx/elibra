@@ -17,14 +17,14 @@
           </div>
 
           <!-- MESSAGE -->
-          <p class="text-gray-500" v-if="popup.message">
+          <p class="text-gray-500 text-center" v-if="popup.message">
             {{ popup.message }}
           </p>
 
           <loading-animation v-if="popup.type === 'load'" />
 
           <div class="flex justify-center gap-2 mt-2" v-if="popup.withButtons">
-            <Button label="Cancel" type="solid" color="red" @click="elpop.close()" />
+            <Button label="Close" type="solid" color="red" @click="elpop.close()" />
           </div>
 
           <div class="w-full h-1 absolute bottom-0 left-0 timer" :class="bgColor[popup.type]" v-if="popup.duration > 0" :style="{ animationDuration: `${popup.duration - 100}ms` }"></div>
@@ -72,7 +72,6 @@ const cardDesign = computed(() => {
 
   return card
 })
-
 </script>
 
 <style scoped>

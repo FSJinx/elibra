@@ -1,19 +1,28 @@
 <?php
 
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CampusController;
 use App\Http\Controllers\LibrarianController;
 use App\Http\Controllers\PatronController;
+use App\Http\Controllers\TestController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
 
 // Authentication Routes
 Route::group(['prefix' => '/auth'], function () {
-    Route::get('', [AuthController::class, 'index']);
-    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/login', [LoginController::class, 'index']);
     Route::post('/registration', [AuthController::class, 'registration']);
+
+    Route::group(['middleware' => 'jwt.auth'], function () {
+        Route::get('', [AuthController::class, 'index']);
+    });
+    Route::post('/refresh', [AuthController::class, 'refresh'])->middleware('jwt.refresh');
 });
+
+// Public Routes
+Route::get('/try', [TestController::class, 'index']);
 
 Route::get('/campus', [CampusController::class, 'index']);
 

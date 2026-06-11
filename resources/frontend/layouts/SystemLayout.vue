@@ -10,7 +10,7 @@
         <div class="flex flex-col">
           <h4 class="font-bold text-lg text-primary">Isabela State University - {{ campus }}</h4>
           <p class="text-neutral-500">
-            Primary Role: <span class="font-bold capitalize">{{ my.librarian.sub_roles?.primary_role?.name }}</span>
+            Primary Role: <span class="font-bold capitalize">{{ my.librarian?.sub_roles?.primary_role?.name || 'No assigned role' }}</span>
           </p>
         </div>
 
@@ -57,13 +57,14 @@ import { useRoute } from 'vue-router'
 
 import formatDate from '@/utilities/date'
 import formatTime from '@/utilities/time'
-import { useUserStore } from '@/stores/auth'
+import { authStore } from '@/stores/auth'
 
 const time = ref(formatTime('full'))
-const my = useUserStore()
+const auth = authStore()
+const my = auth.user
 
 const campus = computed(() => {
-  if (my.role === 'librarian') {
+  if (my?.role === 'librarian') {
     return my.campus?.name
   }
 })

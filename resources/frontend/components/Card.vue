@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center p-3 rounded-md shadow border border-gray-200 bg-white">
+  <div class="flex flex-col items-center p-3 rounded-md shadow border border-gray-200 bg-white">
     <slot />
   </div>
 </template>

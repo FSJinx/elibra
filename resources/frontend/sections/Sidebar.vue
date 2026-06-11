@@ -28,7 +28,7 @@
       <span class="flex h-full items-center text-lg gap-2 p-3 rounded cursor-pointer select-none hover:bg-gray-200" @click="mini.toggleMini()" ref="miniBtn">
         <img :src="images.isu" alt="" class="h-8 w-auto" />
         <span class="flex flex-col justify-center w-[80%] gap-0.5">
-          <p class="text-sm text-ellipsis whitespace-nowrap overflow-hidden capitalize w-[90%]">{{ my.fullName }}</p>
+          <p class="text-sm text-ellipsis whitespace-nowrap overflow-hidden capitalize w-[90%]">{{ auth.fullName }}</p>
           <p class="text-xs text-neutral-400">{{ roleMap[my.role]?.long }}</p>
         </span>
         <ChevronUp class="ml-auto transition duration-200" :class="[state.show ? 'rotate-180' : '']" />
@@ -38,10 +38,10 @@
     <!-- Mini Popup -->
     <Transition name="mini">
       <div class="flex items-end pb-21 justify-center h-full w-full absolute bottom-0 left-0 bg-black/20 z-1" :class="[pad]" v-if="state.show">
-        <div class="mini-card flex flex-col gap-2 w-full bg-white rounded-lg p-2 mb-3 transform" ref="miniRef">
+        <Card class="mini-card w-full mb-3 transform" ref="miniRef">
           <div class="flex flex-col items-center justify-center gap-2 py-4">
             <img :src="images.isu" alt="" class="h-20 w-20" />
-            <p class="text-sm font-bold capitalize">{{ my.fullName }}</p>
+            <p class="text-sm font-bold capitalize">{{ auth.fullName }}</p>
             <p class="text-xs">{{ `@${my.username ?? 'No username'}  |  ${roleMap[my.role].short}` }}</p>
           </div>
           <span class="flex items-center w-full gap-3 p-3 rounded cursor-pointer hover:bg-gray-200">
@@ -56,7 +56,7 @@
             <DoorOpen class="h-5 w-5" />
             <p class="text-sm">Logout</p>
           </span>
-        </div>
+        </Card>
       </div>
     </Transition>
   </aside>
@@ -68,13 +68,15 @@ import BannerComponent from '@/components/public/BannerComponent.vue'
 import menu from '@/constants/sidebar'
 
 import { roleMap } from '@/constants/roleMap'
-import { useUserStore } from '@/stores/auth'
+import { authStore } from '@/stores/auth'
 import { onClickOutside } from '@vueuse/core'
 import { reactive, ref } from 'vue'
+import Card from '@/components/Card.vue'
 
 const pad = ref('px-3 py-4')
 const border = ref('border-gray-200')
-const my = useUserStore()
+const auth = authStore()
+const my = auth?.user
 
 const miniRef = ref(null)
 const miniBtn = ref(null)

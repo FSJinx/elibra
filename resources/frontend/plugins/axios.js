@@ -1,7 +1,9 @@
 // src/plugins/axios.js
-import { useUserStore } from '@/stores/auth'
+import { authStore } from '@/stores/auth'
 
 import axios from 'axios'
+import elpop from './elpop'
+import router from '@/router'
 
 export const backendRoute = `${import.meta.env.VITE_APP_URL}/api`
 
@@ -9,14 +11,15 @@ const api = axios.create({
   baseURL: backendRoute,
 })
 
+let refreshed = false
+
 // Request interceptor: inject token if exists
 api.interceptors.request.use(
   async (config) => {
-    const my = useUserStore()
-    const token = my.token
+    const my = authStore()
 
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`
+    if (my.token) {
+      config.headers.Authorization = `Bearer ${my.token}`
     }
     return config
   },
@@ -24,51 +27,53 @@ api.interceptors.request.use(
 )
 
 api.interceptors.response.use(
-  res => res,
+  (res) => res,
   async (error) => {
-    const originalRequest = error.config
+    const my = authStore()
+    const status = error.response?.status
+    const response = error.response?.data
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true
-      
-      
+    if (status === 401) {
+      if (refreshed) {
+        my.clearUser()
+        elpop.error('Session expired, please re-login to continue.')
+        router.push({ name: 'Home' })
+        return Promise.reject(error)
+      }
+
+      refreshed = true
+      try {
+        const refreshResponse = await api.post('auth/refresh')
+        const newToken = refreshResponse.data?.data?.token
+
+        if (!newToken) {
+          throw error
+        }
+
+        await my.setToken(newToken)
+        error.config.headers.Authorization = `Bearer ${newToken}`
+
+        return api(error.config)
+      } catch (refreshError) {
+        my.clearUser()
+        elpop.error('Session expired, please re-login to continue.')
+        router.push({ name: 'Home' })
+        return Promise.reject(refreshError)
+      } finally {
+        refreshed = false
+      }
     }
 
-  }
+    if (status === 403) {
+      elpop.error(response?.message || 'Access denied.')
+    }
+
+    if (status === 500) {
+      elpop.error('Server error, please try again later.')
+    }
+
+    return Promise.reject(error)
+  },
 )
 
 export default api
-
-// // handle token expiration / refresh
-// axios.interceptors.response.use(
-//   res => res,
-//   async error => {
-//     const originalRequest = error.config
-
-//     // only retry once
-//     if (error.response?.status === 401 && !originalRequest._retry) {
-//       originalRequest._retry = true
-//       try {
-//         const { data } = await axios.post('/refresh', null, {
-//           headers: { Authorization: `Bearer ${localStorage.getItem('refresh_token')}` }
-//         })
-
-//         localStorage.setItem('access_token', data.access_token)
-//         originalRequest.headers.Authorization = `Bearer ${data.access_token}`
-//         return axios(originalRequest) // retry original request
-//       } catch (refreshError) {
-//         // refresh failed → user really unauthorized
-//         logoutUser()
-//         return Promise.reject(refreshError)
-//       }
-//     }
-
-//     return Promise.reject(error)
-//   }
-// )
-
-// ✅ This applies to all API calls automatically.
-// ✅ Prevents infinite loops.
-// ✅ Only retries once per request.
-// ✅ Handles refresh token expiration gracefully.
-//#endregion

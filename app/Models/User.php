@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable implements JWTSubject
+class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, Notifiable, SoftDeletes;
 
     protected $hidden = [
         'password',
@@ -48,8 +50,18 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasOne(Librarian::class, 'user_id');
     }
 
+    public function section()
+    {
+        return $this->belongsTo($this->librarian(), 'section_id');
+    }
+
     public function patron()
     {
         return $this->hasOne(Patron::class, 'user_id');
+    }
+
+    public function program()
+    {
+        return $this->belongsTo($this->patron(), 'program_id');
     }
 }

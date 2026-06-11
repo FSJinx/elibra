@@ -34,7 +34,7 @@ const elpop = {
     state.title = options.title ?? ''
     state.message = options.message ?? ''
     state.withButtons = options.withButtons || false
-    state.duration = options.duration || 0
+    state.duration = state.withButtons ? 0 : options.duration
   },
 
   //   State
@@ -81,19 +81,14 @@ const elpop = {
     }, timer)
   },
 
-  error(message = 'Error', timer = 2000) {
+  error(message = 'Error') {
     this.close()
 
     this.pop('error', {
       title: 'Error',
       message,
-      duration: timer,
+      withButtons: true,
     })
-
-    this.popupDuration = setTimeout(() => {
-      this.close()
-      this.popupDuration = null
-    }, timer)
   },
 
   //   Dynamics
