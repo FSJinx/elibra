@@ -10,6 +10,11 @@ class AuthController extends Controller
     public function index()
     {
         $user = $this->auth()->user();
+
+        if (! $user) {
+            return response()->json(['message' => 'You are not logged in.'], 401);
+        }
+
         $data = [
             // Personal Info
             'last_name' => $user->last_name,
@@ -62,11 +67,10 @@ class AuthController extends Controller
 
             $user->librarian->unsetRelation('branch');
 
-            return $this->response(data: $data);    // 'campus' => $campus,    // 'branch' => $branch,    // 'sub_roles' => $sub_roles,);
-        } else {
-            return response()->json(['message' => 'You are not logged in.'], 401);
+            return $this->response(data: $data);
         }
 
+        return $this->response(data: $data);
     }
 
     public function refresh()

@@ -9,8 +9,11 @@
 
         <div class="flex flex-col">
           <h4 class="font-bold text-lg text-primary">Isabela State University - {{ campus }}</h4>
-          <p class="text-neutral-500">
-            Primary Role: <span class="font-bold capitalize">{{ my.librarian?.sub_roles?.primary_role?.name || 'No assigned role' }}</span>
+          <p class="text-neutral-500" v-if="my.role === 'librarian'">
+            Primary Role: <span class="font-bold capitalize">{{ my.library?.role?.primary_role || 'No assigned role' }}</span>
+          </p>
+          <p class="text-neutral-500" v-else">
+            Primary Role: <span class="font-bold capitalize">Administrator</span>
           </p>
         </div>
 
@@ -64,8 +67,10 @@ const auth = authStore()
 const my = auth.user
 
 const campus = computed(() => {
-  if (my?.role === 'librarian') {
-    return my.campus?.name
+  if (my.role === 'librarian') {
+    return my.library.campus?.name
+  } else if (my.role === 'admin') {
+    return 'Global'
   }
 })
 
