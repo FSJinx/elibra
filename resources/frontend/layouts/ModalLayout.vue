@@ -1,10 +1,23 @@
 <template>
   <Teleport to="body">
     <Transition name="fade">
-      <div v-if="isOpen" class="modal-wrapper fixed inset-0 flex items-center justify-center bg-black/60 p-10 h-screen overflow-y-auto" @click.self="close">
+      <div v-if="isOpen" class="modal-wrapper fixed inset-0 flex items-center justify-center bg-black/60 h-screen overflow-y-auto" @click.self="close">
         <div class="modal relative bg-white rounded-xl shadow-xl border border-gray-200 select-none" :class="[sizeClasses, positionClasses, modal.position]" ref="modalRef">
-          <!-- <Button class="absolute top-0 right-0 m-6" icon="X" @click="close" /> -->
-          <slot />
+          <!-- <X class="absolute top-0 right-0 m-3" icon="X" @click="close" /> -->
+
+          <!-- Modal Header -->
+          <div class="p-5 border-b border-gray-300" v-if="$slots.header">
+            <slot name="header" />
+          </div>
+
+          <div class="p-5">
+            <slot />
+          </div>
+
+          <!-- Modal Footer -->
+          <div class="py-3 px-5 border-t border-gray-300" v-if="$slots.footer">
+            <slot name="footer" />
+          </div>
         </div>
       </div>
     </Transition>

@@ -13,7 +13,8 @@ const router = createRouter({
     {
       path: '/',
       name: 'Home',
-      component: () => import('../pages/LandingPage.vue'),
+      redirect: { name: 'App' },
+      // component: () => import('../pages/LandingPage.vue'),
       // redirect: { name: 'Login' },
     },
     {
@@ -39,12 +40,21 @@ const router = createRouter({
     // Error Pages
     ...errorRoutes,
   ],
+
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    }
+
+    return { top: 0 }
+  },
 })
 
 export let lastRoute = null
 
 router.beforeEach(async (to, from) => {
-  const my = authStore()
+  const auth = authStore()
+  const my = auth?.user
   const accessRoles = to.meta?.role
 
   lastRoute = from
@@ -55,12 +65,12 @@ router.beforeEach(async (to, from) => {
     return { name: 'ServiceUnavailable' }
   }
 
-  if (to.meta.requiresFlow && !accessRoles.split(',').includes(my.user?.role)) {
-    if (my.token && !my.user?.role) {
-      await my.getUser()
-    } else {
-      return { name: 'Forbidden' }
-    }
+  if (auth.token && !auth.isAuthenticated) {
+    auth.getUser()
+  }
+
+  if (to.meta.requiresFlow && !accessRoles.split(',').includes(my?.role)) {
+    return { name: 'Forbidden' }
   }
 })
 

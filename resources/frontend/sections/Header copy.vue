@@ -1,27 +1,33 @@
 <template>
-  <header class="fixed inset-0 w-full h-18 top-0 bg-white shadow-xs z-10">
-    <div class="relative flex h-full w-full justify-center items-center px-5 sm:px-8">
-      <BannerComponent :with-label="true" :with-logo="true" logo-height="h-7" font-size="text-xl" />
-  
-      <div class="absolute navs hidden md:flex items-end gap-2">
-        <router-link :to="{ path: '#' }" class="flex text-center text-sm p-3 hover:text-secondary transition-all duration-150"  v-for="(nav, index) in navs" :key="index">
-          {{ nav.name }}
-        </router-link>
-        <div class="flex items-center justify-center gap-3"
+  <header class="sticky top-0 border-b border-neutral-200 z-10 bg-white">
+    <div class="flex justify-between p-5 mx-auto max-w-7xl">
+      <div class="flex items-center h-full gap-3">
+        <img :src="images.isu" alt="" class="h-11" />
+        <div class="flex flex-col justify-between overflow-hidden whitespace-nowrap">
+          <h1 class="text-2xl font-extrabold text-primary leading-6.5">e-Libra</h1>
+          <p class="text-sm hidden sm:inline">The ISU-One Library Management System of the <span class="font-bold text-primary">ISABELA STATE UNIVERSITY</span></p>
+          <p class="text-sm inline sm:hidden">The LMS of <span class="font-bold text-primary">ISABELA STATE UNIVERSITY</span></p>
         </div>
-      </div>
-      <div class="ml-auto flex gap-5 items-center">
-        <div class="action-btns hidden md:flex gap-2 items-center" v-if="!my.token">
-          <LoginButton/>
-          <Button type="solid" label="Register" color="primary" />
-        </div>
-    
-        <router-link v-else :to="{ name: roleHome[my.role] }">
-          <UserCircle />
-        </router-link>
-        <Button type="outline" icon="Menu" class="flex md:hidden py-3 hover:bg-primary hover:border-primary" @click="toggleSideMenu" />
       </div>
 
+      <div class="ml-auto flex gap-5 items-center">
+        <div class="action-btns hidden md:flex gap-2 items-center" v-if="!my.token">
+          <LoginButton />
+          <Button type="solid" label="Register" color="primary" />
+        </div>
+
+        <button v-else @click="my.home" class="cursor-pointer">
+          <UserCircle class="min-h-4 min-w-4 text-gray-600" />
+        </button>
+        <Button type="outline" icon="Menu" class="flex md:hidden py-3 hover:bg-primary hover:border-primary" @click="toggleSideMenu" />
+      </div>
+    </div>
+    <div class="hidden sm:block bg-primary-dark">
+      <div class="flex gap-2 mx-auto px-5 max-w-7xl text-sm text-white">
+        <router-link :to="{ name: nav.link }" class="flex text-center p-3 hover:bg-primary transition-all duration-150" v-for="(nav, index) in navs" :key="index">
+          {{ nav.name }}
+        </router-link>
+      </div>
     </div>
   </header>
 </template>
@@ -29,18 +35,12 @@
 <script setup>
 import images from '@/assets/images'
 import { reactive, ref } from 'vue'
-import BannerComponent from '@/components/public/BannerComponent.vue';
-import Button from '@/components/buttons/Button.vue';
-import { useUserStore } from '@/stores/auth';
-import LoginButton from '@/components/buttons/LoginButton.vue';
+import BannerComponent from '@/components/public/BannerComponent.vue'
+import Button from '@/components/buttons/Button.vue'
+import { authStore } from '@/stores/auth'
+import LoginButton from '@/components/buttons/LoginButton.vue'
 
-const my = useUserStore()
-
-const roleHome = {
-  admin: 'Admin',
-  librarian: 'Librarian',
-  patron: 'Patron',
-}
+const my = authStore()
 
 const sideMenu = reactive({
   show: false,
@@ -53,22 +53,10 @@ function toggleSideMenu() {
 const navs = ref([
   {
     name: 'Home',
-    link: '',
+    link: 'App',
   },
   {
-    name: 'OPAC',
-    link: '',
-  },
-  {
-    name: 'AcaRepo',
-    link: '',
-  },
-  {
-    name: 'About',
-    link: '',
-  },
-  {
-    name: 'Contact Us',
+    name: 'Campuses',
     link: '',
   },
 ])
@@ -80,6 +68,6 @@ const navs = ref([
 }
 
 .navs a:focus-within {
-  color: var(--color-primary)  ;
+  color: var(--color-primary);
 }
 </style>

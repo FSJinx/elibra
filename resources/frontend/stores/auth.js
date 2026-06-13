@@ -7,6 +7,7 @@ export const authStore = defineStore('user', {
   state: () => ({
     token: localStorage.getItem('token') || null,
     user: null,
+    isAuthenticated: false,
   }),
 
   getters: {
@@ -34,7 +35,7 @@ export const authStore = defineStore('user', {
 
   actions: {
     setUser(data) {
-      this.user = data
+      ;((this.user = data), (this.isAuthenticated = true))
     },
 
     async setToken(token) {
@@ -67,9 +68,23 @@ export const authStore = defineStore('user', {
         null: 'Home',
       }
 
+      console.log('Rerouting to: ', routes[this.user?.role || null])
+
       router.push({ name: routes[this.user?.role || null] })
     },
-    
+
+    async logout() {
+      const confirm = await elpop.confirmLogout()
+
+      if (confirm) {
+        Promise.resolve(() => {
+          this.clearUser()
+        }).then(() => {
+          router.replace({ name: 'Home' })
+        })
+      }
+    },
+
     clearUser() {
       localStorage.clear()
       this.$reset()
