@@ -14,7 +14,7 @@ const publicRoutes = [
         path: 'opac',
         name: 'OPAC',
         component: () => import('@/pages/app/OPACPage.vue'),
-        meta: { title: 'ISU Opac', requiresFlow: false },
+        meta: { title: 'ISU OPAC', requiresFlow: false },
       },
     ],
   },

@@ -2,7 +2,7 @@
   <div class="min-h-screen">
     <div class="h-2 bg-primary-dark"></div>
     <Header v-if="withHeader" />
-    <main class="min-h-screen max-w-7xl mx-auto px-4 py-8">
+    <main class="min-h-screen mx-auto px-4 py-8">
       <slot />
     </main>
     <Footer v-if="withFooter" />

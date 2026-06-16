@@ -59,6 +59,10 @@ const navs = ref([
     name: 'Campuses',
     link: '',
   },
+  {
+    name: 'Announcement',
+    link: '',
+  },
 ])
 </script>
 

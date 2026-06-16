@@ -120,9 +120,9 @@ const getSize = computed(() => {
   }
 
   const sizeIconOnly = {
-    small: 'p-2 text-sm',
-    default: 'p-2 text-base',
-    large: 'p-2 text-lg',
+    small: 'p-2 px-3 text-sm',
+    default: 'p-2 px-3 text-base',
+    large: 'p-2 px-3 text-lg',
   }
 
   if (props.icon && props.label) {

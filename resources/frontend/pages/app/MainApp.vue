@@ -1,44 +1,39 @@
 <template>
-  <div class="flex flex-col w-full p-5 gap-6">
-    <div class="mb-5">
-      <div class="flex justify-center gap-3 mb-5">
-        <img :src="images.isu" alt="" class="h-20 w-20" />
-        <img :src="images.logo" alt="" class="h-20 w-20" />
-      </div>
-      <h1 class="mx-auto text-4xl font-extrabold text-primary text-center mb-3">Isabela State University - Library Services</h1>
-      <p class="text-center"><span class="text-primary font-bold">e-Libra</span> is the Library Management System of the whole Isabela State University System, offering centralized services for every ISU-1.</p>
+  <div class="flex flex-col w-full p-5 gap-6 mx-auto">
+    <Hero />
+
+    <div class="flex flex-col gap-5 max-w-6xl mx-auto">
+      <Card class="p-0" v-for="r in routes.filter(isVisible)">
+        <template #header>
+          <h2 class="text-xl font-bold text-primary">{{ r.title }}</h2>
+        </template>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <Card class="cursor-pointer hover:shadow-primary-light/50 hover:shadow-lg rounded-lg transition duration-200" @click="auth.action" v-for="auth in r.children.filter(isVisible)">
+            <component :is="auth.icon" class="h-10 w-10 my-3 text-primary" />
+            <h2 class="text-xl font-bold">{{ auth.title }}</h2>
+            <p class="mt-2 text-muted">{{ auth.description }}</p>
+          </Card>
+        </div>
+      </Card>
+
+      <!-- Online Subscriptions -->
+      <Card class="p-0">
+        <template #header>
+          <h2 class="text-xl font-bold text-primary">Online Subscriptions</h2>
+        </template>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <Card class="cursor-pointer hover:shadow-primary-light/50 hover:shadow-lg rounded-lg transition duration-200" @click="preview(sub)" v-for="sub in onlineSubscriptions">
+            <div class="flex p-4 mb-5 h-40 overflow-hidden border-b border-gray-300">
+              <img :src="onlineResources[sub.img] || images.isu" alt="Logo" class="h-full w-auto m-auto" />
+            </div>
+            <h2 class="text-xl font-bold">{{ sub.name }}</h2>
+            <p class="mt-2 text-gray-500">{{ sub.description }}</p>
+          </Card>
+        </div>
+      </Card>
     </div>
-
-    <Card class="p-0" v-for="r in routes.filter(isVisible)">
-      <template #header>
-        <h2 class="text-xl font-bold text-primary">{{ r.title }}</h2>
-      </template>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        <Card class="cursor-pointer hover:shadow-primary-light/50 hover:shadow-md rounded-lg transition duration-200" @click="auth.action" v-for="auth in r.children.filter(isVisible)">
-          <component :is="auth.icon" class="h-10 w-10 my-3 text-primary" />
-          <h2 class="text-xl font-bold">{{ auth.title }}</h2>
-          <p class="mt-2 text-gray-500">{{ auth.description }}</p>
-        </Card>
-      </div>
-    </Card>
-
-    <!-- Online Subscriptions -->
-    <Card class="p-0">
-      <template #header>
-        <h2 class="text-xl font-bold text-primary">Online Subscriptions</h2>
-      </template>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        <Card class="cursor-pointer hover:shadow-primary-light/50 hover:shadow-md rounded-lg transition duration-200" @click="visit(sub)" v-for="sub in onlineSubscriptions">
-          <div class="flex p-4 mb-5 h-40 overflow-hidden border-b border-gray-300">
-            <img :src="onlineResources[sub.img] || images.isu" alt="Logo" class="h-full w-auto m-auto" />
-          </div>
-          <h2 class="text-xl font-bold">{{ sub.name }}</h2>
-          <p class="mt-2 text-gray-500">{{ sub.description }}</p>
-        </Card>
-      </div>
-    </Card>
   </div>
 
   <!-- Modals -->
@@ -76,7 +71,7 @@
 
     <template #footer>
       <div class="flex justify-end">
-        <Button @click="() => window.open(selectedERes?.link, '_blank')" label="Visit" color="blue" />
+        <Button @click="visit(selectedERes.link)" label="Visit" color="blue" />
       </div>
     </template>
   </ModalLayout>
@@ -95,13 +90,15 @@ import onlineResources from '@/assets/images/onlineResources/index'
 import onlineSubscriptions from '@/services/onlineSubscriptions'
 import { authStore } from '@/stores/auth'
 import { ref } from 'vue'
-import BaseInput from '@/components/BaseInput.vue'
+import Hero from '@/sections/landing/Hero.vue'
+import { ChevronDown } from 'lucide-vue-next'
 
 const login = ref()
 const test = ref()
 const eResCred = ref()
 const user = authStore()
 const selectedERes = ref(null)
+const openAnnouncements = ref(false)
 
 const routes = ref([
   {
@@ -122,6 +119,27 @@ const routes = ref([
   },
 ])
 
+const announcements = ref([
+  {
+    title: 'University Library - Santiago Campus launching soon.',
+    description: 'The Isabela State University Santiago Campus, who recently officially declared as an official campus  from extension campus is conducting a Library Launch Event for everyone this upcoming July 15, 2026. Anyone is allowed to participate.',
+    by: 'Isabela State University',
+    date: 'June 15, 2026 - 10:01 PM',
+  },
+  {
+    title: 'University Library - Santiago Campus launching soon.',
+    description: 'The Isabela State University Santiago Campus, who recently officially declared as an official campus  from extension campus is conducting a Library Launch Event for everyone this upcoming July 15, 2026. Anyone is allowed to participate.',
+    by: 'Isabela State University',
+    date: 'June 15, 2026 - 10:01 PM',
+  },
+  {
+    title: 'University Library - Santiago Campus launching soon.',
+    description: 'The Isabela State University Santiago Campus, who recently officially declared as an official campus  from extension campus is conducting a Library Launch Event for everyone this upcoming July 15, 2026. Anyone is allowed to participate.',
+    by: 'Isabela State University',
+    date: 'June 15, 2026 - 10:01 PM',
+  },
+])
+
 const isVisible = (item) => {
   switch (item.visibility) {
     case 'guest':
@@ -137,14 +155,17 @@ function open(route) {
   router.push({ name: route })
 }
 
-function visit(res) {
+function preview(res) {
   if (user.isAuthenticated) {
     selectedERes.value = res
-    // window.open(link, '_blank')
     eResCred.value?.open()
   } else {
     alert('You need to be logged in to proceed.')
   }
+}
+
+function visit(link) {
+  window.open(link, '_blank')
 }
 </script>
 
