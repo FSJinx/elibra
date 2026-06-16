@@ -38,7 +38,7 @@
     <!-- Mini Popup -->
     <Transition name="mini">
       <div class="flex items-end pb-21 justify-center h-full w-full absolute bottom-0 left-0 bg-black/20 z-1" :class="[pad]" v-if="state.show">
-        <Card class="mini-card w-full mb-3 transform" ref="miniRef">
+        <Card class="mini-card w-full mb-3 gap-2 transform" ref="miniRef">
           <div class="flex flex-col items-center justify-center gap-2 py-4">
             <img :src="images.isu" alt="" class="h-20 w-20" />
             <p class="text-sm font-bold capitalize">{{ auth.fullName }}</p>
@@ -52,7 +52,7 @@
             <Settings class="h-5 w-5" />
             <p class="text-sm">Settings</p>
           </span>
-          <span class="flex items-center w-full gap-3 p-3 rounded cursor-pointer border border-red-500 text-red-500 hover:bg-red-500 hover:text-white">
+          <span class="flex items-center w-full gap-3 p-3 rounded cursor-pointer border border-red-500 text-red-500 hover:bg-red-500 hover:text-white" @click="auth.logout">
             <DoorOpen class="h-5 w-5" />
             <p class="text-sm">Logout</p>
           </span>

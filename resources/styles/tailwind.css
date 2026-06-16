@@ -9,6 +9,7 @@
   --color-primary-light: #a1dfb9;
   --color-primary-dark: #006838;
   --color-secondary: #0eb55c;
+  --color-muted: #6c757d;
 }
 
 @layer components {

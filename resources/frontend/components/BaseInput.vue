@@ -5,7 +5,7 @@
       <span class="text-red-500" v-if="props.required">*</span>
     </span>
     <div class="relative flex items-center w-full">
-      <input :type="props.type" class="px-3 py-2 pr-10 w-full border no-spinner" :class="[inputClasses, props.required && model === '' ? 'border-red-500' : 'border-primary']" :name="props.name" :id="props.name" :placeholder="props.placeholder ?? props.label" :required="props.required" v-model="model" :autocomplete="props.autocomplete" :pattern="props.validate ? computedPattern : undefined" />
+      <input :type="props.type" class="px-3 py-2 pr-10 w-full border no-spinner" :class="[inputClasses, props.required && model === '' ? 'border-red-500' : 'border-primary']" :name="props.name" :id="props.name" :placeholder="props.placeholder ?? props.label" :required="props.required" v-model="model" :autocomplete="props.autocomplete" :pattern="props.validate ? computedPattern : undefined" :disabled="disabled" />
       <X v-if="model" class="h-5 w-5 z-10 absolute right-0 mr-3 text-gray-500 cursor-pointer" @click="model = ''" :title="`Clear ${label}`" />
     </div>
     <span class="flex items-center gap-1.5 text-sm text-red-500 mt-1" v-if="props.error">
@@ -20,8 +20,6 @@ import { computed } from 'vue'
 // Siguraduhing may import ka ng iyong mga icons gaya nito:
 // import { X, TriangleAlert } from 'lucide-vue-next'
 
-const model = defineModel<string>({ default: '' })
-
 const props = withDefaults(
   defineProps<{
     // Label Contents
@@ -33,7 +31,7 @@ const props = withDefaults(
 
     // Input Property
     type?: 'text' | 'password' | 'email' | 'number' | 'tel'
-    disable?: boolean
+    disabled?: boolean
     required?: boolean
     validate?: boolean
     autocomplete?: 'on' | 'off' | 'username' | 'email' | (string & {})
@@ -44,6 +42,7 @@ const props = withDefaults(
   { type: 'text', variant: 'rounded', size: 'default', validate: false },
 )
 
+const model = defineModel<string>({ default: '' })
 const sizeClasses = { small: 'text-sm', default: 'text-base', large: 'text-lg' }
 const variantClasses = { rounded: 'rounded', circle: 'rounded-full' }
 
