@@ -19,7 +19,6 @@
   "dependencies": {
     "@fontsource/inter": "^5.2.8",
     "@fontsource/poppins": "^5.2.7",
-    "@tailwindcss/line-clamp": "^0.4.4",
     "@vitejs/plugin-vue": "^6.0.7",
     "@vueuse/core": "^14.3.0",
     "lucide-vue-next": "^1.0.0",
