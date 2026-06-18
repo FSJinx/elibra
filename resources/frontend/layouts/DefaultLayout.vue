@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen">
-    <div class="h-2 bg-primary-dark"></div>
+    <!-- <div class="h-2 bg-primary-dark"></div> -->
     <Header v-if="withHeader" />
     <main class="min-h-screen mx-auto px-4 py-8">
       <slot />

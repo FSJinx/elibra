@@ -13,7 +13,7 @@
             <input type="text" name="query" class="w-full pl-10 p-2 bg-gray-50 rounded border border-gray-200" placeholder="Search here..." v-model="query" ref="queryInput" />
             <X class="absolute right-0 mr-3 text-gray-500 h-5 w-5 cursor-pointer" v-if="query" @click="clear" />
           </div>
-          <Button icon="Search" label="Search" color="primary" />
+          <Button icon="Search" label="Search" color="primary" @click="search" />
           <Button icon="Filter" label="Filter" color="primary" variant="outline" />
         </div>
         <div class="flex items-center gap-2">
@@ -30,7 +30,7 @@
       </form>
     </Card>
 
-    <OPACDisplayList :query="query" />
+    <OPACDisplayList :query="searchedQuery" />
   </div>
 </template>
 
@@ -46,6 +46,7 @@ const route = useRoute()
 
 const queryInput = ref()
 const query = ref(route.query.q || '')
+const searchedQuery = ref()
 
 const filters = ref({
   campus: 'echague',
@@ -70,6 +71,7 @@ const publishing = computed(() => {
 })
 
 function search() {
+  searchedQuery.value = query.value
   // alert('User searched for: ' + query.value)
 }
 

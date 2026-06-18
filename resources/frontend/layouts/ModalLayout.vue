@@ -72,7 +72,7 @@ const positionClasses = computed(() => {
 const sizeClasses = computed(() => {
   const sizes = {
     small: 'w-full sm:max-w-100',
-    normal: 'w-full sm:max-w-140',
+    normal: 'w-full sm:max-w-130',
     large: 'w-full sm:max-w-200',
     xlarge: 'w-full sm:max-w-250',
     '2xlarge': 'w-full sm:max-w-300',

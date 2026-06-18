@@ -14,7 +14,5 @@ class Sections extends Model
 
     protected $fillable = [
         'name',
-        'section_head_id',
-        'branch_id',
     ];
 }

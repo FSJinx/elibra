@@ -54,19 +54,19 @@ export let lastRoute = null
 
 router.beforeEach(async (to, from) => {
   const auth = authStore()
-  const my = auth?.user
   const accessRoles = to.meta?.role
 
   lastRoute = from
 
+  if (auth.token && !auth.isAuthenticated) {
+    await auth.getUser()
+  }
+
+  const my = auth?.user
   document.title = to.meta.title ?? 'e-Libra: The ISU-1 Library Management and Resource Monitoring System'
 
   if (to.meta.maintenance) {
     return { name: 'ServiceUnavailable' }
-  }
-
-  if (auth.token && !auth.isAuthenticated) {
-    auth.getUser()
   }
 
   if (to.meta.requiresFlow && !accessRoles.split(',').includes(my?.role)) {

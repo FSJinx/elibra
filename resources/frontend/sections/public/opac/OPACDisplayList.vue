@@ -31,6 +31,7 @@ import Card from '@/components/Card.vue'
 defineProps({
   query: String,
 })
+
 </script>
 
 <style scoped></style>

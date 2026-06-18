@@ -10,7 +10,7 @@
     </div>
 
     <form @submit.prevent="search" class="relative flex items-center px-5 mx-auto mt-5 max-w-6xl border border-primary bg-white rounded-full overflow-hidden">
-      <input type="text" class="h-18 pl-2 pr-20 w-full outline-0 whitespace-nowrap text-ellipsis" placeholder="Try typing some keywords to search in our OPAC" v-model="query" />
+      <input type="text" class="h-17 pl-2 pr-20 w-full outline-0 whitespace-nowrap text-ellipsis" placeholder="Try typing some keywords to search in our OPAC" v-model="query" />
       <button type="submit" class="absolute right-0 mr-2 text-center rounded-full h-[80%] w-auto aspect-square bg-primary text-white"><Search class="m-auto" /></button>
     </form>
 
