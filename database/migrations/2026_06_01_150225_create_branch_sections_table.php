@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sections', function (Blueprint $table) {
+        Schema::create('branch_sections', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            
+            $table->unsignedBigInteger('section_head_id')->nullable(); // Nullable if section has no assigned librarian
+            $table->unsignedBigInteger('branch_id');
+            
             $table->timestamps();
             $table->softDeletes();
         });
@@ -24,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sections');
+        Schema::dropIfExists('branch_sections');
     }
 };

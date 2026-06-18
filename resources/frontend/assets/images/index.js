@@ -5,6 +5,7 @@ import logo from '@/assets/images/logo.svg'
 import announcement from '@/assets/images/announcement.jpg'
 import no_no from '@/assets/images/no_no.gif'
 import construction from '@/assets/images/construction.gif'
+import default_book from '@/assets/images/default_book.png'
 
 export default {
   isu,
@@ -14,4 +15,5 @@ export default {
   announcement,
   no_no,
   construction,
+  default_book,
 }

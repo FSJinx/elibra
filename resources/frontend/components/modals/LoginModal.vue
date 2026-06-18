@@ -1,6 +1,6 @@
 <template>
   <ModalLayout ref="login" :hasInputs="!!hasInputs">
-    <section class="flex flex-col items-center p-10 gap-2">
+    <section class="flex flex-col items-center p-5 gap-2">
       <div class="flex flex-col items-center mb-3 gap-3">
         <div class="flex items-center gap-1 h-15 mb-1">
           <img :src="images.isu" alt="" class="h-full w-auto" />

@@ -1,5 +1,5 @@
 <template>
-  <button class="flex items-center justify-center gap-1 text-center border transition-all duration-200" :class="[btnDesign, { [`${setHover} cursor-pointer`]: !isLoading && !disabled }]" :type="props.type" :disabled="isLoading || disabled">
+  <button class="flex items-center justify-center gap-1 text-center border transition-all duration-200" :class="[btnDesign, { [`${setHover} cursor-pointer`]: !isLoading && !disabled }]" :type="props.type" :disabled="isLoading || disabled" @click="$emit('click')">
     <BarsLoading size="sm" v-if="isLoading" class="mr-2" />
 
     <template v-else>
@@ -40,6 +40,8 @@ const props = withDefaults(
     color: 'default',
   },
 )
+
+defineExpose(['click'])
 
 const btnDesign = computed(() => [getVariant.value, getSize.value, getBorder.value])
 

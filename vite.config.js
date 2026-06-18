@@ -3,7 +3,6 @@ import vue from '@vitejs/plugin-vue'
 import laravel from 'laravel-vite-plugin'
 import { fileURLToPath, URL } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
-import tailwindclamp from '@tailwindcss/line-clamp'
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
@@ -16,7 +15,6 @@ export default defineConfig(({ mode }) => {
       }),
       tailwindcss(),
       vue(),
-      tailwindclamp(),
     ],
 
     resolve: {

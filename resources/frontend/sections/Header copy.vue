@@ -1,7 +1,7 @@
 <template>
-  <header class="sticky top-0 border-b border-neutral-200 z-10 bg-white">
+  <header class="sticky top-0 w-full border-b border-neutral-200 z-10 bg-white">
     <div class="flex justify-between p-5 mx-auto max-w-7xl">
-      <div class="flex items-center h-full gap-3">
+      <div class="flex items-center h-full gap-3 select-none cursor-pointer" @click="router.push({ name: 'Home' })">
         <img :src="images.isu" alt="" class="h-11" />
         <div class="flex flex-col justify-between overflow-hidden whitespace-nowrap">
           <h1 class="text-2xl font-extrabold text-primary leading-6.5">e-Libra</h1>
@@ -39,6 +39,7 @@ import BannerComponent from '@/components/public/BannerComponent.vue'
 import Button from '@/components/buttons/Button.vue'
 import { authStore } from '@/stores/auth'
 import LoginButton from '@/components/buttons/LoginButton.vue'
+import router from '@/router'
 
 const my = authStore()
 

@@ -5,7 +5,7 @@
       <span class="text-red-500" v-if="props.required">*</span>
     </span>
     <div class="relative flex items-center w-full">
-      <input :type="props.type" class="px-3 py-2 pr-10 w-full border no-spinner" :class="[inputClasses, props.required && model === '' ? 'border-red-500' : 'border-primary']" :name="props.name" :id="props.name" :placeholder="props.placeholder ?? props.label" :required="props.required" v-model="model" :autocomplete="props.autocomplete" :pattern="props.validate ? computedPattern : undefined" :disabled="disabled" />
+      <input :type="props.type" class="px-3 py-1.5 pr-10 w-full border no-spinner" :class="[inputClasses, props.required && model === '' ? 'border-red-500' : 'border-primary']" :name="props.name" :id="props.name" :placeholder="props.placeholder ?? props.label" :required="props.required" v-model="model" :autocomplete="props.autocomplete" :pattern="props.validate ? computedPattern : undefined" :disabled="disabled" />
       <X v-if="model" class="h-5 w-5 z-10 absolute right-0 mr-3 text-gray-500 cursor-pointer" @click="model = ''" :title="`Clear ${label}`" />
     </div>
     <span class="flex items-center gap-1.5 text-sm text-red-500 mt-1" v-if="props.error">
