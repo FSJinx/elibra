@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ProfilePhotos;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreProfilePhotosRequest;
-use App\Http\Requests\UpdateProfilePhotosRequest;
+use App\Models\Subscription;
+use App\Http\Requests\StoreSubscriptionRequest;
+use App\Http\Requests\UpdateSubscriptionRequest;
 
-class ProfilePhotosController extends Controller
+class SubscriptionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -28,7 +27,7 @@ class ProfilePhotosController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProfilePhotosRequest $request)
+    public function store(StoreSubscriptionRequest $request)
     {
         //
     }
@@ -36,7 +35,7 @@ class ProfilePhotosController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ProfilePhotos $profilePhotos)
+    public function show(Subscription $subscription)
     {
         //
     }
@@ -44,7 +43,7 @@ class ProfilePhotosController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ProfilePhotos $profilePhotos)
+    public function edit(Subscription $subscription)
     {
         //
     }
@@ -52,7 +51,7 @@ class ProfilePhotosController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProfilePhotosRequest $request, ProfilePhotos $profilePhotos)
+    public function update(UpdateSubscriptionRequest $request, Subscription $subscription)
     {
         //
     }
@@ -60,7 +59,7 @@ class ProfilePhotosController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ProfilePhotos $profilePhotos)
+    public function destroy(Subscription $subscription)
     {
         //
     }

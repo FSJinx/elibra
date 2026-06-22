@@ -11,15 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('profile_photos', function (Blueprint $table) {
+        Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
-            $table->string('original_name');
-            $table->string('stored_name');
-            $table->string('path');
+            $table->string('name');
+            $table->string('description')->nullable();
+            $table->string('username');
+            $table->string('password');
+            $table->string('link');
 
-            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('thumbnail_id')->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('profile_photos');
+        Schema::dropIfExists('subscriptions');
     }
 };
