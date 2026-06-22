@@ -34,7 +34,7 @@ return new class extends Migration
 
         // Users Up
         Schema::table('users', function (Blueprint $table) {
-            $table->foreign('profile_picture_id')->references('id')->on('profile_photos')->onDelete('cascade');
+            $table->foreign('profile_picture_id')->references('id')->on('media')->onDelete('cascade');
         });
 
         // Librarians Up
@@ -57,9 +57,9 @@ return new class extends Migration
             $table->foreign('library_role_id')->references('id')->on('library_roles')->onDelete('cascade');
         });
 
-        // Profile Pictures Up
-        Schema::table('profile_photos', function (Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+        // Subscriptions Up
+        Schema::table('subscriptions', function (Blueprint $table) {
+            $table->foreign('thumbnail_id')->references('id')->on('media')->onDelete('cascade');
         });
     }
 
@@ -68,9 +68,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Profile Pictures Down
-        Schema::table('profile_photos', function (Blueprint $table) {
-            $table->dropForeign(['user_id']);
+        // Subscriptions Down
+        Schema::table('subscriptions', function (Blueprint $table) {
+            $table->dropForeign(['thumbnail_id']);
         });
 
         // Librarian Secondary Roles Down
