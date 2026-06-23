@@ -68,6 +68,8 @@ class AuthController extends Controller
             $user->librarian->unsetRelation('branch');
 
             return $this->response(data: $data);
+        } else if ($user?->role === 'patron') {
+
         }
 
         return $this->response(data: $data);
