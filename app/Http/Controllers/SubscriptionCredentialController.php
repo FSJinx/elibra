@@ -31,21 +31,19 @@ class SubscriptionCredentialController extends Controller
      */
     public function store(StoreSubscriptionCredentialRequest $request)
     {
-        $user = auth('api')->user();
+        $user = $this->user();
 
-        $branchId = $user->librarian? $user->librarian->branch_id : null;
+        if($user?->role == 'librarian' || $user?->role == 'admin') {
+            $credential = SubscriptionCredential::create([
+                'username' => $request->username,
+                'password' => $request->password,
 
-        if (!$branchId) {
-            return $this->response('error', 'You must be assigned to a branch to perform this action.', null, 400);
+                'subscription_id' => $request->subscription_id,
+                'campus_id' => $request->campus_id,
+            ]);
+        } else {
+            return $this->response('error', 'You are not authorized to perform this action.', null, 403);
         }
-
-        $credential = SubscriptionCredential::create([
-            'username' => $request->username,
-            'password' => $request->password,
-
-            'subscription_id' => $request->subscription_id,
-            'campus_id' => $request->campus_id,
-        ]);
 
         return $this->response(
             'success', 
@@ -81,7 +79,6 @@ class SubscriptionCredentialController extends Controller
             'Subscription credential decoded successfully', 
             $credential ? $credential->toArray() : null,
         200);
-    
     }
 
     /**
@@ -95,9 +92,21 @@ class SubscriptionCredentialController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateSubscriptionCredentialRequest $request, SubscriptionCredential $subscriptionCredential)
+    public function update(UpdateSubscriptionCredentialRequest $request, SubscriptionCredential $subscriptionCredentialId)
     {
-        //
+        $user = $this->user();
+        
+        if($user?->role == 'librarian' || $user?->role == 'admin') {
+            $subscriptionCredentialId->update($request->validated());
+        } else {
+            return $this->response('error', 'You are not authorized to perform this action.', null, 403);
+        }
+
+        return $this->response(
+            'success', 
+            'Subscription credential updated successfully', 
+            $subscriptionCredentialId->toArray(),
+            200);
     }
 
     /**

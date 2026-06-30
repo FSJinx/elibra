@@ -12,7 +12,7 @@ class UpdateSubscriptionCredentialRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +23,11 @@ class UpdateSubscriptionCredentialRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'username' => 'required|string|max:255',
+            'password' => 'required|string|max:255',
+
+            'subscription_id' => 'required|integer|exists:subscriptions,id',
+            'campus_id' => 'required|integer|exists:campuses,id',
         ];
     }
 }

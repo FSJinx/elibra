@@ -12,7 +12,7 @@ class UpdateSubscriptionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +23,10 @@ class UpdateSubscriptionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'link' => 'required|url',
+            'thumbnail_id' => 'required|integer|exists:media,id',
         ];
     }
 }

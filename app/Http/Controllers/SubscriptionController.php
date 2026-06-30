@@ -32,21 +32,18 @@ class SubscriptionController extends Controller
      */
     public function store(StoreSubscriptionRequest $request)
     {
-        // $user = auth('api')->user();
         $user = $this->user();
 
-        $branchId = $user->librarian? $user->librarian->branch_id : null;
-
-        if (!$branchId) {
-            return $this->response('error', 'You must be assigned to a branch to perform this action.', null, 400);
+        if (!in_array($user?->role, ['admin', 'librarian'])) {
+            return $this->response(
+                'error',
+                'You are not authorized to perform this action.',
+                null,
+                403
+            );
         }
 
-        $subscription = Subscription::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'link' => $request->link,
-            'thumbnail_id' => $request->thumbnail_id,
-        ]);
+        $subscription = Subscription::create($request->validated());
 
       return $this->response(
         'success', 
@@ -97,14 +94,50 @@ class SubscriptionController extends Controller
      */
     public function update(UpdateSubscriptionRequest $request, Subscription $subscription)
     {
-        //
+        $user = $this->user();
+
+        if (!in_array($user?->role, ['admin', 'librarian'])) {
+            return $this->response(
+                'error',
+                'You are not authorized to perform this action.',
+                null,
+                403
+            );
+        }
+
+        $subscription->update($request->validated());
+
+        return $this->response(
+            'success', 
+            'Subscription updated successfully', 
+            $subscription->toArray(), 
+            200
+        );
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Subscription $subscription)
+    public function destroy(Subscription $subscriptionId)
     {
-        //
+        $user = $this->user();
+
+        if (!in_array($user?->role, ['admin', 'librarian'])) {
+            return $this->response(
+                'error',
+                'You are not authorized to perform this action.',
+                null,
+                403
+            );
+        }
+
+        $subscriptionId->delete();
+
+        return $this->response(
+            'success', 
+            'Subscription deleted successfully', 
+            null, 
+            200
+        );
     }
 }
