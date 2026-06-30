@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Patron;
-use App\Models\Users;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePatronRequest;
@@ -36,7 +36,7 @@ class PatronController extends Controller
     public function store(StorePatronRequest $request)
     {
 
-        $user = Users::create([
+    $user = User::create([
         'first_name' => $request->first_name,
         'last_name' => $request->last_name,
         'username' => $request->username,

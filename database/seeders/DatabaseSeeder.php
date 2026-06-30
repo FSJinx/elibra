@@ -19,8 +19,11 @@ class DatabaseSeeder extends Seeder
             BranchSeeder::class,
             SectionsSeeder::class,
             LibraryRoleSeeder::class,
-            PatronTypeSeeder::class,
-            // UsersSeeder::class,
+            PatronTypeSeeder::class,    
+            SystemSeeder::class,
+            DepartmentSeeder::class,
+            ProgramsSeeder::class,
+            UsersSeeder::class,
 
             AdminSeeder::class,
             LibrarianSeeder::class,

@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('subscriptions', function (Blueprint $table) {
+        Schema::create('subscription_credentials', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('description')->nullable();
-            $table->string('link');
+            $table->string('username');
+            $table->string('password');
 
-            $table->unsignedBigInteger('thumbnail_id')->nullable();
+            
+            $table->unsignedBigInteger('subscription_id');
+            $table->unsignedBigInteger('campus_id')->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('subscriptions');
+        Schema::dropIfExists('subscription_credentials');
     }
 };

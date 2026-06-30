@@ -22,7 +22,8 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->string('branch_head_id')->nullable();
+            $table->unsignedBigInteger('logo_id')->nullable();
+            $table->unsignedBigInteger('branch_head_id')->nullable();
             $table->unsignedBigInteger('campus_id');
         });
     }
