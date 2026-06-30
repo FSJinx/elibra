@@ -12,10 +12,8 @@ class StoreSubscriptionCredentialRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        // return false;
-        $user = $this->user();
+        return true;
 
-        return $user && $user->role === 'librarian';
     }
 
     /**

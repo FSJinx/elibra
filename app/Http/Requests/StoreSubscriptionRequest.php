@@ -12,10 +12,11 @@ class StoreSubscriptionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        // return true;
-        $user = $this->user();
+        return true;
+        // $user = $this->user();
 
-        return $user && $user->role === 'librarian';
+        // return $user && ($user->role === 'librarian' || $user->role === 'admin');
+
     }
 
     /**

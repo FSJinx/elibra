@@ -41,16 +41,17 @@ Route::group(['prefix' => '/item'], function () {
     });
 
     Route::group(['prefix' => '/create'], function() {
-        Route::post('subscription', [SubscriptionController::class, 'store'])->middleware('auth:api', 'role:librarian, admin');
-        Route::post('subscription_credential', [SubscriptionCredentialController::class, 'store'])->middleware('auth:api', 'role:librarian, admin');
+        Route::post('subscription', [SubscriptionController::class, 'store'])->middleware('auth:api', 'role:librarian,admin');
+        Route::post('subscription_credential', [SubscriptionCredentialController::class, 'store'])->middleware('auth:api', 'role:librarian,admin');
     });
 
     Route::group(['prefix' =>'/update'], function() {
-        
+        Route::put('subscription-credential/{subscriptionCredentialId}', [SubscriptionCredentialController::class, 'update'])->middleware('auth:api', 'role:librarian,admin');
+
     });
 
     Route::group(['prefix' =>'/delete'], function() {
-    
+        Route::delete('subscription/{subscriptionId}', [SubscriptionController::class, 'destroy'])->middleware('auth:api', 'role:librarian,admin');
     });
 });
 
