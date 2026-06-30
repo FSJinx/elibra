@@ -6,6 +6,9 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CampusController;
 use App\Http\Controllers\LibrarianController;
 use App\Http\Controllers\PatronController;
+use App\Http\Controllers\MediaController;
+use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\SubscriptionCredentialController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +29,30 @@ Route::group(['prefix' => '/auth'], function () {
 Route::get('/try', [TestController::class, 'index']);
 
 Route::get('/campus', [CampusController::class, 'index']);
+
+Route::post('/upload-media', [MediaController::class, 'upload'])->middleware('auth:api');
+
+//Item Routes
+Route::group(['prefix' => '/item'], function () {
+
+    Route::group(['prefix' => '/get'], function() {
+        Route::get('subscriptions', [SubscriptionController::class, 'getResources']);
+        Route::get('subscription-credential/{subscriptionId}', [SubscriptionCredentialController::class, 'getCredential']);
+    });
+
+    Route::group(['prefix' => '/create'], function() {
+        Route::post('subscription', [SubscriptionController::class, 'store'])->middleware('auth:api', 'role:librarian, admin');
+        Route::post('subscription_credential', [SubscriptionCredentialController::class, 'store'])->middleware('auth:api', 'role:librarian, admin');
+    });
+
+    Route::group(['prefix' =>'/update'], function() {
+        
+    });
+
+    Route::group(['prefix' =>'/delete'], function() {
+    
+    });
+});
 
 // Users Route
 Route::group(['prefix' => '/users', 'middleware' => ['auth:api', 'role:admin,librarian']], function () {
@@ -53,7 +80,9 @@ Route::group(['prefix' => '/librarian', 'middleware' => ['auth:api', 'role:libra
 
     Route::group(['prefix' => 'create'], function () {
         Route::post('user', [AdminController::class, 'storeUser']);
+
     });
+
 });
 
 // Patron Routes

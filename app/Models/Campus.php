@@ -18,4 +18,8 @@ class Campus extends Model
         'address',
         'heading',
     ];
+
+    function subscrptionCredentials() {
+        return $this->hasMany(SubscriptionCredential::class);
+    }
 }

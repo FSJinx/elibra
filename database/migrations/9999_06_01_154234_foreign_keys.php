@@ -13,6 +13,7 @@ return new class extends Migration
     {
         // Branches Up
         Schema::table('branches', function (Blueprint $table) {
+            $table->foreign('logo_id')->references('id')->on('media')->onDelete('cascade');
             $table->foreign('campus_id')->references('id')->on('campuses')->onDelete('cascade');
         });
 
@@ -61,6 +62,12 @@ return new class extends Migration
         Schema::table('subscriptions', function (Blueprint $table) {
             $table->foreign('thumbnail_id')->references('id')->on('media')->onDelete('cascade');
         });
+
+        // Subscription Credentials Up
+        Schema::table('subscription_credentials', function (Blueprint $table) {
+            $table->foreign('subscription_id')->references('id')->on('subscriptions')->onDelete('cascade');
+            $table->foreign('campus_id')->references('id')->on('campuses')->onDelete('cascade');
+        });
     }
 
     /**
@@ -68,6 +75,12 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // Subscriptions Down
+        Schema::table('subscription_credentials', function (Blueprint $table) {
+            $table->dropForeign(['subscription_id']);
+            $table->dropForeign(['campus_id']);
+        });
+
         // Subscriptions Down
         Schema::table('subscriptions', function (Blueprint $table) {
             $table->dropForeign(['thumbnail_id']);
@@ -117,6 +130,7 @@ return new class extends Migration
         // Branches Down
         Schema::table('branches', function (Blueprint $table) {
             $table->dropForeign(['campus_id']);
+            $table->dropForeign(['logo_id']);
         });
     }
 };
