@@ -2,7 +2,7 @@
 import axios from 'axios'
 
 // import elpop from './elpop'
-import router from '@/app/router'
+import router from '@/router'
 import { authStore } from '@/stores/auth'
 
 export const backendRoute = `${(import.meta as any).env.VITE_APP_URL}/api`

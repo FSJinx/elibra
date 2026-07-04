@@ -9,7 +9,7 @@
 </head>
 
 <body class="relative">
-    <div id="app" class="flex flex-col relative bg-gray-50"></div>
+    <div id="app" class="relative leading-none"></div>
 </body>
 
 </html>

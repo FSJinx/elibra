@@ -1,5 +1,5 @@
-import api from '@/app/plugins/axios'
-import router from '@/app/router'
+import api from '@/plugins/axios'
+import router from '@/router'
 import { defineStore } from 'pinia'
 
 // User object shape
@@ -80,6 +80,7 @@ export const authStore = defineStore('user', {
       }
 
       const roleKey = (this.user?.role as string) || 'default'
+      // console.log(routes[roleKey])
       return router.push({ name: routes[roleKey] })
     },
 

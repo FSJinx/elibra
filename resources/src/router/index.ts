@@ -4,14 +4,33 @@ import type { RouteLocationNormalizedLoaded } from 'vue-router'
 // import { roleMap } from '@/constants/roleMap'
 import { authStore } from '@/stores/auth'
 
+// Route imports
+import { publicRoute } from '@/app/public/routes'
+import { adminRoutes } from '@/app/admin/routes'
+import { librarianRoutes } from '@/app/librarian/routes'
+
 const router = createRouter({
   // cast import.meta to any to access env in environments where ImportMeta types aren't defined
   history: createWebHistory((import.meta as any).env.BASE_URL),
   routes: [
+    // Public Route
+    ...publicRoute,
+
+    // Admin Route
     {
-      path: '/',
-      name: 'Home',
-      component: () => import('@/App.vue'),
+      path: '/admin',
+      meta: { requiresAuth: false, role: 'admin' },
+      redirect: { name: 'Admin' },
+      component: () => import('@/layouts/management/ManagementLayout.vue'),
+      children: [...adminRoutes],
+    },
+
+    // Librarian Route
+    {
+      path: '/librarian',
+      meta: { requiresAuth: false, role: 'librarian' },
+      component: () => import('@/layouts/management/ManagementLayout.vue'),
+      children: [...librarianRoutes],
     },
   ],
 
@@ -37,9 +56,7 @@ router.beforeEach(async (to, from) => {
   }
 
   const my = auth?.user
-  document.title = typeof to.meta.title === 'string'
-    ? to.meta.title
-    : 'e-Libra: The ISU-1 Library Management and Resource Monitoring System'
+  document.title = typeof to.meta.title === 'string' ? to.meta.title : 'e-Libra: The ISU-1 Library Management and Resource Monitoring System'
 
   if (to.meta.maintenance) {
     return { name: 'ServiceUnavailable' }
