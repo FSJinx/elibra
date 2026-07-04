@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [
       laravel({
-        input: ['resources/styles/app.css', 'resources/frontend/app.js'],
+        input: ['resources/styles/app.css', 'resources/src/app.ts'],
         refresh: true,
       }),
       tailwindcss(),
@@ -19,7 +19,7 @@ export default defineConfig(({ mode }) => {
 
     resolve: {
       alias: {
-        '@': fileURLToPath(new URL('./resources/frontend', import.meta.url)),
+        '@': fileURLToPath(new URL('./resources/src', import.meta.url)),
       },
     },
 

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Subscription;
 use App\Http\Requests\StoreSubscriptionRequest;
 use App\Http\Requests\UpdateSubscriptionRequest;
 use App\Models\SubscriptionCredential;
@@ -14,10 +13,7 @@ class SubscriptionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        //
-    }
+    public function index() {}
 
     /**
      * Show the form for creating a new resource.

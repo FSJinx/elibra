@@ -2,9 +2,14 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["resources/frontend/*"]
+      "@/*": ["resources/src/*"]
     },
     "ignoreDeprecations": "6.0"
   },
+  "include": [
+    "resources/src/**/*",
+    "resources/src/**/*.d.ts",
+    "resources/src/assets/icon/**/*.d.ts"
+  ],
   "exclude": ["node_modules", "public"]
 }

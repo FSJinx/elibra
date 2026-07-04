@@ -21,7 +21,7 @@ Route::group(['prefix' => '/auth'], function () {
     Route::post('/refresh', [AuthController::class, 'refresh'])->middleware('jwt.refresh');
 
     Route::group(['middleware' => 'jwt.auth'], function () {
-        Route::get('', [AuthController::class, 'index']);
+        Route::get('', [AuthController::class, 'index']); // /api/auth
     });
 });
 
