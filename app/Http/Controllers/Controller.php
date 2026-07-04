@@ -14,6 +14,11 @@ abstract class Controller
         return $auth;
     }
 
+    protected function user()
+    {
+        return $this->auth()->user();
+    }
+
     protected function response(?string $status = null, ?string $message = null, ?array $data = null, int $statusCode = 200)
     {
         return response()->json([

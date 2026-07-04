@@ -27,9 +27,26 @@ class MediaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreMediaRequest $request)
+    public function upload(StoreMediaRequest $request)
     {
-        //
+        $user = $this->user();
+
+        if(!$user) {
+            return $this->response('error', 'You must be logged in to upload image.', null, 401);
+        }
+
+        $file = $request->file('image');
+        $path = $file->store('media','public');
+
+        $media = Media::create([
+            'file_name'  => $file->getClientOriginalName(),
+            'file_path'  => $path,
+            'mime_type'  => $file->getMimeType(),
+            'file_size'  => $file->getSize(),
+            'image_type' => $request->image_type,
+        ]);
+
+        return $this->response('success', 'Media uploaded successfully', $media->toArray(), 201);
     }
 
     /**

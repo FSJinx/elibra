@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreMediaRequest extends FormRequest
+class StoreSubscriptionCredentialRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,6 +13,7 @@ class StoreMediaRequest extends FormRequest
     public function authorize(): bool
     {
         return true;
+
     }
 
     /**
@@ -23,8 +24,11 @@ class StoreMediaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'image_type' => 'required|string|max:255',
+            'username' => 'required|string|max:255',
+            'password' => 'required|string|max:255',
+
+            'subscription_id' => 'required|integer|exists:subscriptions,id',
+            'campus_id' => 'required|integer|exists:campuses,id',
         ];
     }
 }
