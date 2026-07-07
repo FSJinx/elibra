@@ -46,6 +46,8 @@ Route::group(['prefix' => '/item'], function () {
         Route::post('subscription', [SubscriptionController::class, 'store'])->middleware('jwt.auth', 'role:librarian,admin');
         Route::post('subscription_credential', [SubscriptionCredentialController::class, 'store'])->middleware('jwt.auth', 'role:librarian,admin');
 
+        Route::post('academic', [AcademicController::class, 'store'])->middleware('jwt.auth', 'role:librarian');
+
         /* ACADEMICS ROUTES */
         Route::post('academic', [AcademicController::class, 'store'])->middleware('jwt.auth', 'role:librarian');
     });

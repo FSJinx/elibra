@@ -3,11 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\Academic;
+use App\Models\Item;
+use App\Services\AcademicService;
 use App\Http\Requests\StoreAcademicRequest;
 use App\Http\Requests\UpdateAcademicRequest;
 
+
 class AcademicController extends Controller
 {
+    // inject the AcademicService into the controller
+    protected AcademicService $academicService;
+    // using constructor injection to inject the AcademicService into the controller
+    public function __construct(AcademicService $academicService)
+    {
+        $this->academicService = $academicService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -28,12 +39,19 @@ class AcademicController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(StoreAcademicRequest $request)
-    {
-        $user = $this->user();
-
+    {        
+        // Authorize the user through the policy
+        $this->authorize('create', Academic::class);
         
+        // Use the AcademicService to create the academic resource
+        $academic = $this->academicService->create($request->validated());
 
-
+        return $this->response(
+            'success', 
+            'Academic created successfully', 
+            $academic->toArray(), 
+            201
+        );
     }
 
     /**

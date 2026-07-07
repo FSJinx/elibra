@@ -40,15 +40,6 @@ class LibrarianController extends Controller
     {
         $user = $this->user();
 
-        // if($user?->role == 'librarian'){
-        //     return $this->response(
-        //         'error',
-        //         'You are not authorized to perform this action.',
-        //         null,
-        //         403
-        //     );
-        // }
-
         $users = User::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,

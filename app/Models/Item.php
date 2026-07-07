@@ -18,4 +18,8 @@ class Item extends Model
         'keywords',
     ];
 
+    public function academic()
+    {
+        return $this->hasOne(Academic::class);
+    }
 }
