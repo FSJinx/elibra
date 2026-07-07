@@ -17,7 +17,9 @@ return new class extends Migration
             $table->string('subtitle');
             $table->string('description');
             $table->string('keywords');
+
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

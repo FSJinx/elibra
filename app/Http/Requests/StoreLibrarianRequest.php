@@ -29,6 +29,8 @@ class StoreLibrarianRequest extends FormRequest
             'password' => 'required|string|min:8',
             'branch_id' => 'required|exists:branches,id',
             'primary_role_id' => 'required|exists:library_roles,id',
+            'tools' => 'nullable|array',
+            'tools.*' => 'string',
         ];
     }
 }

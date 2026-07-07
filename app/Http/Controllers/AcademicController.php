@@ -29,7 +29,11 @@ class AcademicController extends Controller
      */
     public function store(StoreAcademicRequest $request)
     {
-        //
+        $user = $this->user();
+
+        
+
+
     }
 
     /**

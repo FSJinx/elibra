@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('branch_id');
             $table->unsignedBigInteger('primary_role_id');
+            $table->json('tools')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

@@ -9,6 +9,7 @@ use App\Http\Controllers\PatronController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\SubscriptionCredentialController;
+use App\Http\Controllers\AcademicController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
@@ -41,62 +42,86 @@ Route::group(['prefix' => '/item'], function () {
     });
 
     Route::group(['prefix' => '/create'], function() {
-        Route::post('subscription', [SubscriptionController::class, 'store'])->middleware('auth:api', 'role:librarian,admin');
-        Route::post('subscription_credential', [SubscriptionCredentialController::class, 'store'])->middleware('auth:api', 'role:librarian,admin');
+        /* SUBSCRIPTION ROUTES */
+        Route::post('subscription', [SubscriptionController::class, 'store'])->middleware('jwt.auth', 'role:librarian,admin');
+        Route::post('subscription_credential', [SubscriptionCredentialController::class, 'store'])->middleware('jwt.auth', 'role:librarian,admin');
+
+        /* ACADEMICS ROUTES */
+        Route::post('academic', [AcademicController::class, 'store'])->middleware('jwt.auth', 'role:librarian');
     });
 
     Route::group(['prefix' =>'/update'], function() {
-        Route::put('subscription-credential/{subscriptionCredentialId}', [SubscriptionCredentialController::class, 'update'])->middleware('auth:api', 'role:librarian,admin');
+        Route::put('subscription-credential/{subscriptionCredentialId}', [SubscriptionCredentialController::class, 'update'])->middleware('jwt.auth', 'role:librarian,admin');
 
     });
 
     Route::group(['prefix' =>'/delete'], function() {
-        Route::delete('subscription/{subscriptionId}', [SubscriptionController::class, 'destroy'])->middleware('auth:api', 'role:librarian,admin');
+        Route::delete('subscription/{subscriptionId}', [SubscriptionController::class, 'destroy'])->middleware('jwt.auth', 'role:librarian,admin');
+    });
+});
+
+//Librarian Routes
+Route::group(['prefix' => '/librarian'], function () {
+
+    Route::group(['prefix' => '/get'], function(){
+
+    });
+
+    Route::group(['prefix' => '/create'], function(){
+        Route::post('account', [LibrarianController::class, 'store'])->middleware('auth:api', 'role:librarian');
+    });
+
+    Route::group(['prefix' => '/update'], function(){
+
+    });
+
+    Route::group(['prefix' => '/delete'], function(){
+
     });
 });
 
 // Users Route
-Route::group(['prefix' => '/users', 'middleware' => ['auth:api', 'role:admin,librarian']], function () {
+Route::group(['prefix' => '/users'], function () {
     Route::get('', [UsersController::class, 'index']);
 });
 
-// Admin Routes
-Route::group(['prefix' => '/admin', 'middleware' => ['auth:api', 'role:admin']], function () {
+// // Admin Routes
+// Route::group(['prefix' => '/admin', 'middleware' => ['auth:api', 'role:admin']], function () {
 
-    Route::group(['prefix' => 'get'], function () {
-        Route::get('user', [AdminController::class, 'getUser']);
-    });
+//     Route::group(['prefix' => 'get'], function () {
+//         Route::get('user', [AdminController::class, 'getUser']);
+//     });
 
-    Route::group(['prefix' => 'create'], function () {
-        Route::post('user', [AdminController::class, 'storeUser']);
-    });
-});
+//     Route::group(['prefix' => 'create'], function () {
+//         Route::post('user', [AdminController::class, 'storeUser']);
+//     });
+// });
 
-// Librarian Routes
-Route::group(['prefix' => '/librarian', 'middleware' => ['auth:api', 'role:librarian']], function () {
+// // Librarian Routes
+// Route::group(['prefix' => '/librarian', 'middleware' => ['auth:api', 'role:librarian']], function () {
 
-    Route::group(['prefix' => 'get'], function () {
-        Route::get('user', [AdminController::class, 'getUser']);
-    });
+//     Route::group(['prefix' => 'get'], function () {
+//         Route::get('user', [AdminController::class, 'getUser']);
+//     });
 
-    Route::group(['prefix' => 'create'], function () {
-        Route::post('user', [AdminController::class, 'storeUser']);
+//     Route::group(['prefix' => 'create'], function () {
+//         Route::post('user', [AdminController::class, 'storeUser']);
 
-    });
+//     });
 
-});
+// });
 
-// Patron Routes
-Route::group(['prefix' => '/patron', 'middleware' => ['auth:api', 'role:patron']], function () {
+// // Patron Routes
+// Route::group(['prefix' => '/patron', 'middleware' => ['auth:api', 'role:patron']], function () {
 
-    Route::group(['prefix' => 'get'], function () {
-        Route::get('user', [AdminController::class, 'getUser']);
-    });
+//     Route::group(['prefix' => 'get'], function () {
+//         Route::get('user', [AdminController::class, 'getUser']);
+//     });
 
-    Route::group(['prefix' => 'create'], function () {
-        Route::post('user', [AdminController::class, 'storeUser']);
-    });
-});
+//     Route::group(['prefix' => 'create'], function () {
+//         Route::post('user', [AdminController::class, 'storeUser']);
+//     });
+// });
 
 // Route::middleware('jwt.auth')->group(function () {
 

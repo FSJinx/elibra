@@ -8,7 +8,7 @@ use App\Http\Requests\StoreLibrarianRequest;
 use App\Http\Requests\UpdateLibrarianRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use App\Models\Users;
+use App\Models\User;
 
 class LibrarianController extends Controller
 {
@@ -38,7 +38,18 @@ class LibrarianController extends Controller
      */
     public function store(StoreLibrarianRequest $request)
     {
-        $user = Users::create([
+        $user = $this->user();
+
+        // if($user?->role == 'librarian'){
+        //     return $this->response(
+        //         'error',
+        //         'You are not authorized to perform this action.',
+        //         null,
+        //         403
+        //     );
+        // }
+
+        $users = User::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'username' => $request->username,
@@ -50,12 +61,13 @@ class LibrarianController extends Controller
             'user_id' => $user->id,
             'branch_id' => $request->branch_id,
             'primary_role_id' => $request->primary_role_id,
+            'tools' => $request->tools,
         ]);
 
         return response()->json([
-            'user' => $user,
+            'user' => $users,
             'librarian' => $librarian,
-        ], 201); 
+        ], 201);
     }
 
     /**

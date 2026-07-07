@@ -17,11 +17,12 @@ return new class extends Migration
             $table->string('language');
             $table->enum('category', ['undergraduate thesis', 'graduate thesis', 'case study', 'research paper', 'feasibility study']);
             $table->year('publication_year');
-            $table->timestamps();
             $table->json('subjects')->nullable();
-
+            
             $table->unsignedBigInteger('item_id');
             $table->unsignedBigInteger('department_id');
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 
