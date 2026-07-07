@@ -12,10 +12,10 @@ class StoreSubscriptionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
-        // $user = $this->user();
+        // return true;
+        $user = $this->user();
 
-        // return $user && ($user->role === 'librarian' || $user->role === 'admin');
+        return $user && ($user->role === 'librarian' || $user->role === 'admin');
 
     }
 
@@ -30,7 +30,7 @@ class StoreSubscriptionRequest extends FormRequest
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'link' => 'required|url',
-            'thumbnail_id' => 'required|integer|exists:media,id',
+            'thumbnail_id' => 'nullable|integer|exists:media,id',
         ];
 
     }

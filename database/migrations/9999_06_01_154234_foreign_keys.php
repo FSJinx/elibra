@@ -52,11 +52,6 @@ return new class extends Migration
             $table->foreign('patron_type_id')->references('id')->on('patron_types')->onDelete('cascade');
         });
 
-        // Librarian Secondary Roles Up
-        Schema::table('librarian_secondary_roles', function (Blueprint $table) {
-            $table->foreign('librarian_id')->references('id')->on('librarians')->onDelete('cascade');
-            $table->foreign('library_role_id')->references('id')->on('library_roles')->onDelete('cascade');
-        });
 
         // Subscriptions Up
         Schema::table('subscriptions', function (Blueprint $table) {
@@ -68,6 +63,12 @@ return new class extends Migration
             $table->foreign('subscription_id')->references('id')->on('subscriptions')->onDelete('cascade');
             $table->foreign('campus_id')->references('id')->on('campuses')->onDelete('cascade');
         });
+
+        // Academics Up
+        Schema::table('academics', function (Blueprint $table){
+            $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade');
+            $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');
+        });
     }
 
     /**
@@ -75,6 +76,13 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // Academics Down
+        Schema::table('academics', function (Blueprint $table){
+            $table->dropForeign(['item_id']);
+            $table->dropForeign(['department_id']);
+        });
+        // if (Schema::hasTable('academics')) { Schema::table('academics', function (Blueprint $table) { $table->dropForeign(['item_id']); $table->dropForeign(['department_id']); }); }
+        
         // Subscriptions Down
         Schema::table('subscription_credentials', function (Blueprint $table) {
             $table->dropForeign(['subscription_id']);
@@ -84,12 +92,6 @@ return new class extends Migration
         // Subscriptions Down
         Schema::table('subscriptions', function (Blueprint $table) {
             $table->dropForeign(['thumbnail_id']);
-        });
-
-        // Librarian Secondary Roles Down
-        Schema::table('librarian_secondary_roles', function (Blueprint $table) {
-            $table->dropForeign(['librarian_id']);
-            $table->dropForeign(['library_role_id']);
         });
 
         // Patrons Down
@@ -132,5 +134,6 @@ return new class extends Migration
             $table->dropForeign(['campus_id']);
             $table->dropForeign(['logo_id']);
         });
+        
     }
 };
