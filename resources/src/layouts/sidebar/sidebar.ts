@@ -16,14 +16,30 @@ export const menus = {
         equipment: { path: '', name: 'Equipments', icon: 'Toolbox' },
       },
     },
+
+    management: {
+      name: 'Management',
+      children: [{ path: 'Admin Subscriptions', name: 'Subscriptions', icon: 'GlobeCheck' }],
+    },
   },
 
   librarian: {
     general: {
-      dashboard: { path: '', name: '', icon: '' },
+      name: 'General',
+      children: {
+        dashboard: { path: 'Librarian', name: 'Dashboard', icon: 'Home' },
+      },
     },
+
     collections: {
-      books: { path: '', name: 'Books', icon: 'Books' },
+      name: 'Collections',
+      children: {
+        academic: { path: '', name: 'Academics', icon: 'GraduationCap', code: 'collacademic' },
+        books: { path: '', name: 'Books', icon: 'BookOpen', code: 'collbooks' },
+        serials: { path: '', name: 'Serials', icon: 'Newspaper', code: 'collserials' },
+        equipment: { path: '', name: 'Equipments', icon: 'Toolbox', code: 'collequipment' },
+      },
     },
   },
+
 }
