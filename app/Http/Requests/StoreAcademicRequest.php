@@ -12,21 +12,7 @@ class StoreAcademicRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $user = $this->user();
-        if (!$user || !$user->librarian) {
-            return false;
-        }
-
-        $librarian = $user->librarian;
-        if (!$librarian->primary_role || strtolower($librarian->primary_role->name) !== 'academics') {
-            return false;
-        }
-
         return true;
-        // dd(
-        //     $this->user()->librarian,
-        //     optional($this->user()->librarian)->primary_role
-        // );
     }
 
     /**
