@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreSubscriptionRequest;
 use App\Http\Requests\UpdateSubscriptionRequest;
 use App\Models\SubscriptionCredential;
+use App\Models\Subscription;
 use App\Models\System;
 use App\Models\Branch;
 
@@ -28,18 +29,8 @@ class SubscriptionController extends Controller
      */
     public function store(StoreSubscriptionRequest $request)
     {
-        $user = $this->user();
-
-        if (!in_array($user?->role, ['admin', 'librarian'])) {
-            return $this->response(
-                'error',
-                'You are not authorized to perform this action.',
-                null,
-                403
-            );
-        }
-
-        $subscription = Subscription::create($request->validated());
+        
+    $subscription = Subscription::create($request->validated());
 
       return $this->response(
         'success', 
@@ -56,7 +47,7 @@ class SubscriptionController extends Controller
         //
     }
 
-    public function getResources(SubscriptionCredential $subscriptionCredential)
+    public function getResources()
     {
         $user = $this->user();
 

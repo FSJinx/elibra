@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use Tymon\JWTAuth\JWTGuard;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 abstract class Controller
 {
+    use AuthorizesRequests;
+
     protected function auth(): JWTGuard
     {
         /** @var JWTGuard $auth */

@@ -16,7 +16,11 @@ class Librarian extends Model
         'user_id',
         'branch_id',
         'primary_role_id',
+        'tools',
+    ];
 
+    protected $casts = [
+        'tools' => 'array',
     ];
 
     public function user()

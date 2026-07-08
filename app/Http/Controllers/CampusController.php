@@ -33,7 +33,7 @@ class CampusController extends Controller
             }
         }
 
-        return json_encode($campus->get());
+        return json_encode($campus->get(['id', 'name']));
     }
 
     /**

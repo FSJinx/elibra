@@ -34,7 +34,7 @@ class PatronSeeder extends Seeder
             ],
             [
                 'last_name' => 'tobias',
-                'first_name' => 'eugene',
+                'first_name' => 'eugene_patron',
                 'middle_initial' => 'g',
                 'username' => '22-1188',
                 'role' => 'patron',
