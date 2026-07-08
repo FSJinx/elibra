@@ -29,7 +29,24 @@ class AcademicPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        // Check if user is a librarian
+        if (!$user->librarian) {
+            return false;
+        }
+
+        $librarian = $user->librarian;
+
+        // Check if librarian has a primary role
+        if (!$librarian->primary_role) {
+            return false;
+        }
+
+        // Check if primary role is 'Academics'
+        if (strtolower($librarian->primary_role->name) !== 'academics') {
+            return false;
+        }
+
+        return true;
     }
 
     /**

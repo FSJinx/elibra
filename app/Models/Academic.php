@@ -25,4 +25,9 @@ class Academic extends Model
     protected $casts = [
         'subjects' => 'array',
     ];
+
+    public function item()
+    {
+        return $this->belongsTo(Item::class);
+    }
 }
