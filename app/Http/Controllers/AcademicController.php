@@ -75,7 +75,16 @@ class AcademicController extends Controller
      */
     public function update(UpdateAcademicRequest $request, Academic $academic)
     {
-        //
+        $this->authorize('update', $academic);
+
+        $academic = $this->academicService->update($academic, $request->validated());
+
+        return $this->response(
+            'success', 
+            'Academic updated successfully', 
+            $academic->toArray(), 
+            200
+        );
     }
 
     /**
@@ -83,6 +92,15 @@ class AcademicController extends Controller
      */
     public function destroy(Academic $academic)
     {
-        //
+        $this->authorize('delete', $academic);
+
+        $this->academicService->delete($academic);
+
+        return $this->response(
+            'success',
+            'Academic deleted successfully',
+            [],
+            200
+        );
     }
 }

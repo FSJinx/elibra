@@ -12,7 +12,7 @@ class UpdateAcademicRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +23,20 @@ class UpdateAcademicRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            // Item table fields
+            'title' => 'sometimes|required|string|max:255',
+            'subtitle' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'keywords' => 'nullable|string',
+
+            // Academic table fields
+            'call_number' => 'sometimes|required|string|max:255|unique:academics,call_number,' . $this->route('academic')->id,
+            'language' => 'sometimes|required|string|max:255',
+            'category' => 'sometimes|required|string|max:255',
+            'publication_year' => 'nullable|integer|min:1900|max:' . date('Y'),
+            'subjects' => 'nullable|array',
+            'subjects.*' => 'string|max:255',
+            'department_id' => 'sometimes|required|exists:departments,id',
         ];
     }
 }
