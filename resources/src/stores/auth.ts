@@ -11,6 +11,7 @@ export interface User {
   role: 'admin' | 'librarian' | 'patron' | null
   email?: string
   [key: string]: any
+  tools: ["gendash", "collacademic"],
 }
 
 interface AuthState {

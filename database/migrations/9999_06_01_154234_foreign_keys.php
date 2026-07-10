@@ -20,6 +20,7 @@ return new class extends Migration
         // Sections Up
         Schema::table('branch_sections', function (Blueprint $table) {
             $table->foreign('section_head_id')->references('id')->on('librarians')->onDelete('cascade');
+            $table->foreign('section_id')->references('id')->on('sections')->onDelete('cascade');
             $table->foreign('branch_id')->references('id')->on('branches')->onDelete('cascade');
         });
 
@@ -52,7 +53,6 @@ return new class extends Migration
             $table->foreign('patron_type_id')->references('id')->on('patron_types')->onDelete('cascade');
         });
 
-
         // Subscriptions Up
         Schema::table('subscriptions', function (Blueprint $table) {
             $table->foreign('thumbnail_id')->references('id')->on('media')->onDelete('cascade');
@@ -64,8 +64,13 @@ return new class extends Migration
             $table->foreign('campus_id')->references('id')->on('campuses')->onDelete('cascade');
         });
 
+        // Items Up
+        Schema::table('items', function (Blueprint $table) {
+            $table->foreign('branch_id')->references('id')->on('branches')->onDelete('cascade');
+        });
+
         // Academics Up
-        Schema::table('academics', function (Blueprint $table){
+        Schema::table('academics', function (Blueprint $table) {
             $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade');
             $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');
         });
@@ -77,12 +82,16 @@ return new class extends Migration
     public function down(): void
     {
         // Academics Down
-        Schema::table('academics', function (Blueprint $table){
+        Schema::table('academics', function (Blueprint $table) {
             $table->dropForeign(['item_id']);
             $table->dropForeign(['department_id']);
         });
         // if (Schema::hasTable('academics')) { Schema::table('academics', function (Blueprint $table) { $table->dropForeign(['item_id']); $table->dropForeign(['department_id']); }); }
-        
+
+        Schema::table('items', function (Blueprint $table) {
+            $table->dropForeign('branch_id');
+        });
+
         // Subscriptions Down
         Schema::table('subscription_credentials', function (Blueprint $table) {
             $table->dropForeign(['subscription_id']);
@@ -127,6 +136,7 @@ return new class extends Migration
         Schema::table('branch_sections', function (Blueprint $table) {
             $table->dropForeign(['section_head_id']);
             $table->dropForeign(['branch_id']);
+            $table->dropForeign(['section_id']);
         });
 
         // Branches Down
@@ -134,6 +144,6 @@ return new class extends Migration
             $table->dropForeign(['campus_id']);
             $table->dropForeign(['logo_id']);
         });
-        
+
     }
 };

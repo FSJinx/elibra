@@ -16,20 +16,31 @@ const router = createRouter({
     // Public Route
     ...publicRoute,
 
+    {
+      path: '/db',
+      component: () => import('@/app/DatabaseSchema.vue'),
+    },
+
+    {
+      path: '/test',
+      component: () => import('@/app/Test.vue'),
+    },
+
     // Admin Route
     {
       path: '/admin',
-      meta: { requiresAuth: false, role: 'admin' },
-      redirect: { name: 'Admin' },
-      component: () => import('@/layouts/management/ManagementLayout.vue'),
+      meta: { requiresAuth: true, role: 'admin' },
+      redirect: { name: 'admin' },
+      component: () => import('@/layouts/management/Layout.vue'),
       children: [...adminRoutes],
     },
 
     // Librarian Route
     {
       path: '/librarian',
-      meta: { requiresAuth: false, role: 'librarian' },
-      component: () => import('@/layouts/management/ManagementLayout.vue'),
+      meta: { requiresAuth: true, role: 'librarian' },
+      redirect: { name: 'librarian' },
+      component: () => import('@/layouts/management/Layout.vue'),
       children: [...librarianRoutes],
     },
   ],
@@ -56,13 +67,14 @@ router.beforeEach(async (to, from) => {
   }
 
   const my = auth?.user
+
   document.title = typeof to.meta.title === 'string' ? to.meta.title : 'e-Libra: The ISU-1 Library Management and Resource Monitoring System'
 
   if (to.meta.maintenance) {
     return { name: 'ServiceUnavailable' }
   }
 
-  if (to.meta.requiresFlow && !accessRoles.split(',').includes(String(my?.role ?? ''))) {
+  if (to.meta.requiresAuth && !accessRoles.split(',').includes(String(my?.role ?? ''))) {
     return { name: 'Forbidden' }
   }
 })

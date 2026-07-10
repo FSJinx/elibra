@@ -16,9 +16,15 @@ return new class extends Migration
             
             $table->unsignedBigInteger('section_head_id')->nullable(); // Nullable if section has no assigned librarian
             $table->unsignedBigInteger('branch_id');
+            $table->unsignedBigInteger('section_id');
             
             $table->timestamps();
             $table->softDeletes();
+
+            // University Library -> Branch
+            // Sections 
+            // - Serials -> Juliet
+            // - General
         });
     }
 
