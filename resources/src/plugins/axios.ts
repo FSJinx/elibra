@@ -5,7 +5,9 @@ import axios from 'axios'
 import router from '@/router'
 import { authStore } from '@/stores/auth'
 
-export const backendRoute = `${(import.meta as any).env.VITE_APP_URL}/api`
+// export const backendRoute = `${(import.meta as any).env.VITE_APP_URL}/api`
+export const backendRoute = `http://localhost:8001/api`
+// export const backendRoute = `http://10.10.149.83:8000/api`
 
 const api = axios.create({
   baseURL: backendRoute,

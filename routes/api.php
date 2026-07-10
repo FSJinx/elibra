@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CampusController;
+use App\Http\Controllers\ItemController;
 use App\Http\Controllers\LibrarianController;
 use App\Http\Controllers\PatronController;
 use App\Http\Controllers\MediaController;

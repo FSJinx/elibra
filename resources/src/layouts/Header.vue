@@ -1,19 +1,24 @@
 <template>
-  <header class="absolute top-0 flex items-center w-full p-5">
-    <div class="grid grid-cols-5 w-6xl mx-auto">
+  <header class="header fixed top-0 inset-0 p-5 w-full h-max bg-white">
+    <div class="flex items-center w-full sm:w-7xl mx-auto">
+      <!-- Banner -->
       <div class="flex items-center col-span-4">
-        <img :src="images.isu" alt="" class="" height="40" width="40" />
+        <img :src="images.logo" alt="" class="" height="40" width="40" />
         <div class="ml-3">
           <h1 class="font-extrabold text-primary text-xl">e-Libra</h1>
-          <p class="text-xs mb-0.5">The ISU-1 Centralized Library Management System for the <span class="font-bold text-primary uppercase">Isabela State university</span></p>
+          <p class="text-xs mb-0.5 hidden sm:block">The ISU-1 Centralized Library Management System for the <span class="font-bold text-primary uppercase">Isabela State university</span></p>
         </div>
       </div>
-      <div class="flex items-center justify-end gap-2">
-        <template v-if="auth.isAuthenticated">
-          <button class="text-sm px-3 py-1.5 hover:underline rounded cursor-pointer" @click="auth.home">Dashboard</button>
-          <img :src="images.isu" alt="" class="" height="30" width="30" />
+
+      <!-- Linkers -->
+      <div class="flex flex-1 items-center justify-end gap-3 mx-auto p-3">
+        <button class="btn border border-primary text-primary hover:bg-secondary/5 transition-all duration-150" v-if="!isAuthenticated">Login</button>
+        <template v-for="q in quickLinks" v-else>
+          <router-link :to="{ name: q?.path }" class="btn hover:text-secondary transition duration-200">
+            <component :is="q?.icon" class="h-4 w-4" />
+            <span :title="'Go to ' + q.label">{{ q.label }}</span>
+          </router-link>
         </template>
-        <router-link :to="{ name: 'Login' }" class="px-4 py-1.5 border border-primary text-primary hover:bg-secondary/5 rounded cursor-pointer transition duration-200" v-else>Login</router-link>
       </div>
     </div>
   </header>
@@ -21,9 +26,15 @@
 
 <script setup lang="ts">
 import images from '@/assets/images'
-import { authStore } from '../stores/auth'
+import { authStore } from '@/stores/auth';
+import { ref } from 'vue'
 
 const auth = authStore()
-</script>
+const isAuthenticated = auth.isAuthenticated
 
-<style scoped></style>
+const quickLinks = ref({
+  home: { label: 'Home', icon: 'House', path: '' },
+  profile: { label: 'Profile', icon: 'UserCircle', path: '' },
+  bag: { label: 'Book Bag', icon: 'ShoppingBag', path: '' },
+})
+</script>

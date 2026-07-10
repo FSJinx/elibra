@@ -1,0 +1,16 @@
+.pop-in-enter-active,
+.pop-in-leave-active {
+  transition: all 0.15s ease;
+}
+
+.pop-in-enter-from,
+.pop-in-leave-to {
+  transform: translateY(-8px);
+  opacity: 0;
+}
+
+.pop-in-enter-to,
+.pop-in-leave-from {
+  transform: translateY(0px);
+  opacity: 1;
+}

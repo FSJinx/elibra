@@ -2,6 +2,8 @@
 
 /* File Imports */
 @import './tailwind.css';
+@import './z-index.css';
+@import './animations/pop-in.css';
 
 /* Main Body Styling */
 html {
@@ -27,12 +29,4 @@ html {
 body {
   margin: 0;
   padding: 0;
-}
-
-.modal-wrapper {
-  z-index: 1999;
-}
-
-.popup-wrapper {
-  z-index: 2999;
 }

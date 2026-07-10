@@ -9,7 +9,7 @@
   --color-primary-light: #a1dfb9;
   --color-primary-dark: #006838;
   --color-muted: #6c757d; */
-  
+
   /* ==========================
   * Primary
   * ========================== */
@@ -68,20 +68,34 @@
   --color-yellow-orange-dark: #b45309;
 }
 
+/* Button and Input */
 @layer components {
-  .nav-link {
-    @apply px-4 py-2;
+  .btn {
+    @apply flex items-center gap-2 px-3 py-2  cursor-pointer rounded;
   }
 
-  .nav-btn {
-    @apply px-8 py-1.5 rounded;
+  .icon-btn {
+    @apply flex items-center p-2;
   }
+}
 
-  .announcement-page-btn {
-    @apply text-center w-30 h-full p-5 hover:bg-neutral-700/25 font-bold text-6xl duration-300 cursor-pointer rounded-sm;
+/* Input */
+@layer components {
+  .input {
+    @apply px-3 py-2 rounded-sm hover:border-primary;
   }
+}
 
-  .input, .button {
-    @apply px-4 py-2 rounded border border-slate-300;
+/* Card */
+@layer components {
+  .card {
+    @apply flex flex-col rounded-xl border border-slate-300 shadow-sm bg-white;
+  }
+}
+
+/* Badge */
+@layer components {
+  .badge {
+    @apply p-3 aspect-square rounded-md border;
   }
 }

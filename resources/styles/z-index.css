@@ -1,0 +1,17 @@
+/* 
+    Here is the listiing of z-indexes
+    Just so I could monitor the leveling of the overlays
+
+    Modal - 2000
+    Popup - 3000
+*/
+
+
+
+.modal-wrapper {
+  z-index: 2000;
+}
+
+.popup-wrapper {
+  z-index: 3000;
+}
