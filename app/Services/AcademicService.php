@@ -34,4 +34,41 @@ class AcademicService
 
         });
     }
+
+    public function update(Academic $academic, array $data): Academic
+    {
+        return DB::transaction(function () use ($academic, $data){
+            
+            $academic->item->update(
+                Arr::only($data, [
+                    'title', 
+                    'subtitle', 
+                    'description', 
+                    'keywords'
+                ])
+            );
+
+            $academic->update(
+                Arr::only($data, [
+                    'call_number',
+                    'language',
+                    'category',
+                    'publication_year',
+                    'subjects',
+                    'department_id'
+                ])
+            );
+            
+            // Refresh the academic model to get the latest data from the database
+            return $academic->refresh(); 
+        });
+    }
+
+    public function delete(Academic $academic): void
+    {
+        DB::transaction(function () use ($academic){
+            $academic->item->delete();
+            $academic->delete();
+        });
+    }
 }

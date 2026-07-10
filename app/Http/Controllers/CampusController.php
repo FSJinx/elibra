@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 class CampusController extends Controller
 {
 
+
     public function index(Request $request)
     {
         $search = $request->query('query');
@@ -49,7 +50,16 @@ class CampusController extends Controller
      */
     public function store(StoreCampusRequest $request)
     {
-        //
+        $this->authorize('create', Campus::class);
+
+        $campus = Campus::create($request->validated());
+
+        return $this->response(
+            'success',
+            'Campus created successfully',
+            $campus->toArray(),
+            201
+        );
     }
 
     /**

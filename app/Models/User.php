@@ -64,4 +64,21 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     {
         return $this->belongsTo($this->patron(), 'program_id');
     }
+
+    // Check if user has a primary role
+    // Tapno awamen ti primary role ti user, mabalin mo nga usaren daytoy a method
+    public function hasPrimaryRole(string $role): bool
+    {
+        return strtolower($this->librarian?->primary_role?->name ?? '') === strtolower($role);
+    }
+
+    public function hasRole(string $role): bool
+    {
+        return strtolower($this->role ?? '' ) === strtolower($role);
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->hasRole('admin');
+    }
 }
