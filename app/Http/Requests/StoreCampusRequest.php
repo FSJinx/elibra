@@ -12,7 +12,7 @@ class StoreCampusRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +23,23 @@ class StoreCampusRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'string', 'max:255'],
+            'code' => ['required', 'string', 'max:10'],
+            'address' => ['required', 'string', 'max:255'],
+        ];
+    }
+
+    /**
+     * Get custom messages for validator errors.
+     *
+     * @return array
+     */
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'Name is required',
+            'code.required' => 'Code is required',
+            'address.required' => 'Address is required',
         ];
     }
 }

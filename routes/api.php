@@ -63,6 +63,15 @@ Route::group(['prefix' => '/item'], function () {
     });
 });
 
+//Admin Routes
+Route::group(['prefix' => '/campus'], function () {
+
+    Route::group(['prefix' => '/create'], function(){
+        Route::post('', [CampusController::class, 'store'])->middleware('jwt.auth', 'role:admin');
+    });    
+
+});
+
 //Librarian Routes
 Route::group(['prefix' => '/librarian'], function () {
 

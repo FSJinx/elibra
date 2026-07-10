@@ -72,4 +72,13 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         return strtolower($this->librarian?->primary_role?->name ?? '') === strtolower($role);
     }
 
+    public function hasRole(string $role): bool
+    {
+        return strtolower($this->role ?? '' ) === strtolower($role);
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->hasRole('admin');
+    }
 }
