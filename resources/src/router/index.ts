@@ -21,11 +21,16 @@ const router = createRouter({
       component: () => import('@/app/DatabaseSchema.vue'),
     },
 
+    {
+      path: '/test',
+      component: () => import('@/app/Test.vue'),
+    },
+
     // Admin Route
     {
       path: '/admin',
       meta: { requiresAuth: true, role: 'admin' },
-      redirect: { name: 'Admin' },
+      redirect: { name: 'admin' },
       component: () => import('@/layouts/management/Layout.vue'),
       children: [...adminRoutes],
     },
@@ -34,7 +39,7 @@ const router = createRouter({
     {
       path: '/librarian',
       meta: { requiresAuth: true, role: 'librarian' },
-      redirect: { name: 'Librarian' },
+      redirect: { name: 'librarian' },
       component: () => import('@/layouts/management/Layout.vue'),
       children: [...librarianRoutes],
     },

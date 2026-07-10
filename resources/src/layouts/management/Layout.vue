@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col w-full h-screen overflow-hidden">
+  <div class="flex flex-col w-full h-screen overflow-hidden bg-slate-50">
     <Header @toggleSidebar="toggleSidebar" />
 
     <!-- Main Body -->
@@ -7,7 +7,7 @@
       <!-- Sidebar -->
       <Sidebar :is-open="isSidebarOpen" />
 
-      <main class="flex flex-1 flex-col h-full w-full overflow-y-auto bg-linear-to-br from-teal-50/50 via-white to-green-50/50">
+      <main class="flex flex-1 flex-col h-full w-full overflow-y-auto border-l border-t border-slate-300 bg-white rounded-tl-4xl ml-4">
         <router-view />
       </main>
     </div>

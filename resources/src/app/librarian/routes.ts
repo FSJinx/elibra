@@ -1,12 +1,12 @@
 export const librarianRoutes = [
   {
     path: '',
-    name: 'Librarian',
+    name: 'librarian',
     component: () => import('@/app/librarian/dashboard/Dashboard.vue'),
   },
   {
     path: 'academics',
-    name: 'Librarian Academics',
-    component: () => import('@/app/librarian/dashboard/Dashboard.vue'),
+    name: 'librarian.academics',
+    component: () => import('@/app/librarian/academics/Academics.vue'),
   },
 ]

@@ -1,12 +1,12 @@
 <template>
   <div class="relative">
     <transition name="search">
-      <span class="p-2 absolute" v-if="!isSearching">
+      <span class="p-2 ml-1 absolute" v-if="!isSearching">
         <Search class="h-5 w-5 text-slate-500" />
       </span>
     </transition>
     <input ref="inputRef" v-model="model" type="text" id="query" name="query" :class="inputClass" placeholder="Search" autocomplete="off" @focus="handleFocus" @blur="emit('blur')" @input="emit('input')" />
-    <span class="p-2 absolute right-0 cursor-pointer" v-if="model" @click="clear">
+    <span class="p-2 mr-1 absolute right-0 cursor-pointer" v-if="model" @click="clear">
       <X class="h-5 w-5 text-slate-500" />
     </span>
   </div>
@@ -31,7 +31,7 @@ const props = withDefaults(
 )
 
 const inputClass = computed(() => {
-  let def = 'w-md pr-4 py-2 bg-slate-100 border border-slate-300 rounded-full hover:border-primary transition-all duration-200'
+  let def = 'w-md pr-4 py-2 bg-slate-200 border border-slate-300 rounded-full hover:border-primary transition-all duration-200'
   let c = []
   if (props.isSearching) {
     c.push('pl-4')

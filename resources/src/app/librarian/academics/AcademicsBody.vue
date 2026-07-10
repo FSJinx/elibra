@@ -1,43 +1,38 @@
 <template>
-  <div class="">
-    <div class="overflow-hidden">
+  <div class="flex-1 px-5 pb-5">
+    <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
       <div class="flex items-center justify-between border-b border-slate-200 px-5 py-4">
         <div>
-          <h2 class="text-2xl font-semibold text-slate-900">Academic Collection</h2>
+          <h2 class="text-base font-semibold text-slate-900">Academic Collection</h2>
           <p class="text-sm text-slate-500">Browse and manage the academic records in the library collection.</p>
         </div>
 
         <p class="text-sm text-slate-500">{{ academicRecords.length }} records</p>
       </div>
 
-      <div class="flex items-center gap-2 px-5 py-3">
-        <input name="academic-query" id="academic-query" type="text" class="w-md px-4 h-11 bg-slate-50 border border-slate-300 rounded-md" placeholder="Search by title, call number, researcher" />
-        <Button class="bg-primary text-white h-11">
-          <Icon icon="Plus" size="small"></Icon>
-          <span>Create New</span>
-        </Button>
-      </div>
 
       <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-slate-200 text-left">
           <thead class="bg-slate-50">
-            <tr class="text-center">
-              <th class="px-5 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500 text-left">Title</th>
-              <th class="px-5 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">Call Number</th>
+            <tr>
+              <th class="px-5 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">Title</th>
+              <th class="px-5 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">Code</th>
+              <th class="px-5 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">Department</th>
               <th class="px-5 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">Type</th>
               <th class="px-5 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">Updated</th>
               <th class="px-5 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">Status</th>
-              <th class="px-5 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">Actions</th>
+              <th class="px-5 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500 text-right">Actions</th>
             </tr>
           </thead>
 
           <tbody class="divide-y divide-slate-200 bg-white">
-            <tr v-for="record in academicRecords" :key="record.id" class="hover:bg-slate-50 text-center">
-              <td class="px-5 py-4 text-left space-y-1">
+            <tr v-for="record in academicRecords" :key="record.id" class="hover:bg-slate-50/80">
+              <td class="px-5 py-4">
                 <div class="font-medium text-slate-900">{{ record.title }}</div>
                 <div class="text-sm text-slate-500">{{ record.description }}</div>
               </td>
               <td class="px-5 py-4 text-sm text-slate-600">{{ record.code }}</td>
+              <td class="px-5 py-4 text-sm text-slate-600">{{ record.department }}</td>
               <td class="px-5 py-4 text-sm text-slate-600">{{ record.type }}</td>
               <td class="px-5 py-4 text-sm text-slate-600">{{ record.updatedAt }}</td>
               <td class="px-5 py-4">
@@ -46,7 +41,7 @@
                 </span>
               </td>
               <td class="px-5 py-4">
-                <div class="flex justify-center gap-2">
+                <div class="flex justify-end gap-2">
                   <button type="button" class="inline-flex items-center rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-300 hover:bg-slate-100">Edit</button>
                   <button type="button" class="inline-flex items-center rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-300 hover:bg-slate-100">View</button>
                   <button type="button" class="inline-flex items-center rounded-lg border border-rose-200 px-3 py-2 text-sm font-medium text-rose-600 transition hover:border-rose-300 hover:bg-rose-50">Delete</button>
@@ -61,9 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import Button from '../../../components/ui/Button.vue'
-import Icon from '../../../components/ui/Icon.vue'
 
 const academicRecords = [
   {

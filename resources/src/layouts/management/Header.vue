@@ -1,6 +1,6 @@
 <template>
   <!-- Header -->
-  <header class="grid grid-cols-3 border-b border-slate-300">
+  <header class="grid grid-cols-3 border-slate-300">
     <!-- Banner -->
     <div class="flex flex-1 items-center py-4 px-5 gap-3 select-none mr-auto">
       <div class="flex rounded-sm border border-slate-300 p-2.5 cursor-pointer" @click="$emit('toggleSidebar')">
