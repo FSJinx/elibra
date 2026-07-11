@@ -3,11 +3,11 @@
     <Header @toggleSidebar="toggleSidebar" />
 
     <!-- Main Body -->
-    <div class="flex">
+    <div class="flex flex-1 min-h-0">
       <!-- Sidebar -->
       <Sidebar :is-open="isSidebarOpen" />
 
-      <main class="flex flex-1 flex-col h-full w-full overflow-y-auto border-l border-t border-slate-300 bg-white rounded-tl-4xl ml-4">
+      <main class="flex-1 w-full overflow-y-auto overflow-x-hidden border-l border-t border-slate-300 bg-white rounded-tl-2xl">
         <router-view />
       </main>
     </div>
@@ -30,4 +30,13 @@ const toggleSidebar = () => {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+main {
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color 0.25s ease;
+}
+
+main:hover {
+  scrollbar-color: #808080bf transparent;
+}
+</style>

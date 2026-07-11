@@ -1,20 +1,18 @@
 <template>
-  <aside :class="['flex flex-col h-screen relative border-slate-300 whitespace-nowrap text-nowrap flex-nowrap overflow-hidden transition-all duration-300', isOpen ? 'w-70' : 'w-0']">
-    <div class="relative flex flex-col min-w-70 overflow-hidden">
-      <div class="sidebar h-full overflow-y-auto whitespace-nowrap text-nowrap flex-nowrap">
-        <div class="" v-for="(menu, index) in menus.librarian" :key="index">
+  <aside :class="['flex flex-col h-full relative border-slate-300 whitespace-nowrap text-nowrap flex-nowrap overflow-hidden transition-all duration-300', isOpen ? 'w-70' : 'w-0']">
+    <div class="relative flex flex-col min-w-70 overflow-hidden py-0">
+      <div class="sidebar h-full whitespace-nowrap text-nowrap flex-nowrap pl-1 pt-0">
+        <div class="" v-for="(menu, index) in filteredMenus" :key="index">
           <div class="flex flex-col p-2 gap-2">
             <p class="text-sm text-gray-500 font-semibold">{{ menu.name }}</p>
 
             <template v-for="(item, index) in menu.children" :key="index">
-              <router-link :to="{ name: item.path }" class="flex items-center p-3 px-3 gap-2 rounded-md hover:bg-gray-100">
-                <component :is="item.icon" class="h-5 w-5" />
+              <router-link :to="{ name: item.path }" class="flex items-center p-3 gap-2 rounded-md hover:bg-gray-100">
+                <component :is="item.icon" class="h-4 w-4 mr-2" />
                 <span class="">{{ item.name }}</span>
               </router-link>
             </template>
           </div>
-
-          <!-- <hr class="border-slate-200" v-if="index !== Object.keys(menus.admin)[Object.keys(menus.admin).length - 1]" /> -->
         </div>
       </div>
     </div>
@@ -30,7 +28,8 @@ const auth = authStore()
 const user = auth?.user
 
 const filteredMenus = computed(() => {
-  let menu = user?.role && user.role in menus ? menus[user.role as keyof typeof menus] : []
+  // let menu = user?.role && user.role in menus ? menus[user.role as keyof typeof menus] : []
+  let menu = menus[user?.role as keyof typeof menus] ?? []
 
   return menu
 })
@@ -43,4 +42,16 @@ const props = withDefaults(
 )
 </script>
 
-<style scoped></style>
+<style scoped>
+.sidebar {
+  overflow-y: auto;
+  scrollbar-width: 8px;
+  scrollbar-color: transparent transparent;
+
+  transition: scrollbar-color 0.5s ease;
+}
+
+.sidebar:hover {
+  scrollbar-color: gray transparent;
+}
+</style>

@@ -1,8 +1,8 @@
 export const errorRoutes = [
   {
     path: '/:pathMatch(.*)*',
-    name: 'Forbidden',
-    component: () => import('@/app/error/Forbidden.vue'),
+    name: 'NotFound',
+    component: () => import('@/app/error/NotFound.vue'),
   },
   {
     path: '/forbidden',

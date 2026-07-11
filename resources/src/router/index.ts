@@ -8,6 +8,7 @@ import { authStore } from '@/stores/auth'
 import { publicRoute } from '@/app/public/routes'
 import { adminRoutes } from '@/app/admin/routes'
 import { librarianRoutes } from '@/app/librarian/routes'
+import { errorRoutes } from '../app/error/route'
 
 const router = createRouter({
   // cast import.meta to any to access env in environments where ImportMeta types aren't defined
@@ -27,22 +28,13 @@ const router = createRouter({
     },
 
     // Admin Route
-    {
-      path: '/admin',
-      meta: { requiresAuth: true, role: 'admin' },
-      redirect: { name: 'admin' },
-      component: () => import('@/layouts/management/Layout.vue'),
-      children: [...adminRoutes],
-    },
+    ...adminRoutes,
 
     // Librarian Route
-    {
-      path: '/librarian',
-      meta: { requiresAuth: true, role: 'librarian' },
-      redirect: { name: 'librarian' },
-      component: () => import('@/layouts/management/Layout.vue'),
-      children: [...librarianRoutes],
-    },
+    ...librarianRoutes,
+
+    // Error Routes
+    ...errorRoutes,
   ],
 
   scrollBehavior(to, from, savedPosition) {
