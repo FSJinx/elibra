@@ -99,3 +99,24 @@
     @apply p-3 aspect-square rounded-md border;
   }
 }
+
+/* Table */
+@layer components {
+  tr {
+    @apply hover:bg-slate-50/80;
+  }
+
+  thead {
+    @apply border-y border-slate-300;
+  }
+
+  tbody,
+  thead {
+    @apply divide-y divide-slate-200;
+  }
+
+  th,
+  td {
+    @apply p-5;
+  }
+}

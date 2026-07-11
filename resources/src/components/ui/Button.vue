@@ -23,6 +23,7 @@ const props = withDefaults(defineProps<Props>(), {
   size: 'default',
   loading: false
 })
+
 const size = computed(() => {
   if (props.size === 'small') {
     return 'text-sm h-8'
