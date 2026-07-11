@@ -17,11 +17,11 @@ return new class extends Migration
             $table->string('subtitle');
             $table->string('description');
             $table->string('keywords');
+            $table->unsignedBigInteger('branch_id');
 
             $table->timestamps();
             $table->softDeletes();
 
-            $table->unsignedBigInteger('branch_id');
         });
     }
 

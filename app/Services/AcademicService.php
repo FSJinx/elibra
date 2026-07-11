@@ -17,7 +17,8 @@ class AcademicService
                     'title', 
                     'subtitle', 
                     'description', 
-                    'keywords'
+                    'keywords',
+                    'branch_id'
                 ])
             );
 
@@ -44,7 +45,8 @@ class AcademicService
                     'title', 
                     'subtitle', 
                     'description', 
-                    'keywords'
+                    'keywords',
+                    'branch_id'
                 ])
             );
 
