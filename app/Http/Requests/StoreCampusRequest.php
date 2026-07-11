@@ -23,9 +23,9 @@ class StoreCampusRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'code' => ['required', 'string', 'max:10'],
-            'address' => ['required', 'string', 'max:255'],
+            'name' => 'required|string|max:255',
+            'code' => 'required|string|max:10|unique:campuses,code',
+            'address' => 'required|string|max:255',
         ];
     }
 
@@ -39,6 +39,8 @@ class StoreCampusRequest extends FormRequest
         return [
             'name.required' => 'Name is required',
             'code.required' => 'Code is required',
+            'code.unique' => 'Code must be unique',
+            'code.max' => 'Code must not exceed 10 characters',
             'address.required' => 'Address is required',
         ];
     }

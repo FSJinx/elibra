@@ -21,7 +21,7 @@ class CampusPolicy
      */
     public function view(User $user, Campus $campus): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
     /**
@@ -37,7 +37,7 @@ class CampusPolicy
      */
     public function update(User $user, Campus $campus): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
     /**
@@ -45,7 +45,7 @@ class CampusPolicy
      */
     public function delete(User $user, Campus $campus): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
     /**
