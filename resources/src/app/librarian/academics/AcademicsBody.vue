@@ -10,7 +10,6 @@
         <p class="text-sm text-slate-500">{{ academicRecords.length }} records</p>
       </div>
 
-
       <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-slate-200 text-left">
           <thead class="bg-slate-50">
@@ -56,7 +55,6 @@
 </template>
 
 <script setup lang="ts">
-import Button from '../../../components/ui/Button.vue'
 
 const academicRecords = [
   {

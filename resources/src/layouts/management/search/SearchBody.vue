@@ -1,18 +1,16 @@
 <template>
   <Transition name="pop-in">
-    <div class="absolute top-9.5 translate-x-1/2 right-1/2 bg-white shadow-lg w-md rounded-xl rounded-tr-none rounded-tl-none border border-slate-200 max-h-150 flex flex-col overflow-hidden z-50" v-if="show">
-      <div class="p-2">
-        <div class="text-sm p-2 w-sm line-clamp-1" v-if="searchableOptions.length > 0">
-          Showing results for <span class="italic">"{{ query }}"</span>
-        </div>
+    <div class="absolute top-11 translate-x-1/2 right-1/2 bg-white shadow-lg w-md rounded-xl border border-slate-200 flex flex-col overflow-hidden z-50" v-if="show">
+      <div class="">
+        <div class="text-sm p-5 w-sm line-clamp-1" v-if="searchableOptions.length > 0">Showing {{ searchableOptions.length }} result{{ searchableOptions.length > 1 ? 's' : '' }}</div>
 
-        <div class="w-full overflow-y-auto">
+        <div class="w-full overflow-y-auto transition-all duration-200" :class="show ? 'max-h-150 opacity-100' : 'max-h-0 opacity-0'">
           <div class="flex flex-col items-center gap-2 p-5 text-gray-500 text-center line-clamp-1" v-if="searchableOptions.length <= 0">
             <XCircle class="h-10 w-10" :stroke-width="1.5" />
             No result came up.
           </div>
           <template v-for="option in searchableOptions" v-else>
-            <div class="flex items-center p-2 px-4 gap-3 hover:bg-slate-100 rounded-lg cursor-pointer">
+            <div class="flex items-center p-3 px-4 gap-3 hover:bg-slate-100 cursor-pointer">
               <div class="flex-1 space-y-1">
                 <p>{{ option.name }}</p>
                 <p class="text-sm text-slate-500">{{ option.description }}</p>

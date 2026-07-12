@@ -1,5 +1,5 @@
 <template>
-  <button :class="[size]" class="inline-flex items-center justify-center gap-1 text-center leading-none rounded-md px-4 border cursor-pointer">
+  <button :class="[size, getRadius(radius), getVariant(variant, color)]" class="text-shadow inline-flex shrink-0 items-center justify-center gap-1 border text-center leading-none px-3 cursor-pointer transition-all duration-200">
     <component :is="iconLeft" :class="[iconSize, 'mr-1']"></component>
     <slot />
     <component :is="iconRight" :class="[iconSize, 'ml-1']"></component>
@@ -9,11 +9,14 @@
 <!-- Imports and Initializations -->
 <script setup lang="ts">
 import { computed } from 'vue'
+import { getRadius, Radius } from '../../composables/useRadius'
+import { getVariant, type Colors, type Variants } from '../../composables/useVariants'
 
 interface Props {
+  radius?: Radius
+  variant?: Variants
   size?: 'small' | 'medium' | 'large' | 'default'
-  variant?: 'solid' | 'outline' | 'outline-solid'
-  color?: 'primary' | 'secondary' | 'danger' | ''
+  color?: Colors
   iconRight?: string
   iconLeft?: string
   loading?: true | false
@@ -21,7 +24,10 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   size: 'default',
-  loading: false
+  loading: false,
+  radius: 'cube',
+  variant: 'default',
+  color: 'text',
 })
 
 const size = computed(() => {
