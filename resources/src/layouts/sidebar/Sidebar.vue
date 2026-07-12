@@ -7,8 +7,8 @@
             <p class="text-sm text-gray-500 font-semibold">{{ menu.name }}</p>
 
             <template v-for="(item, index) in menu.children" :key="index">
-              <router-link :to="{ name: item.path }" class="flex items-center p-3 gap-2 rounded-md hover:bg-gray-100">
-                <component :is="item.icon" class="h-4 w-4 mr-2" />
+              <router-link :to="{ name: item.path }" class="flex items-center p-4 gap-2 rounded hover:bg-slate-200 transition duration-150" exact-active-class="bg-slate-200">
+                <Eicon :icon="item.icon" />
                 <span class="">{{ item.name }}</span>
               </router-link>
             </template>
@@ -23,6 +23,7 @@
 import { menus } from './sidebar'
 import { authStore } from '../../stores/auth'
 import { computed, ref } from 'vue'
+import Eicon from '../../components/ui/Eicon.vue'
 
 const auth = authStore()
 const user = auth?.user

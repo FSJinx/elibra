@@ -2,16 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Campus;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCampusRequest;
 use App\Http\Requests\UpdateCampusRequest;
+use App\Models\Campus;
 use Illuminate\Http\Request;
 
 class CampusController extends Controller
 {
-
-
     public function index(Request $request)
     {
         $search = $request->query('query');
@@ -21,12 +18,10 @@ class CampusController extends Controller
         $campus = Campus::query();
 
         if ($search) {
-            $campus->where('name', 'LIKE', '%' . $search . '%')
-            ->orWhere('code', 'LIKE', '%' . $search . '%')
-            ->orWhere('address', 'LIKE', '%' . $search . '%')
-            ;
+            $campus->where('name', 'LIKE', '%'.$search.'%')
+                ->orWhere('code', 'LIKE', '%'.$search.'%')
+                ->orWhere('address', 'LIKE', '%'.$search.'%');
         }
-        
 
         if ($sort && is_array($sort)) {
             foreach ($sort as $field) {
@@ -34,7 +29,7 @@ class CampusController extends Controller
             }
         }
 
-        return json_encode($campus->get(['id', 'name']));
+        return json_encode($campus->get(['*']));
     }
 
     /**

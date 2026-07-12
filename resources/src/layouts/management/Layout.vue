@@ -23,8 +23,6 @@ import Header from './Header.vue'
 const isSidebarOpen = ref(localStorage.getItem('__sidebar') === 'true')
 
 const toggleSidebar = () => {
-  console.log('Clicked')
-
   isSidebarOpen.value = !isSidebarOpen.value
   localStorage.setItem('__sidebar', isSidebarOpen.value.toString())
 }

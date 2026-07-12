@@ -11,7 +11,7 @@ export interface User {
   role: 'admin' | 'librarian' | 'patron' | null
   email?: string
   [key: string]: any
-  tools: ["gendash", "collacademic"],
+  tools: ['gendash', 'collacademic']
 }
 
 interface AuthState {
@@ -74,8 +74,8 @@ export const authStore = defineStore('user', {
 
     home() {
       const routes: Record<string, string> = {
-        admin: 'Admin',
-        librarian: 'Librarian',
+        admin: 'admin',
+        librarian: 'librarian',
         patron: 'Patron',
         default: 'Home',
       }

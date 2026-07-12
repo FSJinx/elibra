@@ -60,7 +60,7 @@ router.beforeEach(async (to, from) => {
 
   const my = auth?.user
 
-  document.title = typeof to.meta.title === 'string' ? to.meta.title : 'e-Libra: The ISU-1 Library Management and Resource Monitoring System'
+  document.title = typeof to.meta.title === 'string' ? 'e-Libra: ' + my?.role?.charAt(0).toUpperCase() + my?.role?.slice(1) + ' | ' + to.meta.title : 'e-Libra: The ISU-1 Library Management and Resource Monitoring System'
 
   if (to.meta.maintenance) {
     return { name: 'ServiceUnavailable' }
