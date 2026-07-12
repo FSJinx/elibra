@@ -23,7 +23,7 @@
 import { menus } from './sidebar'
 import { authStore } from '../../stores/auth'
 import { computed, ref } from 'vue'
-import Eicon from '../../components/ui/Eicon.vue'
+import Eicon from '../../components/ui/eIcon.vue'
 
 const auth = authStore()
 const user = auth?.user

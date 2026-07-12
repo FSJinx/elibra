@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
-import Icon from '../../../components/ui/Eicon.vue'
+import Icon from '../../../components/ui/eIcon.vue'
 import CampusTable from './CampusTable.vue'
 import IconButton from '../../../components/ui/EiconButton.vue'
 import { useCampus } from '../../../stores/campusCache.js'

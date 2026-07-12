@@ -1,7 +1,7 @@
 export type Variants = 'default' | 'default-hover' | 'solid' | 'solid-hover' | 'outline' | 'outline-hover' | 'outline-solid' | 'outline-soft' | 'outline-soft-hover' | 'soft' | 'soft-hover' | 'text' | 'text-hover'
 export type Colors = 'success' | 'danger' | 'info' | 'warning' | 'text'
 
-const variants: Record<Variants, Record<Colors, string>> = {
+export const variants: Record<Variants, Record<Colors, string>> = {
   default: {
     success: 'border-transparent text-green-600 dark:text-green-500',
     danger: 'border-transparent text-red-600 dark:text-red-500',
@@ -42,7 +42,7 @@ const variants: Record<Variants, Record<Colors, string>> = {
     danger: ' border-red-600 text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30',
     info: ' border-blue-600 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/30',
     warning: ' border-yellow-500 text-yellow-500 hover:bg-yellow-50 dark:hover:bg-yellow-950/30',
-    text: ' border-slate-300 text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800/50',
+    text: ' border-slate-500 text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800/50',
   },
   'outline-solid': {
     success: ' border-green-500 text-green-600 hover:bg-green-500 hover:text-white dark:hover:bg-green-500',
@@ -91,9 +91,7 @@ const variants: Record<Variants, Record<Colors, string>> = {
     danger: 'bg-slate-50 border-slate-300 text-red-600 hover:shadow-[0_0_0_.15rem] hover:shadow-red-200/80 dark:hover:bg-red-950/30',
     info: 'bg-slate-50 border-slate-300 text-blue-600 hover:shadow-[0_0_0_.15rem] hover:shadow-blue-200/80 dark:hover:bg-blue-950/30',
     warning: 'bg-slate-50 border-slate-300 text-yellow-500 hover:shadow-[0_0_0_.15rem] hover:shadow-yellow-200/80 dark:hover:bg-yellow-950/30',
-    text: 'bg-slate-50 border-slate-300 text-slate-600 hover:shadow-[0_0_0_.15rem] hover:shadow-secondary/40 dark:text-slate-400 dark:hover:bg-slate-800',
+    text: 'bg-slate-50 border-slate-300 text-slate-800 hover:shadow-[0_0_0_.15rem] hover:shadow-secondary/40 dark:text-slate-400 dark:hover:bg-slate-800',
   },
 }
-export function getVariant(variant: Variants, color: Colors) {
-  return variants[variant ?? 'none'][color ?? 'text']
-}
+
