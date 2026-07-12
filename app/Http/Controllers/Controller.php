@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Tymon\JWTAuth\JWTGuard;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use App\Models\User;
 
 abstract class Controller
 {
@@ -17,7 +18,7 @@ abstract class Controller
         return $auth;
     }
 
-    protected function user()
+    protected function user(): ?User
     {
         return $this->auth()->user();
     }

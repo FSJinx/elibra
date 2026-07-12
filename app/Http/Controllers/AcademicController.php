@@ -24,7 +24,8 @@ class AcademicController extends Controller
      */
     public function index()
     {
-        //
+        //$this ->authorize('viewAny', Academic::class);
+
     }
 
     /**

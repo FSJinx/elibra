@@ -14,7 +14,34 @@ class BranchController extends Controller
      */
     public function index()
     {
-        //
+        $user = $this->user();
+
+        // if user os authenticated and a library admin
+        if ($user && $user->hasPrimaryRole('library admin')) {
+            $campusId = $user->librarian->branch->campus_id;
+
+            $branches = Branch::where('campus_id', $campusId)->get();
+        } else {
+            //returns all the branch
+            $branches = Branch::get([
+                'name', 
+                'contact_info', 
+                'email', 
+                'opening_hour', 
+                'closing_hour',
+                
+                'logo_id',
+                'branch_head_id',
+                'campus_id'
+            ]);
+        }
+
+        return $this->response(
+            'success',
+            'Branches retrieved successfully',
+            $branches->toArray(),
+            200
+        );
     }
 
     /**
@@ -30,7 +57,17 @@ class BranchController extends Controller
      */
     public function store(StoreBranchRequest $request)
     {
-        //
+        $this->authorize('create', Branch::class);
+
+        $branch = Branch::create($request->validated());
+
+        return $this->response(
+            'success',
+            'Branch created successfully',
+            $branch->toArray(),
+            201
+        );
+        
     }
 
     /**
@@ -54,7 +91,16 @@ class BranchController extends Controller
      */
     public function update(UpdateBranchRequest $request, Branch $branch)
     {
-        //
+        $this->authorize('update', $branch);
+
+        $branch->update($request->validated());
+
+        return $this->response(
+            'success',
+            'Branch updated successfully',
+            $branch->toArray(),
+            200
+        );
     }
 
     /**
@@ -62,6 +108,16 @@ class BranchController extends Controller
      */
     public function destroy(Branch $branch)
     {
-        //
+        $this->authorize('delete', $branch);
+        
+        $branch->delete();
+
+        return $this->response(
+            'success',
+            'Branch deleted successfully',
+            null,
+            200
+        );
+
     }
 }

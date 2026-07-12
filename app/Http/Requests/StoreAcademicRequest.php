@@ -28,6 +28,7 @@ class StoreAcademicRequest extends FormRequest
             'subtitle' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'keywords' => 'nullable|string',
+            'branch_id' => 'required|exists:branches,id',
 
             // Academic table fields
             'call_number' => 'required|string|max:255|unique:academics,call_number',
@@ -49,6 +50,8 @@ class StoreAcademicRequest extends FormRequest
     {
         return [
             'title.required' => 'Title is required',
+            'branch_id.required' => 'Branch is required',
+            'branch_id.exists' => 'Selected branch does not exist',
             'call_number.required' => 'Call number is required',
             'call_number.unique' => 'Call number already exists',
             'language.required' => 'Language is required',

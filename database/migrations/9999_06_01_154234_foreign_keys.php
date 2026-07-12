@@ -14,6 +14,7 @@ return new class extends Migration
         // Branches Up
         Schema::table('branches', function (Blueprint $table) {
             $table->foreign('logo_id')->references('id')->on('media')->onDelete('cascade');
+            $table->foreign('branch_head_id')->references('id')->on('librarians')->onDelete('cascade');
             $table->foreign('campus_id')->references('id')->on('campuses')->onDelete('cascade');
         });
 
@@ -89,7 +90,7 @@ return new class extends Migration
         // if (Schema::hasTable('academics')) { Schema::table('academics', function (Blueprint $table) { $table->dropForeign(['item_id']); $table->dropForeign(['department_id']); }); }
 
         Schema::table('items', function (Blueprint $table) {
-            $table->dropForeign('branch_id');
+            $table->dropForeign(['branch_id']);
         });
 
         // Subscriptions Down
@@ -142,6 +143,7 @@ return new class extends Migration
         // Branches Down
         Schema::table('branches', function (Blueprint $table) {
             $table->dropForeign(['campus_id']);
+            $table->dropForeign(['branch_head_id']);
             $table->dropForeign(['logo_id']);
         });
 

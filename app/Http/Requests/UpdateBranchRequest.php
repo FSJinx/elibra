@@ -12,7 +12,7 @@ class UpdateBranchRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,8 +22,21 @@ class UpdateBranchRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            //
+        $rules = [
+            'name' => 'sometimes|required|string|max:255',
+            'contact_info' => 'sometimes|nullable|string|max:255',
+            'email' => 'sometimes|nullable|email|max:255|unique:branches,email,' . $this->route('branch')->id,
+            'opening_hour' => 'sometimes|nullable|date_format:H:i',
+            'closing_hour' => 'sometimes|nullable|date_format:H:i|after:opening_hour',
+            'logo_id' => 'sometimes|nullable|exists:media,id',
+            'branch_head_id' => 'sometimes|nullable|exists:librarians,id',
         ];
+
+        // Only allow admins to update campus_id
+        if($this->user()->isAdmin()){
+            $rules['campus_id'] = 'sometimes|required|exists:campuses,id';
+        }
+
+        return $rules;
     }
 }
