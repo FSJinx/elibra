@@ -14,7 +14,34 @@ class BranchController extends Controller
      */
     public function index()
     {
-        //
+        $user = $this->user();
+
+        // if user os authenticated and a library admin
+        if ($user && $user->hasPrimaryRole('library admin')) {
+            $campusId = $user->librarian->branch->campus_id;
+
+            $branches = Branch::where('campus_id', $campusId)->get();
+        } else {
+            //returns all the branch
+            $branches = Branch::get([
+                'name', 
+                'contact_info', 
+                'email', 
+                'opening_hour', 
+                'closing_hour',
+                
+                'logo_id',
+                'branch_head_id',
+                'campus_id'
+            ]);
+        }
+
+        return $this->response(
+            'success',
+            'Branches retrieved successfully',
+            $branches->toArray(),
+            200
+        );
     }
 
     /**

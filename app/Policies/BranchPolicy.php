@@ -21,6 +21,7 @@ class BranchPolicy
      */
     public function view(User $user, Branch $branch): bool
     {
+        // return $user->hasPrimaryRole('library admin');
         return false;
     }
 

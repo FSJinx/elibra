@@ -83,7 +83,7 @@ Route::group(['prefix' => '/campus'], function () {
 Route::group(['prefix' => '/branch'], function () {
 
     Route::group(['prefix' => '/get'], function () {
-    
+        Route::get('', [BranchController::class, 'index']);
     });
 
     Route::group(['prefix' => '/create'], function () {

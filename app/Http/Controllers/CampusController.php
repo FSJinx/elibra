@@ -63,7 +63,6 @@ class CampusController extends Controller
                 ->values();
         }
 
-
         return $this->response(
             'success',
             'Campuses retrieved successfully',
