@@ -28,6 +28,7 @@ class UpdateAcademicRequest extends FormRequest
             'subtitle' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'keywords' => 'nullable|string',
+            'branch_id' => 'sometimes|required|exists:branches,id',
 
             // Academic table fields
             'call_number' => 'sometimes|required|string|max:255|unique:academics,call_number,' . $this->route('academic')->id,

@@ -14,27 +14,61 @@ class CampusController extends Controller
 
     public function index(Request $request)
     {
-        $search = $request->query('query');
-        $sort = $request->query('sort', []);
-        $order = $request->query('order');
+        $search = trim($request->query('query', ''));// Get the search query from the request, default to an empty string if not provided
+        $sort = $request->query('sort', []); // Get the sort fields from the request, default to an empty array if not provided
+        $order = strtolower($request->query('order', 'asc')); // Get the sort order from the request, default to 'asc' if not provided
+
+        //Allowed column to be sorted
+        $allowedSortFields = ['name', 'code'];
 
         $campus = Campus::query();
 
-        if ($search) {
-            $campus->where('name', 'LIKE', '%' . $search . '%')
-            ->orWhere('code', 'LIKE', '%' . $search . '%')
-            ->orWhere('address', 'LIKE', '%' . $search . '%')
-            ;
+        //Normal Search
+        if($search){
+            $campus->where(function ($query) use ($search) {
+                $query->where('name', 'LIKE', '%' . $search . '%')
+                    ->orWhere('code', 'LIKE', '%' . $search . '%')
+                    ->orWhere('address', 'LIKE', '%' . $search . '%');
+            });
         }
-        
 
-        if ($sort && is_array($sort)) {
-            foreach ($sort as $field) {
-                $campus->orderBy($field, $order ?? 'asc');
+        //For better Sorting
+        if(is_array($sort)){
+            foreach($sort as $field){
+                if(in_array($field, $allowedSortFields, true)){
+                    $campus->orderBy($field, $order === 'desc' ? 'desc' : 'asc');
+                }
             }
         }
+        
+        $campuses = $campus->get(['id', 'name']);
+        //We use fuzzy search if the search query is not empty and no campuses were found in the normal search
+        /*
+            [levenshtein] is used to calculate the distance
+            between two strings, and we sort the campuses by the distance
+            between the search query and the campus name, 
+            and take the top 3 closest matches
+        */
+        if ($campuses->isEmpty() && $search !== '') {
 
-        return json_encode($campus->get(['id', 'name']));
+            $campuses = Campus::select('id', 'name')
+                ->get()
+                ->sortBy(function ($campus) use ($search) {
+                    return levenshtein(
+                        strtolower($search),
+                        strtolower($campus->name)
+                    );
+                })
+                ->take(3)
+                ->values();
+        }
+
+        return $this->response(
+            'success',
+            'Campuses retrieved successfully',
+            $campuses->toArray(),
+            200
+        );
     }
 
     /**
@@ -67,7 +101,14 @@ class CampusController extends Controller
      */
     public function show(Campus $campus)
     {
-        //
+        $this->authorize('view', $campus);
+
+        return $this->response(
+            'success',
+            'Campus retrieved successfully',
+            $campus->toArray(),
+            200
+        );
     }
 
     /**
@@ -83,7 +124,16 @@ class CampusController extends Controller
      */
     public function update(UpdateCampusRequest $request, Campus $campus)
     {
-        //
+        $this->authorize('update', $campus);
+
+        $campus->update($request->validated());
+
+        return $this->response(
+            'success',
+            'Campus updated successfully',
+            $campus->toArray(),
+            200
+        );
     }
 
     /**
@@ -91,6 +141,15 @@ class CampusController extends Controller
      */
     public function destroy(Campus $campus)
     {
-        //
+        $this->authorize('delete', $campus);
+
+        $campus->delete();
+
+        return $this->response(
+            'success',
+            'Campus deleted successfully',
+            null,
+            200
+        );
     }
 }

@@ -16,6 +16,7 @@ class Item extends Model
         'subtitle',
         'description',
         'keywords',
+        'branch_id',
     ];
 
     public function academic()

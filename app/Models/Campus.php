@@ -17,6 +17,7 @@ class Campus extends Model
         'code',
         'address',
         'heading',
+        'status',
     ];
 
     function subscrptionCredentials() {

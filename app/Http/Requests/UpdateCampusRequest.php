@@ -12,7 +12,7 @@ class UpdateCampusRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +23,10 @@ class UpdateCampusRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'sometimes|required|string|max:255',
+            'code' => 'sometimes|required|string|max:10|unique:campuses,code,' . $this->route('campus')->id,
+            'address' => 'sometimes|required|string|max:255',
+            'status' => 'sometimes|required|in:active,inactive',
         ];
     }
 }

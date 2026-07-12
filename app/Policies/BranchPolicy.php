@@ -21,6 +21,7 @@ class BranchPolicy
      */
     public function view(User $user, Branch $branch): bool
     {
+        // return $user->hasPrimaryRole('library admin');
         return false;
     }
 
@@ -29,7 +30,7 @@ class BranchPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
     /**
@@ -37,7 +38,26 @@ class BranchPolicy
      */
     public function update(User $user, Branch $branch): bool
     {
-        return false;
+        // Admins can update any branch
+        if($user->isAdmin()) {
+            return true;
+        }
+
+        // Librarians can only update branches in their own campus
+        if(!$user->hasPrimaryRole('library admin')){
+            return false;
+        }
+
+        // Get the campus ID of the librarian's branch
+        $userCampusId = $user->librarian->branch->campus_id;
+
+        // If the user doesn't have a branch or the branch doesn't belong to a campus, deny access
+        if (! $user->librarian || ! $user->librarian->branch) {
+            return false;
+        }
+
+        // Check if the branch being updated belongs to the same campus as the librarian's branch
+        return $branch->campus_id === $userCampusId;
     }
 
     /**
@@ -45,7 +65,7 @@ class BranchPolicy
      */
     public function delete(User $user, Branch $branch): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
     /**
