@@ -4,20 +4,19 @@
       <span>{{ label }}</span>
       <span class="text-red-500" v-if="required"> *</span>
     </label>
-    <div class="relative flex shrink min-w-50 items-center w-full border h-10 pl-4 overflow-hidden" :class="[variants[variant]['text'], radi[radius]]">
-      <input :type="type === 'password' ? (show ? 'text' : type) : type" :id="id" :name="id" class="pr-4 w-full h-full transition-all duration-150 focus:outline-none" v-model="model" :autocomplete="autocomplete" :placeholder="labelPosition === 'float' ? (active ? (placeholder ?? label) : '') : (placeholder ?? label)" :required="required" />
-      <EiconButton :icon="show ? 'Eye' : 'EyeClosed'" :name="show ? 'Hide Password' : 'Show Password'" @click="show = !show" v-if="type === 'password'" />
-      <EiconButton icon="X" name="Clear Input" @click="model = ''" v-if="enableClear && model.length > 0" />
+    <div class="relative flex shrink min-w-50 items-center w-full border h-10 pl-4 overflow-hidden hover:shadow-[0_0_0_.20rem] hover:shadow-green-200 focus-within:shadow-[0_0_0_.20rem] focus-within:shadow-green-200" :class="[variants[variant]['text'], radi[radius]]">
+      <input :type="type === 'password' ? (show ? 'text' : type) : type" :id="id" :name="id" class="pr-4 w-full h-full transition-all duration-150 focus:outline-none" v-model="model" :autocomplete="autocomplete" :placeholder="inputPlaceholder" :required="required" />
+      <EiconButton variant="default-hover" :icon="show ? 'Eye' : 'EyeClosed'" :name="show ? 'Hide Password' : 'Show Password'" @click="show = !show" v-if="type === 'password'" />
+      <EiconButton variant="default-hover" icon="X" name="Clear Input" @click="model = ''" v-if="enableClear && model.length > 0" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { radi, type Radius } from '../../composables/useRadius'
 import { variants, type Variants } from '../../composables/useVariants'
 import EiconButton from '../ui/EiconButton.vue'
-import Eicon from '../ui/eIcon.vue'
 
 type Types = 'text' | 'number' | 'password' | 'email' | 'tel' | 'hidden'
 type Autocomplete = 'on' | 'off' | string
@@ -55,9 +54,9 @@ const props = withDefaults(defineProps<Props>(), {
 
 const positions: Record<string, Record<LabelPosition, string>> = {
   parent: {
-    float: 'relative inline-flex items-center pt-5',
+    float: `relative inline-flex items-center ${props.label ? 'pt-5' : ''}`,
     default: 'inline-flex items-center gap-5',
-    top: 'inline-flex flex-col gap-2',
+    top: 'inline-flex flex-col gap-2.5',
   },
 
   label: {
@@ -66,11 +65,23 @@ const positions: Record<string, Record<LabelPosition, string>> = {
     top: '',
   },
 }
+
+const inputPlaceholder = computed(() => {
+  if (props.labelPosition === 'float') {
+    if (active.value) {
+      return props.placeholder ?? props.label
+    } else {
+      return !props.label ? props.placeholder : ''
+    }
+  } else {
+    return props.placeholder ?? props.label
+  }
+})
 </script>
 
 <style scoped>
 .label-floating {
-  transform: translate(-1em, -2.5em);
+  transform: translate(-0.5em, -2.6em);
   font-size: var(--text-sm);
   transition: 0.25s;
 }

@@ -8,6 +8,14 @@
     </div>
   </div>
   <div class="p-5 pb-10 space-x-2">
+    <h1 class="text-xl font-bold mb-5">No label Input</h1>
+    <div class="space-y-5">
+      <FormInput id="textInput" v-model="text" placeholder="Input here..." />
+      <FormInput id="topInput" v-model="top" label-position="top" placeholder="Input here..." />
+      <FormInput id="floatInput" v-model="float" label-position="float" placeholder="Input here..." />
+    </div>
+  </div>
+  <div class="p-5 pb-10 space-x-2">
     <h1 class="text-xl font-bold mb-5">Cube Text Input</h1>
     <div class="space-y-5">
       <FormInput id="textInput" v-model="text" label="Default Input" radius="cube" placeholder="Input here..." />
@@ -35,11 +43,11 @@
   <div class="p-5 pb-10 space-x-2">
     <h1 class="text-xl font-bold mb-5">Different Types Input</h1>
     <div class="space-y-5">
-      <FormInput id="textInput" v-model="text" label="Default" placeholder="Input here..."/>
-      <FormInput id="textInput" v-model="text" label="Number" placeholder="Input here..." type="number"/>
-      <FormInput id="textInput" v-model="text" label="Email" placeholder="Input here..." type="email"/>
-      <FormInput id="textInput" v-model="text" label="Password" placeholder="Input here..." type="password"/>
-      <FormInput id="textInput" v-model="text" label="Contact Number" placeholder="Input here..." type="tel"/>
+      <FormInput id="textInput" v-model="text" label="Default" placeholder="Input here..." />
+      <FormInput id="textInput" v-model="text" label="Number" placeholder="Input here..." type="number" />
+      <FormInput id="textInput" v-model="text" label="Email" placeholder="Input here..." type="email" />
+      <FormInput id="textInput" v-model="text" label="Password" placeholder="Input here..." type="password" />
+      <FormInput id="textInput" v-model="text" label="Contact Number" placeholder="Input here..." type="tel" />
     </div>
   </div>
 </template>
