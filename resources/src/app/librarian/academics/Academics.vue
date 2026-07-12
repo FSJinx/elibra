@@ -60,7 +60,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import eButton from '../../../components/ui/eButton.vue'
-import Icon from '../../../components/ui/Eicon.vue'
+import Icon from '../../../components/ui/eIcon.vue'
 
 const academicRecords = [
   {

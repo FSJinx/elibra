@@ -35,7 +35,7 @@
 
 <script setup lang="ts">
 import eButton from '../../../components/ui/eButton.vue'
-import Icon from '../../../components/ui/Eicon.vue'
+import Icon from '../../../components/ui/eIcon.vue'
 </script>
 
 <style scoped></style>

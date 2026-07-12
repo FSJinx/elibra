@@ -30,7 +30,7 @@
 import { ref } from 'vue'
 import Table from '../../../components/tables/Table.vue'
 import IconButton from '../../../components/ui/EiconButton.vue'
-import Eicon from '../../../components/ui/Eicon.vue'
+import Eicon from '../../../components/ui/eIcon.vue'
 import EBadge from '../../../components/ui/eBadge.vue'
 
 interface Props {
