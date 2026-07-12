@@ -29,11 +29,11 @@ class MediaController extends Controller
      */
     public function upload(StoreMediaRequest $request)
     {
-        $user = $this->user();
+        $this->authorize('create', Media::class);
 
-        if(!$user) {
-            return $this->response('error', 'You must be logged in to upload image.', null, 401);
-        }
+        // if(!$user) {
+        //     return $this->response('error', 'You must be logged in to upload image.', null, 401);
+        // }
 
         $file = $request->file('image');
         $path = $file->store('media','public');

@@ -1,5 +1,4 @@
 <?php
-
 use App\Http\Controllers\AcademicController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
@@ -7,6 +6,8 @@ use App\Http\Controllers\CampusController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\SubscriptionCredentialController;
+use App\Http\Controllers\BranchController;
+
 use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,7 +26,7 @@ Route::group(['prefix' => '/auth'], function () {
 // Public Routes
 Route::get('/try', [TestController::class, 'index']);
 
-Route::post('/upload-media', [MediaController::class, 'upload'])->middleware('auth:api');
+Route::post('/upload-media', [MediaController::class, 'upload'])->middleware('jwt.auth', 'role:admin');
 
 // Item Routes
 Route::group(['prefix' => '/item'], function () {
@@ -74,6 +75,27 @@ Route::group(['prefix' => '/campus'], function () {
 
     Route::group(['prefix' => '/delete'], function () {
         Route::delete('{campus}', [CampusController::class, 'destroy'])->middleware('jwt.auth', 'role:admin');
+    });
+
+});
+
+//Branch Routes
+Route::group(['prefix' => '/branch'], function () {
+
+    Route::group(['prefix' => '/get'], function () {
+    
+    });
+
+    Route::group(['prefix' => '/create'], function () {
+        Route::post('', [BranchController::class, 'store'])->middleware('jwt.auth', 'role:admin');
+    });
+
+    Route::group(['prefix' => '/update'], function () {
+        Route::put('{branch}', [BranchController::class, 'update'])->middleware('jwt.auth', 'role:librarian,admin');
+    });
+
+    Route::group(['prefix' => '/delete'], function () {
+        Route::delete('{branch}', [BranchController::class, 'destroy'])->middleware('jwt.auth', 'role:admin');
     });
 
 });

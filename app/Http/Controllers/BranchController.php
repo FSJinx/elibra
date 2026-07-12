@@ -30,7 +30,17 @@ class BranchController extends Controller
      */
     public function store(StoreBranchRequest $request)
     {
-        //
+        $this->authorize('create', Branch::class);
+
+        $branch = Branch::create($request->validated());
+
+        return $this->response(
+            'success',
+            'Branch created successfully',
+            $branch->toArray(),
+            201
+        );
+        
     }
 
     /**
@@ -54,7 +64,16 @@ class BranchController extends Controller
      */
     public function update(UpdateBranchRequest $request, Branch $branch)
     {
-        //
+        $this->authorize('update', $branch);
+
+        $branch->update($request->validated());
+
+        return $this->response(
+            'success',
+            'Branch updated successfully',
+            $branch->toArray(),
+            200
+        );
     }
 
     /**
@@ -62,6 +81,16 @@ class BranchController extends Controller
      */
     public function destroy(Branch $branch)
     {
-        //
+        $this->authorize('delete', $branch);
+        
+        $branch->delete();
+
+        return $this->response(
+            'success',
+            'Branch deleted successfully',
+            null,
+            200
+        );
+
     }
 }
