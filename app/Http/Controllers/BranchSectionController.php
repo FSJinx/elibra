@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BranchSection;
 use App\Http\Requests\StoreBranchSectionRequest;
 use App\Http\Requests\UpdateBranchSectionRequest;
+use App\Models\Branch;
 
 class BranchSectionController extends Controller
 {
@@ -29,7 +30,18 @@ class BranchSectionController extends Controller
      */
     public function store(StoreBranchSectionRequest $request)
     {
-        //
+        $branch = Branch::findOrFail($request->branch_id);
+
+        $this->authorize('create', [BranchSection::class, $branch]);
+
+        $branchSection = BranchSection::create($request->validated());
+
+        return $this->response(
+            'success',
+            'Branch Section created successfully',
+            $branchSection->toArray(),
+            201
+        );
     }
 
     /**

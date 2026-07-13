@@ -21,10 +21,6 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            // University Library -> Branch
-            // Sections 
-            // - Serials -> Juliet
-            // - General
         });
     }
 
