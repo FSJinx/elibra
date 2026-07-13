@@ -6,7 +6,7 @@
         <p class="max-w-2xl text-sm text-slate-500">Manage the university's subscriptions to online resources, journals, and digital services.</p>
       </div>
 
-      <Button class="bg-primary text-white">+ Add New</Button>
+      <eButton variant="solid-hover" color="success">+ Add New</eButton>
     </div>
 
     <div class="flex-1 p-5">
@@ -63,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import Button from '@/components/ui/Button.vue';
+import eButton from '@/components/ui/eButton.vue'
 
 const subscriptions = [
   {

@@ -7,15 +7,15 @@ export const menus = {
       },
     },
 
-    collections: {
-      name: 'Collections',
-      children: {
-        academic: { path: '', name: 'Academics', icon: 'GraduationCap' },
-        books: { path: '', name: 'Books', icon: 'BookOpen' },
-        serials: { path: '', name: 'Serials', icon: 'Newspaper' },
-        equipment: { path: '', name: 'Equipments', icon: 'Toolbox' },
-      },
-    },
+    // collections: {
+    //   name: 'Collections',
+    //   children: {
+    //     academic: { path: '', name: 'Academics', icon: 'GraduationCap' },
+    //     books: { path: '', name: 'Books', icon: 'BookOpen' },
+    //     serials: { path: '', name: 'Serials', icon: 'Newspaper' },
+    //     equipment: { path: '', name: 'Equipments', icon: 'Toolbox' },
+    //   },
+    // },
 
     management: {
       name: 'Management',

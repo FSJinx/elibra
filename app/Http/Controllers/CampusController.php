@@ -2,16 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Campus;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCampusRequest;
 use App\Http\Requests\UpdateCampusRequest;
+use App\Models\Campus;
 use Illuminate\Http\Request;
 
 class CampusController extends Controller
 {
-
-
     public function index(Request $request)
     {
         $search = trim($request->query('query', ''));// Get the search query from the request, default to an empty string if not provided

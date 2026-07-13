@@ -3,9 +3,13 @@
   transition: all 0.15s ease;
 }
 
+.pop-in-leave-to {
+  transition-delay: 0.1s;
+}
+
 .pop-in-enter-from,
 .pop-in-leave-to {
-  transform: translateY(-8px);
+  transform: translateY(-2px);
   opacity: 0;
 }
 

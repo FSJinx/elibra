@@ -1,6 +1,6 @@
 <template>
   <Transition name="pop-in">
-    <div class="absolute top-11 right-0 bg-white shadow-lg w-80 p-2 rounded-xl border border-slate-200 max-h-150 flex flex-col overflow-hidden z-50" v-if="show">
+    <div class="absolute top-11 right-0 bg-white drop-shadow-lg w-80 p-2 rounded-xl border border-slate-300 max-h-150 flex flex-col overflow-hidden z-50" v-if="show">
       <div class="flex flex-col justify-center text-center gap-2 p-5 pb-0">
         <div class="mx-auto p-3 border border-primary rounded-full overflow-hidden">
           <img :src="images.logo" alt="" class="h-15 w-15 mx" />

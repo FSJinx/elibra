@@ -18,6 +18,7 @@ export const adminRoutes = [
       {
         path: 'campus',
         name: 'admin.campus',
+        meta: { title: 'Campus Management' },
         component: () => import('@/app/admin/campus/Campus.vue'),
       },
     ],

@@ -1,34 +1,42 @@
 <template>
   <div class="flex flex-col h-full overflow-hidden">
-    <div class="p-7 pb-0">
+    <div class="p-5 pb-0">
       <h2 class="text-2xl font-semibold text-slate-900">ISU Campuses</h2>
       <p class="text-sm text-slate-500">Browse and manage the campuses in ISU.</p>
     </div>
 
     <div class="flex items-center justify-end gap-2 px-5 py-3 border-b border-slate-200">
-      <p class="text-sm text-slate-500 mr-auto rounded-full border border-slate-300 p-1 px-3 bg-slate-100">{{ campus.campuses.length }} records</p>
-      <input name="academic-query" id="academic-query" type="text" class="w-md px-4 h-11 bg-slate-50 border border-slate-300 rounded-md" placeholder="Search by title, call number, researcher" />
-      <Button class="bg-primary text-white h-11">
-        <Icon icon="Plus" size="small"></Icon>
-        <span>Add New</span>
-      </Button>
+      <EBadge class="mr-auto border border-slate-300 bg-slate-50" radius="pill">{{ campus.campuses.length }} records</EBadge>
+      <FormSearchInput class="w-md bg-slate-50" v-model="query" radius="cube" />
+
+      <eButton @click="newCampusModal?.open()" variant="solid-hover" color="success"> + Add New </eButton>
       <IconButton icon="RefreshCcw" name="Refresh" @click="campus.refresh" />
     </div>
 
-    <CampusTable :data="campus.campuses" :loading="loading" @view="campus.view" />
+    <CampusTable :data="campus.campuses" :loading="campus.loading" @view="campus.view" />
   </div>
+
+  <CampusModal ref="newCampusModal"></CampusModal>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
-import Button from '../../../components/ui/Button.vue'
-import Icon from '../../../components/ui/Icon.vue'
+import Icon from '../../../components/ui/eIcon.vue'
 import CampusTable from './CampusTable.vue'
-import IconButton from '../../../components/ui/IconButton.vue'
+import IconButton from '../../../components/ui/EiconButton.vue'
 import { useCampus } from '../../../stores/campusCache.js'
+import CampusModal from './NewCampusModal.vue'
+import FormSearchInput from '../../../components/forms/FormSearchInput.vue'
+import eButton from '../../../components/ui/eButton.vue'
+import EBadge from '../../../components/ui/eBadge.vue'
 
 const campus = useCampus()
-const loading = campus.loading
+const query = ref<string>('')
+const newCampusModal = ref<InstanceType<typeof CampusModal> | null>(null)
+
+watch(query, (value) => {
+  console.log(value)
+})
 
 onMounted(() => {
   campus.fetchCampuses()
