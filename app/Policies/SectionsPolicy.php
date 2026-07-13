@@ -29,7 +29,7 @@ class SectionsPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
     /**
@@ -37,7 +37,7 @@ class SectionsPolicy
      */
     public function update(User $user, Sections $sections): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
     /**
@@ -45,7 +45,7 @@ class SectionsPolicy
      */
     public function delete(User $user, Sections $sections): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
     /**

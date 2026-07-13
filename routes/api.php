@@ -7,7 +7,7 @@ use App\Http\Controllers\MediaController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\SubscriptionCredentialController;
 use App\Http\Controllers\BranchController;
-
+use App\Http\Controllers\SectionsController;
 use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 
@@ -96,6 +96,27 @@ Route::group(['prefix' => '/branch'], function () {
 
     Route::group(['prefix' => '/delete'], function () {
         Route::delete('{branch}', [BranchController::class, 'destroy'])->middleware('jwt.auth', 'role:admin');
+    });
+
+});
+
+// Section Routes
+Route::group(['prefix' => '/section'], function () {
+
+    Route::group(['prefix' => '/get'], function () {
+        Route::get('', [SectionsController::class, 'index']);
+    });
+
+    Route::group(['prefix' => '/create'], function () {
+        Route::post('', [SectionsController::class, 'store'])->middleware('jwt.auth', 'role:admin');
+    });
+
+    Route::group(['prefix' => '/update'], function () {
+        Route::put('{section}', [SectionsController::class, 'update'])->middleware('jwt.auth', 'role:admin');
+    });
+
+    Route::group(['prefix' => '/delete'], function () {
+        Route::delete('{section}', [SectionsController::class, 'destroy'])->middleware('jwt.auth', 'role:admin');
     });
 
 });

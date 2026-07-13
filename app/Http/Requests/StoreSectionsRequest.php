@@ -12,7 +12,7 @@ class StoreSectionsRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +23,20 @@ class StoreSectionsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required|string|max:255',
+        ];
+    }
+
+    /**
+     * Get custom messages for validator errors.
+     *
+     * @return array
+     */
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'Section name is required',
         ];
     }
 }

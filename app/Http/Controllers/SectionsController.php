@@ -14,7 +14,15 @@ class SectionsController extends Controller
      */
     public function index()
     {
-        //
+        $sections = Sections::get('name');
+
+        return $this->response(
+            'success',
+            'Sections retrieved successfully',
+            $sections->toArray(),
+            200,
+        );
+
     }
 
     /**
@@ -30,7 +38,16 @@ class SectionsController extends Controller
      */
     public function store(StoreSectionsRequest $request)
     {
-        //
+        $this->authorize('create', Sections::class);
+
+        $section = Sections::create($request->validated());
+
+        return $this->response(
+            'success',
+            'Section created successfully',
+            $section->toArray(),
+            201
+        );
     }
 
     /**
@@ -52,16 +69,36 @@ class SectionsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateSectionsRequest $request, Sections $sections)
+    public function update(UpdateSectionsRequest $request, Sections $section)
     {
-        //
+        $this->authorize('update', $section);
+
+        $section->update($request->validated());
+        
+
+        return $this->response(
+            'success',
+            'Section updated successfully',
+            $section->toArray(),
+            200,
+        );  
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Sections $sections)
+    public function destroy(Sections $section)
     {
-        //
+        $this->authorize('delete', $section);
+
+        $section->delete();
+
+        return $this->response(
+            'success',
+            'Section deleted successfully',
+            null,
+            200
+        );
+
     }
 }
