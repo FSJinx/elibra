@@ -3,9 +3,9 @@
     <div class="flex items-center w-full sm:w-7xl mx-auto">
       <!-- Banner -->
       <div class="flex items-center col-span-4">
-        <img :src="images.logo" alt="" class="" height="40" width="40" />
+        <img :src="images.isu" alt="" class="" height="40" width="40" />
         <div class="ml-3">
-          <h1 class="font-extrabold text-primary text-xl">e-Libra</h1>
+          <h1 class="font-extrabold text-primary text-2xl">e-Libra</h1>
           <p class="text-xs mb-0.5 hidden sm:block">The ISU-1 Centralized Library Management System for the <span class="font-bold text-primary uppercase">Isabela State university</span></p>
         </div>
       </div>

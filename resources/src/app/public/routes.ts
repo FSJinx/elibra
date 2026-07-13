@@ -1,13 +1,13 @@
 export const publicRoute = [
   {
     path: '/',
-    name: 'Home',
+    name: 'home',
     component: () => import('@/app/public/landing/LandingPage.vue'),
   },
 
   {
     path: '/login',
-    name: 'Login',
+    name: 'login',
     component: () => import('@/app/auth/login/Login.vue'),
   },
 
