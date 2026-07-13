@@ -4,7 +4,7 @@
       <th class="w-20">No</th>
       <th class="text-left">Name</th>
       <th>Code</th>
-      <th>Address</th>
+      <th class="w-100">Address</th>
       <th>Heading</th>
       <th>Status</th>
       <th class="w-50">Action</th>
@@ -14,7 +14,7 @@
       <tr v-for="(campus, index) in data" :key="campus.id" class="hover">
         <td>{{ index + 1 }}</td>
         <td class="text-left">{{ campus.name ?? 'No name' }}</td>
-        <td>{{ campus.code || 'No assigned code' }}</td>
+        <td>{{ campus.code || 'No code yet' }}</td>
         <td>{{ campus.address }}</td>
         <td>{{ campus.heading || 'No data' }}</td>
         <td class="capitalize">

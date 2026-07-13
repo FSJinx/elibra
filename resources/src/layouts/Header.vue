@@ -12,6 +12,7 @@
 
       <!-- Linkers -->
       <div class="flex flex-1 items-center justify-end gap-3 mx-auto p-3">
+        <e-link-button variant="solid-hover" color="success" :to="{ name: 'login' }">Login</e-link-button>
         <button class="btn border border-primary text-primary hover:bg-secondary/5 transition-all duration-150" v-if="!isAuthenticated">Login</button>
         <template v-for="q in quickLinks" v-else>
           <router-link :to="{ name: q?.path }" class="btn hover:text-secondary transition duration-200">
@@ -26,8 +27,9 @@
 
 <script setup lang="ts">
 import images from '@/assets/images'
-import { authStore } from '@/stores/auth';
+import { authStore } from '@/stores/auth'
 import { ref } from 'vue'
+import ELinkButton from '../components/ui/eLinkButton.vue'
 
 const auth = authStore()
 const isAuthenticated = auth.isAuthenticated

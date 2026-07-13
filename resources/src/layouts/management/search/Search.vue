@@ -1,6 +1,6 @@
 <template>
   <div class="relative inline-flex">
-    <FormSearchInput class="w-md bg-white" v-model="query" @focus="isSearching = true" @blur="isSearching = false" radius="pill" />
+    <FormSearchInput id="global-query" class="w-md bg-white" v-model="query" @focus="isSearching = true" @blur="isSearching = false" radius="pill" placeholder="Try typing 'Create Account'..." />
     <SearchBody :show="show" :query="query" />
   </div>
 </template>

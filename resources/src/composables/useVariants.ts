@@ -24,11 +24,11 @@ export const variants: Record<Variants, Record<Colors, string>> = {
     text: 'border-transparent bg-slate-500 text-white dark:bg-slate-200 dark:text-slate-900',
   },
   'solid-hover': {
-    success: 'border-transparent bg-green-400 text-white hover:bg-green-500',
-    danger: 'border-transparent bg-red-400 text-white hover:bg-red-500',
-    info: 'border-transparent bg-blue-400 text-white hover:bg-blue-500',
-    warning: 'border-transparent bg-yellow-400 text-slate-900 hover:bg-yellow-500',
-    text: 'border-transparent bg-slate-400 text-white hover:bg-slate-500 dark:bg-slate-200 dark:text-slate-900 dark:hover:bg-slate-100',
+    success: 'border-transparent bg-green-500 text-white hover:bg-green-600',
+    danger: 'border-transparent bg-red-500 text-white hover:bg-red-600',
+    info: 'border-transparent bg-blue-500 text-white hover:bg-blue-600',
+    warning: 'border-transparent bg-yellow-500 text-slate-900 hover:bg-yellow-600',
+    text: 'border-transparent bg-slate-500 text-white hover:bg-slate-600 dark:bg-slate-200 dark:text-slate-900 dark:hover:bg-slate-100',
   },
   outline: {
     success: 'border-green-600 text-green-600 bg-transparent',
@@ -94,4 +94,3 @@ export const variants: Record<Variants, Record<Colors, string>> = {
     text: 'bg-slate-50 border-slate-300 text-slate-800 hover:shadow-[0_0_0_.15rem] hover:shadow-secondary/40 dark:text-slate-400 dark:hover:bg-slate-800',
   },
 }
-
