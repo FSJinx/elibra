@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Campus;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+
 
 class StoreCampusRequest extends FormRequest
 {
@@ -12,7 +14,7 @@ class StoreCampusRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user()->can('create', Campus::class);
     }
 
     /**

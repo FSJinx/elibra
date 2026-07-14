@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Branch;
 use App\Models\BranchSection;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
@@ -27,17 +28,33 @@ class BranchSectionPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function create(User $user, Branch $branch): bool // i will pass the campus_id here, para dito ma validate
     {
-        return false;
+        if($user->isAdmin()){
+            return true;
+        }
+
+        if (! $user->hasPrimaryRole('library admin')) {
+            return false;
+        }
+
+        return $branch->campus_id === $user->librarian->branch->campus_id;
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, BranchSection $branchSection): bool
+    public function update(User $user, BranchSection $branchSection, Branch $branch): bool
     {
-        return false;
+        if($user->isAdmin()){
+            return true;
+        }
+
+        if(! $user->hasPrimaryRole('library admin')){
+            return false;
+        }
+
+        return $branch->campus_id === $user->librarian->branch->campus_id;
     }
 
     /**
@@ -45,7 +62,15 @@ class BranchSectionPolicy
      */
     public function delete(User $user, BranchSection $branchSection): bool
     {
-        return false;
+        if($user->isAdmin()){
+            return true;
+        }
+
+        if(! $user->hasPrimaryRole('library admin')){
+            return false;
+        }
+
+        return $branchSection->branch->campus_id === $user->librarian->branch->campus_id;
     }
 
     /**

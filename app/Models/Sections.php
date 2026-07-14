@@ -15,4 +15,9 @@ class Sections extends Model
     protected $fillable = [
         'name',
     ];
+
+    public function branchSections()
+    {
+        return $this->hasMany(BranchSection::class, 'section_id');
+    }
 }
