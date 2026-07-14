@@ -75,6 +75,12 @@ return new class extends Migration
             $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade');
             $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');
         });
+
+        // User Permission
+        Schema::table('user_permissions', function (Blueprint $table){
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('permission_id')->references('id')->on('permissions')->onDelete('cascade');
+        });
     }
 
     /**
@@ -82,6 +88,12 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // User Permissions Down
+        Schema::table('user_permissions', function (Blueprint $table) {
+            $table->dropForeign('user_id');
+            $table->dropForeign('permission_id');
+        });
+
         // Academics Down
         Schema::table('academics', function (Blueprint $table) {
             $table->dropForeign(['item_id']);

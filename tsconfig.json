@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./resources/src/*"]
+    }
+  },
+  "exclude": ["node_modules", "public", "storage"]
+}

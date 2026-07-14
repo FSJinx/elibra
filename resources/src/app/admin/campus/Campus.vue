@@ -22,10 +22,10 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
 import Icon from '../../../components/ui/eIcon.vue'
-import CampusTable from './CampusTable.vue'
-import IconButton from '../../../components/ui/EiconButton.vue'
+import CampusTable from './table/CampusTable.vue'
+import IconButton from '../../../components/ui/IconButton.vue'
 import { useCampus } from '../../../stores/campusCache.js'
-import CampusModal from './NewCampusModal.vue'
+import CampusModal from './modal/NewCampusModal.vue'
 import FormSearchInput from '../../../components/forms/FormSearchInput.vue'
 import eButton from '../../../components/ui/eButton.vue'
 import EBadge from '../../../components/ui/eBadge.vue'

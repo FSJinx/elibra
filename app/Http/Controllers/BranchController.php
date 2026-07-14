@@ -20,7 +20,9 @@ class BranchController extends Controller
         if ($user && $user->hasPrimaryRole('library admin')) {
             $campusId = $user->librarian->branch->campus_id;
 
+            // para ma return lahat ng branch based sa users campus
             $branches = Branch::where('campus_id', $campusId)->get();
+
         } else {
             //returns all the branch
             $branches = Branch::get([
