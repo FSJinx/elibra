@@ -14,7 +14,30 @@ class BranchSectionController extends Controller
      */
     public function index()
     {
-        //
+        $user = $this->user();
+
+        // if user os authenticated and a library admin
+        if ($user && $user->hasPrimaryRole('library admin')) {
+            $campusId = $user->librarian->branch->campus_id;
+
+            $branchSections = BranchSection::where('branch_id', $campusId)->get();
+
+        } else {
+            //returns all the branch sections
+            $branchSections = BranchSection::get([
+                'section_head_id',
+                'branch_id',
+                'section_id'
+            ]);
+        }
+        
+        return $this->response(
+            'success',
+            'Branch Sections retrieved successfully',
+            $branchSections->toArray(),
+            200
+        );
+        
     }
 
     /**
@@ -65,7 +88,22 @@ class BranchSectionController extends Controller
      */
     public function update(UpdateBranchSectionRequest $request, BranchSection $branchSection)
     {
-        //
+
+        $branch = $request->filled('branch_id')  // This will check if the request contains a new  branch_id
+                ? Branch::findOrFail($request->branch_id) // Kung yes, get that branch from db
+                : $branchSection->branch; //if not, use the BranchSection's current branch.
+
+        $this->authorize('update', [$branchSection, $branch]); // gamit array if multiple parameter galing policy
+
+        $branchSection->update($request->validated());
+
+        return $this->response(
+            'success',
+            'Branch Section updated successfully',
+            $branchSection->toArray(),
+            200
+        );
+
     }
 
     /**
@@ -73,6 +111,16 @@ class BranchSectionController extends Controller
      */
     public function destroy(BranchSection $branchSection)
     {
-        //
+        $this->authorize('delete', $branchSection);
+
+        $branchSection->delete();
+
+        return $this->response(
+            'success',
+            'Branch Section deleted successfully.',
+            [],
+            200
+        );
+
     }
 }

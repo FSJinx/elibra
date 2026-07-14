@@ -44,9 +44,17 @@ class BranchSectionPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, BranchSection $branchSection): bool
+    public function update(User $user, BranchSection $branchSection, Branch $branch): bool
     {
-        return false;
+        if($user->isAdmin()){
+            return true;
+        }
+
+        if(! $user->hasPrimaryRole('library admin')){
+            return false;
+        }
+
+        return $branch->campus_id === $user->librarian->branch->campus_id;
     }
 
     /**
@@ -54,7 +62,15 @@ class BranchSectionPolicy
      */
     public function delete(User $user, BranchSection $branchSection): bool
     {
-        return false;
+        if($user->isAdmin()){
+            return true;
+        }
+
+        if(! $user->hasPrimaryRole('library admin')){
+            return false;
+        }
+
+        return $branchSection->branch->campus_id === $user->librarian->branch->campus_id;
     }
 
     /**

@@ -127,6 +127,7 @@ Route::group(['prefix' => '/section'], function () {
 Route::group(['prefix' => '/branch_section'], function () {
 
     Route::group(['prefix' => '/get'], function () {
+        Route::get('', [BranchSectionController::class, 'index']);
     });
 
     Route::group(['prefix' => '/create'], function () {
@@ -134,9 +135,11 @@ Route::group(['prefix' => '/branch_section'], function () {
     });
 
     Route::group(['prefix' => '/update'], function () {
+        Route::put('{branchSection}', [BranchSectionController::class, 'update'])->middleware('jwt.auth');
     });
 
     Route::group(['prefix' => '/delete'], function () {
+        Route::delete('{branchSection}', [BranchSectionController::class, 'destroy'])->middleware('jwt.auth');
     });
 
 });

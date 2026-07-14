@@ -4,6 +4,11 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Validator as ValidationValidator;
+use App\Models\Branch;
+use App\Models\Librarian;
 
 class StoreBranchSectionRequest extends FormRequest
 {
@@ -46,5 +51,43 @@ class StoreBranchSectionRequest extends FormRequest
             'section_head_id.exists' => 'The selected section head is invalid.',
         ];
 
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(
+            response()->json([
+                'status' => 'error',
+                'message' => 'Validation failed.',
+                'data' => $validator->errors(),
+            ], 422)
+        );
+    }
+
+    public function withValidator(ValidationValidator $validator): void
+    {
+        $validator->after(function (ValidationValidator $validator) {
+
+            // No section head selected, nothing to validate.
+            if (! $this->filled('section_head_id')) {
+                return;
+            }
+
+            // branch_id is required, so we can safely retrieve it.
+            $branch = Branch::find($this->branch_id);
+
+            $librarian = Librarian::find($this->section_head_id);
+
+            if (
+                $branch &&
+                $librarian &&
+                $branch->campus_id !== $librarian->branch->campus_id
+            ) {
+                $validator->errors()->add(
+                    'section_head_id',
+                    'The selected section head must belong to the same campus as the branch.'
+                );
+            }
+        });
     }
 }
