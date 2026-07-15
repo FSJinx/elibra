@@ -38,6 +38,7 @@ return new class extends Migration
         // Users Up
         Schema::table('users', function (Blueprint $table) {
             $table->foreign('profile_picture_id')->references('id')->on('media')->onDelete('cascade');
+            $table->foreign('campus_id')->references('id')->on('campus')->onDelete('cascade');
         });
 
         // Librarians Up
@@ -130,6 +131,7 @@ return new class extends Migration
 
         // Users Down
         Schema::table('users', function (Blueprint $table) {
+            $table->dropForeign(['campus_id']);
             $table->dropForeign(['profile_picture_id']);
         });
 

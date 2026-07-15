@@ -88,6 +88,8 @@ class UserController extends Controller
                 'password' => Hash::make('elibra2026'),
             ]);
 
+            UserPermissionController::initializePermissions($user);
+
 
             DB::commit();
 

@@ -12,7 +12,6 @@ class BranchSection extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'section_head_id',
         'branch_id',
         'section_id'
     ];
@@ -32,3 +31,7 @@ class BranchSection extends Model
         return $this->belongsTo(Librarian::class, 'section_head_id');
     }
 }
+
+/**
+ * 
+ */

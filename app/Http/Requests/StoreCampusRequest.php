@@ -46,4 +46,6 @@ class StoreCampusRequest extends BaseRequest
             'address.required' => 'Address is required',
         ];
     }
+
+    
 }

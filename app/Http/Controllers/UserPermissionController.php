@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUserPermissionRequest;
 use App\Http\Requests\UpdateUserPermissionRequest;
+use App\Models\Permission;
 use App\Models\UserPermission;
 
 class UserPermissionController extends Controller
@@ -16,6 +17,8 @@ class UserPermissionController extends Controller
         //
     }
 
+    
+
     public static function initializePermissions($user = null, $role = null)
     {
         if ($user?->role === 'admin') {
@@ -24,8 +27,13 @@ class UserPermissionController extends Controller
                 'campus.all',
                 'branch.all',
             ];
+
             foreach ($permissions as $permission) {
-                UserPermission::create($permission);
+                $permit = Permission::where('permission', $permission)->first(); // Checks kung merong permissio
+                UserPermission::create([
+                    'user_id' => $user->id,
+                    'permission_id' => $permit->id,
+                ]);
             }
         }
     }
