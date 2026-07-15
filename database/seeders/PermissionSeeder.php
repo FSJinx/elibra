@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class PermissionSeeder extends Seeder
@@ -12,6 +11,9 @@ class PermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        foreach (glob(database_path('seeders/permissions/*PermissionSeeder.php')) as $file) {
+            $class = 'Database\\Seeders\\Permissions\\'.basename($file, '.php');
+            $this->call($class);
+        }
     }
 }

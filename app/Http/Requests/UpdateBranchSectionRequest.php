@@ -10,7 +10,7 @@ use Illuminate\Validation\Validator as ValidationValidator;
 use App\Models\Branch;
 use App\Models\Librarian;
 
-class UpdateBranchSectionRequest extends FormRequest
+class UpdateBranchSectionRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -32,17 +32,6 @@ class UpdateBranchSectionRequest extends FormRequest
             'branch_id' => 'sometimes|exists:branches,id',
             'section_id' => 'sometimes|exists:sections,id',
         ];
-    }
-
-    protected function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(
-            response()->json([
-                'status' => 'error',
-                'message' => 'Validation failed.',
-                'data' => $validator->errors(),
-            ], 422)
-        );
     }
 
 

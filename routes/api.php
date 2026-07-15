@@ -10,6 +10,7 @@ use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BranchSectionController;
 use App\Http\Controllers\SectionsController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\UserController;
 use App\Models\BranchSection;
 use Illuminate\Support\Facades\Route;
 
@@ -142,4 +143,12 @@ Route::group(['prefix' => '/branch_section'], function () {
         Route::delete('{branchSection}', [BranchSectionController::class, 'destroy'])->middleware('jwt.auth');
     });
 
+});
+
+//User Section Routes
+Route::group(['prefix' => '/user'], function () {
+
+    Route::group(['prefix' => '/create'], function () {
+        Route::post('', [UserController::class, 'store'])->middleware('jwt.auth', 'role:admin');
+    });
 });

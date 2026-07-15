@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreUsersRequest;
 use App\Http\Requests\UpdateUsersRequest;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
-class UsersController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -66,25 +69,33 @@ class UsersController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        //
-    }
+    public function create() {}
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(StoreUsersRequest $request)
     {
-        $user = User::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'username' => $request->username,
-            'password' => Hash::make($request->password),
-            'role' => $request->role,
-        ]);
+        DB::beginTransaction();
+        try {
+            $user = User::create([
+                'last_name' => $request->last_name,
+                'first_name' => $request->first_name,
+                'sex' => $request->sex,
+                'role' => $request->role,
+                'username' => $request->username,
+                'email' => Str::random(10).'@gmail.com',
+                'password' => Hash::make('elibra2026'),
+            ]);
 
-        return response()->json($user, 201);
+
+            DB::commit();
+
+            return $this->response('success', 'User successfully created.', $user->toArray());
+        } catch (Exception $e) {
+            DB::rollBack();
+            return $this->response('error', 'Error creating user.', statusCode: 422);
+        }
     }
 
     /**

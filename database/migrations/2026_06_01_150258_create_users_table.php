@@ -30,7 +30,7 @@ return new class extends Migration
             $table->string('username')->nullable()->unique();
             $table->string('password');
 
-            $table->enum('role', ['admin', 'librarian', 'patron']);
+            $table->enum('role', ['admin', 'librarian', 'patron'])->default('admin');
             $table->uuid('code')->unique()->nullable();
             $table->enum('status', ['active', 'inactive', 'suspended', 'expired'])->default('active');
 

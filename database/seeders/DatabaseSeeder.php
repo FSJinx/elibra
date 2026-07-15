@@ -15,23 +15,23 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            // Prod Seeds
+            PermissionSeeder::class,
+            PatronTypeSeeder::class,
+            SystemSeeder::class,
+            AdminSeeder::class,
+
+            // Dev Seeds
             CampusSeeder::class,
             BranchSeeder::class,
             SectionsSeeder::class,
-            LibraryRoleSeeder::class,
-            PatronTypeSeeder::class,
-            SystemSeeder::class,
-            
             DepartmentSeeder::class,
             ProgramsSeeder::class,
-            PatronSeeder::class,    
+            LibrarianSeeder::class,
+            PatronSeeder::class,
             UsersSeeder::class,
-
             ItemSeeder::class,
             AcademicSeeder::class,
-
-            AdminSeeder::class,
-            LibrarianSeeder::class,
         ]);
     }
 }

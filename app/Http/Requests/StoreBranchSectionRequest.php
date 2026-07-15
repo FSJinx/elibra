@@ -10,7 +10,7 @@ use Illuminate\Validation\Validator as ValidationValidator;
 use App\Models\Branch;
 use App\Models\Librarian;
 
-class StoreBranchSectionRequest extends FormRequest
+class StoreBranchSectionRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -53,16 +53,6 @@ class StoreBranchSectionRequest extends FormRequest
 
     }
 
-    protected function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(
-            response()->json([
-                'status' => 'error',
-                'message' => 'Validation failed.',
-                'data' => $validator->errors(),
-            ], 422)
-        );
-    }
 
     public function withValidator(ValidationValidator $validator): void
     {

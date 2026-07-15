@@ -44,7 +44,6 @@ return new class extends Migration
         Schema::table('librarians', function (Blueprint $table) {
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('branch_id')->references('id')->on('branches')->onDelete('cascade');
-            $table->foreign('primary_role_id')->references('id')->on('library_roles')->onDelete('cascade');
         });
 
         // Patrons Up
@@ -77,7 +76,7 @@ return new class extends Migration
         });
 
         // User Permission
-        Schema::table('user_permissions', function (Blueprint $table){
+        Schema::table('user_permissions', function (Blueprint $table) {
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('permission_id')->references('id')->on('permissions')->onDelete('cascade');
         });
@@ -90,8 +89,8 @@ return new class extends Migration
     {
         // User Permissions Down
         Schema::table('user_permissions', function (Blueprint $table) {
-            $table->dropForeign('user_id');
-            $table->dropForeign('permission_id');
+            $table->dropForeign(['user_id']);
+            $table->dropForeign(['permission_id']);
         });
 
         // Academics Down
@@ -127,7 +126,6 @@ return new class extends Migration
         Schema::table('librarians', function (Blueprint $table) {
             $table->dropForeign(['user_id']);
             $table->dropForeign(['branch_id']);
-            $table->dropForeign(['primary_role_id']);
         });
 
         // Users Down
