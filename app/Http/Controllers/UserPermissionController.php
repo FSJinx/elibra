@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserPermission;
 use App\Http\Requests\StoreUserPermissionRequest;
 use App\Http\Requests\UpdateUserPermissionRequest;
+use App\Models\UserPermission;
 
 class UserPermissionController extends Controller
 {
@@ -14,6 +14,20 @@ class UserPermissionController extends Controller
     public function index()
     {
         //
+    }
+
+    public static function initializePermissions($user = null, $role = null)
+    {
+        if ($user?->role === 'admin') {
+            $permissions = [
+                'user.all',
+                'campus.all',
+                'branch.all',
+            ];
+            foreach ($permissions as $permission) {
+                UserPermission::create($permission);
+            }
+        }
     }
 
     /**

@@ -40,10 +40,7 @@ class AuthController extends Controller
 
         if ($user?->role == 'librarian') {
             $library = [
-                'role' => [
-                    'primary_role' => $user->librarian->primary_role->name,
-                    'secondary_roles' => [] ?? null,
-                ],
+                'role' => $user->librarian->role,
 
                 'campus' => [
                     'name' => $user->librarian->branch->campus->name,
@@ -68,7 +65,7 @@ class AuthController extends Controller
             $user->librarian->unsetRelation('branch');
 
             return $this->response(data: $data);
-        } else if ($user?->role === 'patron') {
+        } elseif ($user?->role === 'patron') {
 
         }
 

@@ -5,7 +5,7 @@
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { getRadius, type Radius } from '../../composables/useRadius'
+import { radi, type Radius } from '../../composables/useRadius'
 
 type Border = true | false
 
@@ -20,6 +20,6 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const badgeClass = computed(() => {
-  return [getRadius(props.radius)]
+  return [radi[props.radius]]
 })
 </script>

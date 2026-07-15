@@ -25,8 +25,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import Modal from '@/components/ui/Modal.vue'
-import Icon from '../../../components/ui/eIcon.vue'
-import eButton from '../../../components/ui/eButton.vue'
+import Icon from '@/components/ui/eIcon.vue'
+import eButton from '@/components/ui/eButton.vue'
 const addNewCampus = ref<InstanceType<typeof Modal> | null>(null)
 
 function open() {

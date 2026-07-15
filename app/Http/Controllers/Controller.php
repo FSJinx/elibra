@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Tymon\JWTAuth\JWTGuard;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Models\User;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Tymon\JWTAuth\JWTGuard;
 
 abstract class Controller
 {
@@ -23,7 +23,7 @@ abstract class Controller
         return $this->auth()->user();
     }
 
-    protected function response(?string $status = null, ?string $message = null, ?array $data = null, int $statusCode = 200)
+    protected function response(?string $status = 'success', ?string $message = null, ?array $data = null, int $statusCode = 200)
     {
         return response()->json([
             'status' => $status,

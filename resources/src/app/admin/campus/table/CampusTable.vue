@@ -4,23 +4,21 @@
       <th class="w-20">No</th>
       <th class="text-left">Name</th>
       <th>Code</th>
-      <th>Address</th>
+      <th class="w-100">Address</th>
       <th>Heading</th>
       <th>Status</th>
-      <th class="w-50">Action</th>
     </template>
 
     <template #body>
-      <tr v-for="(campus, index) in data" :key="campus.id" class="hover">
+      <tr v-for="(campus, index) in data" :key="campus.id" class="hover cursor-pointer leading-relaxed" @click="check(campus)">
         <td>{{ index + 1 }}</td>
         <td class="text-left">{{ campus.name ?? 'No name' }}</td>
-        <td>{{ campus.code || 'No assigned code' }}</td>
+        <td>{{ campus.code || 'No code yet' }}</td>
         <td>{{ campus.address }}</td>
         <td>{{ campus.heading || 'No data' }}</td>
         <td class="capitalize">
           <EBadge :class="[campus.status === 'active' ? 'bg-green-400 text-white' : 'bg-red-400 text-white']" radius="pill">{{ campus.status }}</EBadge>
         </td>
-        <td><IconButton icon="Eye" :name="'View ' + campus.name" @click="$emit('view', campus.id)" /></td>
       </tr>
     </template>
   </Table>
@@ -28,10 +26,10 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import Table from '../../../components/tables/Table.vue'
-import IconButton from '../../../components/ui/EiconButton.vue'
-import Eicon from '../../../components/ui/eIcon.vue'
-import EBadge from '../../../components/ui/eBadge.vue'
+import Table from '@/components/tables/Table.vue'
+import EBadge from '@/components/ui/eBadge.vue'
+import router from '../../../../router/index.js'
+import { useCampus } from '../../../../stores/campusCache.js'
 
 interface Props {
   data: any[]
@@ -41,6 +39,12 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   data: () => [],
 })
+
+const campus = useCampus()
+const check = (c: any) => {
+  campus.currentCampus = c
+  router.push({ name: 'admin.campus.details', params: { id: c?.id } })
+}
 
 const colspan = ref(7)
 </script>

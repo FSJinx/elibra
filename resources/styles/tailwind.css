@@ -103,7 +103,7 @@
 /* Table */
 @layer components {
   tr.hover {
-    @apply hover:bg-slate-50/80;
+    @apply hover:bg-green-50/80;
   }
 
   thead {

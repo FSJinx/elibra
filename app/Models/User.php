@@ -65,25 +65,28 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         return $this->belongsTo($this->patron(), 'program_id');
     }
 
+    public function permissions()
+    {
+        return $this->belongsToMany(Permission::class, 'user_permissions', 'user_id', 'permission_id');
+    }
+
+    // Custom methods
+
     // Check if user has a primary role
     // Tapno awamen ti primary role ti user, mabalin mo nga usaren daytoy a method
-    public function librarianPrimaryRole(string $role): bool
-    {
-        return strtolower($this->librarian?->primary_role?->name ?? '') === strtolower($role);
-    }
+    // public function librarianPrimaryRole(string $role): bool
+    // {
+    //     return strtolower($this->librarian?->primary_role?->name ?? '') === strtolower($role);
+    // }
 
     public function roleIs(string $role): bool
     {
-        return strtolower($this->role ?? '' ) === strtolower($role);
+        return strtolower($this->role ?? '') === strtolower($role);
     }
 
-    public function permissions()
+    public function hasPermission(string $permission): bool
     {
-        return $this->belongsToMany(
-            Permission::class,
-            'user_permissions',
-            'user_id',
-            'permission_id'
-        );
+        return $this->permissions()->where('permission', $permission)->exists();
     }
-}   
+
+}

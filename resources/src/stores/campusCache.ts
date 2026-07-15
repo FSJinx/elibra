@@ -33,14 +33,18 @@ export const useCampus = defineStore('campus', {
       this.currentCampus = data
     },
 
-    async fetchCampuses() {
+    async fetchCampuses(query: string | null = null) {
       if (this.campuses.length > 0) return this.campuses
 
       this.loading = true
       await api
-        .get('campus/get')
+        .get('campus/get', {
+          params: {
+            query,
+          },
+        })
         .then((res) => {
-          this.setCampuses(res.data)
+          this.setCampuses(res.data.data)
         })
         .finally(() => {
           this.loading = false

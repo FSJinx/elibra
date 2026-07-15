@@ -1,0 +1,27 @@
+<?php
+
+namespace App\Permissions;
+
+class {{class}}
+{
+    public static function all()
+    {
+        return [
+            ['module' => '{{module}}', 'action' => 'all', 'permission' => '{{module}}.all'],
+
+            ['module' => '{{module}}', 'action' => 'create', 'permission' => '{{module}}.create'],
+
+            ['module' => '{{module}}', 'action' => 'view', 'permission' => '{{module}}.view'],
+            ['module' => '{{module}}', 'action' => 'viewAny', 'permission' => '{{module}}.viewAny'],
+
+            ['module' => '{{module}}', 'action' => 'update', 'permission' => '{{module}}.update'],
+            ['module' => '{{module}}', 'action' => 'updateAny', 'permission' => '{{module}}.updateAny'],
+
+            ['module' => '{{module}}', 'action' => 'delete', 'permission' => '{{module}}.delete'],
+            ['module' => '{{module}}', 'action' => 'deleteAny', 'permission' => '{{module}}.deleteAny'],
+            
+            ['module' => '{{module}}', 'action' => 'forceDelete', 'permission' => '{{module}}.forceDelete'],
+            ['module' => '{{module}}', 'action' => 'forceDeleteAny', 'permission' => '{{module}}.forceDeleteAny'],
+        ];
+    }
+}

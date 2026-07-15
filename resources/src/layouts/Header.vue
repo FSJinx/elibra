@@ -3,15 +3,16 @@
     <div class="flex items-center w-full sm:w-7xl mx-auto">
       <!-- Banner -->
       <div class="flex items-center col-span-4">
-        <img :src="images.logo" alt="" class="" height="40" width="40" />
+        <img :src="images.isu" alt="" class="" height="40" width="40" />
         <div class="ml-3">
-          <h1 class="font-extrabold text-primary text-xl">e-Libra</h1>
+          <h1 class="font-extrabold text-primary text-2xl">e-Libra</h1>
           <p class="text-xs mb-0.5 hidden sm:block">The ISU-1 Centralized Library Management System for the <span class="font-bold text-primary uppercase">Isabela State university</span></p>
         </div>
       </div>
 
       <!-- Linkers -->
       <div class="flex flex-1 items-center justify-end gap-3 mx-auto p-3">
+        <e-link-button variant="solid-hover" color="success" :to="{ name: 'login' }">Login</e-link-button>
         <button class="btn border border-primary text-primary hover:bg-secondary/5 transition-all duration-150" v-if="!isAuthenticated">Login</button>
         <template v-for="q in quickLinks" v-else>
           <router-link :to="{ name: q?.path }" class="btn hover:text-secondary transition duration-200">
@@ -26,8 +27,9 @@
 
 <script setup lang="ts">
 import images from '@/assets/images'
-import { authStore } from '@/stores/auth';
+import { authStore } from '@/stores/auth'
 import { ref } from 'vue'
+import ELinkButton from '../components/ui/eLinkButton.vue'
 
 const auth = authStore()
 const isAuthenticated = auth.isAuthenticated
