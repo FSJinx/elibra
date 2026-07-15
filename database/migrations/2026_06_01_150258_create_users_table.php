@@ -37,6 +37,7 @@ return new class extends Migration
             $table->unsignedTinyInteger('login_attempts')->default(0);
 
             $table->unsignedBigInteger('profile_picture_id')->nullable();
+            $table->unsignedBigInteger('campus_id')->nullable();
 
             $table->rememberToken();
             $table->timestamps();

@@ -20,11 +20,11 @@ class DatabaseSeeder extends Seeder
             PatronTypeSeeder::class,
             SystemSeeder::class,
             AdminSeeder::class,
+            SectionsSeeder::class,
 
             // Dev Seeds
             CampusSeeder::class,
             BranchSeeder::class,
-            SectionsSeeder::class,
             DepartmentSeeder::class,
             ProgramsSeeder::class,
             LibrarianSeeder::class,
