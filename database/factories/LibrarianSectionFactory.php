@@ -2,13 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Models\LibraryRole;
+use App\Models\LibrarianSection;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<LibraryRole>
+ * @extends Factory<LibrarianSection>
  */
-class LibraryRoleFactory extends Factory
+class LibrarianSectionFactory extends Factory
 {
     /**
      * Define the model's default state.

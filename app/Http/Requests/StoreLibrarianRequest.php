@@ -28,7 +28,7 @@ class StoreLibrarianRequest extends BaseRequest
             'username' => 'required|string|max:255|unique:users,username',
             'password' => 'required|string|min:8',
             'branch_id' => 'required|exists:branches,id',
-            'primary_role_id' => 'required|exists:library_roles,id',
+            'primary_role_id' => 'required|exists:librarian_sections,id',
             'tools' => 'nullable|array',
             'tools.*' => 'string',
         ];

@@ -24,3 +24,4 @@ class Campus extends Model
         return $this->hasMany(SubscriptionCredential::class);
     }
 }
+    

@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use Illuminate\Auth\Access\Response;
-use App\Models\LibraryRole;
+use App\Models\LibrarianSection;
 use App\Models\User;
+use Illuminate\Auth\Access\Response;
 
-class LibraryRolePolicy
+class LibrarianSectionPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -19,7 +19,7 @@ class LibraryRolePolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, LibraryRole $libraryRole): bool
+    public function view(User $user, LibrarianSection $librarianSection): bool
     {
         return false;
     }
@@ -35,7 +35,7 @@ class LibraryRolePolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, LibraryRole $libraryRole): bool
+    public function update(User $user, LibrarianSection $librarianSection): bool
     {
         return false;
     }
@@ -43,7 +43,7 @@ class LibraryRolePolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, LibraryRole $libraryRole): bool
+    public function delete(User $user, LibrarianSection $librarianSection): bool
     {
         return false;
     }
@@ -51,7 +51,7 @@ class LibraryRolePolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, LibraryRole $libraryRole): bool
+    public function restore(User $user, LibrarianSection $librarianSection): bool
     {
         return false;
     }
@@ -59,7 +59,7 @@ class LibraryRolePolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, LibraryRole $libraryRole): bool
+    public function forceDelete(User $user, LibrarianSection $librarianSection): bool
     {
         return false;
     }

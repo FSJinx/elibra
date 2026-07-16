@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use Database\Factories\LibraryRoleFactory;
+use Database\Factories\LibrarianSectionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class LibrarianSection extends Model
 {
-    /** @use HasFactory<LibraryRoleFactory> */
+    /** @use HasFactory<LibrarianSectionFactory> */
     use HasFactory;
 
     protected $fillable = [

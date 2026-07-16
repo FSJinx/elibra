@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\LibraryRole;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreLibraryRoleRequest;
-use App\Http\Requests\UpdateLibraryRoleRequest;
+use App\Http\Requests\StoreLibrarianSectionRequest;
+use App\Http\Requests\UpdateLibrarianSectionRequest;
+use App\Models\LibrarianSection;
 
-class LibraryRoleController extends Controller
+class LibrarianSectionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return LibraryRole::all();
+        return LibrarianSection::all();
     }
 
     /**
@@ -28,9 +28,9 @@ class LibraryRoleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreLibraryRoleRequest $request)
+    public function store(StoreLibrarianSectionRequest $request)
     {
-        return LibraryRole::create([
+        return LibrarianSection::create([
             'name' => $request->name,
             'description' => $request->description,
         ]);
@@ -39,7 +39,7 @@ class LibraryRoleController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(LibraryRole $libraryRole)
+    public function show(LibrarianSection $librarianSection)
     {
         //
     }
@@ -47,7 +47,7 @@ class LibraryRoleController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(LibraryRole $libraryRole)
+    public function edit(LibrarianSection $librarianSection)
     {
         //
     }
@@ -55,7 +55,7 @@ class LibraryRoleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateLibraryRoleRequest $request, LibraryRole $libraryRole)
+    public function update(UpdateLibrarianSectionRequest $request, LibrarianSection $librarianSection)
     {
         //
     }
@@ -63,7 +63,7 @@ class LibraryRoleController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(LibraryRole $libraryRole)
+    public function destroy(LibrarianSection $librarianSection)
     {
         //
     }

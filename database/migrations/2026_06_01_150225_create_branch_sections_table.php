@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('branch_sections', function (Blueprint $table) {
             $table->id();
             
-            $table->unsignedBigInteger('section_head_id')->nullable(); // Nullable if section has no assigned librarian
             $table->unsignedBigInteger('branch_id');
             $table->unsignedBigInteger('section_id');
             
