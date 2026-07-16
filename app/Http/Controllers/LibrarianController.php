@@ -51,7 +51,7 @@ class LibrarianController extends Controller
         $librarian = Librarian::create([
             'user_id' => $user->id,
             'branch_id' => $request->branch_id,
-            'primary_role_id' => $request->primary_role_id,
+            'role' => $request->role,
             'tools' => $request->tools,
         ]);
 

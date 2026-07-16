@@ -2,17 +2,17 @@
 
 namespace Database\Seeders;
 
-use App\Models\LibraryRole;
+use App\Models\LibrarianSection;
 use Illuminate\Database\Seeder;
 
-class LibraryRoleSeeder extends Seeder
+class LibrarianSectionSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        $libraryRoles = [
+        $librarianSections = [
             ['name' => 'branch head'],
             ['name' => 'library admin'],
             ['name' => 'general'],
@@ -28,8 +28,8 @@ class LibraryRoleSeeder extends Seeder
             ['name' => 'staff'],
         ];
 
-        foreach ($libraryRoles as $role) {
-            LibraryRole::create($role);
+        foreach ($librarianSections as $section) {
+            LibrarianSection::create($section);
         }
     }
 }

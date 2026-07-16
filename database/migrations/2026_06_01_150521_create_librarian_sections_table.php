@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('library_roles', function (Blueprint $table) {
+        Schema::create('librarian_sections', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->unsignedBigInteger('librarian_id');
+            $table->unsignedBigInteger('branch_section_id');
+            $table->boolean('isHead')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('library_roles');
+        Schema::dropIfExists('librarian_sections');
     }
 };
