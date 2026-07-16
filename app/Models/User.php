@@ -43,6 +43,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         'username',
         'password',
         'profile_picture_id',
+        'campus_id'
     ];
 
     public function librarian()
@@ -63,6 +64,11 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     public function program()
     {
         return $this->belongsTo($this->patron(), 'program_id');
+    }
+
+    public function campus()
+    {
+        return $this->belongsTo(Campus::class);
     }
 
     public function permissions()

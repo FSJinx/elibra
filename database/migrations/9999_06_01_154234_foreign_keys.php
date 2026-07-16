@@ -147,7 +147,6 @@ return new class extends Migration
 
         // Sections Down
         Schema::table('branch_sections', function (Blueprint $table) {
-            $table->dropForeign(['section_head_id']);
             $table->dropForeign(['branch_id']);
             $table->dropForeign(['section_id']);
         });
