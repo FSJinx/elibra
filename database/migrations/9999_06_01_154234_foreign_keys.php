@@ -20,7 +20,6 @@ return new class extends Migration
 
         // Sections Up
         Schema::table('branch_sections', function (Blueprint $table) {
-            $table->foreign('section_head_id')->references('id')->on('librarians')->onDelete('cascade');
             $table->foreign('section_id')->references('id')->on('sections')->onDelete('cascade');
             $table->foreign('branch_id')->references('id')->on('branches')->onDelete('cascade');
         });
@@ -38,7 +37,7 @@ return new class extends Migration
         // Users Up
         Schema::table('users', function (Blueprint $table) {
             $table->foreign('profile_picture_id')->references('id')->on('media')->onDelete('cascade');
-            $table->foreign('campus_id')->references('id')->on('campus')->onDelete('cascade');
+            $table->foreign('campus_id')->references('id')->on('campuses')->onDelete('cascade');
         });
 
         // Librarians Up
