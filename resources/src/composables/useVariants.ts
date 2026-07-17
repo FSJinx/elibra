@@ -45,7 +45,7 @@ export const variants: Record<Variants, Record<Colors, string>> = {
     text: ' border-slate-500 text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800/50',
   },
   'outline-solid': {
-    success: ' border-green-500 text-green-600 hover:bg-green-500 hover:text-white dark:hover:bg-green-500',
+    success: ' border-primary text-primary hover:bg-primary hover:text-white dark:hover:bg-green-500',
     danger: ' border-red-500 text-red-600 hover:bg-red-500 hover:text-white dark:hover:bg-red-500',
     info: ' border-blue-500 text-blue-600 hover:bg-blue-500 hover:text-white dark:hover:bg-blue-500',
     warning: ' border-yellow-400 text-yellow-500 hover:bg-yellow-400 hover:text-slate-900 dark:hover:bg-yellow-500',

@@ -37,4 +37,4 @@ app.config.globalProperties.$api = api
 app.use(pinia)
 app.use(icons)
 app.use(router)
-app.mount('#app')
+app.mount('#e-Libra')

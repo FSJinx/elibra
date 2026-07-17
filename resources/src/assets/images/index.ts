@@ -9,7 +9,7 @@ import default_book from '@/assets/images/default_book.png'
 import user from '@/assets/icon/user.png'
 import forbidden from '@/assets/images/forbidden.jpg'
 
-export default {
+const images = {
   isu,
   gate,
   logo,
@@ -21,3 +21,5 @@ export default {
   user,
   forbidden,
 }
+
+export default images
