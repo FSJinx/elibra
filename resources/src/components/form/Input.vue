@@ -16,7 +16,7 @@
 import { computed, ref } from 'vue'
 import { radi, type Radius } from '../../composables/useRadius'
 import { variants, type Variants } from '../../composables/useVariants'
-import EiconButton from '../ui/IconButton.vue'
+import EiconButton from '../my/IconButton.vue'
 
 type Types = 'text' | 'number' | 'password' | 'email' | 'tel' | 'hidden'
 type Autocomplete = 'on' | 'off' | string

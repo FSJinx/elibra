@@ -34,8 +34,8 @@
 </template>
 
 <script setup lang="ts">
-import eButton from '../../../components/ui/eButton.vue'
-import Icon from '../../../components/ui/eIcon.vue'
+import eButton from '../../../components/my/Button.vue/index.js'
+import Icon from '../../../components/my/Icon.vue/index.js'
 </script>
 
 <style scoped></style>

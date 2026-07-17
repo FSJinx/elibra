@@ -21,14 +21,14 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
-import Icon from '../../../components/ui/eIcon.vue'
+import Icon from '../../../components/my/Icon.vue/index.js'
 import CampusTable from './table/CampusTable.vue'
-import IconButton from '../../../components/ui/IconButton.vue'
+import IconButton from '../../../components/my/IconButton.vue'
 import { useCampus } from '../../../stores/campusCache.js'
 import CampusModal from './modal/NewCampusModal.vue'
-import FormSearchInput from '../../../components/forms/FormSearchInput.vue'
-import eButton from '../../../components/ui/eButton.vue'
-import EBadge from '../../../components/ui/eBadge.vue'
+import FormSearchInput from '../../../components/form/FormSearchInput.vue'
+import eButton from '../../../components/my/Button.vue/index.js'
+import EBadge from '../../../components/my/Badge.vue/index.js'
 
 const campus = useCampus()
 const campuses = computed(() => campus?.campuses)

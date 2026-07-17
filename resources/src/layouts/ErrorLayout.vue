@@ -14,8 +14,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import EButton from '../components/ui/eButton.vue'
-import ELinkButton from '../components/ui/eLinkButton.vue'
+import EButton from '../components/my/Button.vue/index.js'
+import ELinkButton from '../components/my/LinkButton.vue/index.js'
 import Header from './Header.vue'
 import { authStore } from '../stores/auth.js'
 
