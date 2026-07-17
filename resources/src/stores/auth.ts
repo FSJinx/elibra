@@ -77,7 +77,7 @@ export const authStore = defineStore('user', {
         admin: 'admin',
         librarian: 'librarian',
         patron: 'Patron',
-        default: 'Home',
+        default: 'home',
       }
 
       const roleKey = (this.user?.role as string) || 'default'

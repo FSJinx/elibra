@@ -132,7 +132,7 @@ const handleLogin = async () => {
     const response = error as { response?: { data?: LoginErrorResponse } }
     errorMessage.value = response.response?.data?.message || 'Login failed. Please check your credentials and try again.'
   } finally {
-    auth.home()
+    await auth.home()
     isSubmitting.value = false
   }
 }

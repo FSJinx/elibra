@@ -1,35 +1,24 @@
 <template>
-  <header class="header fixed top-0 inset-0 p-5 w-full h-max bg-white">
-    <div class="flex items-center w-full sm:w-7xl mx-auto">
-      <!-- Banner -->
-      <div class="flex items-center col-span-4">
-        <img :src="images.isu" alt="" class="" height="40" width="40" />
-        <div class="ml-3">
-          <h1 class="font-extrabold text-primary text-2xl">e-Libra</h1>
-          <p class="text-xs mb-0.5 hidden sm:block">The ISU-1 Centralized Library Management System for the <span class="font-bold text-primary uppercase">Isabela State university</span></p>
-        </div>
+  <header class="sticky top-0 z-40 border-b border-border/10 bg-background dark:bg-background backdrop-blur-md">
+    <nav class="mx-auto flex h-17.5 w-full max-w-5xl items-center justify-between px-3 sm:px-6">
+      <div class="flex min-w-0 items-center gap-2 text-teal-600">
+        <Logo width="28" />
+        <h1 class="font-black text-2xl font-poppins shrink-0">e-Libra</h1>
       </div>
-
-      <!-- Linkers -->
-      <div class="flex flex-1 items-center justify-end gap-3 mx-auto p-3">
-        <e-link-button variant="solid-hover" color="success" :to="{ name: 'login' }">Login</e-link-button>
-        <button class="btn border border-primary text-primary hover:bg-secondary/5 transition-all duration-150" v-if="!isAuthenticated">Login</button>
-        <template v-for="q in quickLinks" v-else>
-          <router-link :to="{ name: q?.path }" class="btn hover:text-secondary transition duration-200">
-            <component :is="q?.icon" class="h-4 w-4" />
-            <span :title="'Go to ' + q.label">{{ q.label }}</span>
-          </router-link>
-        </template>
+      <div class="flex items-center gap-1.5 sm:gap-2">
+        <ELinkButton to="login" color="success" variant="outline-solid">Login</ELinkButton>
       </div>
-    </div>
+    </nav>
   </header>
 </template>
 
 <script setup lang="ts">
-import images from '@/assets/images'
 import { authStore } from '@/stores/auth'
 import { ref } from 'vue'
-import ELinkButton from '../components/ui/eLinkButton.vue'
+import EButton from '@/components/ui/eButton.vue'
+import router from '@/router'
+import Logo from '@/components/ui/Logo.vue'
+import ELinkButton from '@/components/ui/eLinkButton.vue'
 
 const auth = authStore()
 const isAuthenticated = auth.isAuthenticated

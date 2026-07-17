@@ -1,13 +1,15 @@
 <template>
-  <Header />
-  <Hero />
-  <Browse />
+  <div class="flex flex-col min-h-dvh">
+    <Header />
+
+    <main class="flex-1">
+      <section class="h-screen">kabisado</section>
+    </main>
+  </div>
 </template>
 
 <script setup lang="ts">
 import Header from '@/layouts/Header.vue'
-import Hero from './components/Hero.vue'
-import Browse from './components/Browse.vue'
 </script>
 
 <style scoped></style>

@@ -1,9 +1,6 @@
 @import 'tailwindcss';
 
-/* File Imports */
-@import './tailwind.css';
-@import './z-index.css';
-@import './animations/pop-in.css';
+@import './index.css';
 
 /* Main Body Styling */
 html {
