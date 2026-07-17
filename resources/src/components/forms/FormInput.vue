@@ -4,7 +4,7 @@
       <span>{{ label }}</span>
       <span class="text-red-500" v-if="required"> *</span>
     </label>
-    <div class="relative flex shrink min-w-50 items-center w-full border h-10 pl-4 overflow-hidden hover:shadow-[0_0_0_.20rem] hover:shadow-green-200 focus-within:shadow-[0_0_0_.20rem] focus-within:shadow-green-200" :class="[variants[variant]['text'], radi[radius]]">
+    <div class="relative flex shrink min-w-50 items-center w-full border h-10 pl-4 overflow-hidden hover:shadow-[0_0_0_.20rem] hover:shadow-primary-light focus-within:shadow-[0_0_0_.20rem] focus-within:shadow-primary-light" :class="[variants[variant]['text'], radi[radius]]">
       <input :type="type === 'password' ? (show ? 'text' : type) : type" :id="id" :name="id" class="pr-4 w-full h-full transition-all duration-150 focus:outline-none" v-model="model" :autocomplete="autocomplete" :placeholder="inputPlaceholder" :required="required" />
       <EiconButton variant="default-hover" :icon="show ? 'Eye' : 'EyeClosed'" :name="show ? 'Hide Password' : 'Show Password'" @click="show = !show" v-if="type === 'password'" />
       <EiconButton variant="default-hover" icon="X" name="Clear Input" @click="model = ''" v-if="enableClear && model.length > 0" />
@@ -91,6 +91,6 @@ const inputPlaceholder = computed(() => {
 
 .form-input:focus-within label,
 .form-input:hover label {
-  color: var(--color-secondary);
+  color: var(--color-primary);
 }
 </style>
