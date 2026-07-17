@@ -3,6 +3,8 @@ import vue from '@vitejs/plugin-vue'
 import laravel from 'laravel-vite-plugin'
 import { fileURLToPath, URL } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
@@ -15,6 +17,22 @@ export default defineConfig(({ mode }) => {
       }),
       tailwindcss(),
       vue(),
+
+      AutoImport({
+        dts: 'resources/src/auto-import.d.ts',
+
+        imports: ['vue', 'vue-router', 'pinia'],
+
+        dirs: ['resources/src/composables/**', 'resources/src/stores/**', 'resources/src/router/*'],
+
+        vueTemplate: true,
+      }),
+
+      Components({
+        dirs: ['resources/src/components/**'],
+
+        dts: 'resources/src/components/components.d.ts',
+      }),
     ],
 
     resolve: {

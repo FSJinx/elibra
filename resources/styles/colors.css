@@ -8,22 +8,47 @@
   /* ==========================
   * Primary
   * ========================== */
-  --color-primary-light: #43a86d;
-  --color-primary: #278f56;
-  --color-primary-dark: #1d6d41;
-  --color-secondary: #0eb55c;
+  --color-primary-light: var(--color-indigo-200);
+  --color-primary: var(--color-indigo-600);
+  --color-primary-dark: var(--color-indigo-900);
+
+  /* ==========================
+  * Secondary
+  * ========================== */
+  --color-secondary: var(--color-slate-900);
 
   /* ==========================
   *   Info
   *  ==========================*/
-  --color-blue: var(--color-blue-500) --color-blue-light: var(--color-blue-400) --color-blue-dark: var(--color-blue-600) /* ==========================
+  --color-blue: var(--color-blue-500);
+  --color-blue-light: var(--color-blue-400);
+  --color-blue-dark: var(--color-blue-600);
+
+  /* ==========================
   *   Error
-  *  ==========================*/ --color-red: var(--color-red-500) --color-red-light: var(--color-red-400) --color-red-dark: var(--color-red-600) /* ==========================
+  *  ==========================*/
+  --color-red: var(--color-red-500);
+  --color-red-light: var(--color-red-400);
+  --color-red-dark: var(--color-red-600);
+
+  /* ==========================
   *   Success
-  *  ==========================*/ --color-green: var(--color-green-500) --color-green-light: var(--color-green-400)
-    --color-green-dark: var(--color-green-600) /* ==========================
+  *  ==========================*/
+  --color-green: var(--color-green-500);
+  --color-green-light: var(--color-green-400);
+  --color-green-dark: var(--color-green-600);
+
+  /* ==========================
   *   Warning
-  *  ==========================*/ --color-yellow: var(--color-yellow-500) --color-yellow-light: var(--color-yellow-400) --color-yellow-dark: var(--color-yellow-600) /* ==========================
+  *  ==========================*/
+  --color-yellow: var(--color-yellow-500);
+  --color-yellow-light: var(--color-yellow-400);
+  --color-yellow-dark: var(--color-yellow-600);
+
+  /* ==========================
   *   Restore
-  *  ==========================*/ --color-purple: var(--color-purple-500) --color-purple-light: var(--color-purple-400) --color-purple-dark: var(--color-purple-600);
+  *  ==========================*/
+  --color-purple: var(--color-purple-500);
+  --color-purple-light: var(--color-purple-400);
+  --color-purple-dark: var(--color-purple-600);
 }
