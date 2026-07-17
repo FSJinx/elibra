@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import Eicon from '../ui/eIcon.vue'
+import Eicon from '../my/Icon.vue/index.js'
 import { radi, type Radius } from '../../composables/useRadius.js'
 
 const model = defineModel<string>({ default: '' })

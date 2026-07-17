@@ -9,7 +9,7 @@
 import { computed, ref, watch } from 'vue'
 import SearchInput from './SearchInput.vue'
 import SearchBody from './SearchBody.vue'
-import FormSearchInput from '../../../components/forms/FormSearchInput.vue'
+import FormSearchInput from '../../../components/form/FormSearchInput.vue'
 
 const query = defineModel<string>({ default: '' })
 const isSearching = ref(false)

@@ -13,13 +13,6 @@
 </template>
 
 <script setup lang="ts">
-import { authStore } from '@/stores/auth'
-import { ref } from 'vue'
-import EButton from '@/components/ui/eButton.vue'
-import router from '@/router'
-import Logo from '@/components/ui/Logo.vue'
-import ELinkButton from '@/components/ui/eLinkButton.vue'
-
 const auth = authStore()
 const isAuthenticated = auth.isAuthenticated
 

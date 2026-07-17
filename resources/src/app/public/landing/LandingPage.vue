@@ -2,14 +2,12 @@
   <div class="flex flex-col min-h-dvh">
     <Header />
 
-    <main class="flex-1">
-      <section class="h-screen">kabisado</section>
-    </main>
+    <main class="flex-1"></main>
+
+    <!-- <Footer /> -->
   </div>
 </template>
 
-<script setup lang="ts">
-import Header from '@/layouts/Header.vue'
-</script>
+<script setup lang="ts"></script>
 
 <style scoped></style>

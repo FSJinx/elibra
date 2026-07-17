@@ -54,7 +54,7 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import FormInput from '../../components/forms/FormInput.vue'
+import FormInput from '../../components/form/FormInput.vue'
 
 const text = ref<string>('')
 const top = ref<string>('')

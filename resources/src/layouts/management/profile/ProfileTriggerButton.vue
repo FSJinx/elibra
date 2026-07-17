@@ -11,7 +11,7 @@
 import { computed } from 'vue'
 import images from '@/assets/images'
 import { authStore } from '@/stores/auth'
-import eButton from '../../../components/ui/eButton.vue'
+import eButton from '../../../components/my/Button.vue/index.js'
 
 defineEmits(['click'])
 
