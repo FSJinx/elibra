@@ -2,26 +2,24 @@
 
 namespace Database\Seeders;
 
-use App\Models\Permission;
 use App\Models\User;
-use App\Models\UserPermission;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
-class AdminSeeder extends Seeder
+class SuperAdminSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        User::create([
-            'last_name' => 'Echague',
-            'first_name' => 'Campus Admin',
+         User::create([
+            'first_name' => 'System Administrator',
             'sex' => 'male',
-            'role' => 'admin',
-            'username' => 'admin',
-            'email' => 'isue@isu.edu.ph',
+            'role' => 'super admin',
+            'username' => 'super',
+            'email' => 'elibra@isu.edu.ph',
             'email_verified_at' => now(),
             'password' => Hash::make('elibra2026'),
         ]);

@@ -11,6 +11,7 @@ use App\Http\Controllers\BranchSectionController;
 use App\Http\Controllers\SectionsController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserPermissionController;
 use App\Models\BranchSection;
 use Illuminate\Support\Facades\Route;
 
@@ -30,6 +31,24 @@ Route::group(['prefix' => '/auth'], function () {
 Route::get('/try', [TestController::class, 'index']);
 
 Route::post('/upload-media', [MediaController::class, 'upload'])->middleware('jwt.auth', 'role:admin');
+
+//User Permission Routes
+Route::group(['prefix' => '/user-permission'], function () {
+
+    Route::group(['prefix' => '/get'], function () {
+    });
+
+    Route::group(['prefix' => '/create'], function () {
+        Route::post('', [UserPermissionController::class, 'store'])->middleware('jwt.auth');
+    });
+
+    Route::group(['prefix' => '/update'], function () {
+    });
+
+    Route::group(['prefix' => '/delete'], function () {
+    });
+
+});
 
 // Item Routes
 Route::group(['prefix' => '/item'], function () {

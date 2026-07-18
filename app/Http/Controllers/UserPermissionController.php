@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreUserPermissionRequest;
 use App\Http\Requests\UpdateUserPermissionRequest;
 use App\Models\Permission;
+use App\Models\User;
 use App\Models\UserPermission;
+use App\Services\UserPermissionService;
 
 class UserPermissionController extends Controller
 {
@@ -15,27 +17,6 @@ class UserPermissionController extends Controller
     public function index()
     {
         //
-    }
-
-    
-
-    public static function initializePermissions($user = null, $role = null)
-    {
-        if ($user?->role === 'admin') {
-            $permissions = [
-                'user.all',
-                'campus.all',
-                'branch.all',
-            ];
-
-            foreach ($permissions as $permission) {
-                $permit = Permission::where('permission', $permission)->first(); // Checks kung merong permissio
-                UserPermission::create([
-                    'user_id' => $user->id,
-                    'permission_id' => $permit->id,
-                ]);
-            }
-        }
     }
 
     /**
@@ -51,7 +32,21 @@ class UserPermissionController extends Controller
      */
     public function store(StoreUserPermissionRequest $request)
     {
-        //
+        $validated = $request->validated();
+
+        $userPermission = UserPermissionService::assign(
+            $request->user(),
+            User::findOrFail($validated['user_id']),
+            Permission::findOrFail($validated['permission_id'])
+        );
+
+        return $this->response(
+            'success',
+            'User permission created successfully',
+            $userPermission->toArray(),
+            201
+        );
+
     }
 
     /**

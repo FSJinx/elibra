@@ -29,7 +29,7 @@ class UserPermissionPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->isSuperAdmin() || $user->hasPermission('manage.create');
     }
 
     /**
