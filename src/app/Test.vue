@@ -5,7 +5,7 @@
       <div>
         <!-- Header / Logo Area -->
         <div class="p-6 border-b border-slate-100 flex items-center gap-3">
-          <div class="h-9 w-9 rounded-lg bg-primary flex items-center justify-center text-white shadow-md shadow-indigo-100">
+          <div class="h-9 w-9 rounded-lg bg-primary flex items-center justify-center text-primary-foreground shadow-md shadow-indigo-100">
             <Logo width="18" />
           </div>
           <div>
@@ -30,7 +30,7 @@
             <!-- Children Sub-menu (Smooth Slide Transition) -->
             <Transition enter-active-class="transition-[max-height,opacity] duration-300 ease-out overflow-hidden" leave-active-class="transition-[max-height,opacity] duration-250 ease-in overflow-hidden" enter-from-class="max-h-0 opacity-0" enter-to-class="max-h-40 opacity-100" leave-from-class="max-h-40 opacity-100" leave-to-class="max-h-0 opacity-0">
               <div v-show="currentPage === page.name" class="pl-9 space-y-1 overflow-hidden">
-                <button v-for="child in page.children" :key="child.name" class="relative flex items-center w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200" :class="[currentPage === page.name && currentComponent === child.component ? 'bg-primary-light/25 text-primary font-semibold shadow-sm' : 'text-slate-500 hover:text-slate-800 hover:bg-slate-50']" @click="open(page.name, child.name)">
+                <button v-for="child in page.children" :key="child.name" class="relative flex items-center w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200" :class="[currentPage === page.name && currentComponent === child.component ? 'bg-primary-soft text-primary font-semibold shadow-sm' : 'text-slate-500 hover:text-slate-800 hover:bg-slate-50']" @click="open(page.name, child.name)">
                   <!-- Active Dot Indicator -->
                   <span v-if="currentPage === page.name && currentComponent === child.component" class="absolute left-0 w-1 h-5 bg-primary rounded-r-full" />
                   {{ child.name }}
@@ -42,7 +42,7 @@
       </div>
 
       <!-- User Profile / Footer Section in Sidebar -->
-      <div class="p-4 border-t border-slate-100 bg-slate-50/50">
+      <div class="p-4 border-t border-secondary bg-background">
         <div class="flex items-center gap-3 px-2 py-1.5">
           <div class="h-9 w-9 rounded-full bg-primary-light/50 border-2 border-white shadow-sm flex items-center justify-center font-bold text-primary text-sm">EL</div>
           <div class="flex-1 min-w-0">
@@ -83,6 +83,7 @@
 
 <script setup lang="ts">
 import TestButton from '@/app/test/TestButton.vue'
+import TestColor from '@/app/test/TestColor.vue'
 import TestInput from '@/app/test/TestInput.vue'
 
 const pages = ref([
@@ -103,7 +104,12 @@ const pages = ref([
   {
     name: 'Utilities',
     icon: 'Wrench',
-    children: [],
+    children: [
+      {
+        name: 'Colors',
+        component: markRaw(TestColor),
+      },
+    ],
   },
 ])
 

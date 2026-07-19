@@ -1,0 +1,6 @@
+/* 
+*       The transitions declared here are transitions under the Vue Component <Transition>
+*       the name of transition will be the file name and is used using <Transition name="#">
+*/
+
+@import './pop-in.css';

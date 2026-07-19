@@ -9,7 +9,7 @@
 </head>
 
 <body class="relative">
-    <div id="e-Libra" class="relative leading-normal"></div>
+    <div id="e-Libra" class="relative bg-background text-foreground"></div>
 </body>
 
 </html>

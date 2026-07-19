@@ -27,13 +27,11 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
 import App from './App.vue'
 import router from '@/router/index.js'
-import api from '@/plugins/axios.js'
 
 const app = createApp(App)
 const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)
 ;(app.config as any).devtools = false
-app.config.globalProperties.$api = api
 
 app.use(pinia)
 app.use(icons)

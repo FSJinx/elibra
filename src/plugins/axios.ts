@@ -9,7 +9,7 @@ import { authStore } from '@/stores/auth'
 export const backendRoute = `http://localhost:8001/api`
 // export const backendRoute = `http://10.10.149.83:8000/api`
 
-const api = axios.create({
+export const api = axios.create({
   baseURL: backendRoute,
 })
 
@@ -77,5 +77,3 @@ api.interceptors.response.use(
     return Promise.reject(error)
   },
 )
-
-export default api

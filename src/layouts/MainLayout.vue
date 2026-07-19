@@ -3,7 +3,7 @@
     <FeatureBelt />
     <Header />
 
-    <main class="flex-1 flex flex-col min-h-[90dvh]">
+    <main class="flex-1 flex flex-col">
       <slot />
     </main>
 

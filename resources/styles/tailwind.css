@@ -1,38 +1,3 @@
-@theme {
-  /* Fonts */
-  /* --font-poppins: 'Poppins', sans-serif; */
-  --font-sans: 'Inter', sans-serif;
-
-  /* Colors */
-  /* --color-primary: #14824a;
-  --color-primary: #278f56;
-  --color-primary-light: #a1dfb9;
-  --color-primary-dark: #006838;
-  --color-muted: #6c757d; */
-
-
-}
-
-/* Input */
-@layer components {
-  .input {
-    @apply px-3 py-2 rounded-sm hover:border-primary;
-  }
-}
-
-/* Card */
-@layer components {
-  .card {
-    @apply flex flex-col rounded-xl border border-slate-300 shadow-sm bg-white;
-  }
-}
-
-/* Badge */
-@layer components {
-  .badge {
-    @apply p-3 aspect-square rounded-md border;
-  }
-}
 
 /* Table */
 @layer components {

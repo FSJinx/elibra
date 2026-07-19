@@ -9,8 +9,10 @@ declare global {
   const EffectScope: typeof import('vue').EffectScope
   const acceptHMRUpdate: typeof import('pinia').acceptHMRUpdate
   const adminRoutes: typeof import('./router/adminRoutes').adminRoutes
+  const api: typeof import('./plugins/axios').api
   const authRoute: typeof import('./router/authRoute').authRoute
   const authStore: typeof import('./stores/auth').authStore
+  const backendRoute: typeof import('./plugins/axios').backendRoute
   const campusStore: typeof import('./stores/campusCache').campusStore
   const computed: typeof import('vue').computed
   const createApp: typeof import('vue').createApp
@@ -26,6 +28,7 @@ declare global {
   const getCurrentScope: typeof import('vue').getCurrentScope
   const getCurrentWatcher: typeof import('vue').getCurrentWatcher
   const h: typeof import('vue').h
+  const icons: typeof import('./plugins/icons').default
   const images: typeof import('./assets/images/index').default
   const inject: typeof import('vue').inject
   const isProxy: typeof import('vue').isProxy
@@ -57,7 +60,6 @@ declare global {
   const onUnmounted: typeof import('vue').onUnmounted
   const onUpdated: typeof import('vue').onUpdated
   const onWatcherCleanup: typeof import('vue').onWatcherCleanup
-  const onlineResources: typeof import('./assets/images/onlineResources/index.js').default
   const patronRoutes: typeof import('./router/patronRoutes').default
   const provide: typeof import('vue').provide
   const publicRoutes: typeof import('./router/publicRoutes').default
@@ -92,7 +94,9 @@ declare global {
   const useRoute: typeof import('vue-router').useRoute
   const useRouter: typeof import('vue-router').useRouter
   const useSlots: typeof import('vue').useSlots
+  const useSystemStore: typeof import('./stores/themeStore').useSystemStore
   const useTemplateRef: typeof import('vue').useTemplateRef
+  const useTheme: typeof import('./composables/useTheme').useTheme
   const watch: typeof import('vue').watch
   const watchEffect: typeof import('vue').watchEffect
   const watchPostEffect: typeof import('vue').watchPostEffect
@@ -122,8 +126,10 @@ declare module 'vue' {
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
     readonly acceptHMRUpdate: UnwrapRef<typeof import('pinia')['acceptHMRUpdate']>
     readonly adminRoutes: UnwrapRef<typeof import('./router/adminRoutes')['adminRoutes']>
+    readonly api: UnwrapRef<typeof import('./plugins/axios')['api']>
     readonly authRoute: UnwrapRef<typeof import('./router/authRoute')['authRoute']>
     readonly authStore: UnwrapRef<typeof import('./stores/auth')['authStore']>
+    readonly backendRoute: UnwrapRef<typeof import('./plugins/axios')['backendRoute']>
     readonly campusStore: UnwrapRef<typeof import('./stores/campusCache')['campusStore']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
     readonly createApp: UnwrapRef<typeof import('vue')['createApp']>
@@ -139,6 +145,7 @@ declare module 'vue' {
     readonly getCurrentScope: UnwrapRef<typeof import('vue')['getCurrentScope']>
     readonly getCurrentWatcher: UnwrapRef<typeof import('vue')['getCurrentWatcher']>
     readonly h: UnwrapRef<typeof import('vue')['h']>
+    readonly icons: UnwrapRef<typeof import('./plugins/icons')['default']>
     readonly images: UnwrapRef<typeof import('./assets/images/index')['default']>
     readonly inject: UnwrapRef<typeof import('vue')['inject']>
     readonly isProxy: UnwrapRef<typeof import('vue')['isProxy']>
@@ -204,7 +211,9 @@ declare module 'vue' {
     readonly useRoute: UnwrapRef<typeof import('vue-router')['useRoute']>
     readonly useRouter: UnwrapRef<typeof import('vue-router')['useRouter']>
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>
+    readonly useSystemStore: UnwrapRef<typeof import('./stores/themeStore')['useSystemStore']>
     readonly useTemplateRef: UnwrapRef<typeof import('vue')['useTemplateRef']>
+    readonly useTheme: UnwrapRef<typeof import('./composables/useTheme')['useTheme']>
     readonly watch: UnwrapRef<typeof import('vue')['watch']>
     readonly watchEffect: UnwrapRef<typeof import('vue')['watchEffect']>
     readonly watchPostEffect: UnwrapRef<typeof import('vue')['watchPostEffect']>

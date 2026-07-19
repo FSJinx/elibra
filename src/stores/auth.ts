@@ -1,8 +1,3 @@
-import api from '@/plugins/axios'
-import router from '@/router'
-import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
-
 // User object shape
 export interface User {
   id: number | string

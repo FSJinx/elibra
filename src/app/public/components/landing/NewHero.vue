@@ -1,6 +1,6 @@
 <template>
-  <section class="relative overflow-hidden bg-radial from-primary/5 via-transparent to-transparent">
-    <div class="place-content-center w-full max-w-7xl mx-auto px-6 py-16 sm:pb-24 sm:pt-20 space-y-8 mb-20">
+  <section class="relative flex justify-center min-h-[90vh] overflow-hidden bg-radial from-primary/5 via-transparent to-transparent">
+    <div class="place-content-center w-full max-w-7xl  px-6 pb-30 space-y-8">
       <!-- Logo Branding -->
       <div class="flex items-center justify-center">
         <IsuLogo width="85" class="drop-shadow-lg drop-shadow-primary/50" />
