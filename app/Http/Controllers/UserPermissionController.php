@@ -8,15 +8,22 @@ use App\Models\Permission;
 use App\Models\User;
 use App\Models\UserPermission;
 use App\Services\UserPermissionService;
+use Illuminate\Http\Request;
 
 class UserPermissionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $permissions = UserPermissionService::view($request->user());
+
+        return $this->response(
+            'success',
+            'User Permissions retrieved!',
+            $permissions->toArray()
+        );
     }
 
     /**
@@ -46,7 +53,6 @@ class UserPermissionController extends Controller
             $userPermission->toArray(),
             201
         );
-
     }
 
     /**
@@ -70,7 +76,20 @@ class UserPermissionController extends Controller
      */
     public function update(UpdateUserPermissionRequest $request, UserPermission $userPermission)
     {
-        //
+        $validated = $request->validated();
+
+        $userPermission = UserPermissionService::update(
+            $request->user(),
+            $userPermission,
+            Permission::findOrFail($validated['permission_id'])
+        );
+
+        return $this->response(
+            'success',
+            'User Permission update successfully',
+            $userPermission->toArray(),
+            200
+        );
     }
 
     /**
@@ -78,6 +97,16 @@ class UserPermissionController extends Controller
      */
     public function destroy(UserPermission $userPermission)
     {
-        //
+        UserPermissionService::delete(
+            request()->user(),
+            $userPermission
+        );
+
+        return $this->response(
+            'success',
+            'User Permission deleted successfully.',
+            [],
+            200
+        );
     }
 }

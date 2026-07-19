@@ -91,7 +91,6 @@ class UserController extends Controller
 
             UserPermissionService::initializePermissions($user);
 
-
             DB::commit();
 
             return $this->response('success', 'User successfully created.', $user->toArray());

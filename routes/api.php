@@ -36,6 +36,7 @@ Route::post('/upload-media', [MediaController::class, 'upload'])->middleware('jw
 Route::group(['prefix' => '/user-permission'], function () {
 
     Route::group(['prefix' => '/get'], function () {
+        Route::get('', [UserPermissionController::class, 'index'])->middleware('jwt.auth');
     });
 
     Route::group(['prefix' => '/create'], function () {
@@ -43,9 +44,11 @@ Route::group(['prefix' => '/user-permission'], function () {
     });
 
     Route::group(['prefix' => '/update'], function () {
+        Route::put('/{user_permission}', [UserPermissionController::class, 'update'])->middleware(('jwt.auth'));
     });
 
     Route::group(['prefix' => '/delete'], function () {
+        Route::delete('/{user_permission}', [UserPermissionController::class, 'destroy'])->middleware('jwt.auth');
     });
 
 });

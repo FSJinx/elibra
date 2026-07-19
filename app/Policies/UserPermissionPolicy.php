@@ -21,7 +21,8 @@ class UserPermissionPolicy
      */
     public function view(User $user, UserPermission $userPermission): bool
     {
-        return false;
+        return $user->isSuperAdmin() 
+               || $user->hasPermission('manage.view');
     }
 
     /**
@@ -29,7 +30,8 @@ class UserPermissionPolicy
      */
     public function create(User $user): bool
     {
-        return $user->isSuperAdmin() || $user->hasPermission('manage.create');
+        return $user->isSuperAdmin() 
+               || $user->hasPermission('manage.create');
     }
 
     /**
@@ -37,7 +39,8 @@ class UserPermissionPolicy
      */
     public function update(User $user, UserPermission $userPermission): bool
     {
-        return false;
+        return $user->isSuperAdmin()
+               || $user->hasPermission('manage.update');
     }
 
     /**
@@ -45,7 +48,8 @@ class UserPermissionPolicy
      */
     public function delete(User $user, UserPermission $userPermission): bool
     {
-        return false;
+        return $user->isSuperAdmin()
+               || $user->hasPermission('manage.delete');
     }
 
     /**

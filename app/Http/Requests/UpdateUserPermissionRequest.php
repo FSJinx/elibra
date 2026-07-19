@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\UserPermission;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -12,7 +13,7 @@ class UpdateUserPermissionRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->user()->can('update', $this->route('user_permission'));
     }
 
     /**
@@ -23,7 +24,7 @@ class UpdateUserPermissionRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            //
+            'permission_id' => 'required|exists:permissions,id',
         ];
     }
 }
