@@ -28,7 +28,7 @@ class UserPolicy
      */
     public function create(AuthUser $user): bool
     {
-        if ($user->hasPermission('user.all') || $user->hasPermission('user.create')) { // Highest Admin
+        if ($user->hasPermission('user.all')) { // Highest Admin
             return true;
         }
 

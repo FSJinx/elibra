@@ -12,32 +12,32 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [
       laravel({
-        input: ['resources/styles/app.css', 'resources/src/app.ts'],
+        input: ['resources/styles/app.css', 'src/app.ts'],
         refresh: true,
       }),
       tailwindcss(),
       vue(),
 
       AutoImport({
-        dts: 'resources/src/auto-import.d.ts',
+        dts: 'src/auto-import.d.ts',
 
         imports: ['vue', 'vue-router', 'pinia'],
 
-        dirs: ['resources/src/composables/**', 'resources/src/stores/**', 'resources/src/router/*'],
+        dirs: ['src/composables/**', 'src/stores/**', 'src/router/*', 'src/assets/images/*', 'src/plugins/*'],
 
         vueTemplate: true,
       }),
 
       Components({
-        dirs: ['resources/src/components/**'],
+        dirs: ['src/components/**'],
 
-        dts: 'resources/src/components/components.d.ts',
+        dts: 'src/components/components.d.ts',
       }),
     ],
 
     resolve: {
       alias: {
-        '@': fileURLToPath(new URL('./resources/src', import.meta.url)),
+        '@': fileURLToPath(new URL('./src', import.meta.url)),
       },
     },
 

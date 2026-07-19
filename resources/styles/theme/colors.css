@@ -1,0 +1,83 @@
+@theme {
+  /* ==========================
+  * System
+  * ========================== */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-white: var(--white);
+  --color-black: var(--black);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  /* ==========================
+  * Primary
+  * ========================== */
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-soft-hover: var(--primary-soft-hover);
+  --color-primary-soft-foreground: var(--primary-soft-foreground);
+
+  /* ==========================
+  * Secondary
+  * ========================== */
+  --color-secondary: var(--secondary);
+  --color-secondary-hover: var(--secondary-hover);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary-soft: var(--secondary-soft);
+  --color-secondary-soft-hover: var(--secondary-soft-hover);
+  --color-secondary-soft-foreground: var(--secondary-soft-foreground);
+
+  /* ==========================
+  *   Info
+  *  ==========================*/
+  --color-info: var(--info);
+  --color-info-hover: var(--info-hover);
+  --color-info-foreground: var(--info-foreground);
+  --color-info-soft: var(--info-soft);
+  --color-info-soft-hover: var(--info-soft-hover);
+  --color-info-soft-foreground: var(--info-soft-foreground);
+
+  /* ==========================
+  *   Success
+  *  ==========================*/
+  --color-success: var(--success);
+  --color-success-hover: var(--success-hover);
+  --color-success-foreground: var(--success-foreground);
+  --color-success-soft: var(--success-soft);
+  --color-success-soft-hover: var(--success-soft-hover);
+  --color-success-soft-foreground: var(--success-soft-foreground);
+
+  /* ==========================
+  *   Warning
+  *  ==========================*/
+  --color-warning: var(--warning);
+  --color-warning-hover: var(--warning-hover);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-warning-soft: var(--warning-soft);
+  --color-warning-soft-hover: var(--warning-soft-hover);
+  --color-warning-soft-foreground: var(--warning-soft-foreground);
+
+  /* ==========================
+  *   Danger
+  *  ==========================*/
+  --color-danger: var(--danger);
+  --color-danger-hover: var(--danger-hover);
+  --color-danger-foreground: var(--danger-foreground);
+  --color-danger-soft: var(--danger-soft);
+  --color-danger-soft-hover: var(--danger-soft-hover);
+  --color-danger-soft-foreground: var(--danger-soft-foreground);
+  --color-warning-soft-foreground: var(--warning-soft-foreground);
+
+  /* ==========================
+  *   Restore
+  *  ==========================*/
+  --color-restore: var(--restore);
+  --color-restore-hover: var(--restore-hover);
+  --color-restore-foreground: var(--restore-foreground);
+  --color-restore-soft: var(--restore-soft);
+  --color-restore-soft-hover: var(--restore-soft-hover);
+  --color-restore-soft-foreground: var(--restore-soft-foreground);
+}

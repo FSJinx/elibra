@@ -16,7 +16,8 @@ class AdminSeeder extends Seeder
     public function run(): void
     {
         $user = User::create([
-            'first_name' => 'System Administrator',
+            'last_name' => 'Echague',
+            'first_name' => 'Campus Admin',
             'sex' => 'male',
             'role' => 'admin',
             'username' => 'admin',
@@ -27,9 +28,9 @@ class AdminSeeder extends Seeder
 
         $permissions = [
             'page.admin.all',
-            'user.all',
-            'campus.all',
-            'branch.all',
+            'manage.create',
+            'manage.update',
+            'manage.delete',
         ];
 
         foreach ($permissions as $permission) {

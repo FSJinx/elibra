@@ -23,7 +23,6 @@ class LibrarianSeeder extends Seeder
                 'role' => 'librarian',
                 'email' => 'angelo@isu.edu.ph',
                 'password' => bcrypt('elibra2026'),
-                'librarian' => ['role' => 'admin'],
             ],
             [
                 'last_name' => 'tobias',
@@ -33,7 +32,6 @@ class LibrarianSeeder extends Seeder
                 'role' => 'librarian',
                 'email' => 'librarian_eugene@isu.edu.ph',
                 'password' => bcrypt('elibra2026'),
-                'librarian' => ['role' => 'staff'],
             ],
             [
                 'last_name' => 'christian',
@@ -43,18 +41,14 @@ class LibrarianSeeder extends Seeder
                 'role' => 'librarian',
                 'email' => 'christian@isu.edu.ph',
                 'password' => bcrypt('elibra2026'),
-                'librarian' => ['role' => 'staff'],
             ],
         ];
 
         foreach ($users as $user) {
             $librarian = User::create(Arr::except($user, ['librarian']));
 
-            $lib = $user['librarian'];
-
             Librarian::create([
                 'user_id' => $librarian->id,
-                'role' => $lib['role'],
                 'branch_id' => 1,
             ]);
         }

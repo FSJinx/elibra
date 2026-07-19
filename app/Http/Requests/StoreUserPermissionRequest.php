@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\UserPermission;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Override;
 
 class StoreUserPermissionRequest extends BaseRequest
 {
@@ -12,7 +14,7 @@ class StoreUserPermissionRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->user()->can('create', UserPermission::class);
     }
 
     /**
@@ -23,7 +25,23 @@ class StoreUserPermissionRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            //
+            'user_id' => 'required|exists:users,id',
+            'permission_id' => 'required|exists:permissions,id',
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    #[Override]
+    public function messages():array
+    {
+        return [
+            'user_id.required' => 'User is required.',
+            'user_id.exists' => 'The selected User is invalid.',
+
+            'permission_id.required' => 'Permission is required.',
+            'permission_id.exists' => 'The selected permission is invalid.'
         ];
     }
 }

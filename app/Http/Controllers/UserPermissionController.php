@@ -5,37 +5,25 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreUserPermissionRequest;
 use App\Http\Requests\UpdateUserPermissionRequest;
 use App\Models\Permission;
+use App\Models\User;
 use App\Models\UserPermission;
+use App\Services\UserPermissionService;
+use Illuminate\Http\Request;
 
 class UserPermissionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-    }
+        $permissions = UserPermissionService::view($request->user());
 
-    
-
-    public static function initializePermissions($user = null, $role = null)
-    {
-        if ($user?->role === 'admin') {
-            $permissions = [
-                'user.all',
-                'campus.all',
-                'branch.all',
-            ];
-
-            foreach ($permissions as $permission) {
-                $permit = Permission::where('permission', $permission)->first(); // Checks kung merong permissio
-                UserPermission::create([
-                    'user_id' => $user->id,
-                    'permission_id' => $permit->id,
-                ]);
-            }
-        }
+        return $this->response(
+            'success',
+            'User Permissions retrieved!',
+            $permissions->toArray()
+        );
     }
 
     /**
@@ -51,7 +39,20 @@ class UserPermissionController extends Controller
      */
     public function store(StoreUserPermissionRequest $request)
     {
-        //
+        $validated = $request->validated();
+
+        $userPermission = UserPermissionService::assign(
+            $request->user(),
+            User::findOrFail($validated['user_id']),
+            Permission::findOrFail($validated['permission_id'])
+        );
+
+        return $this->response(
+            'success',
+            'User permission created successfully',
+            $userPermission->toArray(),
+            201
+        );
     }
 
     /**
@@ -75,7 +76,20 @@ class UserPermissionController extends Controller
      */
     public function update(UpdateUserPermissionRequest $request, UserPermission $userPermission)
     {
-        //
+        $validated = $request->validated();
+
+        $userPermission = UserPermissionService::update(
+            $request->user(),
+            $userPermission,
+            Permission::findOrFail($validated['permission_id'])
+        );
+
+        return $this->response(
+            'success',
+            'User Permission update successfully',
+            $userPermission->toArray(),
+            200
+        );
     }
 
     /**
@@ -83,6 +97,16 @@ class UserPermissionController extends Controller
      */
     public function destroy(UserPermission $userPermission)
     {
-        //
+        UserPermissionService::delete(
+            request()->user(),
+            $userPermission
+        );
+
+        return $this->response(
+            'success',
+            'User Permission deleted successfully.',
+            [],
+            200
+        );
     }
 }

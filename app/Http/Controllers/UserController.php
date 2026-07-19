@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreUsersRequest;
 use App\Http\Requests\UpdateUsersRequest;
 use App\Models\User;
+use App\Services\UserPermissionService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -88,8 +89,7 @@ class UserController extends Controller
                 'password' => Hash::make('elibra2026'),
             ]);
 
-            UserPermissionController::initializePermissions($user);
-
+            UserPermissionService::initializePermissions($user);
 
             DB::commit();
 
