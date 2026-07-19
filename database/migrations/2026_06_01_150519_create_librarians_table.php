@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('librarians', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->enum('role', ['admin', 'staff', 'assistant']);
+            // $table->enum('role', ['admin', 'staff', 'assistant']);
             $table->unsignedBigInteger('branch_id');
             $table->json('tools')->nullable();
 

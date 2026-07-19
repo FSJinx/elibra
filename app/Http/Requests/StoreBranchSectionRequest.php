@@ -28,7 +28,7 @@ class StoreBranchSectionRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'section_head_id' => 'nullable|exists:librarians,id',
+            // 'section_head_id' => 'nullable|exists:librarians,id',
             'branch_id' => 'required|exists:branches,id',
             'section_id' => 'required|exists:sections,id',
         ];
@@ -48,7 +48,7 @@ class StoreBranchSectionRequest extends BaseRequest
             'section_id.required' => 'Please select a section.',
             'section_id.exists' => 'The selected section is invalid.',
 
-            'section_head_id.exists' => 'The selected section head is invalid.',
+            // 'section_head_id.exists' => 'The selected section head is invalid.',
         ];
 
     }

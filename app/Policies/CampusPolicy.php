@@ -21,7 +21,9 @@ class CampusPolicy
      */
     public function view(User $user, Campus $campus): bool
     {
-        return $user->isAdmin();
+        if ($user->hasPermission('user.all')) { return true; }
+        
+        return false;
     }
 
     /**
