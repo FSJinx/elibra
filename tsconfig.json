@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "paths": {
-      "@/*": ["./resources/src/*"]
+      "@/*": ["./src/*"]
     }
   },
-  "include": ["./resources/src/**/*.ts", "./resources/src/**/*.vue", "./resources/src/auto-imports.d.ts"],
+  "include": ["./src/**/*.ts", "./src/**/*.vue", "./src/auto-imports.d.ts"],
   "exclude": ["node_modules", "public", "storage"]
 }

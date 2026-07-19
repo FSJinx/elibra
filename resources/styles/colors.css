@@ -8,9 +8,9 @@
   /* ==========================
   * Primary
   * ========================== */
-  --color-primary-light: var(--color-indigo-200);
-  --color-primary: var(--color-indigo-600);
-  --color-primary-dark: var(--color-indigo-900);
+  --color-primary: var(--color-emerald-600);
+  --color-primary-light: var(--color-emerald-200);
+  --color-primary-dark: var(--color-emerald-900);
 
   /* ==========================
   * Secondary
@@ -20,35 +20,35 @@
   /* ==========================
   *   Info
   *  ==========================*/
-  --color-blue: var(--color-blue-500);
-  --color-blue-light: var(--color-blue-400);
-  --color-blue-dark: var(--color-blue-600);
+  --color-info: var(--color-blue-500);
+  --color-info-light: var(--color-blue-400);
+  --color-info-dark: var(--color-blue-600);
 
   /* ==========================
   *   Error
   *  ==========================*/
-  --color-red: var(--color-red-500);
-  --color-red-light: var(--color-red-400);
-  --color-red-dark: var(--color-red-600);
+  --color-danger: var(--color-red-500);
+  --color-danger-light: var(--color-red-400);
+  --color-danger-dark: var(--color-red-600);
 
   /* ==========================
   *   Success
   *  ==========================*/
-  --color-green: var(--color-green-500);
-  --color-green-light: var(--color-green-400);
-  --color-green-dark: var(--color-green-600);
+  --color-success: var(--color-emerald-500);
+  --color-success-light: var(--color-emerald-400);
+  --color-success-dark: var(--color-emerald-600);
 
   /* ==========================
   *   Warning
   *  ==========================*/
-  --color-yellow: var(--color-yellow-500);
-  --color-yellow-light: var(--color-yellow-400);
-  --color-yellow-dark: var(--color-yellow-600);
+  --color-warning: var(--color-yellow-500);
+  --color-warning-light: var(--color-yellow-400);
+  --color-warning-dark: var(--color-yellow-600);
 
   /* ==========================
   *   Restore
   *  ==========================*/
-  --color-purple: var(--color-purple-500);
-  --color-purple-light: var(--color-purple-400);
-  --color-purple-dark: var(--color-purple-600);
+  --color-restore: var(--color-purple-500);
+  --color-restore-light: var(--color-purple-400);
+  --color-restore-dark: var(--color-purple-600);
 }
