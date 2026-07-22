@@ -1,83 +1,47 @@
-@theme {
-  /* ==========================
-  * System
-  * ========================== */
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-white: var(--white);
-  --color-black: var(--black);
+:root {
+  /*  ========================== 
+  *   Main Color Palette
+  *   ========================== */
 
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
+  --primary: lab(50% -47.74 25.84);
+  --primary-hover: color-mix(in oklab, var(--primary) 90%, var(--primary-foreground) 10%);
+  --primary-foreground: var(--snow);
+  --primary-soft: color-mix(in oklab, var(--primary) 15%, transparent);
+  --primary-soft-hover: color-mix(in oklab, var(--primary) 20%, transparent);
+  --primary-soft-foreground: var(--primary);
 
-  /* ==========================
-  * Primary
-  * ========================== */
-  --color-primary: var(--primary);
-  --color-primary-hover: var(--primary-hover);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary-soft: var(--primary-soft);
-  --color-primary-soft-hover: var(--primary-soft-hover);
-  --color-primary-soft-foreground: var(--primary-soft-foreground);
+  --info: oklch(0.6204 0.195 253.83);
+  --info-hover: color-mix(in oklab, var(--info) 90%, var(--info-foreground) 10%);
+  --info-foreground: var(--snow);
+  --info-soft: color-mix(in oklab, var(--info) 15%, transparent);
+  --info-soft-hover: color-mix(in oklab, var(--info) 20%, transparent);
+  --info-soft-foreground: var(--info);
 
-  /* ==========================
-  * Secondary
-  * ========================== */
-  --color-secondary: var(--secondary);
-  --color-secondary-hover: var(--secondary-hover);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary-soft: var(--secondary-soft);
-  --color-secondary-soft-hover: var(--secondary-soft-hover);
-  --color-secondary-soft-foreground: var(--secondary-soft-foreground);
+  --success: oklch(0.7329 0.1935 150.81);
+  --success-hover: color-mix(in oklab, var(--success) 90%, var(--success-foreground) 10%);
+  --success-foreground: var(--snow);
+  --success-soft: color-mix(in oklab, var(--success) 15%, transparent);
+  --success-soft-hover: color-mix(in oklab, var(--success) 20%, transparent);
+  --success-soft-foreground: var(--success);
 
-  /* ==========================
-  *   Info
-  *  ==========================*/
-  --color-info: var(--info);
-  --color-info-hover: var(--info-hover);
-  --color-info-foreground: var(--info-foreground);
-  --color-info-soft: var(--info-soft);
-  --color-info-soft-hover: var(--info-soft-hover);
-  --color-info-soft-foreground: var(--info-soft-foreground);
+  --warning: oklch(0.7819 0.1585 72.3301);
+  --warning-hover: color-mix(in oklab, var(--warning) 90%, var(--warning-foreground) 10%);
+  --warning-foreground: var(--snow);
+  --warning-soft: color-mix(in oklab, var(--warning) 15%, transparent);
+  --warning-soft-hover: color-mix(in oklab, var(--warning) 20%, transparent);
+  --warning-soft-foreground: var(--warning);
 
-  /* ==========================
-  *   Success
-  *  ==========================*/
-  --color-success: var(--success);
-  --color-success-hover: var(--success-hover);
-  --color-success-foreground: var(--success-foreground);
-  --color-success-soft: var(--success-soft);
-  --color-success-soft-hover: var(--success-soft-hover);
-  --color-success-soft-foreground: var(--success-soft-foreground);
+  --danger: oklch(0.6532 0.2328 25.7401);
+  --danger-hover: color-mix(in oklab, var(--danger) 90%, var(--danger-foreground) 10%);
+  --danger-foreground: var(--snow);
+  --danger-soft: color-mix(in oklab, var(--danger) 15%, transparent);
+  --danger-soft-hover: color-mix(in oklab, var(--danger) 20%, transparent);
+  --danger-soft-foreground: var(--danger);
 
-  /* ==========================
-  *   Warning
-  *  ==========================*/
-  --color-warning: var(--warning);
-  --color-warning-hover: var(--warning-hover);
-  --color-warning-foreground: var(--warning-foreground);
-  --color-warning-soft: var(--warning-soft);
-  --color-warning-soft-hover: var(--warning-soft-hover);
-  --color-warning-soft-foreground: var(--warning-soft-foreground);
-
-  /* ==========================
-  *   Danger
-  *  ==========================*/
-  --color-danger: var(--danger);
-  --color-danger-hover: var(--danger-hover);
-  --color-danger-foreground: var(--danger-foreground);
-  --color-danger-soft: var(--danger-soft);
-  --color-danger-soft-hover: var(--danger-soft-hover);
-  --color-danger-soft-foreground: var(--danger-soft-foreground);
-  --color-warning-soft-foreground: var(--warning-soft-foreground);
-
-  /* ==========================
-  *   Restore
-  *  ==========================*/
-  --color-restore: var(--restore);
-  --color-restore-hover: var(--restore-hover);
-  --color-restore-foreground: var(--restore-foreground);
-  --color-restore-soft: var(--restore-soft);
-  --color-restore-soft-hover: var(--restore-soft-hover);
-  --color-restore-soft-foreground: var(--restore-soft-foreground);
+  --restore: oklch(55.8% 0.288 302.321);
+  --restore-hover: color-mix(in oklab, var(--restore) 90%, var(--restore-foreground) 10%);
+  --restore-foreground: var(--snow);
+  --restore-soft: color-mix(in oklab, var(--restore) 15%, transparent);
+  --restore-soft-hover: color-mix(in oklab, var(--restore) 20%, transparent);
+  --restore-soft-foreground: var(--restore);
 }

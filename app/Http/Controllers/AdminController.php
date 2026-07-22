@@ -12,4 +12,8 @@ class AdminController extends Controller
     public function storeUser() {
         return response()->json(['status' => 'success']);
     }
+
+    public static function dashboard () {
+        
+    }
 }

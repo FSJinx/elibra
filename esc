@@ -1,0 +1,797 @@
+[33mcommit d8f8a9860f21f7c1f19290907e866e83d18a29b2[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mriri[m[33m, [m[1;31morigin/riri[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Merge: e665a51 3f7f079
+Author: Reign Chryzel <reignchryzelbalico@gmail.com>
+Commit: GitHub <noreply@github.com>
+
+    Merge pull request #39 from arsiiioreo/riri
+    
+    Riri
+
+[33mcommit 3f7f079c648236535b54557317968eccd64fe352[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Added: Color Palette
+
+[33mcommit db73e6029823530694b3ee5a659b6781e39732d5[m
+Merge: fe8dba8 57a43bb
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Merge branch 'Eugene' of github.com:arsiiioreo/elibra into riri
+
+[33mcommit fe8dba86a11657db742640175a31a9bbb026e01b[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Modified: Button Component
+
+[33mcommit 57a43bb6459f0609df679f4e5e6749db5ba723a6[m[33m ([m[1;31morigin/Eugene[m[33m)[m
+Author: Eugene G. Tobias <imnoteugene09@gmail.com>
+Commit: Eugene G. Tobias <imnoteugene09@gmail.com>
+
+    Added: RUD for user permissions
+
+[33mcommit 5df3a83962bf4d4d47ce99823586a9e4870b6b63[m
+Author: Eugene G. Tobias <imnoteugene09@gmail.com>
+Commit: Eugene G. Tobias <imnoteugene09@gmail.com>
+
+    Added: Create permission. Changes: move the initialization in service
+
+[33mcommit e665a516947a158c050f7fae7f06bb5320cdfc37[m
+Merge: f96f14e 723c306
+Author: Reign Chryzel <reignchryzelbalico@gmail.com>
+Commit: GitHub <noreply@github.com>
+
+    Merge pull request #37 from arsiiioreo/riri
+    
+    Fixed: Refactored env for local testing
+
+[33mcommit 723c306ded18def2733450f8fa53d7a2d3336ef3[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Fixed: Refactored env for local testing
+
+[33mcommit f96f14e9485f47c6b83b6f7efa4da798eb2892dc[m
+Merge: 466cbba 291302c
+Author: Reign Chryzel <reignchryzelbalico@gmail.com>
+Commit: GitHub <noreply@github.com>
+
+    Merge pull request #36 from arsiiioreo/riri
+    
+    Added: Auto Imports
+
+[33mcommit 291302c7cbc0c3a5038c0ece705eb04013d5eba2[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Added: Auto Imports
+
+[33mcommit 466cbba1bd8c55417429feeefbf494ece2153d18[m
+Merge: c4c31ba eb42bb7
+Author: Reign Chryzel <reignchryzelbalico@gmail.com>
+Commit: GitHub <noreply@github.com>
+
+    Merge pull request #35 from arsiiioreo/riri
+    
+    Modified: env, to test local machine using other device
+
+[33mcommit eb42bb77f4d11fcec9facd4ed44b9b7c47b44ee0[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Modified: env, to test local machine using other device
+
+[33mcommit c4c31baa671b4d7b4b6a75592069eb29e6edaabc[m
+Merge: 2038384 08fa70f
+Author: Reign Chryzel <reignchryzelbalico@gmail.com>
+Commit: GitHub <noreply@github.com>
+
+    Merge pull request #34 from arsiiioreo/Eugene
+    
+    Fixed: migration related to campus, remove branch section head
+
+[33mcommit 08fa70ffb194be6304ebeed6610400c0a6d2cd2c[m
+Author: Eugene G. Tobias <imnoteugene09@gmail.com>
+Commit: Eugene G. Tobias <imnoteugene09@gmail.com>
+
+    Changes: successfully rename library_roles table->librarian sections
+
+[33mcommit 1a850ee6cd0ae091194bf4a50d61b022558cb383[m
+Author: Eugene G. Tobias <imnoteugene09@gmail.com>
+Commit: Eugene G. Tobias <imnoteugene09@gmail.com>
+
+    Small fix on user migration
+
+[33mcommit 36276dcdaa00eb0df4701391df8b723e8c3c9bc6[m
+Author: Eugene G. Tobias <imnoteugene09@gmail.com>
+Commit: Eugene G. Tobias <imnoteugene09@gmail.com>
+
+    Fixed: migration related to campus, remove branch section head
+
+[33mcommit 2038384f46616f06af46fbeb5a69c4fe79094e2f[m
+Merge: ea23dcc 02f9465
+Author: Reign Chryzel <reignchryzelbalico@gmail.com>
+Commit: GitHub <noreply@github.com>
+
+    Merge pull request #33 from arsiiioreo/riri
+    
+    Modified: Librarian, LibraryRole
+
+[33mcommit 02f946559391f793ff19bbe17711d5fd64617495[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Modified: Librarian, LibraryRole
+
+[33mcommit ea23dcc1fb6b117fc8fe3d4cb7bbf7e3c2c087b2[m
+Merge: 3845a75 e7c3162
+Author: Reign Chryzel <reignchryzelbalico@gmail.com>
+Commit: GitHub <noreply@github.com>
+
+    Merge pull request #31 from arsiiioreo/riri
+    
+    Fixed: Tests error
+
+[33mcommit e7c31628cf002198b70c50e81ce93f7450a04748[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Fixed: Tests error
+
+[33mcommit 3845a75be730e42f8ab61d98fa8a0c878b79a108[m
+Merge: 43fd8e9 f5a8f08
+Author: Reign Chryzel <reignchryzelbalico@gmail.com>
+Commit: GitHub <noreply@github.com>
+
+    Merge pull request #30 from arsiiioreo/riri
+    
+    Riri
+
+[33mcommit f5a8f0872963571831eb2b4eef5b6b3cc1ce24d2[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Added: Permissions and Sample for Policy
+
+[33mcommit 1808bc6757e85ed85cb1800a9034b70aad8d0cec[m
+Merge: ffa0dc1 43fd8e9
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Merge
+
+[33mcommit 43fd8e92298a1daaa47b4be2487ef5919f42122d[m[33m ([m[1;31morigin/dyep[m[33m)[m
+Merge: eb798b8 b0b9338
+Author: Reign Chryzel <reignchryzelbalico@gmail.com>
+Commit: GitHub <noreply@github.com>
+
+    Merge pull request #29 from arsiiioreo/Eugene
+    
+    Eugene
+
+[33mcommit b0b933867f2f2f40b87bfd4bff8f135b03f9f01f[m
+Author: Eugene G. Tobias <imnoteugene09@gmail.com>
+Commit: Eugene G. Tobias <imnoteugene09@gmail.com>
+
+    Added: migration table for user_permission and permission
+
+[33mcommit ff196accb3d6c4739cadc592fa7c253fca554e48[m
+Author: Eugene G. Tobias <imnoteugene09@gmail.com>
+Commit: Eugene G. Tobias <imnoteugene09@gmail.com>
+
+    Added: RUD for branch sections, fix the restriction for library admin to Add, Update, Delete if not related to its campus
+
+[33mcommit ffa0dc181f273e4d2408d4606d6c1844e107f1de[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Added: Campus Searching in Admin
+
+[33mcommit ad7e74c4ce595de77caaa8cdb0b9606dc4171941[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Added: Error pages
+
+[33mcommit 400fe42098056004c1e133bed916170d78eb5a31[m
+Author: Eugene G. Tobias <imnoteugene09@gmail.com>
+Commit: Eugene G. Tobias <imnoteugene09@gmail.com>
+
+    Added: Create for Branch Section while admin can create branch section to all campuses, library admin can only store based on its campus to restrict adding data to diff campuses
+
+[33mcommit e3ada0fc5c98bbb348fd24cf0b4f7fb30ff85eea[m
+Merge: 20c43e7 eb798b8
+Author: Eugene G. Tobias <imnoteugene09@gmail.com>
+Commit: Eugene G. Tobias <imnoteugene09@gmail.com>
+
+    Merge branch 'main' of https://github.com/arsiiioreo/elibra into Eugene
+
+[33mcommit 20c43e72906db0d7369736f93c62cca736b51c9f[m
+Author: Eugene G. Tobias <imnoteugene09@gmail.com>
+Commit: Eugene G. Tobias <imnoteugene09@gmail.com>
+
+    Added: CRUD for sections
+
+[33mcommit eb798b82996672ba4a5ecbd261283eea91eeab8f[m
+Merge: 8581ea3 5d9bc76
+Author: Reign Chryzel <reignchryzelbalico@gmail.com>
+Commit: GitHub <noreply@github.com>
+
+    Merge pull request #27 from arsiiioreo/riri
+    
+    Riri
+
+[33mcommit 5d9bc7623df9bae569397c521141b0a7c7a2be38[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Modified: Github Workflows, removed testing for 8.3 and 8.4
+
+[33mcommit a3539abd75beef04fad945cd0714944d0e2d55c9[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Modified: Github Workflows, removed testing for 8.3 and 8.4
+
+[33mcommit 8581ea33514b35a7e4cf464ad169b6e46a2a3dc1[m
+Merge: 5a1b04c 583b319
+Author: Reign Chryzel <reignchryzelbalico@gmail.com>
+Commit: GitHub <noreply@github.com>
+
+    Merge pull request #25 from arsiiioreo/riri
+    
+    Riri
+
+[33mcommit 583b3192e94c1ef2980348204d3c7edefdf3ee67[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Modified: Input Component
+
+[33mcommit 11d2bc9d62219a882f065aa20589e6e587505c2a[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Added: Input Component
+
+[33mcommit 5a1b04cd21c30eba3ff05da91eb79bb333f01467[m
+Merge: 0b7109d 5d3584c
+Author: Reign Chryzel <reignchryzelbalico@gmail.com>
+Commit: GitHub <noreply@github.com>
+
+    Merge pull request #24 from arsiiioreo/riri
+    
+    Added: Button Component
+
+[33mcommit 5d3584c0b8b2fea030ac78565a4d7b20f9e14c61[m
+Merge: 495e623 0b7109d
+Author: Reign Chryzel <reignchryzelbalico@gmail.com>
+Commit: GitHub <noreply@github.com>
+
+    Merge branch 'main' into riri
+
+[33mcommit 0b7109db94358f28dc4f2e5176e9430c14370c24[m
+Merge: ab6aa37 d02b883
+Author: Reign Chryzel <reignchryzelbalico@gmail.com>
+Commit: GitHub <noreply@github.com>
+
+    Merge pull request #23 from arsiiioreo/Eugene
+    
+    Eugene
+
+[33mcommit d02b8831f8bba2f8533ea3710a3479a47f2e3750[m
+Author: Eugene G. Tobias <imnoteugene09@gmail.com>
+Commit: Eugene G. Tobias <imnoteugene09@gmail.com>
+
+    Added: Display function for branch that allows library admin to view branches based on their campus else public
+
+[33mcommit 495e623a7fc967e9e0c2b0d394d559dabf20a6d5[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Added: Button Component
+
+[33mcommit 09c6835f47ab5dd5ca02f536f7e3c7fecf41424c[m
+Author: Eugene G. Tobias <imnoteugene09@gmail.com>
+Commit: Eugene G. Tobias <imnoteugene09@gmail.com>
+
+    Added: CUD for branches based on their roles % small fix for migration of branch
+
+[33mcommit fff104a99aef52a356f1fb40bfd2018b7ee49ffd[m
+Author: Eugene G. Tobias <imnoteugene09@gmail.com>
+Commit: Eugene G. Tobias <imnoteugene09@gmail.com>
+
+    Added update, delete, and show specific campus based on its user role:admin, fix security issue in sorting campus that allows users to  inject name of column  through url
+
+[33mcommit 2aaa5e3bb902c2dac41cf26db9f606b251ddcf17[m
+Author: Eugene G. Tobias <imnoteugene09@gmail.com>
+Commit: Eugene G. Tobias <imnoteugene09@gmail.com>
+
+    fix [Create, Update, Delete] items w/ section_id under item table
+
+[33mcommit ab6aa37eb3d1da17c2e200c99b8c3a830a2f3758[m
+Merge: 0aa053d 4dfb0ba
+Author: Reign Chryzel <reignchryzelbalico@gmail.com>
+Commit: GitHub <noreply@github.com>
+
+    Merge pull request #22 from arsiiioreo/riri
+    
+    Added: Frontend read for campus in admin management
+
+[33mcommit 4dfb0ba30fa39d6b8005cf0d9e2a8d2275c797e3[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Added: Frontend read for campus in admin management
+
+[33mcommit 0aa053d0765ae95afc076365a84daf0deebf151b[m
+Merge: 1b5defd 878aea5
+Author: Reign Chryzel <reignchryzelbalico@gmail.com>
+Commit: GitHub <noreply@github.com>
+
+    Merge pull request #21 from arsiiioreo/Eugene
+    
+    Eugene
+
+[33mcommit 878aea5edd30994abc73bce88d75860bd7fe36d5[m
+Author: Eugene G. Tobias <imnoteugene09@gmail.com>
+Commit: Eugene G. Tobias <imnoteugene09@gmail.com>
+
+    Added Create Campus based on user role->Admin
+
+[33mcommit ee30e26ec62f78c688cd11df11e20d604100aee6[m
+Merge: 9c5cfbe 1b5defd
+Author: Eugene G. Tobias <imnoteugene09@gmail.com>
+Commit: Eugene G. Tobias <imnoteugene09@gmail.com>
+
+    Merge branch 'main' of https://github.com/arsiiioreo/elibra into Eugene
+
+[33mcommit 1b5defd9ca79e177821fbe699de74d721eddf895[m
+Merge: 75273e0 4c4aae0
+Author: Reign Chryzel <reignchryzelbalico@gmail.com>
+Commit: GitHub <noreply@github.com>
+
+    Merge pull request #20 from arsiiioreo/riri
+    
+    Riri
+
+[33mcommit 4c4aae0ef587dab590827b28670ced2747ac1e8a[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Modified: Items Table, Branch Sections Table
+
+[33mcommit 9c5cfbe433064f201da0bd9731b77576c038829a[m
+Author: Eugene G. Tobias <imnoteugene09@gmail.com>
+Commit: Eugene G. Tobias <imnoteugene09@gmail.com>
+
+    Added Update & Delete function for acdemic record, fix redundant authorization in Academic Policy
+
+[33mcommit bdb629c66ea4868c507dc774a1b2c7dcd647bb50[m
+Merge: 1394df9 75273e0
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Merge branch 'main' of github.com:arsiiioreo/elibra into riri
+
+[33mcommit 1394df9af7619226d24c043be5d4ff1e70820b6e[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Added: Librarian Dashboard
+
+[33mcommit 75273e03f4250b324ea7611ec313e14d455fc7b0[m
+Merge: 07a0b61 be8ca54
+Author: Reign Chryzel <reignchryzelbalico@gmail.com>
+Commit: GitHub <noreply@github.com>
+
+    Merge pull request #19 from Eugene
+    
+    Eugene
+
+[33mcommit be8ca54b6435acec255a83a564de8d418bce6761[m
+Author: Eugene G. Tobias <imnoteugene09@gmail.com>
+Commit: Eugene G. Tobias <imnoteugene09@gmail.com>
+
+    Fix Policy Structure, remove redundant authorization
+
+[33mcommit a034e5606eb99e6cb788f686888d8d692e65d04e[m
+Merge: 571083d 07a0b61
+Author: Eugene G. Tobias <imnoteugene09@gmail.com>
+Commit: Eugene G. Tobias <imnoteugene09@gmail.com>
+
+    Merge branch 'main' of https://github.com/arsiiioreo/elibra into Eugene
+
+[33mcommit 571083dc2fa1ba43c99bbcd1b6db37daafafcf02[m
+Author: Eugene G. Tobias <imnoteugene09@gmail.com>
+Commit: Eugene G. Tobias <imnoteugene09@gmail.com>
+
+    Added creation of Academics record and implemented policy also added Services folder for storing items
+
+[33mcommit 07a0b619dcadd85e4815836a99894769ecdd2716[m
+Merge: 486dd74 1876fad
+Author: Reign Chryzel <reignchryzelbalico@gmail.com>
+Commit: GitHub <noreply@github.com>
+
+    Merge pull request #18 from arsiiioreo/Eugene
+    
+    Added: tools column under librarian, removed secondary role for librarian
+
+[33mcommit 1876fad6b7e0e2678d4d5c9d31799c8842e9ec9f[m
+Author: Eugene G. Tobias <imnoteugene09@gmail.com>
+Commit: Eugene G. Tobias <imnoteugene09@gmail.com>
+
+    adding tools column under librarian, removed secondary role for librarian
+
+[33mcommit 486dd74212f21bb8e2c116f5986b6e9abdebfae7[m
+Merge: 3e9a920 815ebc3
+Author: Reign Chryzel <reignchryzelbalico@gmail.com>
+Commit: GitHub <noreply@github.com>
+
+    Merge pull request #17 from arsiiioreo/frontend
+    
+    Frontend
+
+[33mcommit 815ebc35cebf97653859da4fd995b81ec39aec81[m[33m ([m[1;32mfrontend[m[33m)[m
+Merge: 32b00e2 3e9a920
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Merge branch 'main' of github.com:arsiiioreo/elibra into frontend
+
+[33mcommit 32b00e288ce04462249bd69405a56bda2c69efbc[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Fixed: Folder structure for Frontend
+
+[33mcommit 3e9a9209cd0c90b60a451a8907599581d4ad51ef[m
+Merge: 89d01ee 9444c0b
+Author: Reign Chryzel <reignchryzelbalico@gmail.com>
+Commit: GitHub <noreply@github.com>
+
+    Merge pull request #16 from arsiiioreo/Eugene
+    
+    Added function to update & delete the specific subscription
+
+[33mcommit 9444c0b32df81bd6f049a0e780e0191afca0e9eb[m
+Author: Eugene G. Tobias <imnoteugene09@gmail.com>
+Commit: Eugene G. Tobias <imnoteugene09@gmail.com>
+
+    Added function to update & delete the specific subscription
+
+[33mcommit 89d01ee0944f4fd17892e69d85539b8e33c7028f[m
+Merge: 6a056a3 15557ac
+Author: Reign Chryzel <reignchryzelbalico@gmail.com>
+Commit: GitHub <noreply@github.com>
+
+    Merge pull request #15 from arsiiioreo/Eugene
+    
+    Added column for branch logo under branch table, Added storing subscr…
+
+[33mcommit 15557acdc222e88671c21cc68eae09cf96969689[m
+Author: Eugene G. Tobias <imnoteugene09@gmail.com>
+Commit: Eugene G. Tobias <imnoteugene09@gmail.com>
+
+    Added column for branch logo under branch table, Added storing subscription and can fetch subscription and subscription credentials based on what value has been set on system settings table
+
+[33mcommit 8927a4f69e9e82de642ee08f296a213c1cffbce0[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Added: Frontend v2 with better folder structuring and transition to ts module
+
+[33mcommit 6a056a3b38a4c9052aed47040b3caf70aaa51af3[m
+Merge: ea19ab2 e4381d7
+Author: Reign Chryzel <reignchryzelbalico@gmail.com>
+Commit: GitHub <noreply@github.com>
+
+    Merge pull request #14 from arsiiioreo/frontend
+    
+    Added: Subscription migration
+
+[33mcommit e4381d7c24ff6ce5107fe1e137447de311f6993d[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Added: Subscription migration
+
+[33mcommit ea19ab26c2d07368121e3646448cae109d950904[m
+Merge: 69c29ae 7f76346
+Author: Reign Chryzel <reignchryzelbalico@gmail.com>
+Commit: GitHub <noreply@github.com>
+
+    Merge pull request #13 from arsiiioreo/frontend
+    
+    Frontend
+
+[33mcommit 7f763462af888919df4220a7ff64641cd6c29817[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Fixed something, I don't know what HAHAHA
+
+[33mcommit d2e2f96c9af2fa8828de3af04eb4f88fc294c0e4[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Added: OPAC list view for search
+
+[33mcommit 69c29aeae0d1434cb45af0b72eb92f78c81b8306[m
+Merge: b7bd4ba ad358ab
+Author: Reign Chryzel <reignchryzelbalico@gmail.com>
+Commit: GitHub <noreply@github.com>
+
+    Merge pull request #12 from arsiiioreo/frontend
+    
+    Added: New Landing Page (unconfirmed)
+
+[33mcommit ad358ab5a63f2ffe1c74a2b8b162da2330592a15[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Latest
+
+[33mcommit e59f29051a459551bd344909dba62d2ea253bb08[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Added: New Landing Page (unconfirmed)
+
+[33mcommit b7bd4ba244edcd9bd5904172eeaccf99f7926f4c[m[33m ([m[1;32mmain[m[33m)[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Fix: env
+
+[33mcommit 5e43cd45ac3eef1c42f384c9ee89d4bfd1e7d8a8[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Fix: Auth index for admin
+
+[33mcommit 27551673e079c31c8f7f64f0d9b8532b4f258be6[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Fixed: Backend Configuration and major changes in security handling
+
+[33mcommit 7e52624cc68aa74275850d6e582afcaeb139c45f[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Added: Fetch APIs for everything, I don't know what anymore. Just enough to make me crazy
+
+[33mcommit e6feb557cf03b30e12f62c5ed6c03dc557795d72[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Added: RoleMiddleware for route guarding
+
+[33mcommit 395914f26bb5b14d029d86ad7094ab4a6b80b0e1[m
+Merge: 9ae6725 1e4b2a9
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Merge branch 'main' of github.com:arsiiioreo/elibra into frontend
+
+[33mcommit 9ae67257a43a6e2daa9c941e13258a0f342afc47[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Added: Librarian user management
+
+[33mcommit 1e4b2a926206a5087b9330f72e5919086933d297[m
+Merge: 9fd0ca2 e9122d7
+Author: Reign Chryzel <reignchryzelbalico@gmail.com>
+Commit: GitHub <noreply@github.com>
+
+    Merge pull request #11 from arsiiioreo/backend
+    
+    Added: Setup Login API, modified Middlewares and Controllers for User…
+
+[33mcommit e9122d7d7dea93a7128747c37cdb96df7b80cb8e[m
+Author: Dyepp <jefmmamaril@gmail.com>
+Commit: Dyepp <jefmmamaril@gmail.com>
+
+    Added: Setup Login API, modified Middlewares and Controllers for Users, Patrons, and Librarians
+
+[33mcommit 9fd0ca2cab397816f87d04f4c80632e8d753b56f[m
+Merge: 69b8def 9a84bd6
+Author: Reign Chryzel <reignchryzelbalico@gmail.com>
+Commit: GitHub <noreply@github.com>
+
+    Merge pull request #10 from arsiiioreo/frontend
+    
+    Added: UI Components V2
+
+[33mcommit 9a84bd6bfdbc60c87fdc92398502fe9c47355691[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Added: UI Components V2
+
+[33mcommit 69b8defb6d24071139c5c99b2bfe4604b562273d[m
+Merge: d031c43 b0660f3
+Author: Reign Chryzel <reignchryzelbalico@gmail.com>
+Commit: GitHub <noreply@github.com>
+
+    Merge pull request #9 from arsiiioreo/frontend
+    
+    Frontend
+
+[33mcommit b0660f3ab0c7f46fd3ecb0302fa50ff26f4e34ae[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Added: Campus controller searchable
+
+[33mcommit 5e731b42b2a0f5f73da103431f18474ee86ee69c[m
+Merge: 7df45be d031c43
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Merge branch 'main' of github.com:arsiiioreo/elibra into frontend
+
+[33mcommit 7df45bee00a86e75b14c3349c1d94bbe3e844e44[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Added: Campus Management
+
+[33mcommit d031c4345b8b5d1e6b7483c0a26402470483a442[m
+Author: Dyepp <jefmmamaril@gmail.com>
+Commit: Dyepp <jefmmamaril@gmail.com>
+
+    Start of backend dev
+
+[33mcommit 1dc2aca53e4d2bf97e0a410c33729d2012ed3d37[m
+Merge: dec4715 0da1477
+Author: Reign Chryzel <reignchryzelbalico@gmail.com>
+Commit: GitHub <noreply@github.com>
+
+    Merge pull request #8 from arsiiioreo/frontend
+    
+    Added: Campus Seeder
+
+[33mcommit 0da14770619e6aaf50f8bffd55c7ba6964208ff5[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Updated: composer.lock for merging issues
+
+[33mcommit bcf5e4ea936c76d9e6eb455517109e92de09fd29[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Added: Campus Seeder
+
+[33mcommit dec47151ec266165330a4477f61c05b758d0e3db[m
+Merge: be5a803 85a3ef8
+Author: Reign Chryzel <reignchryzelbalico@gmail.com>
+Commit: GitHub <noreply@github.com>
+
+    Merge pull request #7 from arsiiioreo/frontend
+    
+    Fix: Page Error
+
+[33mcommit 85a3ef89b347af6b3e04ca58df2c81b5fe223c60[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Fix: Page Error
+
+[33mcommit be5a803216718ab139e5c9f0f64eb333d6b68069[m
+Merge: e806c37 24da503
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Merge branch 'main' of github.com:arsiiioreo/elibra into frontend
+
+[33mcommit e806c370fb61ce2fb289bced029bd11b490e5124[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Emergency Push
+
+[33mcommit 24da503f3bf8879de84b745d663f427b06711791[m
+Merge: f861b1e 26925b2
+Author: Reign Chryzel <reignchryzelbalico@gmail.com>
+Commit: GitHub <noreply@github.com>
+
+    Merge pull request #5 from arsiiioreo/frontend
+    
+    Added: Database
+
+[33mcommit 26925b23e683d5042719d396fbc41b4a0509339b[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Added: Database
+
+[33mcommit f861b1ef6b1203e3c198a6fb1162f892d8f0c3be[m
+Merge: 399fa18 2a5006c
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Merge branch 'main' of github.com:arsiiioreo/elibra
+
+[33mcommit 399fa186fb1fd44a51bd0e3f914486b6f453826e[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Modified: env
+
+[33mcommit 2a5006c9bdd2b21ce7bb5b05caf82a8898086325[m
+Merge: 4efa6ed e13b4d4
+Author: Reign Chryzel <reignchryzelbalico@gmail.com>
+Commit: GitHub <noreply@github.com>
+
+    Merge pull request #4 from arsiiioreo/frontend
+    
+    Frontend
+
+[33mcommit e13b4d49527db37f7f9f588e077d7fe131592c04[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Added: Landing Page
+
+[33mcommit 4cbfba6125a6e75c02a737b5e4570f78a1776352[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Added: Landing Stuff
+
+[33mcommit ebc46ddfa2d3a8a1507b52aff54241747912809e[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Added: Admin Sidebar
+
+[33mcommit 4efa6ed951ebe7a263069feb6f3ba6d1ac006bfb[m[33m ([m[1;32mbackend[m[33m)[m
+Merge: 119f0c0 245c0af
+Author: Reign Chryzel <reignchryzelbalico@gmail.com>
+Commit: GitHub <noreply@github.com>
+
+    Merge pull request #3 from arsiiioreo/frontend
+    
+    Added: Improved popup version
+
+[33mcommit 245c0af6e6961f74a0d9a66e6f49e41adaaa44a9[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Added: Improved popup version
+
+[33mcommit 119f0c0da6b691a8743f2d92469aa61553ed50ef[m
+Merge: 47c1e89 c635b8c
+Author: Reign Chryzel <reignchryzelbalico@gmail.com>
+Commit: GitHub <noreply@github.com>
+
+    Merge pull request #2 from arsiiioreo/frontend
+    
+    Merge pull request #1 from arsiiioreo/main
+
+[33mcommit c635b8ce2e4854412f5120e517e4ebbff3feef25[m
+Merge: 5ba4acc 47c1e89
+Author: Reign Chryzel <reignchryzelbalico@gmail.com>
+Commit: GitHub <noreply@github.com>
+
+    Merge pull request #1 from arsiiioreo/main
+    
+    Fix: Reformatted the Frontend Structure
+
+[33mcommit 47c1e89ad866e849ac996aeaa5462f06190e12d4[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Fix: Reformatted the Frontend Structure
+
+[33mcommit 5ba4acc1446415e818e46f34945204f15c29a27b[m
+Author: Reign <reignchryzelbalico@gmail.com>
+Commit: Reign <reignchryzelbalico@gmail.com>
+
+    Project initialization

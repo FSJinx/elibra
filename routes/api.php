@@ -174,3 +174,8 @@ Route::group(['prefix' => '/user'], function () {
         Route::post('', [UserController::class, 'store'])->middleware('jwt.auth', 'role:admin');
     });
 });
+
+
+Route::group(['middleware' => 'jwt.auth'], function () {
+    Route::get('/dashboard', [UserController::class, 'store']);
+});

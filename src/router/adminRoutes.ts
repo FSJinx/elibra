@@ -1,7 +1,7 @@
 export const adminRoutes = [
   {
     path: '/admin',
-    meta: { requiresAuth: true, role: 'admin' },
+    meta: { role: 'admin' },
     redirect: { name: 'admin' },
     component: () => import('@/layouts/management/Layout.vue'),
     children: [

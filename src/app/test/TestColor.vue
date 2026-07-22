@@ -10,16 +10,6 @@
   </div>
 
   <div class="">
-    <h1 class="section-title">Secondary</h1>
-    <div class="section">
-      <div class="grid grid-cols-2 gap-5 w-full">
-        <h1 class="bg-secondary text-secondary-foreground hover:bg-secondary-hover p-2 px-4 rounded-md">Secondary</h1>
-        <h1 class="bg-secondary-soft text-secondary-soft-foreground hover:bg-secondary-soft-hover p-2 px-4 rounded-md">Secondary Soft</h1>
-      </div>
-    </div>
-  </div>
-
-  <div class="">
     <h1 class="section-title">Success</h1>
     <div class="section">
       <div class="grid grid-cols-2 gap-5 w-full">
@@ -50,11 +40,12 @@
   </div>
 
   <div class="">
-    <h1 class="section-title">Muted</h1>
+    <h1 class="section-title">Default</h1>
     <div class="section">
       <div class="grid grid-cols-2 gap-5 w-full">
-        <h1 class="bg-muted text-muted-foreground p-2 px-4 rounded-md">Muted</h1>
-        <h1 class="text-muted-foreground p-2 px-4 rounded-md">Muted</h1>
+        <h1 class="bg-default text-default-foreground hover:bg-default-hover p-2 px-4 rounded-md">Default</h1>
+        <h1 class="text-muted p-2 px-4 rounded-md">Muted</h1>
+        <h1 class="disabled bg-disabled text-disabled-foreground p-2 px-4 rounded-md">Disabled</h1>
       </div>
     </div>
   </div>
