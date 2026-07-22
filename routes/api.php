@@ -185,3 +185,8 @@ Route::group(['prefix' => '/admin'], function () {
     });
     
 });
+
+
+Route::group(['middleware' => 'jwt.auth'], function () {
+    Route::get('/dashboard', [UserController::class, 'store']);
+});

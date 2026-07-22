@@ -12,6 +12,7 @@ declare global {
   const api: typeof import('./plugins/axios').api
   const authRoute: typeof import('./router/authRoute').authRoute
   const authStore: typeof import('./stores/auth').authStore
+  const axios: typeof import('./plugins/axios').default
   const backendRoute: typeof import('./plugins/axios').backendRoute
   const campusStore: typeof import('./stores/campusCache').campusStore
   const computed: typeof import('vue').computed
@@ -129,6 +130,7 @@ declare module 'vue' {
     readonly api: UnwrapRef<typeof import('./plugins/axios')['api']>
     readonly authRoute: UnwrapRef<typeof import('./router/authRoute')['authRoute']>
     readonly authStore: UnwrapRef<typeof import('./stores/auth')['authStore']>
+    readonly axios: UnwrapRef<typeof import('./plugins/axios')['default']>
     readonly backendRoute: UnwrapRef<typeof import('./plugins/axios')['backendRoute']>
     readonly campusStore: UnwrapRef<typeof import('./stores/campusCache')['campusStore']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>

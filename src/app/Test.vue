@@ -24,7 +24,7 @@
                 <span>{{ page.name }}</span>
               </div>
 
-              <ChevronDown class="h-4 w-4 text-slate-400 transition-transform duration-300" :class="page.name && 'rotate-180 text-primary'" />
+              <ChevronDown class="h-4 w-4 text-slate-400 transition-transform duration-300" :class="currentPage === page.name && 'rotate-180 text-primary'" />
             </button>
 
             <!-- Children Sub-menu (Smooth Slide Transition) -->

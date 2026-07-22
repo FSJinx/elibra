@@ -1,0 +1,9 @@
+:root {
+  /*  ========================== 
+  *   Primitives (it doesn't change when theme changes)
+  *   ========================== */
+  --white: oklch(1 0 129.6259);
+  --black: oklch(0 0 0);
+  --snow: oklch(0.9911 0 190.0501);
+  --eclipse: oklch(0.2103 0.0059 285.8898);
+}

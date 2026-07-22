@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      */
