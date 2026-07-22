@@ -42,7 +42,7 @@ const schemaSections = [
   },
   {
     label: 'General',
-    fields: ['title', 'call_number', 'language', 'category', 'isbn', 'status', 'location', 'publisher', 'year_published', 'keywords'],
+    fields: ['title', 'edition', 'author', 'author_number', 'physical_description', 'call_number', 'accession', 'language', 'category', 'isbn', 'status', 'location', 'publisher', 'year_published', 'copyright', 'keywords'],
   },
   {
     label: 'Filipiniana',
