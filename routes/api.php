@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\AcademicController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CampusController;
@@ -167,12 +168,22 @@ Route::group(['prefix' => '/branch_section'], function () {
 
 });
 
-//User Section Routes
+//User Routes
 Route::group(['prefix' => '/user'], function () {
 
     Route::group(['prefix' => '/create'], function () {
         Route::post('', [UserController::class, 'store'])->middleware('jwt.auth', 'role:admin');
     });
+
+});
+
+//Admin Routes
+Route::group(['prefix' => '/admin'], function () {
+
+    Route::group(['prefix' => '/create'], function () {
+        Route::post('', [AdminController::class, 'store'])->middleware('jwt.auth', 'role:super admin');
+    });
+    
 });
 
 
