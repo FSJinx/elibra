@@ -1,0 +1,44 @@
+:root {
+  /*  ========================== 
+  *   Background
+  *   ========================== */
+  --background: oklch(98.4% 0.003 247.858);
+  --background-secondary: color-mix(in oklab, var(--background) 96%, var(--foreground) 4%);
+  --background-tertiary: color-mix(in oklab, var(--background) 92%, var(--foreground) 8%);
+  --background-inverse: var(--foreground);
+
+  --background-container: var(--white);
+  --background-container-secondary: oklch(0.9524 0.0013 286.3678);
+  --background-container-tertiary: oklch(0.9373 0.0013 286.3706);
+
+  /*  ========================== 
+  *   Foreground
+  *   ========================== */
+  --foreground: var(--eclipse);
+  --muted: color-mix(in oklab, var(--foreground) 50%, transparent);
+  --link: var(--primary);
+
+  /*  ========================== 
+  *   Default
+  *   ========================== */
+  --default: oklch(0.94 0.001 286.373);
+  --default-hover: color-mix(in oklab, var(--default) 96%, var(--default-foreground) 4%);
+  --default-foreground: var(--eclipse);
+
+  /*  ========================== 
+  *   Separator / Outline / 
+  *   ========================== */
+  --separator: oklch(0.92 0.004 286.3187);
+  --separator-secondary: color-mix(in oklab, var(--surface) 85%, var(--surface-foreground) 15%);
+  --separator-tertiary: color-mix(in oklab, var(--surface) 81%, var(--surface-foreground) 19%);
+
+  /*  ========================== 
+  *   Others
+  *   ========================== */
+  --border: oklch(0.9 0.004 286.3198);
+  --backdrop: oklch(0 0 0 / 0.5);
+  --overlay: var(--white);
+  --segment: var(--white);
+  --disabled: color-mix(in oklab, var(--foreground) 5%, transparent);
+  --disabled-foreground: color-mix(in oklab, var(--foreground) 40%, transparent);
+}

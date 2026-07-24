@@ -1,11 +1,15 @@
 @import 'tailwindcss';
 
-@import './index.css';
+/* File Imports */
+@import './theme/index.css';
+@import './z-index.css';
+@import './animations/index.css';
+@import './transitions/index.css';
 
 /* Main Body Styling */
 html {
   box-sizing: border-box;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 :root {
@@ -26,4 +30,8 @@ html {
 body {
   margin: 0;
   padding: 0;
+}
+
+.disabled {
+  cursor: not-allowed;
 }
