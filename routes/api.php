@@ -172,16 +172,23 @@ Route::group(['prefix' => '/branch_section'], function () {
 Route::group(['prefix' => '/user'], function () {
 
     Route::group(['prefix' => '/create'], function () {
-        Route::post('', [UserController::class, 'store'])->middleware('jwt.auth', 'role:admin');
+        Route::post('', [UserController::class, 'store'])->middleware('jwt.auth', 'role:super admin,admin');
     });
 
 });
 
 //Admin Routes
-Route::group(['prefix' => '/admin'], function () {
+// Route::group(['prefix' => '/admin'], function () {
 
-    Route::group(['prefix' => '/create'], function () {
-        Route::post('', [AdminController::class, 'store'])->middleware('jwt.auth', 'role:super admin');
-    });
+//     Route::group(['prefix' => '/create'], function () {
+//         Route::post('', [AdminController::class, 'store'])->middleware('jwt.auth', 'role:super admin');
+//     });
     
-});
+//     Route::group(['prefix' => '/update'], function () {
+//         Route::put('{admin}', [AdminController::class, 'update'])->middleware('jwt.auth', 'role:super admin');
+//     });
+
+//     Route::group(['prefix' => '/delete'], function () {
+//         Route::delete('{admin}', [AdminController::class, 'destroy'])->middleware('jwt.auth', 'role:super admin');
+//     });
+// });

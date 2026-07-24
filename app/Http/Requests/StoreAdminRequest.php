@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Validation\Rule;
 
 class StoreAdminRequest extends BaseRequest
 {
@@ -23,21 +24,20 @@ class StoreAdminRequest extends BaseRequest
     public function rules(): array
     {
         return [
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'middle_initial' => ['nullable', 'string', 'max:2'],
+            'sex' => ['required', Rule::in(['male', 'female'])],
 
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'middle_initial' => 'nullable|string|max:255',
-            'sex'=> 'required|in:male,female',
+            'birthdate' => ['required', 'date', 'before:today'],
+            'contact_number' => ['required', 'regex:/^09\d{9}$/'],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')],
 
-            'birthdate' => 'required|date|before:today',
-            'contact_number' => 'required|string|size:11',
-            'email' => 'required|string|max:255',
+            'username' => ['required', 'string', 'max:255', Rule::unique('users', 'username')],
+            'password' => ['required', 'string', 'min:8'],
+            'role' => ['required', Rule::in(['admin'])],
 
-            'username' => 'required|string|max:255|unique:users,username',
-            'password' => 'required|string|min:8',
-            'role' => 'required|string|in:admin',
-
-            'campus_id' => 'required|exists:campuses,id',
+            'campus_id' => ['required', 'exists:campuses,id'],
         ];
     }
 }

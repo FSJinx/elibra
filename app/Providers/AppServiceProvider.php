@@ -22,6 +22,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::policy(User::class, AdminPolicy::class);
+        Gate::before(function (User $user, string $ability) {
+            return $user->isSuperAdmin() ? true : null;
+        });
     }
 }

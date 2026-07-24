@@ -7,6 +7,8 @@ use App\Models\User;
 use App\Models\UserPermission;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+
 
 class AdminSeeder extends Seeder
 {
@@ -16,6 +18,7 @@ class AdminSeeder extends Seeder
     public function run(): void
     {
         $user = User::create([
+            'uuid' => Str::uuid()->toString(),
             'last_name' => 'Echague',
             'first_name' => 'Campus Admin',
             'sex' => 'male',

@@ -6,6 +6,7 @@ use App\Http\Requests\StoreUsersRequest;
 use App\Http\Requests\UpdateUsersRequest;
 use App\Models\User;
 use App\Services\UserPermissionService;
+use App\Services\UserService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -78,27 +79,40 @@ class UserController extends Controller
     public function store(StoreUsersRequest $request)
     {
         DB::beginTransaction();
-        try {
-            $user = User::create([
-                'last_name' => $request->last_name,
-                'first_name' => $request->first_name,
-                'middle_initial' => $request->middle_initial,
-                'sex' => $request->sex,
-                'role' => $request->role,
-                'username' => $request->username,
-                'email' => Str::random(10).'@gmail.com',
-                'password' => Hash::make('elibra2026'),
-            ]);
+        try{
+            $data = $request->validated();
 
-            UserPermissionService::initializePermissions($user);
+            UserService::verifyCampus($request->user(), $data);
+
+            $role = $data['role'];
+
+            $data['password'] = Hash::make($data['password']);
+
+            unset($data['role']);
+            $user = User::create($data);
+
+            UserService::assignRoleAndPermissions($user, $role);
 
             DB::commit();
 
-            return $this->response('success', 'User successfully created.', $user->toArray());
+            return $this->response(
+                'success',
+                'User successfully created.',
+                $user->toArray(),
+                201,
+            );
+
         } catch (Exception $e) {
-            DB::rollBack();
-            return $this->response('error', 'Error creating user.', statusCode: 422);
-        }
+            DB::rollback();
+
+            return $this->response(
+                'error',
+                'Failed to create user.',
+                [],
+                422,
+            );
+            // throw $e;
+       }
     }
 
     /**
