@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCampusRequest;
 use App\Http\Requests\UpdateCampusRequest;
 use App\Models\Campus;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class CampusController extends Controller
 {
@@ -81,14 +84,24 @@ class CampusController extends Controller
      */
     public function store(StoreCampusRequest $request)
     {
-        $campus = Campus::create($request->validated());
+        DB::beginTransaction();
 
-        return $this->response(
-            'success',
-            'Campus created successfully',
-            $campus->toArray(),
-            201
-        );
+        try {
+            $campus = Campus::create($request->validated());
+
+            DB::commit();
+
+            return $this->response(
+                'success',
+                'Campus created successfully',
+                $campus->toArray(),
+                201
+            );
+        } catch (Throwable $e) {
+            DB::rollBack();
+
+            throw $e;
+        }
     }
 
     /**
@@ -119,15 +132,24 @@ class CampusController extends Controller
      */
     public function update(UpdateCampusRequest $request, Campus $campus)
     {
+        DB::beginTransaction();
 
-        $campus->update($request->validated());
+        try {
+            $campus->update($request->validated());
 
-        return $this->response(
-            'success',
-            'Campus updated successfully',
-            $campus->toArray(),
-            200
-        );
+            DB::commit();
+
+            return $this->response(
+                'success',
+                'Campus updated successfully',
+                $campus->toArray(),
+                200
+            );
+        } catch (Throwable $e) {
+            DB::rollBack();
+
+            throw $e;
+        }
     }
 
     /**
@@ -137,13 +159,23 @@ class CampusController extends Controller
     {
         $this->authorize('delete', $campus);
 
-        $campus->delete();
+        DB::beginTransaction();
 
-        return $this->response(
-            'success',
-            'Campus deleted successfully',
-            null,
-            200
-        );
+        try {
+            $campus->delete();
+
+            DB::commit();
+
+            return $this->response(
+                'success',
+                'Campus deleted successfully',
+                null,
+                200
+            );
+        } catch (Throwable $e) {
+            DB::rollBack();
+
+            throw $e;
+        }
     }
 }
