@@ -9,6 +9,7 @@ use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\SubscriptionCredentialController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BranchSectionController;
+use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\SectionsController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
@@ -101,6 +102,28 @@ Route::group(['prefix' => '/campus'], function () {
 
     Route::group(['prefix' => '/delete'], function () {
         Route::delete('{campus}', [CampusController::class, 'destroy'])->middleware('jwt.auth', 'role:super admin');
+    });
+
+});
+
+// Department Routes
+Route::group(['prefix' => '/department'], function () {
+
+    Route::group(['prefix' => '/get'], function () {
+        // Route::get('', [CampusController::class, 'index']);
+        // Route::get('{campus}', [CampusController::class, 'show'])->middleware('jwt.auth', 'role:super admin');
+    });
+
+    Route::group(['prefix' => '/create'], function () {
+        Route::post('', [DepartmentController::class, 'store'])->middleware('jwt.auth', 'role:super admin');
+    });
+
+    Route::group(['prefix' => '/update'], function () {
+        // Route::put('{campus}', [CampusController::class, 'update'])->middleware('jwt.auth', 'role:super admin');
+    });
+
+    Route::group(['prefix' => '/delete'], function () {
+        // Route::delete('{campus}', [CampusController::class, 'destroy'])->middleware('jwt.auth', 'role:super admin');
     });
 
 });

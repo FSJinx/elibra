@@ -6,6 +6,9 @@ use App\Models\Department;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDepartmentRequest;
 use App\Http\Requests\UpdateDepartmentRequest;
+use Exception;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class DepartmentController extends Controller
 {
@@ -30,7 +33,26 @@ class DepartmentController extends Controller
      */
     public function store(StoreDepartmentRequest $request)
     {
-        //
+        DB::beginTransaction();
+        try {
+
+            $department = Department::create($request->validated());
+
+            DB::commit();
+
+            return $this->response(
+                'success',
+                'Department created Successfully',
+                $department->toArray(),
+                201,
+            );
+
+
+        } catch(Throwable $e) {
+
+            DB::rollBack();
+            throw $e;
+        }
     }
 
     /**
