@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use App\Models\Campus;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-
+use Illuminate\Validation\Rule;
 
 class StoreCampusRequest extends BaseRequest
 {
@@ -25,9 +25,9 @@ class StoreCampusRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'code' => 'required|string|max:10|unique:campuses,code',
-            'address' => 'required|string|max:255',
+            'name' => ['required', 'string', 'max:255'],
+            'code' => ['required', 'string', 'max:10', Rule::unique('campuses', 'code')],
+            'address' => ['required', 'string', 'max:255'],
         ];
     }
 

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 {
@@ -27,6 +28,18 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         return [];
     }
 
+    protected static function booted()
+    {
+        static::creating(function ($user){
+            $user->uuid = Str::uuid();
+        });
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return 'uuid';
+    }
+
     protected $fillable = [
         'last_name',
         'first_name',
@@ -37,7 +50,6 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         'email',
         'email_verified_at',
         'role',
-        'code',
         'status',
         'login_attempts',
         'username',
@@ -78,13 +90,6 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 
     // Custom methods
 
-    // Check if user has a primary role
-    // Tapno awamen ti primary role ti user, mabalin mo nga usaren daytoy a method
-    // public function librarianPrimaryRole(string $role): bool
-    // {
-    //     return strtolower($this->librarian?->primary_role?->name ?? '') === strtolower($role);
-    // }
-
     public function roleIs(string $role): bool
     {
         return strtolower($this->role ?? '') === strtolower($role);
@@ -93,6 +98,16 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     public function isSuperAdmin(): bool
     {
         return $this->roleIs('super admin');
+    }
+
+    public function isPatron(): bool
+    {
+        return $this->roleIs('patron');
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->roleIs('admin');
     }
 
     public function hasPermission(string $permission): bool

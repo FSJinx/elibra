@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Patron;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class PatronSeeder extends Seeder
 {
@@ -15,6 +16,7 @@ class PatronSeeder extends Seeder
     {
         $students = [
             [
+                'uuid' => Str::uuid()->toString(),
                 'last_name' => 'balico',
                 'first_name' => 'reign chryzel',
                 'middle_initial' => null,
@@ -24,6 +26,7 @@ class PatronSeeder extends Seeder
                 'password' => bcrypt('elibra2026'),
             ],
             [
+                'uuid' => Str::uuid()->toString(),                
                 'last_name' => 'mamaril',
                 'first_name' => 'jef',
                 'middle_initial' => 'a',
@@ -33,6 +36,7 @@ class PatronSeeder extends Seeder
                 'password' => bcrypt('elibra2026'),
             ],
             [
+                'uuid' => Str::uuid()->toString(),
                 'last_name' => 'tobias',
                 'first_name' => 'eugene_patron',
                 'middle_initial' => 'g',

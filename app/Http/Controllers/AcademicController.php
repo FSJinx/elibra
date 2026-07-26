@@ -47,7 +47,7 @@ class AcademicController extends Controller
         // Use the AcademicService to create the academic resource
         $academic = $this->academicService->create($request->validated());
 
-        return $this->response(
+        return $this->response( 
             'success', 
             'Academic created successfully', 
             $academic->toArray(), 

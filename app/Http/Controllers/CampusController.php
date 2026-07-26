@@ -81,8 +81,6 @@ class CampusController extends Controller
      */
     public function store(StoreCampusRequest $request)
     {
-        $this->authorize('create', Campus::class);
-
         $campus = Campus::create($request->validated());
 
         return $this->response(
@@ -121,7 +119,6 @@ class CampusController extends Controller
      */
     public function update(UpdateCampusRequest $request, Campus $campus)
     {
-        $this->authorize('update', $campus);
 
         $campus->update($request->validated());
 

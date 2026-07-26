@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Validation\Rule;
 
 class StoreUsersRequest extends BaseRequest
 {
@@ -22,17 +23,40 @@ class StoreUsersRequest extends BaseRequest
      */
     public function rules(): array
     {
-        return [
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'middle_initial' => 'nullable|string|max:255',
-            'sex'=> 'required|in:male,female',
+        $authUser = $this->user();
 
-            'username' => 'required|string|max:255|unique:users,username',
-            'password' => 'required|string|min:8',
-            'role' => 'required|string|in:librarian,patron',
+        $rules = [
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'middle_initial' => ['nullable', 'string', 'max:2'],
+            'sex' => ['required', Rule::in(['male', 'female'])],
 
-            'campus_id' => 'required|exists:campuses,id',
+            'birthdate' => ['required', 'date', 'before:today'],
+            'contact_number' => ['required', 'regex:/^09\d{9}$/'],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')],
+
+            'username' => ['required', 'string', 'max:255', Rule::unique('users', 'username')],
+            'password' => ['required', 'string', 'min:8'],
         ];
+
+        //For Super Admin
+        if ($authUser->isSuperAdmin()){
+            $rules['role'] = [
+                            'required', 
+                            Rule::in(['admin', 'librarian', 'patron'])
+                            ];
+            $rules['campus_id'] = [
+                            'required',
+                            'exists:campuses,id'
+                            ];
+        // For Library Admin
+        }elseif($authUser->isAdmin()){
+            $rules['role'] = [
+                            'required', 
+                            Rule::in(['librarian', 'patron'])
+                            ];
+        }
+        
+        return $rules;
     }
 }

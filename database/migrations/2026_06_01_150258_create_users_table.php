@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique();
 
             $table->string('last_name')->nullable();
             $table->string('first_name');
@@ -31,7 +32,6 @@ return new class extends Migration
             $table->string('password');
 
             $table->enum('role', ['super admin', 'admin', 'librarian', 'patron'])->default('admin');
-            $table->uuid('code')->unique()->nullable();
             $table->enum('status', ['active', 'inactive', 'suspended', 'expired'])->default('active');
 
             $table->unsignedTinyInteger('login_attempts')->default(0);

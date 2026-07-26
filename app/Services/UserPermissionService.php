@@ -21,34 +21,6 @@ class UserPermissionService
         'manage.restore',
         'manage.forceDelete',
     ];
-
-    public static function initializePermissions(User $user): void 
-    {
-        //use early return if not admin
-        if ($user->role !== 'admin') {
-            return;
-        }
-
-        $permissions = [
-            'user.all',
-            'campus.all',
-            'branch.all',
-            // 'manage.all',
-        ];
-
-        foreach ($permissions as $permission) {
-            $permit = Permission::where('permission', $permission)->first(); // Checks kung merong permissio
-            
-            //para ma avoid yung null data [permission] if ever
-            if($permit) {
-                UserPermission::firstOrCreate([ //firstOrCreate to avoid duplication of insertion
-                    'user_id' => $user->id,
-                    'permission_id' => $permit->id,
-                ]);
-            }
-        }
-    }
-
     /**
      * Reusable response 
      */

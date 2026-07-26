@@ -88,19 +88,19 @@ Route::group(['prefix' => '/campus'], function () {
 
     Route::group(['prefix' => '/get'], function () {
         Route::get('', [CampusController::class, 'index']);
-        Route::get('{campus}', [CampusController::class, 'show'])->middleware('jwt.auth', 'role:admin');
+        Route::get('{campus}', [CampusController::class, 'show'])->middleware('jwt.auth', 'role:super admin');
     });
 
     Route::group(['prefix' => '/create'], function () {
-        Route::post('', [CampusController::class, 'store'])->middleware('jwt.auth', 'role:admin');
+        Route::post('', [CampusController::class, 'store'])->middleware('jwt.auth', 'role:super admin');
     });
 
     Route::group(['prefix' => '/update'], function () {
-        Route::put('{campus}', [CampusController::class, 'update'])->middleware('jwt.auth', 'role:admin');
+        Route::put('{campus}', [CampusController::class, 'update'])->middleware('jwt.auth', 'role:super admin');
     });
 
     Route::group(['prefix' => '/delete'], function () {
-        Route::delete('{campus}', [CampusController::class, 'destroy'])->middleware('jwt.auth', 'role:admin');
+        Route::delete('{campus}', [CampusController::class, 'destroy'])->middleware('jwt.auth', 'role:super admin');
     });
 
 });
@@ -172,21 +172,27 @@ Route::group(['prefix' => '/branch_section'], function () {
 Route::group(['prefix' => '/user'], function () {
 
     Route::group(['prefix' => '/create'], function () {
-        Route::post('', [UserController::class, 'store'])->middleware('jwt.auth', 'role:admin');
+        Route::post('', [UserController::class, 'store'])->middleware('jwt.auth', 'role:super admin,admin');
+    });
+
+    Route::group(['prefix' => '/update'], function () {
+        Route::put('{user}', [UserController::class, 'update'])->middleware('jwt.auth', 'role:super admin');
     });
 
 });
 
 //Admin Routes
-Route::group(['prefix' => '/admin'], function () {
+// Route::group(['prefix' => '/admin'], function () {
 
-    Route::group(['prefix' => '/create'], function () {
-        Route::post('', [AdminController::class, 'store'])->middleware('jwt.auth', 'role:super admin');
-    });
+//     Route::group(['prefix' => '/create'], function () {
+//         Route::post('', [AdminController::class, 'store'])->middleware('jwt.auth', 'role:super admin');
+//     });
     
-});
+//     Route::group(['prefix' => '/update'], function () {
+//         Route::put('{admin}', [AdminController::class, 'update'])->middleware('jwt.auth', 'role:super admin');
+//     });
 
-
-Route::group(['middleware' => 'jwt.auth'], function () {
-    Route::get('/dashboard', [UserController::class, 'store']);
-});
+//     Route::group(['prefix' => '/delete'], function () {
+//         Route::delete('{admin}', [AdminController::class, 'destroy'])->middleware('jwt.auth', 'role:super admin');
+//     });
+// });

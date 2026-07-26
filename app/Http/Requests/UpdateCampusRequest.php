@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateCampusRequest extends BaseRequest
 {
@@ -12,7 +13,7 @@ class UpdateCampusRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user()->can('update', $this->route('campus'));
     }
 
     /**
@@ -23,10 +24,15 @@ class UpdateCampusRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'name' => 'sometimes|required|string|max:255',
-            'code' => 'sometimes|required|string|max:10|unique:campuses,code,' . $this->route('campus')->id,
-            'address' => 'sometimes|required|string|max:255',
-            'status' => 'sometimes|required|in:active,inactive',
+
+            'name' => [ 'sometimes', 'required', 'string', 'max:255' ],
+            'code' => [ 'sometimes','required','string','max:10',
+                        Rule::unique('campuses', 'code')->ignore($this->route('campus')->id),
+                      ],
+            'address' => [ 'sometimes', 'required', 'string','max:255' ],
+            'status' => [ 'sometimes', 'required', Rule::in(['active', 'inactive']) ],
+
         ];
     }
 }
+    

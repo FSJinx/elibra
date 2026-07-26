@@ -6,6 +6,7 @@ use App\Models\Librarian;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 class LibrarianSeeder extends Seeder
 {
@@ -16,6 +17,7 @@ class LibrarianSeeder extends Seeder
     {
         $users = [
             [
+                'uuid' => Str::uuid()->toString(),
                 'last_name' => 'dela cruz',
                 'first_name' => 'mark angelo',
                 'middle_initial' => 'd',
@@ -25,6 +27,7 @@ class LibrarianSeeder extends Seeder
                 'password' => bcrypt('elibra2026'),
             ],
             [
+                'uuid' => Str::uuid()->toString(),
                 'last_name' => 'tobias',
                 'first_name' => 'eugene_librarian',
                 'middle_initial' => 'd',
@@ -34,6 +37,7 @@ class LibrarianSeeder extends Seeder
                 'password' => bcrypt('elibra2026'),
             ],
             [
+                'uuid' => Str::uuid()->toString(),
                 'last_name' => 'christian',
                 'first_name' => 'christian',
                 'middle_initial' => 'd',
