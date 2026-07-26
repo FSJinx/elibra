@@ -13,7 +13,9 @@ class UpdateUserPermissionRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('update', $this->route('user_permission'));
+        $permission = $this->route('user_permission');
+        
+        return $this->user()->can('update', $permission);
     }
 
     /**

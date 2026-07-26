@@ -88,19 +88,19 @@ Route::group(['prefix' => '/campus'], function () {
 
     Route::group(['prefix' => '/get'], function () {
         Route::get('', [CampusController::class, 'index']);
-        Route::get('{campus}', [CampusController::class, 'show'])->middleware('jwt.auth', 'role:admin');
+        Route::get('{campus}', [CampusController::class, 'show'])->middleware('jwt.auth', 'role:super admin');
     });
 
     Route::group(['prefix' => '/create'], function () {
-        Route::post('', [CampusController::class, 'store'])->middleware('jwt.auth', 'role:admin');
+        Route::post('', [CampusController::class, 'store'])->middleware('jwt.auth', 'role:super admin');
     });
 
     Route::group(['prefix' => '/update'], function () {
-        Route::put('{campus}', [CampusController::class, 'update'])->middleware('jwt.auth', 'role:admin');
+        Route::put('{campus}', [CampusController::class, 'update'])->middleware('jwt.auth', 'role:super admin');
     });
 
     Route::group(['prefix' => '/delete'], function () {
-        Route::delete('{campus}', [CampusController::class, 'destroy'])->middleware('jwt.auth', 'role:admin');
+        Route::delete('{campus}', [CampusController::class, 'destroy'])->middleware('jwt.auth', 'role:super admin');
     });
 
 });
@@ -173,6 +173,10 @@ Route::group(['prefix' => '/user'], function () {
 
     Route::group(['prefix' => '/create'], function () {
         Route::post('', [UserController::class, 'store'])->middleware('jwt.auth', 'role:super admin,admin');
+    });
+
+    Route::group(['prefix' => '/update'], function () {
+        Route::put('{user}', [UserController::class, 'update'])->middleware('jwt.auth', 'role:super admin');
     });
 
 });

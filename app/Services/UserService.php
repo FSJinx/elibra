@@ -11,6 +11,10 @@ class UserService
     //ENCAPSULATES
     private const ROLE_PERMISSIONS = [
         'admin' => [
+            'user.create',
+            'user.update',
+            'user.delete',
+
             'branch.create',
             'branch.view',
             'branch.update',
@@ -58,6 +62,29 @@ class UserService
         )->pluck('id');
 
         $user->permissions()->syncWithoutDetaching($permissionIds);
+    }
+
+    public static function syncRolePermissions(User $user, string $role): void
+    {
+        if(!array_key_exists($role, self::ROLE_PERMISSIONS)){
+            throw new HttpResponseException(
+                response()->json([
+                    'status' => 'error',
+                    'message' => 'Invalid Role',
+                ])
+            );
+        }
+
+        $permissionIds = Permission::whereIn(
+            'permission',
+            self::ROLE_PERMISSIONS[$role]
+        )->pluck('id');
+
+        $user->update([
+            'role' => $role,
+        ]);
+
+        $user->permissions()->sync($permissionIds);
     }
     /**
      * syncWithoutDetaching => This will add the provided relationship and will keep

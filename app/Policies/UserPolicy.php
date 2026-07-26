@@ -36,7 +36,7 @@ class UserPolicy
      */
     public function update(AuthUser $user, User $users): bool
     {
-        return false;
+        return $user->hasPermission('user.update');
     }
 
     /**

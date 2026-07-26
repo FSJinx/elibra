@@ -89,7 +89,6 @@ class UserController extends Controller
 
             $data['password'] = Hash::make($data['password']);
 
-            unset($data['role']);
             $user = User::create($data);
 
             UserService::assignRoleAndPermissions($user, $role);
@@ -135,9 +134,49 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateUsersRequest $request, User $users)
+    public function update(UpdateUsersRequest $request, User $user)
     {
-        //
+        
+        DB::beginTransaction();
+        try{
+            $data = $request->validated();
+            
+            UserService::verifyCampus($request->user(), $data);
+
+            //Update password if provided from request
+            if(!empty($data['password'])){
+                $data['password'] = Hash::make($data['password']);
+            } else {
+                unset($data['password']);
+            }
+
+            // Only Super Admin is allowed to update role
+            if(isset($data['role']) && $user->role !== $data['role']){
+
+                UserService::syncRolePermissions($user, $data['role']);
+                //no need to update role, may role na sa service
+                unset($data['role']);
+
+            }
+
+            $user->update($data);
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'User updated successfully.',
+                $user->toArray(),
+            ]);
+        }catch(Exception $e){
+            DB::rollback();
+
+            return $this->response(
+                'error',
+                'Failed to update user.',
+                [],
+                422,
+            );
+        }
     }
 
     /**

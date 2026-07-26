@@ -23,7 +23,7 @@ class StoreUsersRequest extends BaseRequest
      */
     public function rules(): array
     {
-        $user = $this->user();
+        $authUser = $this->user();
 
         $rules = [
             'first_name' => ['required', 'string', 'max:255'],
@@ -39,12 +39,8 @@ class StoreUsersRequest extends BaseRequest
             'password' => ['required', 'string', 'min:8'],
         ];
 
-        if(!$user){
-            return $rules;
-        }
-
         //For Super Admin
-        if ($user->isSuperAdmin()){
+        if ($authUser->isSuperAdmin()){
             $rules['role'] = [
                             'required', 
                             Rule::in(['admin', 'librarian', 'patron'])
@@ -54,7 +50,7 @@ class StoreUsersRequest extends BaseRequest
                             'exists:campuses,id'
                             ];
         // For Library Admin
-        }elseif($user->isAdmin()){
+        }elseif($authUser->isAdmin()){
             $rules['role'] = [
                             'required', 
                             Rule::in(['librarian', 'patron'])

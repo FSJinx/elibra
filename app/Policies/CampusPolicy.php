@@ -20,9 +20,7 @@ class CampusPolicy
      * Determine whether the user can view the model.
      */
     public function view(User $user, Campus $campus): bool
-    {
-        if ($user->hasPermission('user.all')) { return true; }
-        
+    {        
         return false;
     }
 
@@ -31,7 +29,7 @@ class CampusPolicy
      */
     public function create(User $user): bool
     {
-        return $user->isAdmin();
+        return false;
     }
 
     /**
@@ -39,7 +37,7 @@ class CampusPolicy
      */
     public function update(User $user, Campus $campus): bool
     {
-        return $user->isAdmin();
+        return false;
     }
 
     /**
@@ -47,7 +45,7 @@ class CampusPolicy
      */
     public function delete(User $user, Campus $campus): bool
     {
-        return $user->isAdmin();
+        return false;
     }
 
     /**
