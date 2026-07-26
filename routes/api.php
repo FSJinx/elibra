@@ -110,8 +110,7 @@ Route::group(['prefix' => '/campus'], function () {
 Route::group(['prefix' => '/department'], function () {
 
     Route::group(['prefix' => '/get'], function () {
-        // Route::get('', [CampusController::class, 'index']);
-        // Route::get('{campus}', [CampusController::class, 'show'])->middleware('jwt.auth', 'role:super admin');
+        Route::get('', [DepartmentController::class, 'index']);
     });
 
     Route::group(['prefix' => '/create'], function () {
@@ -119,11 +118,11 @@ Route::group(['prefix' => '/department'], function () {
     });
 
     Route::group(['prefix' => '/update'], function () {
-        // Route::put('{campus}', [CampusController::class, 'update'])->middleware('jwt.auth', 'role:super admin');
+        Route::put('{department}', [DepartmentController::class, 'update'])->middleware('jwt.auth', 'role:super admin');
     });
 
     Route::group(['prefix' => '/delete'], function () {
-        // Route::delete('{campus}', [CampusController::class, 'destroy'])->middleware('jwt.auth', 'role:super admin');
+        Route::delete('{department}', [DepartmentController::class, 'destroy'])->middleware('jwt.auth', 'role:super admin');
     });
 
 });

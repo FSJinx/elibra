@@ -20,8 +20,10 @@ class Campus extends Model
         'status',
     ];
 
-    function subscrptionCredentials() {
-        return $this->hasMany(SubscriptionCredential::class);
+    public function departments()
+    {
+        return $this->hasMany(Department::class);
     }
+
 }
     

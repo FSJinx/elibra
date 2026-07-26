@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateCampusRequest;
 use App\Models\Campus;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -18,50 +19,62 @@ class CampusController extends Controller
         $sort = $request->query('sort', []); // Get the sort fields from the request, default to an empty array if not provided
         $order = strtolower($request->query('order', 'asc')); // Get the sort order from the request, default to 'asc' if not provided
 
-        // Allowed column to be sorted
-        $allowedSortFields = ['name', 'code'];
+        //Cache Version
+        $version = Cache::get('campuses_version', 1);
+        // Generate a unique cache key
+        $cacheKey = 'campuses:v'.$version.':'.md5(json_encode([
+            'search' => $search,
+            'sort' => $sort,
+            'order' => $order,
+        ]));
 
-        $campus = Campus::query();
+        $campuses = Cache::remember($cacheKey, now()->addMinutes(10), function () use ($search, $sort, $order) {
+            // Allowed column to be sorted
+            $allowedSortFields = ['name', 'code'];
 
-        // Normal Search
-        if ($search) {
-            $campus->where(function ($query) use ($search) {
-                $query->where('name', 'LIKE', '%'.$search.'%')
-                    ->orWhere('code', 'LIKE', '%'.$search.'%')
-                    ->orWhere('address', 'LIKE', '%'.$search.'%');
-            });
-        }
+            $query = Campus::query();
 
-        // For better Sorting
-        if (is_array($sort)) {
-            foreach ($sort as $field) {
-                if (in_array($field, $allowedSortFields, true)) {
-                    $campus->orderBy($field, $order === 'desc' ? 'desc' : 'asc');
+            // Normal Search
+            if ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('name', 'LIKE', '%'.$search.'%')
+                        ->orWhere('code', 'LIKE', '%'.$search.'%')
+                        ->orWhere('address', 'LIKE', '%'.$search.'%');
+                });
+            }
+
+            // For better Sorting
+            if (is_array($sort)) {
+                foreach ($sort as $field) {
+                    if (in_array($field, $allowedSortFields, true)) {
+                        $query->orderBy($field, $order === 'desc' ? 'desc' : 'asc');
+                    }
                 }
             }
-        }
 
-        $campuses = $campus->get(['*']);
-        // We use fuzzy search if the search query is not empty and no campuses were found in the normal search
-        /*
-            [levenshtein] is used to calculate the distance
-            between two strings, and we sort the campuses by the distance
-            between the search query and the campus name,
-            and take the top 3 closest matches
-        */
-        if ($campuses->isEmpty() && $search !== '') {
+            $campuses = $query->get();
+            // We use fuzzy search if the search query is not empty and no campuses were found in the normal search
+            /*
+                [levenshtein] is used to calculate the distance
+                between two strings, and we sort the campuses by the distance
+                between the search query and the campus name,
+                and take the top 3 closest matches
+            */
+            if ($campuses->isEmpty() && $search !== '') {
 
-            $campuses = Campus::select('*')
-                ->get()
-                ->sortBy(function ($campus) use ($search) {
-                    return levenshtein(
-                        strtolower($search),
-                        strtolower($campus->name)
-                    );
-                })
-                ->take(3)
-                ->values();
-        }
+                $campuses = Campus::all()
+                    ->sortBy(function ($campus) use ($search) {
+                        return levenshtein(
+                            strtolower($search),
+                            strtolower($campus->name)
+                        );
+                    })
+                    ->take(3)
+                    ->values();
+            }
+
+            return $campuses;
+        });
 
         return $this->response(
             'success',
@@ -90,6 +103,8 @@ class CampusController extends Controller
             $campus = Campus::create($request->validated());
 
             DB::commit();
+
+            Cache::increment('campuses_version');
 
             return $this->response(
                 'success',
@@ -139,6 +154,8 @@ class CampusController extends Controller
 
             DB::commit();
 
+            Cache::increment('campuses_version');
+
             return $this->response(
                 'success',
                 'Campus updated successfully',
@@ -162,9 +179,15 @@ class CampusController extends Controller
         DB::beginTransaction();
 
         try {
+            foreach ($campus->departments as $department) {
+                $department->programs()->delete();
+                $department->delete();
+            }
             $campus->delete();
 
             DB::commit();
+
+            Cache::increment('campuses_version');
 
             return $this->response(
                 'success',

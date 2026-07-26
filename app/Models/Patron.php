@@ -36,6 +36,6 @@ class Patron extends Model
 
     public function program()
     {
-        return $this->belongsTo(Programs::class, 'program_id');
+        return $this->belongsTo(Programs::class, 'program_id')->withTrashed();
     }
 }
