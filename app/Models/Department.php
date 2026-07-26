@@ -18,7 +18,7 @@ class Department extends Model
         'campus_id',
     ];
 
-    public function program()
+    public function programs()
     {
         return $this->hasMany(Programs::class);
     }
