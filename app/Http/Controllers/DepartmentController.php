@@ -104,7 +104,10 @@ class DepartmentController extends Controller
                     ->values();
             }
 
-
+            if($departments->isEmpty()){
+                return null;
+            }
+            
             return $departments;
         });
 
