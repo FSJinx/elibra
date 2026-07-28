@@ -34,8 +34,7 @@ class CampusController extends Controller
                 if ($search) {
                     $query->where(function ($query) use ($search) {
                         $query->where('name', 'LIKE', "%{$search}%")
-                            ->orWhere('code', 'LIKE', "%{$search}%")
-                            ->orWhere('address', 'LIKE', "%{$search}%");
+                            ->orWhere('code', 'LIKE', "%{$search}%");
                     });
                 }
 

@@ -6,7 +6,8 @@ use App\Models\Department;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDepartmentRequest;
 use App\Http\Requests\UpdateDepartmentRequest;
-use Exception;
+use App\Models\Campus;
+use App\Services\CacheService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -37,79 +38,42 @@ class DepartmentController extends Controller
             $campusId = $request->campus_id;
         }
 
-        $version = Cache::get('departments_version', 1);
+        $departments = CacheService::remember(
+            CacheService::DEPARTMENTS,
+            [
+                'campus_id' => $campusId,
+                'search' => $search,
+                'sort' => $sort,
+                'order' => $order,
+            ],
+            now()->addMinutes(10),
+            function () use ($search, $sort, $order, $campusId){
 
-        $cacheKey = 'departments:v'.$version.':'.md5(json_encode([
-            'campus_id' => $campusId,
-            'search' => $search,
-            'sort' => $sort,
-            'order' => $order,
-        ]));
+                $allowedSortFields = ['name', 'code' ];
+                $query = Department::query();
 
-
-        $departments = Cache::remember($cacheKey, now()->addMinutes(10), function () use (
-            $search,
-            $sort,
-            $order,
-            $campusId
-        ) {
-
-            $allowedSortFields = ['name', 'code'];
-
-            $query = Department::query()
-                ->when($campusId !== null, function ($query) use ($campusId) {
-                    $query->where('campus_id', $campusId);
-                });
-
-
-            // Search
-            if ($search) {
-                $query->where(function ($query) use ($search) {
-                    $query->where('name', 'LIKE', '%'.$search.'%')
-                        ->orWhere('code', 'LIKE', '%'.$search.'%');
-                });
-            }
-
-
-            // Sorting
-            if (is_array($sort)) {
-                foreach ($sort as $field) {
-                    if (in_array($field, $allowedSortFields, true)) {
-                        $query->orderBy(
-                            $field,
-                            $order === 'desc' ? 'desc' : 'asc'
-                        );
-                    }
+                if ($search) {
+                    $query->where(function ($query) use ($search) {
+                        $query->where('name', 'LIKE', "%{$search}%")
+                            ->orWhere('code', 'LIKE', "%{$search}%");
+                    });
                 }
+
+                if (is_array($sort) && !empty($sort)) {
+                    foreach ($sort as $field) {
+                        if (in_array($field, $allowedSortFields, true)) {
+                            $query->orderBy(
+                                $field,
+                                $order === 'desc' ? 'desc' : 'asc'
+                            );
+                        }
+                    }
+                } else {
+                    $query->orderBy('name');
+                }
+                return $query->get();
             }
-
-
-            $departments = $query->get();
-
-
-            // Levenshtein fallback
-            if ($departments->isEmpty() && $search !== '') {
-
-                $departments = Department::when($campusId, function ($query) use ($campusId) {
-                        $query->where('campus_id', $campusId);
-                    })
-                    ->get()
-                    ->sortBy(function ($department) use ($search) {
-                        return levenshtein(
-                            strtolower($search),
-                            strtolower($department->name)
-                        );
-                    })
-                    ->take(3)
-                    ->values();
-            }
-
-            if($departments->isEmpty()){
-                return null;
-            }
-            
-            return $departments;
-        });
+        );
 
         if($departments->isEmpty()){
             return $this->response(
