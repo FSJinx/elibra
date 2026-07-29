@@ -26,11 +26,10 @@ class UpdateDepartmentRequest extends BaseRequest
     {
         return [
             'name' => [ 'sometimes', 'required', 'string', 'max:255' ],
-            'code' => [ 'sometimes', 'required', 'string', 'max:10', 
-                         Rule::unique((new Department)->getTable(), 'code')],
+            'code' => [ 'sometimes', 'required', 'string', 'max:10' ],
 
             'campus_id' => [ 'sometimes', 'required', 
-                             Rule::exists((new Campus())->getTable(), 'id')],
+                             Rule::exists((new Campus)->getTable(), 'id')],
         ];
     } 
 }

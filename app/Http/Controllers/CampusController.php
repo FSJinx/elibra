@@ -5,9 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCampusRequest;
 use App\Http\Requests\UpdateCampusRequest;
 use App\Models\Campus;
-use Exception;
+use App\Services\CacheService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -19,62 +18,63 @@ class CampusController extends Controller
         $sort = $request->query('sort', []); // Get the sort fields from the request, default to an empty array if not provided
         $order = strtolower($request->query('order', 'asc')); // Get the sort order from the request, default to 'asc' if not provided
 
-        //Cache Version
-        $version = Cache::get('campuses_version', 1);
-        // Generate a unique cache key
-        $cacheKey = 'campuses:v'.$version.':'.md5(json_encode([
-            'search' => $search,
-            'sort' => $sort,
-            'order' => $order,
-        ]));
+        $campuses = CacheService::remember(
+            CacheService::CAMPUSES,
+            [
+                'search' => $search,
+                'sort' => $sort,
+                'order' => $order,
+            ],
+            now()->addMinutes(10),
+            function () use ($search, $sort, $order){
 
-        $campuses = Cache::remember($cacheKey, now()->addMinutes(10), function () use ($search, $sort, $order) {
-            // Allowed column to be sorted
-            $allowedSortFields = ['name', 'code'];
+                $allowedSortFields = ['name', 'code'];
+                $query = Campus::query();
 
-            $query = Campus::query();
-
-            // Normal Search
-            if ($search) {
-                $query->where(function ($query) use ($search) {
-                    $query->where('name', 'LIKE', '%'.$search.'%')
-                        ->orWhere('code', 'LIKE', '%'.$search.'%')
-                        ->orWhere('address', 'LIKE', '%'.$search.'%');
-                });
-            }
-
-            // For better Sorting
-            if (is_array($sort)) {
-                foreach ($sort as $field) {
-                    if (in_array($field, $allowedSortFields, true)) {
-                        $query->orderBy($field, $order === 'desc' ? 'desc' : 'asc');
-                    }
+                if ($search) {
+                    $query->where(function ($query) use ($search) {
+                        $query->where('name', 'LIKE', "%{$search}%")
+                            ->orWhere('code', 'LIKE', "%{$search}%");
+                    });
                 }
+
+                if (is_array($sort) && !empty($sort)) {
+                    foreach ($sort as $field) {
+                        if (in_array($field, $allowedSortFields, true)) {
+                            $query->orderBy(
+                                $field,
+                                $order === 'desc' ? 'desc' : 'asc'
+                            );
+                        }
+                    }
+                } else {
+                    $query->orderBy('name');
+                }
+                return $query->get();
             }
+        );
 
-            $campuses = $query->get();
-            // We use fuzzy search if the search query is not empty and no campuses were found in the normal search
-            /*
-                [levenshtein] is used to calculate the distance
-                between two strings, and we sort the campuses by the distance
-                between the search query and the campus name,
-                and take the top 3 closest matches
-            */
-            if ($campuses->isEmpty() && $search !== '') {
+        if ($campuses->isEmpty() && $search !== '') {
 
-                $campuses = Campus::all()
-                    ->sortBy(function ($campus) use ($search) {
-                        return levenshtein(
-                            strtolower($search),
-                            strtolower($campus->name)
-                        );
-                    })
-                    ->take(3)
-                    ->values();
-            }
+            $campuses = Campus::all()
+                ->sortBy(function ($campus) use ($search) {
+                    return levenshtein(
+                        strtolower($search),
+                        strtolower($campus->name)
+                    );
+                })
+                ->take(3)
+                ->values();
+        }
 
-            return $campuses;
-        });
+        if ($campuses->isEmpty()) {
+            return $this->response(
+                'error',
+                'Campus not found.',
+                [],
+                200
+            );
+        }
 
         return $this->response(
             'success',
@@ -104,7 +104,7 @@ class CampusController extends Controller
 
             DB::commit();
 
-            Cache::increment('campuses_version');
+            CacheService::invalidate(CacheService::CAMPUSES);
 
             return $this->response(
                 'success',
@@ -154,7 +154,7 @@ class CampusController extends Controller
 
             DB::commit();
 
-            Cache::increment('campuses_version');
+            CacheService::invalidate(CacheService::CAMPUSES);
 
             return $this->response(
                 'success',
@@ -179,15 +179,14 @@ class CampusController extends Controller
         DB::beginTransaction();
 
         try {
-            foreach ($campus->departments as $department) {
-                $department->programs()->delete();
-                $department->delete();
-            }
+
             $campus->delete();
 
             DB::commit();
 
-            Cache::increment('campuses_version');
+            CacheService::invalidate(CacheService::CAMPUSES);
+            CacheService::invalidate(CacheService::DEPARTMENTS);
+            CacheService::invalidate(CacheService::PROGRAMS);
 
             return $this->response(
                 'success',
