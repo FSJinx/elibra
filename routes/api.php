@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 
 // Authentication Routes
 Route::group(['prefix' => '/auth'], function () {
-    Route::post('/login', [LoginController::class, 'index']);
+    Route::post('/login', [LoginController::class, 'index'])->middleware('throttle:login');
     Route::post('/registration', [AuthController::class, 'registration']);
 
     Route::post('/refresh', [AuthController::class, 'refresh'])->middleware('jwt.refresh');
@@ -39,19 +39,19 @@ Route::post('/upload-media', [MediaController::class, 'upload'])->middleware('jw
 Route::group(['prefix' => '/user-permission'], function () {
 
     Route::group(['prefix' => '/get'], function () {
-        Route::get('', [UserPermissionController::class, 'index'])->middleware('jwt.auth');
+        Route::get('', [UserPermissionController::class, 'index'])->middleware('jwt.auth', 'throttle:read');
     });
 
     Route::group(['prefix' => '/create'], function () {
-        Route::post('', [UserPermissionController::class, 'store'])->middleware('jwt.auth');
+        Route::post('', [UserPermissionController::class, 'store'])->middleware('jwt.auth', 'throttle:write_permission');
     });
 
     Route::group(['prefix' => '/update'], function () {
-        Route::put('/{user_permission}', [UserPermissionController::class, 'update'])->middleware(('jwt.auth'));
+        Route::put('/{user_permission}', [UserPermissionController::class, 'update'])->middleware('jwt.auth', 'throttle:write_permission');
     });
 
     Route::group(['prefix' => '/delete'], function () {
-        Route::delete('/{user_permission}', [UserPermissionController::class, 'destroy'])->middleware('jwt.auth');
+        Route::delete('/{user_permission}', [UserPermissionController::class, 'destroy'])->middleware('jwt.auth', 'throttle:delete');
     });
 
 });
@@ -89,20 +89,20 @@ Route::group(['prefix' => '/item'], function () {
 Route::group(['prefix' => '/campus'], function () {
 
     Route::group(['prefix' => '/get'], function () {
-        Route::get('', [CampusController::class, 'index']);
-        Route::get('{campus}', [CampusController::class, 'show'])->middleware('jwt.auth', 'role:super admin');
+        Route::get('', [CampusController::class, 'index'])->middleware('throttle:read');
+        Route::get('{campus}', [CampusController::class, 'show'])->middleware('jwt.auth', 'role:super admin', 'throttle:api');
     });
 
     Route::group(['prefix' => '/create'], function () {
-        Route::post('', [CampusController::class, 'store'])->middleware('jwt.auth', 'role:super admin');
+        Route::post('', [CampusController::class, 'store'])->middleware('jwt.auth', 'role:super admin', 'throttle:write');
     });
 
     Route::group(['prefix' => '/update'], function () {
-        Route::put('{campus}', [CampusController::class, 'update'])->middleware('jwt.auth', 'role:super admin');
+        Route::put('{campus}', [CampusController::class, 'update'])->middleware('jwt.auth', 'role:super admin', 'throttle:write');
     });
 
     Route::group(['prefix' => '/delete'], function () {
-        Route::delete('{campus}', [CampusController::class, 'destroy'])->middleware('jwt.auth', 'role:super admin');
+        Route::delete('{campus}', [CampusController::class, 'destroy'])->middleware('jwt.auth', 'role:super admin', 'throttle:delete');
     });
 
 });
