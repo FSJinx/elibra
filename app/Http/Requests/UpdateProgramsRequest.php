@@ -2,8 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Department;
+use App\Models\Programs;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateProgramsRequest extends BaseRequest
 {
@@ -12,7 +15,7 @@ class UpdateProgramsRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->user()->can('create', $this->route('program'));
     }
 
     /**
@@ -23,7 +26,12 @@ class UpdateProgramsRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => [ 'sometimes', 'required', 'string', 'max:255' ],
+            'code' => [ 'sometimes', 'required', 'string', 'max:10' ],
+
+            'department_id' => [ 'sometimes', 'required',
+                                  Rule::exists((new Department)->getTable(), 'id') ],
+ 
         ];
     }
 }

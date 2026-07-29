@@ -10,6 +10,7 @@ use App\Http\Controllers\SubscriptionCredentialController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BranchSectionController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\ProgramsController;
 use App\Http\Controllers\SectionsController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
@@ -123,6 +124,27 @@ Route::group(['prefix' => '/department'], function () {
 
     Route::group(['prefix' => '/delete'], function () {
         Route::delete('{department}', [DepartmentController::class, 'destroy'])->middleware('jwt.auth', 'role:super admin');
+    });
+
+});
+
+// Program Routes
+Route::group(['prefix' => '/program'], function () {
+
+    Route::group(['prefix' => '/get'], function () {
+        Route::get('', [ProgramsController::class, 'index']);
+    });
+
+    Route::group(['prefix' => '/create'], function () {
+        Route::post('', [ProgramsController::class, 'store'])->middleware('jwt.auth', 'role:super admin');
+    });
+
+    Route::group(['prefix' => '/update'], function () {
+        Route::put('{department}', [ProgramsController::class, 'update'])->middleware('jwt.auth', 'role:super admin');
+    });
+
+    Route::group(['prefix' => '/delete'], function () {
+        Route::delete('{program}', [ProgramsController::class, 'destroy'])->middleware('jwt.auth', 'role:super admin');
     });
 
 });

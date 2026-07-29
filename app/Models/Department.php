@@ -25,6 +25,6 @@ class Department extends Model
 
     public function campus()
     {
-        return $this->belongsTo(Campus::class, 'campus_id');
+        return $this->belongsTo(Campus::class);
     }
 }

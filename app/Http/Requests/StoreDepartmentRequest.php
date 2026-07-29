@@ -27,7 +27,7 @@ class StoreDepartmentRequest extends BaseRequest
     {
         return [
             'name' => [ 'required', 'string', 'max:255' ],
-            'code' => [ 'required', 'string', 'max:10', Rule::unique((new Department)->getTable(), 'code') ],
+            'code' => [ 'required', 'string', 'max:10' ],
             'campus_id' => [ 'required',  Rule::exists((new Campus)->getTable(), 'id') ]
         ];
     }
@@ -38,12 +38,11 @@ class StoreDepartmentRequest extends BaseRequest
      *
      * @return array
      */
-    public function messages(): array
+    public function messages(): array   
     {
         return [
             'name.required' => 'Name is required',
             'code.required' => 'Code is required',
-            'code.unique' => 'Code must be unique',
             'code.max' => 'Code must not exceed 10 characters',
 
             'campus_id.required' => 'Campus is required.',

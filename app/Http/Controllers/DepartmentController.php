@@ -6,10 +6,8 @@ use App\Models\Department;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDepartmentRequest;
 use App\Http\Requests\UpdateDepartmentRequest;
-use App\Models\Campus;
 use App\Services\CacheService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -28,14 +26,12 @@ class DepartmentController extends Controller
 
         $campusId = null;
 
-        // Users are restricted to their campus
-        if (!$user->isSuperAdmin()) {
-            $campusId = $user->campus_id;
-        }
-
-        // Super admin can filter campus
-        if ($user->isSuperAdmin() && $request->filled('campus_id')) {
-            $campusId = $request->campus_id;
+        if ($user) {
+            if (!$user->isSuperAdmin()) {
+                $campusId = $user->campus_id;
+            } elseif ($request->filled('campus_id')) {
+                $campusId = $request->campus_id;
+            }
         }
 
         $departments = CacheService::remember(
@@ -49,15 +45,19 @@ class DepartmentController extends Controller
             now()->addMinutes(10),
             function () use ($search, $sort, $order, $campusId){
 
-                $allowedSortFields = ['name', 'code' ];
-                $query = Department::query();
+            $allowedSortFields = ['name', 'code' ];
+            $query = Department::query();
 
-                if ($search) {
-                    $query->where(function ($query) use ($search) {
-                        $query->where('name', 'LIKE', "%{$search}%")
-                            ->orWhere('code', 'LIKE', "%{$search}%");
-                    });
-                }
+            if (!is_null($campusId)) {
+                $query->where('campus_id', $campusId);
+            }
+
+            if ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('name', 'LIKE', "%{$search}%")
+                        ->orWhere('code', 'LIKE', "%{$search}%");
+                });
+            }
 
                 if (is_array($sort) && !empty($sort)) {
                     foreach ($sort as $field) {
@@ -112,7 +112,7 @@ class DepartmentController extends Controller
 
             DB::commit();
             
-            Cache::increment('departments_version');
+            CacheService::invalidate(CacheService::DEPARTMENTS);
 
             return $this->response(
                 'success',
@@ -157,7 +157,7 @@ class DepartmentController extends Controller
 
             DB::commit();
 
-            Cache::increment('departments_version');
+            CacheService::invalidate(CacheService::DEPARTMENTS);
 
             return $this->response(
                 'success',
@@ -183,12 +183,12 @@ class DepartmentController extends Controller
         DB::beginTransaction();
         try {
 
-            $department->programs()->delete(); // Delete program, once the related department deleted
             $department->delete();
 
             DB::commit();
 
-            Cache::increment('departments_version');
+            CacheService::invalidate(CacheService::DEPARTMENTS);
+            CacheService::invalidate(CacheService::PROGRAMS);
 
             return $this->response(
                 'success',
