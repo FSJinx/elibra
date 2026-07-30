@@ -6,6 +6,9 @@ use App\Models\Branch;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreBranchRequest;
 use App\Http\Requests\UpdateBranchRequest;
+use App\Services\CacheService;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class BranchController extends Controller
 {
@@ -17,8 +20,8 @@ class BranchController extends Controller
         $user = $this->user();
 
         // if user os authenticated and a library admin
-        if ($user && $user->hasPrimaryRole('library admin')) {
-            $campusId = $user->librarian->branch->campus_id;
+        if ($user && $user->isAdmin()) {
+            $campusId = $user->campus_id;
 
             // para ma return lahat ng branch based sa users campus
             $branches = Branch::where('campus_id', $campusId)->get();
@@ -59,16 +62,26 @@ class BranchController extends Controller
      */
     public function store(StoreBranchRequest $request)
     {
-        $this->authorize('create', Branch::class);
+        DB::beginTransaction();
+        try {
 
-        $branch = Branch::create($request->validated());
+            $branch = Branch::create($request->validated());
 
-        return $this->response(
-            'success',
-            'Branch created successfully',
-            $branch->toArray(),
-            201
-        );
+            DB::commit();
+            CacheService::invalidate(CacheService::BRANCHES);
+
+            return $this->response(
+                'success',
+                'Branch created successfully',
+                $branch->toArray(),
+                201
+            );
+
+        } catch(Throwable $e) {
+            DB::rollBack();
+
+            throw $e;
+        }
         
     }
 
@@ -93,16 +106,25 @@ class BranchController extends Controller
      */
     public function update(UpdateBranchRequest $request, Branch $branch)
     {
-        $this->authorize('update', $branch);
+        DB::beginTransaction();
+        try{
+            $branch->update($request->validated());
 
-        $branch->update($request->validated());
+            DB::commit();
 
-        return $this->response(
-            'success',
-            'Branch updated successfully',
-            $branch->toArray(),
-            200
-        );
+            CacheService::invalidate(CacheService::BRANCHES);
+
+            return $this->response(
+                'success',
+                'Branch updated successfully',
+                $branch->toArray(),
+                200
+            );
+        } catch (Throwable $e){
+            DB::rollBack();
+            throw $e;
+        }
+
     }
 
     /**
@@ -110,16 +132,27 @@ class BranchController extends Controller
      */
     public function destroy(Branch $branch)
     {
-        $this->authorize('delete', $branch);
-        
-        $branch->delete();
+        DB::beginTransaction();
+        try{
 
-        return $this->response(
-            'success',
-            'Branch deleted successfully',
-            null,
-            200
-        );
+            $branch->delete();
+            DB::commit();
+
+            CacheService::invalidate(CacheService::BRANCHES);
+            CacheService::invalidate(CacheService::SECTIONS);
+            CacheService::invalidate(CacheService::BRANCH_SECTIONS);
+
+            return $this->response(
+                'success',
+                'Branch deleted successfully',
+                null,
+                200
+            );
+        } catch(Throwable $e){
+            DB::rollBack();
+            throw $e;
+        }
+    
 
     }
 }

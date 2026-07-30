@@ -15,6 +15,10 @@ class CacheService
     public const DEPARTMENTS = 'departments';
     public const PROGRAMS = 'programs';
 
+    public const BRANCHES = 'branches';
+    public const SECTIONS = 'sections';
+    public const BRANCH_SECTIONS = 'branch_sections';
+
     
     /**
      * Cache a query using a versioned cache key.
