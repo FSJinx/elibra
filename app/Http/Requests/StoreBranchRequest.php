@@ -2,8 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Branch;
+use App\Models\Campus;
+use App\Models\Librarian;
+use App\Models\Media;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreBranchRequest extends BaseRequest
 {
@@ -12,7 +16,7 @@ class StoreBranchRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user()->can('create', Branch::class);
     }
 
     /**
@@ -23,17 +27,16 @@ class StoreBranchRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'contact_info' => 'nullable|string|max:255',
-            'email' => 'nullable|email|max:255|unique:branches,email',
+            'name' => [ 'required', 'string', 'max:255' ],
+            'contact_info' => [ 'nullable', 'string', 'max:255' ],
+            'email' => [ 'nullable', 'email', 'max:255', Rule::unique('branches', 'email') ],
 
-            'opening_hour' => 'nullable|date_format:H:i',
-            'closing_hour' => 'nullable|date_format:H:i|after:opening_hour',
-            
-            'logo_id' => 'nullable|exists:media,id',
-            'branch_head_id' => 'nullable|exists:librarians,id',
-            'campus_id' => 'required|exists:campuses,id',
+            'opening_hour' => [ 'nullable', 'date_format:H:i', 'required_with:closing_hour', ],
+            'closing_hour' => [ 'nullable', 'date_format:H:i', 'required_with:opening_hour', 'after:opening_hour' ],
 
+            'logo_id' => [ 'nullable', Rule::exists((new Media)->getTable(), 'id') ],
+            'branch_head_id' => [ 'nullable',  Rule::exists((new Librarian)->getTable(), 'id') ],
+            'campus_id' => [ 'required', Rule::exists((new Campus)->getTable(), 'id') ]
         ];
     }
 
@@ -45,16 +48,23 @@ class StoreBranchRequest extends BaseRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'Branch name is required',
-            'email.email' => 'Email must be a valid email address',
-            'email.unique' => 'Email already exists',
-            'opening_hour.date_format' => 'Opening hour must be in the format HH:MM',
-            'closing_hour.date_format' => 'Closing hour must be in the format HH:MM',
-            'closing_hour.after' => 'Closing hour must be after opening hour',
-            'logo_id.exists' => 'Selected logo does not exist',
-            'branch_head_id.exists' => 'Selected branch head does not exist',
-            'campus_id.required' => 'Campus is required',
-            'campus_id.exists' => 'Selected campus does not exist',
+            'name.required' => 'Branch name is required.',
+
+            'email.email' => 'Please enter a valid email address.',
+            'email.unique' => 'This email address is already in use.',
+
+            'opening_hour.date_format' => 'Opening hour must be in the format HH:MM.',
+            'closing_hour.date_format' => 'Closing hour must be in the format HH:MM.',
+            'closing_hour.after' => 'Closing hour must be later than the opening hour.',
+
+            'opening_hour.required_with' => 'Opening hour is required when a closing hour is provided.',
+            'closing_hour.required_with' => 'Closing hour is required when an opening hour is provided.',
+
+            'logo_id.exists' => 'The selected logo is invalid.',
+            'branch_head_id.exists' => 'The selected branch head is invalid.',
+
+            'campus_id.required' => 'Campus is required.',
+            'campus_id.exists' => 'The selected campus is invalid.',
         ];
     }
 }

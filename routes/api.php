@@ -153,19 +153,19 @@ Route::group(['prefix' => '/program'], function () {
 Route::group(['prefix' => '/branch'], function () {
 
     Route::group(['prefix' => '/get'], function () {
-        Route::get('', [BranchController::class, 'index']);
+        Route::get('', [BranchController::class, 'index'])->middleware('throttle:read');
     });
 
     Route::group(['prefix' => '/create'], function () {
-        Route::post('', [BranchController::class, 'store'])->middleware('jwt.auth', 'role:admin');
+        Route::post('', [BranchController::class, 'store'])->middleware('jwt.auth', 'role:super admin, admin', 'throttle:write');
     });
 
     Route::group(['prefix' => '/update'], function () {
-        Route::put('{branch}', [BranchController::class, 'update'])->middleware('jwt.auth', 'role:librarian,admin');
+        Route::put('{branch}', [BranchController::class, 'update'])->middleware('jwt.auth', 'role:super admin, admin', 'throttle:write');
     });
 
     Route::group(['prefix' => '/delete'], function () {
-        Route::delete('{branch}', [BranchController::class, 'destroy'])->middleware('jwt.auth', 'role:admin');
+        Route::delete('{branch}', [BranchController::class, 'destroy'])->middleware('jwt.auth', 'role:super admin', 'throttle:delete');
     });
 
 });
@@ -199,15 +199,15 @@ Route::group(['prefix' => '/branch_section'], function () {
     });
 
     Route::group(['prefix' => '/create'], function () {
-        Route::post('', [BranchSectionController::class, 'store'])->middleware('jwt.auth');
+        Route::post('', [BranchSectionController::class, 'store'])->middleware('jwt.auth', 'role:super admin', 'throttle:write');
     });
 
     Route::group(['prefix' => '/update'], function () {
-        Route::put('{branchSection}', [BranchSectionController::class, 'update'])->middleware('jwt.auth');
+        Route::put('{branchSection}', [BranchSectionController::class, 'update'])->middleware('jwt.auth', 'role:super admin', 'throttle:write');
     });
 
     Route::group(['prefix' => '/delete'], function () {
-        Route::delete('{branchSection}', [BranchSectionController::class, 'destroy'])->middleware('jwt.auth');
+        Route::delete('{branchSection}', [BranchSectionController::class, 'destroy'])->middleware('jwt.auth', 'role:super admin', 'throttle:delete');
     });
 
 });

@@ -28,9 +28,13 @@ class BranchPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function create(User $user, Branch $branch): bool
     {
-        return $user->isAdmin();
+        if(!$user->isAdmin()){
+            return false;
+        }
+
+        return $user->campus_id === $branch->campus_id;
     }
 
     /**
@@ -38,26 +42,12 @@ class BranchPolicy
      */
     public function update(User $user, Branch $branch): bool
     {
-        // Admins can update any branch
-        if($user->isAdmin()) {
-            return true;
-        }
-
         // Librarians can only update branches in their own campus
-        if(!$user->hasPrimaryRole('library admin')){
+        if(!$user->isAdmin()){
             return false;
         }
-
-        // Get the campus ID of the librarian's branch
-        $userCampusId = $user->librarian->branch->campus_id;
-
-        // If the user doesn't have a branch or the branch doesn't belong to a campus, deny access
-        if (! $user->librarian || ! $user->librarian->branch) {
-            return false;
-        }
-
-        // Check if the branch being updated belongs to the same campus as the librarian's branch
-        return $branch->campus_id === $userCampusId;
+        
+        return $user->campus_id === $branch->campus_id;
     }
 
     /**
@@ -65,7 +55,7 @@ class BranchPolicy
      */
     public function delete(User $user, Branch $branch): bool
     {
-        return $user->isAdmin();
+        return false;
     }
 
     /**
