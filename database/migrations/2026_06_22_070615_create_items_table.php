@@ -16,12 +16,16 @@ return new class extends Migration
             $table->string('title');
             $table->string('subtitle');
             $table->string('description');
+            $table->string('call_number');
+            $table->string('language');
+            $table->year('publication_year');
+
             $table->string('keywords');
+            $table->binary('electronic_file');
             $table->unsignedBigInteger('branch_id');
 
             $table->timestamps();
             $table->softDeletes();
-
         });
     }
 

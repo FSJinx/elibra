@@ -2,7 +2,8 @@
   /*  ========================== 
   *   Background
   *   ========================== */
-  --background: oklch(98.4% 0.003 247.858);
+  /* --background: oklch(98.4% 0.003 247.858); */
+  --background: #f1f1f1;
   --background-secondary: color-mix(in oklab, var(--background) 96%, var(--foreground) 4%);
   --background-tertiary: color-mix(in oklab, var(--background) 92%, var(--foreground) 8%);
   --background-inverse: var(--foreground);
