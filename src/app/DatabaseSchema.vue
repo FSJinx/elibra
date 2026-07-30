@@ -42,20 +42,20 @@ const schemaSections = [
   },
   {
     label: 'General',
-    fields: ['title', 'edition', 'author', 'author_number', 'physical_description', 'call_number', 'accession', 'language', 'category', 'isbn', 'status', 'location', 'publisher', 'year_published', 'copyright', 'keywords'],
+    fields: ['title', 'call_number', 'edition', 'author', 'author_number', 'physical_description', 'accession', 'language', 'category', 'isbn', 'status', 'location', 'publisher', 'year_published', 'copyright', 'keywords'],
   },
   {
     label: 'Filipiniana',
     fields: ['title', 'call_number', 'language', 'category', 'isbn', 'status', 'location', 'publisher', 'year_published', 'keywords'],
   },
-  {
-    label: 'Reference',
-    fields: [],
-  },
-  {
-    label: 'Serials',
-    fields: ['title'],
-  },
+  // {
+  //   label: 'Reference',
+  //   fields: [],
+  // },
+  // {
+  //   label: 'Serials',
+  //   fields: ['title'],
+  // },
 ]
 
 const commonFields = computed(() => {

@@ -4,8 +4,8 @@
       <span>{{ label }}</span>
       <span class="text-red-500" v-if="required"> *</span>
     </label>
-    <div class="relative flex shrink min-w-50 items-center w-full border h-10 pl-4 overflow-hidden hover:shadow-[0_0_0_.20rem] hover:shadow-primary-light focus-within:shadow-[0_0_0_.20rem] focus-within:shadow-primary-light" :class="[variant, radi[radius]]">
-      <input :type="type === 'password' ? (show ? 'text' : type) : type" :id="id" :name="id" class="pr-4 w-full h-full transition-all duration-150 focus:outline-none" v-model="model" :autocomplete="autocomplete" :placeholder="inputPlaceholder" :required="required" />
+    <div class="relative flex shrink min-w-50 items-center w-full border border-border h-10 overflow-hidden focus-within:ring-3 focus-within:ring-primary/30" :class="[variant, radi[radius]]">
+      <input :type="type === 'password' ? (show ? 'text' : type) : type" :id="id" :name="id" class="px-4 w-full h-full transition-all duration-150 focus:outline-none" v-model="model" :autocomplete="autocomplete" :placeholder="inputPlaceholder" :required="required" />
       <IconButton variant="default-hover" :icon="show ? 'Eye' : 'EyeClosed'" :name="show ? 'Hide Password' : 'Show Password'" @click="show = !show" v-if="type === 'password'" />
       <IconButton variant="default-hover" icon="X" name="Clear Input" @click="model = ''" v-if="enableClear && model.length > 0" />
     </div>
