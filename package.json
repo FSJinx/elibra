@@ -23,6 +23,7 @@
     "@fontsource/inter": "^5.2.8",
     "@fontsource/poppins": "^5.2.7",
     "@lucide/vue": "^1.22.0",
+    "@openfonts/baskervville_latin": "^1.0.3",
     "@vitejs/plugin-vue": "^6.0.7",
     "@vueuse/core": "^14.3.0",
     "pinia": "^3.0.4",

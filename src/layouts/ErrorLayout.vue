@@ -1,7 +1,7 @@
 <template>
   <MainLayout>
     <div class="place-content-center place-items-center space-y-5 w-full max-w-5xl h-full m-auto text-center p-5">
-      <div class="relative flex justify-center items-center h-25 w-25 bg-danger/8 text-danger rounded-full">
+      <div class="relative flex justify-center items-center h-25 w-25 bg-red-50 text-danger rounded-full">
         <Logo width="50" />
       </div>
 
@@ -20,9 +20,9 @@
         <slot name="message" />
       </p>
 
-      <div class="place-items-center space-x-5 p-10 mb-25">
+      <div class="place-items-center space-x-5 p-10">
         <Button left-icon="ArrowLeft" variant="text" color="success" @click="router.back()">Go Back</Button>
-        <Button as="router-link" :to="{ name: path }" left-icon="House" variant="primary" color="success">Home</Button>
+        <Button as="link" :to="{ name: path }" left-icon="House" variant="primary" color="success">Home</Button>
       </div>
     </div>
   </MainLayout>

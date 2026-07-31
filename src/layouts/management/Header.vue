@@ -34,7 +34,7 @@ import { Bell } from '@lucide/vue'
 import { ref } from 'vue'
 import Notification from './notification/Notification.vue'
 import Search from './search/Search.vue'
-import { authStore } from '../../stores/auth.js'
+import { authStore } from '../../stores/authStore.js'
 import Profile from './profile/Profile.vue'
 
 const auth = authStore()

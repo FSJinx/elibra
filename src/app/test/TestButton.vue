@@ -15,14 +15,14 @@
   <div class="">
     <h1 class="section-title">Button as Link</h1>
     <div class="section">
-      <Button as="router-link" :to="{ name: 'home' }" variant="primary">Primary</Button>
-      <Button as="router-link" :to="{ name: 'home' }" variant="secondary">Secondary</Button>
-      <Button as="router-link" :to="{ name: 'home' }" variant="info">Info</Button>
-      <Button as="router-link" :to="{ name: 'home' }" variant="success">Success</Button>
-      <Button as="router-link" :to="{ name: 'home' }" variant="danger">Danger</Button>
-      <Button as="router-link" :to="{ name: 'home' }" variant="warning">Warning</Button>
-      <Button as="router-link" :to="{ name: 'home' }" variant="restore">Restore</Button>
-      <Button as="router-link" :to="{ name: 'home' }">Text</Button>
+      <Button as="link" :to="{ name: 'home' }" variant="primary">Primary</Button>
+      <Button as="link" :to="{ name: 'home' }" variant="secondary">Secondary</Button>
+      <Button as="link" :to="{ name: 'home' }" variant="info">Info</Button>
+      <Button as="link" :to="{ name: 'home' }" variant="success">Success</Button>
+      <Button as="link" :to="{ name: 'home' }" variant="danger">Danger</Button>
+      <Button as="link" :to="{ name: 'home' }" variant="warning">Warning</Button>
+      <Button as="link" :to="{ name: 'home' }" variant="restore">Restore</Button>
+      <Button as="link" :to="{ name: 'home' }">Text</Button>
     </div>
   </div>
   <div class="">

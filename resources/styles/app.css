@@ -35,3 +35,8 @@ body {
 .disabled {
   cursor: not-allowed;
 }
+
+::selection {
+  background-color: var(--color-primary);
+  color: #ffffff;
+}

@@ -1,5 +1,5 @@
 <template>
-  <component :is="as" class="btn relative inline-flex items-center justify-center rounded-md min-h-10 py-2 px-3 font-medium transition-all duration-100" :class="[btnClass]" :disabled="disabled" @mouseup="($event.currentTarget as HTMLButtonElement).blur()">
+  <component :is="buttonAs" :type="type" class="btn relative inline-flex items-center justify-center rounded-xl min-h-10 py-2 px-3 font-medium transition-all duration-100" :class="[btnClass]" :disabled="disabled || loading" @mouseup="($event.currentTarget as HTMLButtonElement).blur()">
     <Spinner class="absolute" v-if="loading" />
 
     <Icon :icon="leftIcon" v-if="leftIcon" :class="['mr-1.5', props.loading && 'invisible']" />
@@ -9,11 +9,15 @@
 </template>
 
 <script setup lang="ts">
+type Types = 'submit' | 'button'
+type Ases = 'button' | 'link'
+
 interface Props {
   leftIcon?: string
   rightIcon?: string
   loading?: boolean
-  as?: 'button' | 'router-link'
+  as?: Ases
+  type?: Types
   variant?: Variants
   disabled?: boolean
   size?: Sizes
@@ -25,6 +29,16 @@ const props = withDefaults(defineProps<Props>(), {
   variant: 'text',
   disabled: false,
   size: 'default',
+  type: 'button',
+})
+
+const buttonAs = computed(() => {
+  const asses: Record<Ases, string> = {
+    button: 'button',
+    link: 'router-link',
+  }
+
+  return asses[props.as]
 })
 
 const btnClass = computed(() => {
@@ -52,7 +66,7 @@ const btnClass = computed(() => {
 
   const border = props.variant === 'text' ? 'border-transparent' : 'border'
 
-  const disabled = props.disabled ? 'opacity-75 cursor-not-allowed' : 'cursor-pointer'
+  const disabled = props.disabled || props.loading ? 'opacity-75 cursor-not-allowed' : 'cursor-pointer'
   const design = props.disabled ? 'border-transparent bg-muted text-muted-foreground' : variants[props.variant ?? 'text']
 
   return [sizes[props.size], focus[props.variant], design, disabled, border]

@@ -31,8 +31,8 @@ class DatabaseSeeder extends Seeder
             LibrarianSeeder::class,
             PatronSeeder::class,
             UsersSeeder::class,
-            ItemSeeder::class,
-            AcademicSeeder::class,
+            // ItemSeeder::class,
+            // AcademicSeeder::class,
         ]);
     }
 }

@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 // import { roleMap } from '@/constants/roleMap'
-import { authStore } from '@/stores/auth'
+import { authStore } from '@/stores/authStore'
 
 // Route imports
 
@@ -46,6 +46,7 @@ const router = createRouter({
 
 router.beforeEach(async (to, from) => {
   const auth = authStore()
+  const { goHome } = useAuth()
   const my = computed(() => auth?.user)
   const accessRoles = String(to.meta?.role ?? '')
 
@@ -54,7 +55,7 @@ router.beforeEach(async (to, from) => {
   }
 
   if (to.name === 'login' && auth.isAuthenticated) {
-    auth.home()
+    goHome()
   }
 
   document.title = typeof to.meta.title === 'string' ? 'e-Libra: ' + my.value?.role?.charAt(0).toUpperCase() + my.value?.role?.slice(1) + ' | ' + to.meta.title : 'e-Libra: The ISU-1 Library Management and Resource Monitoring System'
