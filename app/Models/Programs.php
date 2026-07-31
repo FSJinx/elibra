@@ -11,11 +11,7 @@ class Programs extends Model
     /** @use HasFactory<\Database\Factories\ProgramsFactory> */
     use HasFactory, SoftDeletes;
 
-    protected $fillable = [
-        'name',
-        'code',
-        'department_id'
-    ];
+    protected $fillable = ['name', 'code', 'department_id'];
     
     public function patron() {
         return $this->hasMany(Patron::class);

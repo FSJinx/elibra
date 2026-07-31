@@ -12,18 +12,7 @@ class Branch extends Model
     /** @use HasFactory<BranchFactory> */
     use HasFactory, SoftDeletes;
 
-    protected $fillable = [
-        'name', //College of Medicine lIbrary
-        'contact_info',
-        'email',
-        'email_verified_at',
-        'opening_hour',
-        'closing_hour',
-
-        'logo_id',
-        'branch_head_id',
-        'campus_id'
-    ];
+    protected $fillable = ['name', 'contact_info', 'email', 'email_verified_at', 'opening_hour', 'closing_hour', 'logo_id', 'branch_head_id', 'campus_id'];
 
     public function campus()
     {

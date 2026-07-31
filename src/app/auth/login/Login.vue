@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col w-full max-w-120 p-8 mx-auto sm:bg-background rounded-4xl sm:shadow-lg">
+  <div class="flex flex-col w-full max-w-120 p-8 mx-auto sm:bg-background rounded-4xl sm:shadow-lg hover:shadow-2xl transition-all duration-200">
     <!-- Logo Header -->
     <div class="flex flex-col items-center text-primary gap-1 mb-5">
       <Button as="link" :to="{ name: 'home' }" class="mx-auto">
@@ -9,9 +9,7 @@
       <p class="text-muted text-sm">Login now and continue where we left off.</p>
     </div>
 
-    <Transition name="pop-in">
-      <Alert v-if="error" variant="danger">{{ error }}</Alert>
-    </Transition>
+    <Alert v-if="error" variant="danger">{{ error }}</Alert>
 
     <!-- Form -->
     <form @submit.prevent="handleSubmit" class="flex flex-col space-y-3">
@@ -42,7 +40,6 @@ async function handleSubmit() {
   if (!res.success) {
     error.value = res.message
   } else {
-    
   }
 }
 </script>

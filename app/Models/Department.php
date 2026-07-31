@@ -12,11 +12,7 @@ class Department extends Model
     /** @use HasFactory<DepartmentFactory> */
     use HasFactory, SoftDeletes;
 
-    protected $fillable = [
-        'name',
-        'code',
-        'campus_id',
-    ];
+    protected $fillable = ['name', 'code', 'campus_id'];
 
     public function programs()
     {

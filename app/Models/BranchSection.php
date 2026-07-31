@@ -11,10 +11,7 @@ class BranchSection extends Model
     /** @use HasFactory<\Database\Factories\BranchSectionFactory> */
     use HasFactory, SoftDeletes;
 
-    protected $fillable = [
-        'branch_id',
-        'section_id'
-    ];
+    protected $fillable = ['branch_id', 'section_id'];
 
     public function branch()
     {

@@ -12,12 +12,7 @@ class Librarian extends Model
     /** @use HasFactory<LibrarianFactory> */
     use HasFactory, SoftDeletes;
 
-    protected $fillable = [
-        'user_id',
-        'branch_id',
-        'role', // admin, staff, assistant
-        'tools',
-    ];
+    protected $fillable = ['user_id', 'branch_id', 'role', 'tools'];
 
     protected $casts = [
         'tools' => 'array',

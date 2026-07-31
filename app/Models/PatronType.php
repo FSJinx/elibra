@@ -12,9 +12,5 @@ class PatronType extends Model
     /** @use HasFactory<PatronTypeFactory> */
     use HasFactory, SoftDeletes;
 
-    protected $fillable = [
-        'key',
-        'name',
-        'description',
-    ];
+    protected $fillable = ['key', 'name', 'description'];
 }

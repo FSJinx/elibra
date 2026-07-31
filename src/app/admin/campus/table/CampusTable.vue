@@ -17,7 +17,7 @@
         <td>{{ campus.address }}</td>
         <td>{{ campus.heading || 'No data' }}</td>
         <td class="capitalize">
-          <EBadge :class="[campus.status === 'active' ? 'bg-green-400 text-white' : 'bg-red-400 text-white']" radius="pill">{{ campus.status }}</EBadge>
+          <Badge :class="[campus.status === 'active' ? 'bg-green-400 text-white' : 'bg-red-400 text-white']" radius="pill">{{ campus.status }}</Badge>
         </td>
       </tr>
     </template>
@@ -25,11 +25,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import Table from '@/components/tables/Table.vue'
-import EBadge from '@/components/ui/eBadge.vue'
-import router from '../../../../router/index.js'
-import { useCampus } from '../../../../stores/campusCache.js'
 
 interface Props {
   data: any[]
@@ -41,6 +36,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const campus = useCampus()
+
 const check = (c: any) => {
   campus.currentCampus = c
   router.push({ name: 'admin.campus.details', params: { id: c?.id } })

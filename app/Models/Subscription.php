@@ -10,13 +10,7 @@ class Subscription extends Model
     /** @use HasFactory<\Database\Factories\SubscriptionFactory> */
     use HasFactory;
 
-    protected $fillable = [
-        'name',
-        'description',
-        'link',
-
-        'thumbnail_id',
-    ];
+    protected $fillable = ['name', 'description', 'link', 'thumbnail_id'];
 
     //relationship with media
     public function media()

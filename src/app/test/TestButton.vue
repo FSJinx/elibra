@@ -3,7 +3,7 @@
     <h1 class="section-title">Default</h1>
     <div class="section">
       <Button variant="primary">Primary</Button>
-      <Button variant="secondary">Secondary</Button>
+      <Button variant="default">Secondary</Button>
       <Button variant="info">Info</Button>
       <Button variant="success">Success</Button>
       <Button variant="danger">Danger</Button>
@@ -16,7 +16,7 @@
     <h1 class="section-title">Button as Link</h1>
     <div class="section">
       <Button as="link" :to="{ name: 'home' }" variant="primary">Primary</Button>
-      <Button as="link" :to="{ name: 'home' }" variant="secondary">Secondary</Button>
+      <Button as="link" :to="{ name: 'home' }" variant="default">Secondary</Button>
       <Button as="link" :to="{ name: 'home' }" variant="info">Info</Button>
       <Button as="link" :to="{ name: 'home' }" variant="success">Success</Button>
       <Button as="link" :to="{ name: 'home' }" variant="danger">Danger</Button>
@@ -29,7 +29,7 @@
     <h1 class="section-title">Loading</h1>
     <div class="section">
       <Button loading variant="primary">Primary</Button>
-      <Button loading variant="secondary">Secondary</Button>
+      <Button loading variant="default">Secondary</Button>
       <Button loading variant="info">Info</Button>
       <Button loading variant="success">Success</Button>
       <Button loading variant="danger">Danger</Button>
@@ -42,7 +42,7 @@
     <h1 class="section-title">Icon Only</h1>
     <div class="section">
       <Button variant="primary"> <Icon icon="search"></Icon> </Button>
-      <Button variant="secondary"> <Icon icon="search"></Icon> </Button>
+      <Button variant="default"> <Icon icon="search"></Icon> </Button>
       <Button variant="info"> <Icon icon="search"></Icon> </Button>
       <Button variant="success"> <Icon icon="search"></Icon> </Button>
       <Button variant="danger"> <Icon icon="search"></Icon> </Button>
@@ -55,7 +55,7 @@
     <h1 class="section-title">With Left Icon</h1>
     <div class="section">
       <Button left-icon="search" variant="primary">Search</Button>
-      <Button left-icon="search" variant="secondary">Search</Button>
+      <Button left-icon="search" variant="default">Search</Button>
       <Button left-icon="search" variant="info">Search</Button>
       <Button left-icon="search" variant="success">Search</Button>
       <Button left-icon="search" variant="danger">Search</Button>
@@ -68,7 +68,7 @@
     <h1 class="section-title">With Right Icon</h1>
     <div class="section">
       <Button right-icon="search" variant="primary">Search</Button>
-      <Button right-icon="search" variant="secondary">Search</Button>
+      <Button right-icon="search" variant="default">Search</Button>
       <Button right-icon="search" variant="info">Search</Button>
       <Button right-icon="search" variant="success">Search</Button>
       <Button right-icon="search" variant="danger">Search</Button>
@@ -81,7 +81,7 @@
     <h1 class="section-title">Disabled</h1>
     <div class="section">
       <Button disabled variant="primary">Primary</Button>
-      <Button disabled variant="secondary">Secondary</Button>
+      <Button disabled variant="default">Secondary</Button>
       <Button disabled variant="info">Info</Button>
       <Button disabled variant="success">Success</Button>
       <Button disabled variant="danger">Danger</Button>

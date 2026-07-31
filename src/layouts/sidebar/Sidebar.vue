@@ -1,5 +1,5 @@
 <template>
-  <aside :class="['flex flex-col h-full relative border-slate-300 whitespace-nowrap text-nowrap flex-nowrap overflow-hidden transition-all duration-300', isOpen ? 'w-70' : 'w-0']">
+  <aside :class="['flex flex-col h-full relative border-slate-300 whitespace-nowrap text-nowrap flex-nowrap overflow-hidden transition-all duration-300', system.sidebar ? 'w-70' : 'w-0']">
     <div class="relative flex flex-col min-w-70 overflow-hidden py-0">
       <div class="sidebar h-full whitespace-nowrap text-nowrap flex-nowrap pl-1 pt-0">
         <div class="" v-for="(menu, index) in filteredMenus" :key="index">
@@ -23,6 +23,7 @@
 import { menus } from './sidebar'
 
 const auth = authStore()
+const system = systemStore()
 const user = auth?.user
 
 const filteredMenus = computed(() => {
@@ -31,13 +32,6 @@ const filteredMenus = computed(() => {
 
   return menu
 })
-
-const props = withDefaults(
-  defineProps<{
-    isOpen?: boolean
-  }>(),
-  { isOpen: false },
-)
 </script>
 
 <style scoped>

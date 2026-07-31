@@ -11,13 +11,7 @@ class Item extends Model
     /** @use HasFactory<\Database\Factories\ItemFactory> */
     use HasFactory, SoftDeletes;
     
-    protected $fillable = [
-        'title',
-        'subtitle',
-        'description',
-        'keywords',
-        'branch_id',
-    ];
+    protected $fillable = ['title', 'subtitle', 'description', 'keywords', 'branch_id'];
 
     public function academic()
     {

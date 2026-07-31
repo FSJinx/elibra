@@ -77,6 +77,7 @@ declare global {
   const shallowRef: typeof import('vue').shallowRef
   const sizes: typeof import('./composables/useType').sizes
   const storeToRefs: typeof import('pinia').storeToRefs
+  const systemStore: typeof import('./stores/systemStore').systemStore
   const toRaw: typeof import('vue').toRaw
   const toRef: typeof import('vue').toRef
   const toRefs: typeof import('vue').toRefs
@@ -194,6 +195,7 @@ declare module 'vue' {
     readonly shallowRef: UnwrapRef<typeof import('vue')['shallowRef']>
     readonly sizes: UnwrapRef<typeof import('./composables/useType')['sizes']>
     readonly storeToRefs: UnwrapRef<typeof import('pinia')['storeToRefs']>
+    readonly systemStore: UnwrapRef<typeof import('./stores/systemStore')['systemStore']>
     readonly toRaw: UnwrapRef<typeof import('vue')['toRaw']>
     readonly toRef: UnwrapRef<typeof import('vue')['toRef']>
     readonly toRefs: UnwrapRef<typeof import('vue')['toRefs']>

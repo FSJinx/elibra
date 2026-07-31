@@ -45,10 +45,17 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from) => {
+  const matched = to.matched
+
+  const requiresAuth = matched.some((route) => route.meta.requiresAuth)
+  const role = matched.find((route) => route.meta.role)?.meta.role
+  const permission = matched.find((route) => route.meta.permission)?.meta.permission
+  const maintenance = matched.find((route) => route.meta.maintenance)?.meta.maintenance
+
   const auth = authStore()
   const { goHome } = useAuth()
   const my = computed(() => auth?.user)
-  const accessRoles = String(to.meta?.role ?? '')
+  const accessRoles = String(role ?? '')
 
   if (auth.token && !auth.isAuthenticated) {
     await auth.getUser()
@@ -60,11 +67,11 @@ router.beforeEach(async (to, from) => {
 
   document.title = typeof to.meta.title === 'string' ? 'e-Libra: ' + my.value?.role?.charAt(0).toUpperCase() + my.value?.role?.slice(1) + ' | ' + to.meta.title : 'e-Libra: The ISU-1 Library Management and Resource Monitoring System'
 
-  if (to.meta.maintenance) {
+  if (maintenance) {
     return { name: 'ServiceUnavailable' }
   }
 
-  if (to.meta.requiresAuth && !accessRoles.split(',').includes(String(my.value?.role ?? ''))) {
+  if (requiresAuth && !accessRoles.split(',').includes(String(my.value?.role ?? ''))) {
     return { name: 'error.403' }
   }
 })

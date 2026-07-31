@@ -10,13 +10,7 @@ class Media extends Model
     /** @use HasFactory<\Database\Factories\MediaFactory> */
     use HasFactory;
 
-    protected $fillable = [
-        'file_name',
-        'file_path',
-        'mime_type',
-        'file_size',
-        'image_type',
-    ];
+    protected $fillable = ['file_name', 'file_path', 'mime_type', 'file_size', 'image_type'];
 
     
 

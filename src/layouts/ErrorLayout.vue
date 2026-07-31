@@ -1,6 +1,6 @@
 <template>
   <MainLayout>
-    <div class="place-content-center place-items-center space-y-5 w-full max-w-5xl h-full m-auto text-center p-5">
+    <div class="place-content-center place-items-center space-y-5 w-full max-w-5xl min-h-[80dvh] m-auto text-center p-5">
       <div class="relative flex justify-center items-center h-25 w-25 bg-red-50 text-danger rounded-full">
         <Logo width="50" />
       </div>

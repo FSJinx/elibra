@@ -12,13 +12,7 @@ class Campus extends Model
     /** @use HasFactory<CampusFactory> */
     use HasFactory, SoftDeletes;
 
-    protected $fillable = [
-        'name',
-        'code',
-        'address',
-        'heading',
-        'status',
-    ];
+    protected $fillable = ['name', 'code', 'address', 'heading', 'status'];
 
     public function departments()
     {

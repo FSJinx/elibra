@@ -9,12 +9,7 @@ class System extends Model
 {
     /** @use HasFactory<\Database\Factories\SystemFactory> */
     use HasFactory;
-    protected $fillable = [
-        'key',
-        'description',
-        'value',
-        'selections',
-    ];
+    protected $fillable = ['key', 'description', 'value', 'selections'];
 
     protected $casts = [
         'selections' => 'array',
