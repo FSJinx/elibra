@@ -12,9 +12,7 @@ class Sections extends Model
     /** @use HasFactory<SectionsFactory> */
     use HasFactory, SoftDeletes;
 
-    protected $fillable = [
-        'name',
-    ];
+    protected $fillable = ['name'];
 
     public function branchSections()
     {

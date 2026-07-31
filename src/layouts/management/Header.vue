@@ -3,7 +3,7 @@
   <header class="grid grid-cols-3 border-slate-300">
     <!-- Banner -->
     <div class="flex flex-1 items-center py-4 px-5 gap-3 select-none mr-auto">
-      <div class="flex rounded-sm p-2.5 border border-slate-300 bg-white cursor-pointer" @click="$emit('toggleSidebar')">
+      <div class="flex rounded-sm p-2.5 border border-slate-300 bg-white cursor-pointer" @click="system.toggleSidebar()">
         <i class="fi fi-br-menu-burger leading-0 text-md"></i>
       </div>
       <div class="flex items-center gap-2">
@@ -38,6 +38,7 @@ import { authStore } from '../../stores/authStore.js'
 import Profile from './profile/Profile.vue'
 
 const auth = authStore()
+const system = systemStore()
 const user = auth?.user
 const searchQuery = ref('')
 </script>

@@ -44,7 +44,7 @@ const buttonAs = computed(() => {
 const btnClass = computed(() => {
   const variants: Record<Variants, string> = {
     primary: 'border border-primary bg-primary text-primary-foreground hover:bg-primary-hover',
-    secondary: 'border-transparent bg-secondary text-secondary-foreground hover:bg-secondary-hover',
+    default: 'border-transparent bg-default text-default-foreground hover:bg-default-hover',
     info: 'border-info bg-info text-info-foreground hover:bg-info-hover',
     success: 'border-success bg-success text-success-foreground hover:bg-success-hover',
     danger: 'border-danger bg-danger text-danger-foreground hover:bg-danger-hover',
@@ -55,7 +55,7 @@ const btnClass = computed(() => {
 
   const focus: Record<Variants, string> = {
     primary: ' focus:ring-4 focus:ring-primary/25',
-    secondary: ' focus:ring-4 focus:ring-secondary/15',
+    default: ' focus:ring-4 focus:ring-default/15',
     info: ' focus:ring-4 focus:ring-info/25',
     success: ' focus:ring-4 focus:ring-success/25',
     danger: ' focus:ring-4 focus:ring-danger/25',
@@ -67,7 +67,7 @@ const btnClass = computed(() => {
   const border = props.variant === 'text' ? 'border-transparent' : 'border'
 
   const disabled = props.disabled || props.loading ? 'opacity-75 cursor-not-allowed' : 'cursor-pointer'
-  const design = props.disabled ? 'border-transparent bg-muted text-muted-foreground' : variants[props.variant ?? 'text']
+  const design = variants[props.variant ?? 'text']
 
   return [sizes[props.size], focus[props.variant], design, disabled, border]
 })

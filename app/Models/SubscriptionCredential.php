@@ -11,13 +11,7 @@ class SubscriptionCredential extends Model
     /** @use HasFactory<\Database\Factories\SubscriptionCredentialFactory> */
     use HasFactory;
 
-    protected $fillable =[
-        'username',
-        'password',
-
-        'subscription_id',
-        'campus_id',
-    ];
+    protected $fillable = ['username', 'password', 'subscription_id', 'campus_id'];
 
     //Addes Laravel Encryption (Mutator Method)
     //For Retrieving and Storing Passwords without exposing them in plain text

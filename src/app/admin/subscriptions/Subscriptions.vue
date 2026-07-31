@@ -63,8 +63,6 @@
 </template>
 
 <script setup lang="ts">
-import eButton from '@/components/ui/eButton.vue'
-
 const subscriptions = [
   {
     id: 1,

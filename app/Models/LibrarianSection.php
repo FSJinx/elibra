@@ -11,11 +11,7 @@ class LibrarianSection extends Model
     /** @use HasFactory<LibrarianSectionFactory> */
     use HasFactory;
 
-    protected $fillable = [
-        'section_id', // 
-        'librarian_id',
-        'role', // head, staff
-    ];
+    protected $fillable = ['section_id', 'librarian_id', 'role'];
 
     public function librarian() {
         return $this->hasMany(Librarian::class);

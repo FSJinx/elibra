@@ -1,13 +1,14 @@
 export const adminRoutes = [
   {
     path: '/admin',
-    meta: { role: 'admin' },
+    meta: { requiresAuth: true, role: 'admin' },
     redirect: { name: 'admin' },
-    component: () => import('@/layouts/management/Layout.vue'),
+    component: () => import('@/layouts/ManagementLayout.vue'),
     children: [
       {
         path: '',
         name: 'admin',
+        meta: {title: 'Dashboard'},
         component: () => import('@/app/admin/dashboard/Dashboard.vue'),
       },
       {

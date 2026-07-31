@@ -1,9 +1,11 @@
 <template>
-  <section class="h-screen w-full border-b">asdf</section>
-  <section class="h-screen w-full border-b">asdf</section>
-  <section class="h-screen w-full border-b">asdf</section>
+  <section class="h-screen">
+    
+  </section>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const auth = authStore()
+</script>
 
 <style scoped></style>

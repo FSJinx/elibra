@@ -11,16 +11,7 @@ class Academic extends Model
     /** @use HasFactory<\Database\Factories\AcademicFactory> */
     use HasFactory, SoftDeletes;
 
-    protected $fillable = [
-        'call_number',
-        'language',
-        'category',
-        'publication_year',
-        'subjects',
-
-        'item_id',
-        'department_id'
-    ];
+    protected $fillable = ['call_number', 'language', 'category', 'publication_year', 'subjects', 'item_id', 'department_id'];
 
     protected $casts = [
         'subjects' => 'array',

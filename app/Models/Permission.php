@@ -11,11 +11,7 @@ class Permission extends Model
     /** @use HasFactory<PermissionFactory> */
     use HasFactory;
 
-    protected $fillable = [
-        'module',
-        'action',
-        'permission',
-    ];
+    protected $fillable = ['module', 'action', 'permission'];
 
     public function users()
     {

@@ -19,9 +19,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import TableNoData from './TableNoData.vue'
-import TableLoading from './TableLoading.vue'
+import TableNoData from '@/components/table/TableNoData.vue'
+import TableLoading from '@/components/table/TableLoading.vue'
 
 interface Props {
   loading: boolean
