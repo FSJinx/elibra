@@ -61,18 +61,6 @@ export const authStore = defineStore(
       }
     }
 
-    function home() {
-      const routes: Record<string, string> = {
-        admin: 'admin',
-        librarian: 'librarian',
-        patron: 'Patron',
-        default: 'home',
-      }
-
-      const roleKey = (user.value?.role as string) || 'default'
-      return router.push({ name: routes[roleKey] })
-    }
-
     async function logout(): Promise<void> {
       const confirmed = window.confirm('Are you sure you want to logout?')
       if (confirmed) {
@@ -98,7 +86,6 @@ export const authStore = defineStore(
       setUser,
       setToken,
       getUser,
-      home,
       logout,
       clearUser,
     }

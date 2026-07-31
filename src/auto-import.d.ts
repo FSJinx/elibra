@@ -11,7 +11,7 @@ declare global {
   const adminRoutes: typeof import('./router/adminRoutes').adminRoutes
   const api: typeof import('./plugins/axios').api
   const authRoute: typeof import('./router/authRoute').authRoute
-  const authStore: typeof import('./stores/auth').authStore
+  const authStore: typeof import('./stores/authStore').authStore
   const axios: typeof import('./plugins/axios').default
   const backendRoute: typeof import('./plugins/axios').backendRoute
   const campusStore: typeof import('./stores/campusCache').campusStore
@@ -109,11 +109,11 @@ declare global {
   export type { Component, Slot, Slots, ComponentPublicInstance, ComputedRef, DirectiveBinding, ExtractDefaultPropTypes, ExtractPropTypes, ExtractPublicPropTypes, InjectionKey, PropType, Ref, ShallowRef, MaybeRef, MaybeRefOrGetter, VNode, WritableComputedRef } from 'vue'
   import('vue')
   // @ts-ignore
-  export type { Variants, Sizes, Radius } from './composables/useType'
+  export type { Variants, Sizes } from './composables/useType'
   import('./composables/useType')
   // @ts-ignore
-  export type { User } from './stores/auth'
-  import('./stores/auth')
+  export type { User } from './stores/authStore'
+  import('./stores/authStore')
   // @ts-ignore
   export type { CampusInfo } from './stores/campusCache'
   import('./stores/campusCache')
@@ -129,7 +129,7 @@ declare module 'vue' {
     readonly adminRoutes: UnwrapRef<typeof import('./router/adminRoutes')['adminRoutes']>
     readonly api: UnwrapRef<typeof import('./plugins/axios')['api']>
     readonly authRoute: UnwrapRef<typeof import('./router/authRoute')['authRoute']>
-    readonly authStore: UnwrapRef<typeof import('./stores/auth')['authStore']>
+    readonly authStore: UnwrapRef<typeof import('./stores/authStore')['authStore']>
     readonly axios: UnwrapRef<typeof import('./plugins/axios')['default']>
     readonly backendRoute: UnwrapRef<typeof import('./plugins/axios')['backendRoute']>
     readonly campusStore: UnwrapRef<typeof import('./stores/campusCache')['campusStore']>
@@ -182,7 +182,6 @@ declare module 'vue' {
     readonly patronRoutes: UnwrapRef<typeof import('./router/patronRoutes')['default']>
     readonly provide: UnwrapRef<typeof import('vue')['provide']>
     readonly publicRoutes: UnwrapRef<typeof import('./router/publicRoutes')['default']>
-    readonly radi: UnwrapRef<typeof import('./composables/useType')['radi']>
     readonly reactive: UnwrapRef<typeof import('vue')['reactive']>
     readonly readonly: UnwrapRef<typeof import('vue')['readonly']>
     readonly ref: UnwrapRef<typeof import('vue')['ref']>

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('edition');
             $table->string('isbn_issn');
             $table->string('copyright_year');
-            $table->enum('category', []);
+            $table->enum('category', ['fiction', 'non-fiction']);
             $table->timestamps();
 
             $table->unsignedBigInteger('item_id');

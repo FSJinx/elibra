@@ -1,6 +1,6 @@
 <template>
   <section class="relative flex justify-center min-h-[90vh] overflow-hidden bg-radial from-primary/5 via-transparent to-transparent">
-    <div class="place-content-center w-full max-w-7xl px-6 pb-30 space-y-8">
+    <div class="place-content-center w-full max-w-7xl px-6 pb-30 space-y-5">
       <!-- Logo Branding -->
       <div class="flex items-center justify-center">
         <IsuLogo width="85" class="drop-shadow-lg drop-shadow-primary/50" />
@@ -8,11 +8,11 @@
 
       <!-- Typography -->
       <div class="space-y-4 max-w-4xl mx-auto text-center">
-        <h1 class="text-4xl sm:text-6xl font-extrabold text-primary tracking-tight leading-none">
-          Isabela State University
-          <span class="block text-foreground mt-2 text-3xl sm:text-5xl font-medium">Library Services</span>
+        <h1 class="font-baskervville uppercase text-2xl sm:text-5xl font-extrabold text-primary tracking-tight leading-none">
+          <span class="text-[125%]">I</span>sabela <span class="text-[125%]">S</span>tate <span class="text-[125%]">U</span>niversity
+          <span class="block mt-2 text-xl sm:text-4xl"><span class="text-[125%]">L</span>ibrary <span class="text-[125%]">S</span>ervices</span>
         </h1>
-        <p class="text-base sm:text-lg text-foreground max-w-2xl mx-auto leading-relaxed">Welcome to <Chip>e-Libra</Chip>, the centralized Library Management System empowering academic discovery for every ISU-1.</p>
+        <p class="text-base text-md sm:text-lg text-foreground max-w-2xl mx-auto leading-relaxed">Welcome to <Chip>e-Libra</Chip>, the centralized Library Management System empowering academic discovery for every ISU-1.</p>
       </div>
 
       <!-- OPAC Search Form -->

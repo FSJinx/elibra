@@ -3,7 +3,7 @@ import axios from 'axios'
 
 // import elpop from './elpop'
 import router from '@/router'
-import { authStore } from '@/stores/auth'
+import { authStore } from '@/stores/authStore'
 
 // export const backendRoute = `${(import.meta as any).env.VITE_APP_URL}/api`
 export const backendRoute = `http://localhost:8001/api`

@@ -6,42 +6,42 @@
   --primary: lab(50% -47.74 25.84);
   --primary-hover: color-mix(in oklab, var(--primary) 90%, var(--primary-foreground) 10%);
   --primary-foreground: var(--snow);
-  --primary-soft: color-mix(in oklab, var(--primary) 15%, transparent);
+  --primary-soft: color-mix(in oklab, var(--primary) 5%, transparent);
   --primary-soft-hover: color-mix(in oklab, var(--primary) 20%, transparent);
   --primary-soft-foreground: var(--primary);
 
   --info: oklch(0.6204 0.195 253.83);
   --info-hover: color-mix(in oklab, var(--info) 90%, var(--info-foreground) 10%);
   --info-foreground: var(--snow);
-  --info-soft: color-mix(in oklab, var(--info) 15%, transparent);
+  --info-soft: color-mix(in oklab, var(--info) 5%, transparent);
   --info-soft-hover: color-mix(in oklab, var(--info) 20%, transparent);
   --info-soft-foreground: var(--info);
 
   --success: oklch(0.7329 0.1935 150.81);
   --success-hover: color-mix(in oklab, var(--success) 90%, var(--success-foreground) 10%);
   --success-foreground: var(--snow);
-  --success-soft: color-mix(in oklab, var(--success) 15%, transparent);
+  --success-soft: color-mix(in oklab, var(--success) 5%, transparent);
   --success-soft-hover: color-mix(in oklab, var(--success) 20%, transparent);
   --success-soft-foreground: var(--success);
 
   --warning: oklch(0.7819 0.1585 72.3301);
   --warning-hover: color-mix(in oklab, var(--warning) 90%, var(--warning-foreground) 10%);
   --warning-foreground: var(--snow);
-  --warning-soft: color-mix(in oklab, var(--warning) 15%, transparent);
+  --warning-soft: color-mix(in oklab, var(--warning) 5%, transparent);
   --warning-soft-hover: color-mix(in oklab, var(--warning) 20%, transparent);
   --warning-soft-foreground: var(--warning);
 
   --danger: oklch(0.6532 0.2328 25.7401);
   --danger-hover: color-mix(in oklab, var(--danger) 90%, var(--danger-foreground) 10%);
   --danger-foreground: var(--snow);
-  --danger-soft: color-mix(in oklab, var(--danger) 15%, transparent);
+  --danger-soft: color-mix(in oklab, var(--danger) 5%, transparent);
   --danger-soft-hover: color-mix(in oklab, var(--danger) 20%, transparent);
   --danger-soft-foreground: var(--danger);
 
   --restore: oklch(55.8% 0.288 302.321);
   --restore-hover: color-mix(in oklab, var(--restore) 90%, var(--restore-foreground) 10%);
   --restore-foreground: var(--snow);
-  --restore-soft: color-mix(in oklab, var(--restore) 15%, transparent);
+  --restore-soft: color-mix(in oklab, var(--restore) 5%, transparent);
   --restore-soft-hover: color-mix(in oklab, var(--restore) 20%, transparent);
   --restore-soft-foreground: var(--restore);
 }

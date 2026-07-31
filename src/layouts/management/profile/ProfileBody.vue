@@ -32,7 +32,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import images from '../../../assets/images'
-import { authStore } from '../../../stores/auth'
+import { authStore } from '../../../stores/authStore'
 
 interface Props {
   show: boolean

@@ -7,11 +7,11 @@
       </router-link>
       <div class="flex items-center gap-1.5 sm:gap-3">
         <template v-if="!isAuthenticated">
-          <Button as="router-link" :to="{ name: 'login' }" class="text-primary" variant="text">Login</Button>
-          <Button as="router-link" :to="{ name: '' }" variant="primary">Register</Button>
+          <Button as="link" :to="{ name: 'login' }" class="text-primary" variant="text">Login</Button>
+          <Button as="link" :to="{ name: '' }" variant="primary">Register</Button>
         </template>
         <template v-else>
-          <Button as="router-link" :to="{ name: 'home' }" variant="text" left-icon="home" class="text-primary">Home</Button>
+          <Button as="link" :to="{ name: 'home' }" variant="text" left-icon="home" class="text-primary">Home</Button>
         </template>
       </div>
     </nav>
