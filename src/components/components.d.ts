@@ -32,7 +32,7 @@ declare module 'vue' {
     Loader: typeof import('./my/Loader.vue')['default']
     Logo: typeof import('./brand/Logo.vue')['default']
     MainLayout: typeof import('./../layouts/MainLayout.vue')['default']
-    ManagementLayout: typeof import('./../layouts/ManagementLayout.vue')['default']
+    ManagementLayout: typeof import('../layouts/management_new/ManagementLayout.vue/index.js')['default']
     Modal: typeof import('./my/Modal.vue')['default']
     NewButton: typeof import('./my/Button.vue/index.js')['default']
     Notification: typeof import('./../layouts/management/notification/Notification.vue')['default']

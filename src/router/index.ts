@@ -68,7 +68,7 @@ router.beforeEach(async (to, from) => {
   document.title = typeof to.meta.title === 'string' ? 'e-Libra: ' + my.value?.role?.charAt(0).toUpperCase() + my.value?.role?.slice(1) + ' | ' + to.meta.title : 'e-Libra: The ISU-1 Library Management and Resource Monitoring System'
 
   if (maintenance) {
-    return { name: 'ServiceUnavailable' }
+    return { name: 'error.503' }
   }
 
   if (requiresAuth && !accessRoles.split(',').includes(String(my.value?.role ?? ''))) {

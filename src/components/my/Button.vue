@@ -3,7 +3,7 @@
     <Spinner class="absolute" v-if="loading" />
 
     <Icon :icon="leftIcon" v-if="leftIcon" :class="['mr-1.5', props.loading && 'invisible']" />
-    <span class="flex justify-center items-center gap-1.5" :class="[props.loading && 'invisible']"><slot /></span>
+    <span class="flex justify-center items-center w-full gap-1.5" :class="[props.loading && 'invisible']"><slot /></span>
     <Icon :icon="rightIcon" v-if="rightIcon" :class="['ml-1.5', props.loading && 'invisible']" />
   </component>
 </template>
@@ -44,7 +44,7 @@ const buttonAs = computed(() => {
 const btnClass = computed(() => {
   const variants: Record<Variants, string> = {
     primary: 'border border-primary bg-primary text-primary-foreground hover:bg-primary-hover',
-    default: 'border-transparent bg-default text-default-foreground hover:bg-default-hover',
+    default: 'bg-default text-default-foreground hover:bg-default-hover',
     info: 'border-info bg-info text-info-foreground hover:bg-info-hover',
     success: 'border-success bg-success text-success-foreground hover:bg-success-hover',
     danger: 'border-danger bg-danger text-danger-foreground hover:bg-danger-hover',
@@ -64,7 +64,7 @@ const btnClass = computed(() => {
     text: 'focus:text-primary ',
   }
 
-  const border = props.variant === 'text' ? 'border-transparent' : 'border'
+  const border = props.variant === 'text' ? '' : 'border'
 
   const disabled = props.disabled || props.loading ? 'opacity-75 cursor-not-allowed' : 'cursor-pointer'
   const design = variants[props.variant ?? 'text']

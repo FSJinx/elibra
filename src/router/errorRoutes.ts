@@ -11,9 +11,9 @@ export const errorRoutes = [
     component: () => import('@/app/error/Forbidden.vue'),
   },
   {
-    path: '/create-account',
-    name: 'create',
+    path: '/maintenance',
+    name: 'error.503',
     meta: { requiresFlow: true },
-    component: () => import('@/app/error/Forbidden.vue'),
+    component: () => import('@/app/error/ServiceUnavailable.vue'),
   },
 ]

@@ -8,7 +8,7 @@
 
     <!-- Input Container -->
     <div class="flex flex-col w-full gap-1">
-      <div class="relative flex shrink min-w-50 items-center bg-background/50 w-full border transition-colors h-10 overflow-hidden focus-within:ring-4" :class="[radiusClass, error ? 'border-danger focus-within:border-danger focus-within:ring-danger/20' : 'border-border focus-within:ring-primary-soft focus-within:border-primary/50']">
+      <div class="relative flex shrink min-w-50 items-center bg-background w-full border transition-colors h-10 overflow-hidden focus-within:ring-4" :class="[radiusClass, error ? 'border-danger focus-within:border-danger focus-within:ring-danger/20' : 'border-border focus-within:ring-primary-soft focus-within:border-primary/50']">
         <!-- Slot para sa Prefix Icon (Optional) -->
         <slot name="prefix" />
 
