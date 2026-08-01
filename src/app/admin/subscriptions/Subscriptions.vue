@@ -1,15 +1,6 @@
 <template>
-  <div class="flex flex-col w-full h-full bg-slate-50">
-    <div class="flex flex-col gap-4 border-b border-slate-200 bg-white px-5 py-5 sm:flex-row sm:items-end sm:justify-between">
-      <div class="space-y-1">
-        <h1 class="text-2xl font-bold text-slate-900">Subscriptions</h1>
-        <p class="max-w-2xl text-sm text-slate-500">Manage the university's subscriptions to online resources, journals, and digital services.</p>
-      </div>
-
-      <eButton variant="solid-hover" color="success">+ Add New</eButton>
-    </div>
-
-    <div class="flex-1 p-5">
+  <div class="flex flex-col w-full">
+    <div class="flex-1">
       <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
         <div class="flex items-center justify-between border-b border-slate-200 px-5 py-4">
           <div>

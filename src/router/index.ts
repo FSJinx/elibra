@@ -57,6 +57,8 @@ router.beforeEach(async (to, from) => {
   const my = computed(() => auth?.user)
   const accessRoles = String(role ?? '')
 
+  // console.log(matched)
+
   if (auth.token && !auth.isAuthenticated) {
     await auth.getUser()
   }
@@ -68,7 +70,9 @@ router.beforeEach(async (to, from) => {
   document.title = typeof to.meta.title === 'string' ? 'e-Libra: ' + my.value?.role?.charAt(0).toUpperCase() + my.value?.role?.slice(1) + ' | ' + to.meta.title : 'e-Libra: The ISU-1 Library Management and Resource Monitoring System'
 
   if (maintenance) {
-    return { name: 'error.503' }
+    // Some logic that triggers a popup showing that the page is under maintenance
+
+    return false
   }
 
   if (requiresAuth && !accessRoles.split(',').includes(String(my.value?.role ?? ''))) {

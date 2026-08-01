@@ -1,5 +1,5 @@
 <template>
-  <svg class="inline" viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg" :height="height ?? width" :width="width" :class="[color]">
+  <svg class="inline size-[1.5em]" viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg" :class="[color]">
     <rect width="190.055" height="49.0959" transform="matrix(0.830985 0.556294 -0.829066 0.559151 43.0684 100.286)" fill="currentColor" />
     <rect width="128.877" height="49.2363" transform="matrix(0.830985 0.556294 0 1 52.9047 177.602)" fill="currentColor" />
     <rect width="112.297" height="49.2363" transform="matrix(-0.830985 0.556294 0 1 253.317 186.826)" fill="currentColor" />
@@ -13,13 +13,10 @@
 
 <script setup lang="ts">
 interface Icon {
-  width: string
-  height?: string
   color?: string
 }
 
 const props = withDefaults(defineProps<Icon>(), {
-  width: '32',
   color: 'currentColor',
 })
 </script>
