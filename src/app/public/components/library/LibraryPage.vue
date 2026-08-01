@@ -23,8 +23,6 @@
 </template>
 
 <script setup lang="ts">
-import Header from '@/layouts/Headers.vue'
-import { ref } from 'vue'
 
 const routes = ref([
   { label: 'Collections', description: 'Browse our hundreds and thousands of collections in our OPAC.', icon: 'Library', path: 'OPAC' },
