@@ -32,7 +32,11 @@ const router = createRouter({
     ...librarianRoutes,
 
     // Error Routes
-    ...errorRoutes,
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'error.404',
+      component: { render: () => null },
+    },
   ],
 
   scrollBehavior(to, from, savedPosition) {
@@ -53,6 +57,7 @@ router.beforeEach(async (to, from) => {
   const maintenance = matched.find((route) => route.meta.maintenance)?.meta.maintenance
 
   const auth = authStore()
+  const error = useError()
   const { goHome } = useAuth()
   const my = computed(() => auth?.user)
   const accessRoles = String(role ?? '')
@@ -67,17 +72,25 @@ router.beforeEach(async (to, from) => {
     goHome()
   }
 
-  document.title = typeof to.meta.title === 'string' ? 'e-Libra: ' + my.value?.role?.charAt(0).toUpperCase() + my.value?.role?.slice(1) + ' | ' + to.meta.title : 'e-Libra: The ISU-1 Library Management and Resource Monitoring System'
-
   if (maintenance) {
     // Some logic that triggers a popup showing that the page is under maintenance
-
+    error.maintenance()
     return false
   }
 
-  if (requiresAuth && !accessRoles.split(',').includes(String(my.value?.role ?? ''))) {
-    return { name: 'error.403' }
+  if (to.name === 'error.404') {
+    console.log('Wala kayong pupuntahan maem.')
+    error.notFound(to.fullPath)
+    return
   }
+
+  if (requiresAuth && !accessRoles.split(',').includes(String(my.value?.role ?? ''))) {
+    error.forbidden()
+    router.resolve(from)
+    return false
+  }
+
+  document.title = typeof to.meta.title === 'string' ? 'e-Libra: ' + my.value?.role?.charAt(0).toUpperCase() + my.value?.role?.slice(1) + ' | ' + to.meta.title : 'e-Libra: The ISU-1 Library Management and Resource Monitoring System'
 })
 
 export default router

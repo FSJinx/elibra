@@ -24,6 +24,7 @@ declare global {
   const defineStore: typeof import('pinia').defineStore
   const effectScope: typeof import('vue').effectScope
   const errorRoutes: typeof import('./router/errorRoutes').errorRoutes
+  const export: typeof import('./composables/useError').export
   const getActivePinia: typeof import('pinia').getActivePinia
   const getCurrentInstance: typeof import('vue').getCurrentInstance
   const getCurrentScope: typeof import('vue').getCurrentScope
@@ -76,6 +77,7 @@ declare global {
   const shallowReadonly: typeof import('vue').shallowReadonly
   const shallowRef: typeof import('vue').shallowRef
   const sizes: typeof import('./composables/useType').sizes
+  const state: typeof import('./composables/useError').state
   const storeToRefs: typeof import('pinia').storeToRefs
   const systemStore: typeof import('./stores/systemStore').systemStore
   const toRaw: typeof import('vue').toRaw
@@ -90,6 +92,7 @@ declare global {
   const useClickOutside: typeof import('./composables/useClickOutside').useClickOutside
   const useCssModule: typeof import('vue').useCssModule
   const useCssVars: typeof import('vue').useCssVars
+  const useError: typeof import('./composables/useError').default
   const useId: typeof import('vue').useId
   const useLink: typeof import('vue-router').useLink
   const useModel: typeof import('vue').useModel
@@ -208,6 +211,7 @@ declare module 'vue' {
     readonly useClickOutside: UnwrapRef<typeof import('./composables/useClickOutside')['useClickOutside']>
     readonly useCssModule: UnwrapRef<typeof import('vue')['useCssModule']>
     readonly useCssVars: UnwrapRef<typeof import('vue')['useCssVars']>
+    readonly useError: UnwrapRef<typeof import('./composables/useError')['default']>
     readonly useId: UnwrapRef<typeof import('vue')['useId']>
     readonly useLink: UnwrapRef<typeof import('vue-router')['useLink']>
     readonly useModel: UnwrapRef<typeof import('vue')['useModel']>

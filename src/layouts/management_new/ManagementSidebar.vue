@@ -4,10 +4,10 @@
       <!-- Header Logo -->
       <div class="flex items-center gap-3 p-5 border-b border-border/50">
         <div class="size-10 rounded-lg bg-primary flex items-center justify-center text-primary-foreground">
-          <Logo width="18" />
+          <Logo class="text-xs" />
         </div>
         <div>
-          <h1 class="text-xl font-bold tracking-tight text-primary">e-Libra</h1>
+          <h1 class="text-lg font-bold tracking-tight text-primary">e-Libra</h1>
           <p class="text-xs text-muted font-medium">Isabela State University ILMS</p>
         </div>
       </div>

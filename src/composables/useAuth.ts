@@ -4,6 +4,10 @@ const errorMessage = ref<string | null>(null)
 
 export function useAuth() {
   const auth = authStore()
+  const user = {
+    ...auth.user,
+    isAuthenticated: auth.isAuthenticated,
+  }
 
   function goHome() {
     const routes: Record<string, string> = {
@@ -13,14 +17,8 @@ export function useAuth() {
       default: 'home',
     }
 
-    console.log(auth.user?.role as string)
-
     const roleKey = (auth.user?.role as string) || 'default'
     return router.push({ name: routes[roleKey] })
-  }
-
-  function user() {
-    return auth.user
   }
 
   async function login({ username = null, password = null }: { username?: string | null; password?: string | null } = {}) {
@@ -62,12 +60,12 @@ export function useAuth() {
 
   return {
     // States
+    user,
     loading,
     errorMessage,
 
     // Actions
     login,
     goHome,
-    user,
   }
 }
