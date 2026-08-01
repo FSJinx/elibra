@@ -7,6 +7,9 @@
 */
 
 
+.bg-backdrop {
+  z-index: 1999;
+}
 
 .modal-wrapper {
   z-index: 2000;
