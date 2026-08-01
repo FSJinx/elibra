@@ -25,7 +25,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
 
 const steps = [1, 2, 3, 4, 5]
 const current = ref(1)

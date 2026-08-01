@@ -12,7 +12,7 @@
 
       <div class="flex items-center gap-2 px-5 py-3">
         <input name="academic-query" id="academic-query" type="text" class="w-md px-4 h-11 bg-slate-50 border border-slate-300 rounded-md" placeholder="Search by title, call number, researcher" />
-        <eButton class="" variant="solid-hover" color="success">+ Create New></eButton>
+        <Button class="" color="success">+ Create New></Button>
       </div>
 
       <div class="overflow-x-auto">
@@ -58,10 +58,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import eButton from '../../../components/my/Button.vue/index.js'
-import Icon from '../../../components/my/Icon.vue/index.js'
-
 const academicRecords = [
   {
     id: 1,

@@ -6,7 +6,7 @@
   --primary: lab(50% -47.74 25.84);
   --primary-hover: color-mix(in oklab, var(--primary) 90%, var(--primary-foreground) 10%);
   --primary-foreground: var(--snow);
-  --primary-soft: color-mix(in oklab, var(--primary) 5%, transparent);
+  --primary-soft: color-mix(in oklab, var(--primary) 10%, transparent);
   --primary-soft-hover: color-mix(in oklab, var(--primary) 20%, transparent);
   --primary-soft-foreground: var(--primary);
 

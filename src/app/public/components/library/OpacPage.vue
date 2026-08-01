@@ -160,9 +160,7 @@
 </template>
 
 <script setup lang="ts">
-import Header from '@/layouts/Headers.vue'
 import { ArrowRight, BookOpen, Clock3, Filter, Search, ShoppingBag, Sparkles } from '@lucide/vue'
-import { ref } from 'vue'
 
 const query = ref('')
 

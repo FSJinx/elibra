@@ -29,9 +29,6 @@
 </template>
 
 <script setup lang="ts">
-import images from '@/assets/images'
-import router from '@/router'
-import { ref } from 'vue'
 
 const query = ref('')
 

@@ -1,0 +1,141 @@
+/* =========================================================
+   1. BASE STYLING
+   ========================================================= */
+[data-title]:not([data-title='']),
+[data-title-top]:not([data-title-top='']),
+[data-title-bottom]:not([data-title-bottom='']),
+[data-title-left]:not([data-title-left='']),
+[data-title-right]:not([data-title-right='']) {
+  position: relative;
+  cursor: pointer;
+}
+
+/* Base Tooltip Styling (::after) */
+[data-title]:not([data-title=''])::after,
+[data-title-top]:not([data-title-top=''])::after,
+[data-title-bottom]:not([data-title-bottom=''])::after,
+[data-title-left]:not([data-title-left=''])::after,
+[data-title-right]:not([data-title-right=''])::after {
+  position: absolute;
+
+  /* Modern Tooltip Styling */
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  padding: 5px 12px;
+  max-width: max-content;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  /* Smooth Fade & Scale Animation */
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    visibility 0.2s;
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* Dynamic Content Assignment */
+[data-title]::after {
+  content: attr(data-title);
+}
+[data-title-top]::after {
+  content: attr(data-title-top);
+}
+[data-title-bottom]::after {
+  content: attr(data-title-bottom);
+}
+[data-title-left]::after {
+  content: attr(data-title-left);
+}
+[data-title-right]::after {
+  content: attr(data-title-right);
+}
+
+/* Base Hover Effect (May 0.75s Delay) */
+[data-title]:not([data-title='']):hover::after,
+[data-title-top]:not([data-title-top='']):hover::after,
+[data-title-bottom]:not([data-title-bottom='']):hover::after,
+[data-title-left]:not([data-title-left='']):hover::after,
+[data-title-right]:not([data-title-right='']):hover::after {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0.75s;
+}
+
+/* =========================================================
+   2. POSITIONS & ANIMATIONS
+   ========================================================= */
+
+/* --- TOP --- */
+[data-title-top]::after {
+  bottom: 100%;
+  left: 50%;
+  margin-bottom: 8px;
+  transform: translateX(-50%) translateY(-4px);
+}
+
+[data-title-top]:hover::after {
+  transform: translateX(-50%) translateY(0);
+}
+
+/* --- BOTTOM (Default data-title AT data-title-bottom) --- */
+[data-title]::after,
+[data-title-bottom]::after {
+  top: 100%;
+  left: 50%;
+  margin-top: 8px;
+  transform: translateX(-50%) translateY(4px);
+}
+
+[data-title]:hover::after,
+[data-title-bottom]:hover::after {
+  transform: translateX(-50%) translateY(0);
+}
+
+/* --- LEFT --- */
+[data-title-left]::after {
+  right: 100%;
+  top: 50%;
+  margin-right: 8px;
+  transform: translateY(-50%) translateX(-4px);
+}
+
+[data-title-left]:hover::after {
+  transform: translateY(-50%) translateX(0);
+}
+
+/* --- RIGHT --- */
+[data-title-right]::after {
+  left: 100%;
+  top: 50%;
+  margin-left: 8px;
+  transform: translateY(-50%) translateX(4px);
+}
+
+[data-title-right]:hover::after {
+  transform: translateY(-50%) translateX(0);
+}
+
+
+/* =========================================================
+   3. SAFETY NET: ABSOLUTE HIDE ON EMPTY ATTRIBUTES
+   ========================================================= */
+[data-title='']::after,
+[data-title-top='']::after,
+[data-title-bottom='']::after,
+[data-title-left='']::after,
+[data-title-right='']::after,
+[data-title='']::before,
+[data-title-top='']::before,
+[data-title-bottom='']::before,
+[data-title-left='']::before,
+[data-title-right='']::before {
+  display: none !important;
+}

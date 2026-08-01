@@ -7,11 +7,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import IconButton from '@/components/ui/IconButton.vue'
-import { useCampus } from '@/stores/campusCache'
-import router from '@/router'
 
 const route = useRoute()
 

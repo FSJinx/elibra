@@ -111,8 +111,6 @@
 </template>
 
 <script setup lang="ts">
-import images from '@/assets/images'
-import { ref } from 'vue'
 
 const items = ref([
   { title: 'Research Methods in Library Science', authors: ['Reign', 'Eugene', 'Jef'], item_type: 'book', description: 'This is a sample description for a book that is on the shelf.' },

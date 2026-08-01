@@ -34,8 +34,6 @@ import MainLayout from '@/layouts/MainLayout.vue'
 const auth = authStore()
 const user = computed(() => auth?.user)
 
-console.log(router)
-
 const path = computed(() => {
   if (auth?.isAuthenticated) {
     if (user.value?.role === 'admin') {
