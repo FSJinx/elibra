@@ -10,7 +10,7 @@
     <div class="flex flex-col w-full gap-1">
       <div class="relative flex shrink min-w-50 items-center bg-background w-full border transition-colors h-10 overflow-hidden focus-within:ring-4" :class="[radiusClass, error ? 'border-danger focus-within:border-danger focus-within:ring-danger/20' : 'border-border focus-within:ring-primary-soft focus-within:border-primary/50']">
         <!-- Slot para sa Prefix Icon (Optional) -->
-        <slot name="prefix" />
+        <Icon :icon="leftIcon" v-if="leftIcon" class="ml-3"/>
 
         <input :id="id" :name="id" v-model="model" :type="inputType" :placeholder="inputPlaceholder" :required="required" :disabled="disabled" :autocomplete="autocomplete" class="px-4 w-full h-full bg-transparent transition-all duration-150 focus:outline-none disabled:cursor-not-allowed" />
 
@@ -50,6 +50,8 @@ interface Props {
   required?: boolean
   disabled?: boolean
   enableClear?: boolean
+  leftIcon?: string
+  rightIcon?: string
   error?: boolean
   errorMessage?: string
 }

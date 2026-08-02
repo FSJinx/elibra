@@ -8,12 +8,7 @@
       </div>
 
       <div class="flex items-end gap-2 justify-end ml-auto">
-        <Button class="bg-background border border-border w-75 justify-between">
-          <div class="w-full flex justify-between items-center font-light px-2 text-sm">
-            <p>Search</p>
-            <p><Icon icon="component" /> + K</p>
-          </div>
-        </Button>
+        <ManagementSearch />
         <Button class="bg-background border border-border">
           <Icon icon="bell" />
         </Button>
@@ -25,6 +20,8 @@
 </template>
 
 <script setup lang="ts">
+import ManagementSearch from '@/layouts/management_new/ManagementSearch.vue'
+
 const route = useRoute()
 const auth = authStore()
 </script>
