@@ -1,16 +1,13 @@
 <template>
-  <Button class="bg-background border border-border justify-between w-75" @click="searchModal?.open()">
-    <div class="w-full flex items-center gap-2 font-medium px-2 text-sm">
-      <Icon icon="search" />
-      <p>Search</p>
-      <p class="ml-auto"><Icon icon="component" /> + K</p>
-    </div>
+  <Button variant="default" class="justify-between w-75" left-icon="search" @click="searchModal?.open()">
+    Search
+    <p class="ml-auto shrink-0"><Icon icon="component" /> + K</p>
   </Button>
 
   <Modal ref="searchModal" position="top" size="normal" :has-inputs="searchQuery.length > 0">
-    <h1 class="flex items-center gap-2 mb-1 tracking-tight"><Icon icon="settings" /> System Settings</h1>
+    <!-- <h1 class="flex items-center gap-2 mb-1 tracking-tight"><Icon icon="settings" /> System Settings</h1> -->
     <div class="flex items-center gap-2">
-      <Input class="border-0" id="system-search" placeholder="Search" left-icon="search" v-model="searchQuery" enable-clear ref="searchInput" />
+      <Input class="border-0" id="system-search" placeholder="Search for system settings..." left-icon="settings" v-model="searchQuery" enable-clear ref="searchInput" />
       <Button class="border border-border" data-title="Clear and Close" @click="clearClose"><Icon icon="arrow-left" /></Button>
     </div>
 

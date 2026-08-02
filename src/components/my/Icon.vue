@@ -1,5 +1,5 @@
 <template>
-  <component :is="icon" class="size-[1em] inline-block shrink-0 leading-0"></component>
+  <component :is="icon" class="size-[1.25em] m-0 inline-block shrink-0"></component>
 </template>
 
 <script setup lang="ts">

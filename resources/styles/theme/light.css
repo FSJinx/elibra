@@ -4,13 +4,13 @@
   *   ========================== */
   /* --background: oklch(98.4% 0.003 247.858); */
   --background: #fff;
-  --background-secondary: color-mix(in oklab, var(--background) 97%, var(--foreground) 3%);
-  --background-tertiary: color-mix(in oklab, var(--background) 90%, var(--foreground) 10%);
-  --background-inverse: var(--foreground);
+  --secondary: color-mix(in oklab, var(--background) 97%, var(--foreground) 3%);
+  --tertiary: color-mix(in oklab, var(--background) 90%, var(--foreground) 10%);
+  --inverse: var(--foreground);
 
-  --background-container: var(--white);
-  --background-container-secondary: oklch(0.9524 0.0013 286.3678);
-  --background-container-tertiary: oklch(0.9373 0.0013 286.3706);
+  --container: var(--white);
+  --container-secondary: oklch(0.9524 0.0013 286.3678);
+  --container-tertiary: oklch(0.9373 0.0013 286.3706);
 
   /*  ========================== 
   *   Foreground

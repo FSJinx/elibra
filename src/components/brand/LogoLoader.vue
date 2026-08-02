@@ -1,5 +1,5 @@
 <template>
-  <div class="logo-loader-wrapper text-primary">
+  <div class="logo-loader-wrapper text-primary size-full">
     <Logo class="logo-loader text-[3em]" />
     <p>Please wait while we prepare your tools...</p>
   </div>

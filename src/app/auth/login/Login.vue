@@ -13,8 +13,8 @@
 
     <!-- Form -->
     <form @submit.prevent="handleSubmit" class="flex flex-col space-y-3">
-      <Input id="username" label="Username" label-position="top" type="username" v-model="credentials.username" required />
-      <Input id="password" label="Password" label-position="top" type="password" v-model="credentials.password" required />
+      <Input id="username" label="Username" label-position="top" type="username" v-model="credentials.username" required :disabled="loading"/>
+      <Input id="password" label="Password" label-position="top" type="password" v-model="credentials.password" required :disabled="loading"/>
 
       <Button as="link" :to="{ name: '' }" size="small" variant="text" class="ml-auto text-primary">Forgot password?</Button>
       <Button variant="primary" type="submit" :loading="loading">Login</Button>

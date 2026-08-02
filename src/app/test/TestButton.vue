@@ -90,6 +90,16 @@
       <Button disabled>Text</Button>
     </div>
   </div>
+  <div class="">
+    <h1 class="section-title">Size</h1>
+    <div class="flex flex-col gap-3">
+      <Button class="text-xs" variant="default">Xsmall</Button>
+      <Button class="small" variant="default">small</Button>
+      <Button class="default" variant="default">default</Button>
+      <Button class="large" variant="default">large</Button>
+      <Button class="text-4xl" variant="default">xlarge</Button>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts"></script>

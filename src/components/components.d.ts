@@ -33,7 +33,7 @@ declare module 'vue' {
     Logo: typeof import('./brand/Logo.vue')['default']
     LogoLoader: typeof import('./brand/LogoLoader.vue')['default']
     MainLayout: typeof import('./../layouts/MainLayout.vue')['default']
-    ManagementLayout: typeof import('../layouts/management_new/ManagementLayout.vue/index.js')['default']
+    ManagementLayout: typeof import('../layouts/management/ManagementLayout.vue/index.js')['default']
     Modal: typeof import('./my/Modal.vue')['default']
     ModalLayout: typeof import('./my/ModalLayout.vue')['default']
     NewButton: typeof import('./my/Button.vue/index.js')['default']
@@ -54,5 +54,7 @@ declare module 'vue' {
     Table: typeof import('./table/Table.vue')['default']
     TableLoading: typeof import('./table/TableLoading.vue')['default']
     TableNoData: typeof import('./table/TableNoData.vue')['default']
+    Tbody: typeof import('./table/Tbody.vue')['default']
+    Thead: typeof import('./table/Thead.vue')['default']
   }
 }

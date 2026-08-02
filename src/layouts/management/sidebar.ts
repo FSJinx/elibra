@@ -20,7 +20,7 @@ export const menus = {
     management: {
       name: 'Management',
       children: [
-        { path: 'admin.subscriptions', name: 'Subscriptions', icon: 'GlobeCheck' },
+        // { path: 'admin.subscriptions', name: 'Subscriptions', icon: 'GlobeCheck' },
         { path: 'admin.campus', name: 'Campus', icon: 'Building' },
       ],
     },

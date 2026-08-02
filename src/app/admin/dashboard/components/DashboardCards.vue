@@ -2,7 +2,7 @@
   <!-- Card Parent -->
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
     <!-- Card -->
-    <div class="grid grid-cols-1 sm:text-end shrink-0 bg-background-container p-5 border border-border rounded-2xl hover:shadow-lg transition-all duration-300" v-for="card in datas" :data-title="card.data.toLocaleString() + ' ' + card.label.replace(/\b\w/g, (char) => char.toUpperCase())">
+    <div class="grid grid-cols-1 sm:text-end shrink-0 bg-container p-5 border border-border rounded-2xl hover:shadow-lg transition-all duration-300" v-for="card in datas" :data-title="card.data.toLocaleString() + ' ' + card.label.replace(/\b\w/g, (char) => char.toUpperCase())">
       <!-- Icon and Status -->
       <div class="flex items-start justify-between">
         <!-- Card Icon -->

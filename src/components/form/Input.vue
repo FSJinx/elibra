@@ -1,5 +1,5 @@
 <template>
-  <div class="form-input w-full my-2" :class="[positions.parent[labelPosition], { 'opacity-60 cursor-not-allowed': disabled }]" @focusin="active = true" @focusout="active = false" :title="required ? (label ? `${label} is required.` : 'Required field.') : `${label || ''} Input`">
+  <div class="form-input w-full" :class="[positions.parent[labelPosition], { 'opacity-60 cursor-not-allowed': disabled }]" @focusin="active = true" @focusout="active = false" :title="required ? (label ? `${label} is required.` : 'Required field.') : `${label || ''} Input`">
     <!-- Label -->
     <label v-if="label" :for="id" class="text-md shrink-0 transition-all duration-150" :class="[positions.label[labelPosition], { 'label-floating': (active || hasValue) && labelPosition === 'float' }, error ? 'text-danger' : '']">
       <span>{{ label }}</span>
@@ -7,43 +7,39 @@
     </label>
 
     <!-- Input Container -->
-    <div class="flex flex-col w-full gap-1">
-      <div class="relative flex shrink min-w-50 items-center bg-background w-full border transition-colors h-10 overflow-hidden focus-within:ring-4" :class="[radiusClass, error ? 'border-danger focus-within:border-danger focus-within:ring-danger/20' : 'border-border focus-within:ring-primary-soft focus-within:border-primary/50']">
+    <div class="flex w-full">
+      <div class="relative flex shrink-0 items-center bg-background w-full border transition-colors min-h-10 min-w-20 py-2 px-4 rounded-xl overflow-hidden focus-within:ring-4" :class="[error ? 'border-danger focus-within:border-danger focus-within:ring-danger/20' : 'border-border focus-within:ring-primary-soft focus-within:border-primary/50']">
         <!-- Slot para sa Prefix Icon (Optional) -->
-        <Icon :icon="leftIcon" v-if="leftIcon" class="ml-3"/>
+        <Icon :icon="leftIcon" v-if="leftIcon" class="mr-3 -ml-0.5" />
 
-        <input :id="id" :name="id" v-model="model" :type="inputType" :placeholder="inputPlaceholder" :required="required" :disabled="disabled" :autocomplete="autocomplete" class="px-4 w-full h-full bg-transparent transition-all duration-150 focus:outline-none disabled:cursor-not-allowed" />
+        <input :id="id" :name="id" v-model="model" :type="inputType" :placeholder="inputPlaceholder" :required="required" :disabled="disabled" :autocomplete="autocomplete" class="w-full bg-transparent transition-all duration-150 focus:outline-none disabled:cursor-not-allowed" />
 
         <!-- Clear Button -->
-        <Button v-if="enableClear && hasValue && !disabled" type="button" size="small" aria-label="Clear input" @click="model = ''">
+        <span class="h-full px-4 cursor-pointer -mr-4" v-if="enableClear && hasValue && !disabled && inputType !== 'password'" type="button" size="small" aria-label="Clear input" @click="model = ''">
           <Icon icon="X" name="Clear Input" />
-        </Button>
+        </span>
 
         <!-- Toggle Password Button -->
-        <Button v-if="type === 'password' && !disabled" type="button" size="small" :aria-label="show ? 'Hide password' : 'Show password'" @click="show = !show">
+        <span class="h-full px-4 cursor-pointer -mr-4" v-if="type === 'password' && !disabled" type="button" size="small" :aria-label="show ? 'Hide password' : 'Show password'" @click="show = !show">
           <Icon variant="default-hover" :icon="show ? 'Eye' : 'EyeClosed'" :name="show ? 'Hide Password' : 'Show Password'" />
-        </Button>
+        </span>
 
         <!-- Slot para sa Suffix Icon (Optional) -->
-        <slot name="suffix" />
+        <Icon :icon="rightIcon" v-if="rightIcon" class="ml-4 -mr-0.5" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-
 type Types = 'text' | 'number' | 'password' | 'email' | 'tel' | 'username' | 'hidden'
 type Autocomplete = 'on' | 'off' | string
 type LabelPosition = 'float' | 'default' | 'top'
-type Radius = 'none' | 'sm' | 'md' | 'lg' | 'xl' | 'full'
 
 interface Props {
   id: string
   label?: string
   type?: Types
-  radius?: Radius
   autocomplete?: Autocomplete
   placeholder?: string
   labelPosition?: LabelPosition
@@ -54,6 +50,7 @@ interface Props {
   rightIcon?: string
   error?: boolean
   errorMessage?: string
+  size?: Sizes
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -66,6 +63,7 @@ const props = withDefaults(defineProps<Props>(), {
   enableClear: false,
   error: false,
   errorMessage: '',
+  size: 'default',
 })
 
 const model = defineModel<string | number>({ default: '' })
@@ -81,19 +79,6 @@ const inputType = computed(() => {
     return show.value ? 'text' : 'password'
   }
   return props.type
-})
-
-// Dynamic border radius mapper
-const radiusClass = computed(() => {
-  const map: Record<Radius, string> = {
-    none: 'rounded-none',
-    sm: 'rounded-sm',
-    md: 'rounded-md',
-    lg: 'rounded-lg',
-    xl: 'rounded-xl',
-    full: 'rounded-full',
-  }
-  return map[props.radius] ?? 'rounded-xl'
 })
 
 const positions = computed(() => ({

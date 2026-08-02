@@ -5,6 +5,6 @@ export const sizes: Record<Sizes, string> = {
   xsmall: 'text-xs',
   small: 'text-sm',
   default: 'text-base',
-  large: 'text-lg',
-  xlarge: 'text-xl',
+  large: 'text-xl',
+  xlarge: 'text-3xl',
 }

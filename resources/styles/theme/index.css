@@ -6,19 +6,20 @@
 /* System Colors */
 @theme {
   --color-background: var(--background);
-  --color-background-secondary: var(--background-secondary);
-  --color-background-tertiary: var(--background-tertiary);
-  --color-background-inverse: var(--background-inverse);
+  --color-secondary: var(--secondary);
+  --color-tertiary: var(--tertiary);
+  --color-inverse: var(--inverse);
 
-  --color-background-container: var(--background-container);
-  --color-background-container-secondary: var(--background-container-secondary);
-  --color-background-container-tertiary: var(--background-container-tertiary);
+  --color-container: var(--container);
+  --color-container-secondary: var(--container-secondary);
+  --color-container-tertiary: var(--container-tertiary);
 
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
   --color-link: var(--link);
 
   --color-default: var(--default);
+  --color-default-soft: var(--default-soft);
   --color-default-hover: var(--default-hover);
   --color-default-foreground: var(--default-foreground);
 
