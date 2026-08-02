@@ -6,6 +6,7 @@ use App\Http\Requests\StoreCampusRequest;
 use App\Http\Requests\UpdateCampusRequest;
 use App\Models\Campus;
 use App\Services\CacheService;
+use App\Services\QueryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Throwable;
@@ -14,9 +15,13 @@ class CampusController extends Controller
 {
     public function index(Request $request)
     {
-        $search = trim($request->query('query', '')); // Get the search query from the request, default to an empty string if not provided
-        $sort = $request->query('sort', []); // Get the sort fields from the request, default to an empty array if not provided
-        $order = strtolower($request->query('order', 'asc')); // Get the sort order from the request, default to 'asc' if not provided
+          [
+            'search' => $search,
+            'sort' => $sort,
+            'order' => $order,
+            'page' => $page,
+            'per_page' => $perPage,
+        ] = QueryService::filters($request);
 
         $campuses = CacheService::remember(
             CacheService::CAMPUSES,
