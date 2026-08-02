@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreBranchRequest;
 use App\Http\Requests\UpdateBranchRequest;
 use App\Services\CacheService;
+use App\Services\QueryService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -15,31 +17,91 @@ class BranchController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $user = $this->user();
+        $user = $request->user();
 
-        // if user os authenticated and a library admin
-        if ($user && $user->isAdmin()) {
-            $campusId = $user->campus_id;
+        [
+            'search' => $search,
+            'sort' => $sort,
+            'order' => $order,
+            'page' => $page,
+            'per_page' => $perPage,
+        ] = QueryService::filters($request);
 
-            // para ma return lahat ng branch based sa users campus
-            $branches = Branch::where('campus_id', $campusId)->get();
+        $campusId = null;
+        $isGuest = is_null($user);
 
-        } else {
-            //returns all the branch
-            $branches = Branch::get([
-                'name', 
-                'contact_info', 
-                'email', 
-                'opening_hour', 
-                'closing_hour',
-                
-                'logo_id',
-                'branch_head_id',
-                'campus_id'
-            ]);
-        }
+        $campusId = ($user && !$user->isSuperAdmin())
+            ? $user->campus_id
+            : null;
+
+        $branches = CacheService::remember(
+            CacheService::BRANCHES,
+            [
+                'campus_id' => $campusId,
+                'search' => $search,
+                'sort' => $sort,
+                'order' => $order,
+                'page' => $page,
+                'per_page' => $perPage,
+            ],
+            now()->addHour(),
+            function () use ($isGuest, $campusId, $search, $sort, $order, $perPage) {
+
+                $allowedSortFields = [
+                    'name',
+                    'email',
+                    'opening_hour',
+                    'created_at',
+                ];
+
+                $query = Branch::query();
+
+                // Admin: only branches from their campus
+                if (!is_null($campusId)) {
+                    $query->where('campus_id', $campusId);
+                } elseif ($isGuest) {
+                    
+                        $query->select([
+                            'name',
+                            'contact_info',
+                            'email',
+                            'opening_hour',
+                            'closing_hour',
+                            'logo_id',
+                            'branch_head_id',
+                            'campus_id',
+                        ]);
+
+                }
+
+                // Search
+                if ($search) {
+                    $query->where(function ($q) use ($search) {
+                        $q->where('name', 'LIKE', "%{$search}%")
+                            ->orWhere('email', 'LIKE', "%{$search}%")
+                            ->orWhere('contact_info', 'LIKE', "%{$search}%");
+                    });
+                }
+
+                // Sort
+                if (is_array($sort) && !empty($sort)) {
+                    foreach ($sort as $field) {
+                        if (in_array($field, $allowedSortFields, true)) {
+                            $query->orderBy(
+                                $field,
+                                $order === 'desc' ? 'desc' : 'asc'
+                            );
+                        }
+                    }
+                } else {
+                    $query->orderBy('name');
+                }
+
+                return $query->paginate($perPage);
+            }
+        );
 
         return $this->response(
             'success',
@@ -48,7 +110,6 @@ class BranchController extends Controller
             200
         );
     }
-
     /**
      * Show the form for creating a new resource.
      */

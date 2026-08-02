@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProgramsRequest;
 use App\Http\Requests\UpdateProgramsRequest;
 use App\Services\CacheService;
+use App\Services\QueryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Throwable;
@@ -20,9 +21,13 @@ class ProgramsController extends Controller
     {
         $user = $request->user();
 
-        $search = trim($request->query('query', ''));
-        $sort = $request->query('sort', []);
-        $order = strtolower($request->query('order', 'asc'));
+   [
+            'search' => $search,
+            'sort' => $sort,
+            'order' => $order,
+            'page' => $page,
+            'per_page' => $perPage,
+        ] = QueryService::filters($request);
 
         $campusId = null;
         $departmentId = null;
@@ -49,9 +54,11 @@ class ProgramsController extends Controller
                 'search' => $search,
                 'sort' => $sort,
                 'order' => $order,
+                'page' => $page,
+                'per_page' => $perPage,
             ],
             now()->addMinutes(10),
-            function () use ($search, $sort, $order, $campusId, $departmentId){
+            function () use ($search, $sort, $order, $campusId, $departmentId, $page, $perPage)     {
 
                 $allowedSortFields = ['name', 'code' ];
                 $query = Programs::query();
@@ -84,7 +91,7 @@ class ProgramsController extends Controller
                 } else {
                     $query->orderBy('name');
                 }
-                    return $query->get();
+                    return $query->paginate($perPage);
             }
         );
 

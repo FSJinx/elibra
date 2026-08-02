@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDepartmentRequest;
 use App\Http\Requests\UpdateDepartmentRequest;
 use App\Services\CacheService;
+use App\Services\QueryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Throwable;
@@ -20,9 +21,13 @@ class DepartmentController extends Controller
     {
         $user = $request->user();
 
-        $search = trim($request->query('query', ''));
-        $sort = $request->query('sort', []);
-        $order = strtolower($request->query('order', 'asc'));
+        [
+            'search' => $search,
+            'sort' => $sort,
+            'order' => $order,
+            'page' => $page,
+            'per_page' => $perPage,
+        ] = QueryService::filters($request);
 
         $campusId = null;
 
