@@ -3,7 +3,7 @@ export const adminRoutes = [
     path: '/admin',
     meta: { requiresAuth: true, role: 'admin' },
     redirect: { name: 'admin' },
-    component: () => import('@/layouts/management_new/ManagementLayout.vue'),
+    component: () => import('@/layouts/management/ManagementLayout.vue'),
     children: [
       {
         path: '',
@@ -36,15 +36,9 @@ export const adminRoutes = [
           title: 'Campus Management',
           description: "Manage your campus' online subscriptions.",
           permission: '',
-          maintenance: true,
+          maintenance: false,
         },
         component: () => import('@/app/admin/campus/Campus.vue'),
-      },
-      {
-        // Campus Details with List of Branches
-        path: 'campus/id=:id',
-        name: 'admin.campus.details',
-        component: () => import('@/app/admin/campus/details/Details.vue'),
       },
     ],
   },

@@ -1,8 +1,8 @@
 <template>
   <Teleport to="body">
     <Transition name="fade">
-      <div v-if="isOpen" class="modal-wrapper fixed inset-0 flex items-center justify-center bg-black/60 h-screen overflow-y-auto p-10" @click.self="close">
-        <div class="modal relative bg-background rounded-xl shadow-xl border border-gray-200 select-none" :class="[sizeClasses, positionClasses, position]" ref="modalRef">
+      <div v-if="isOpen" class="modal-wrapper fixed inset-0 flex items-center justify-center bg-backdrop h-screen overflow-y-auto p-10" :class="[hasInputs ? '' : 'cursor-pointer']" @click.self="close">
+        <div class="modal relative bg-background rounded-2xl shadow-2xl border border-border select-none" :class="[sizeClasses, positionClasses, position]" ref="modalRef">
           <!-- <X class="absolute top-0 right-0 m-3" icon="X" @click="close" /> -->
 
           <!-- Modal Header -->
@@ -58,7 +58,7 @@ const positionClasses = computed(() => {
 const sizeClasses = computed(() => {
   const sizes: Record<ModalSize, string> = {
     small: 'w-full sm:max-w-100',
-    normal: 'w-full sm:max-w-130',
+    normal: 'w-full sm:max-w-150',
     large: 'w-full sm:max-w-200',
     xlarge: 'w-full sm:max-w-250',
     '2xlarge': 'w-full sm:max-w-300',

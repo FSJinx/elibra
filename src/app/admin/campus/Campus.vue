@@ -1,42 +1,37 @@
 <template>
-  <div class="flex flex-col h-full overflow-hidden">
-    <div class="p-5 pb-0">
-      <h2 class="text-2xl font-semibold text-slate-900">ISU Campuses</h2>
-      <p class="text-sm text-slate-500">Browse and manage the campuses in ISU.</p>
+  <section class="flex flex-col gap-5 overflow-hidden mb-3">
+    <div class="flex items-center justify-end gap-2 w-full">
+      <Input id="campus-query" left-icon="search" class="max-w-85" placeholder="Search by name, code, address" />
+
+      <Button variant="primary">Create New</Button>
     </div>
+  </section>
 
-    <div class="flex items-center justify-end gap-2 px-5 py-3 border-b border-slate-200">
-      <EBadge class="mr-auto border border-slate-300 bg-slate-50" radius="pill">{{ campus.campuses.length }} records</EBadge>
-      <FormSearchInput id="campus-query" class="w-md bg-slate-50" v-model="query" radius="cube" placeholder="Search campus by name, code, or address" />
 
-      <eButton @click="newCampusModal?.open()" variant="solid-hover" color="success"> + Add New </eButton>
-      <IconButton icon="RefreshCcw" name="Refresh" @click="campus.refresh" />
-    </div>
+  <Table>
+    <Thead>
+      <tr>
+        <th>Campus Name</th>
+        <th>Code</th>
+        <th>Address</th>
+        <th class="text-center">Actions</th>
+      </tr>
+    </Thead>
 
-    <CampusTable :data="campuses" :loading="campus.loading" @view="campus.view" />
-  </div>
-
-  <CampusModal ref="newCampusModal"></CampusModal>
+    <Tbody>
+      <tr v-for="i in 20" :key="i">
+        <td>Campus Branch {{ i }}</td>
+        <td>CB-00{{ i }}</td>
+        <td>123 University Avenue, Metro City</td>
+        <td class="text-center">
+          <Button class="text-xs py-1 px-3 border border-border">View</Button>
+        </td>
+      </tr>
+    </Tbody>
+  </Table>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
-import CampusTable from '@/app/admin/campus/table/CampusTable.vue'
-import type NewCampusModal from '@/app/admin/campus/modal/NewCampusModal.vue'
-
-const campus = useCampus()
-const campuses = computed(() => campus?.campuses)
-const query = ref<string>('')
-const newCampusModal = ref<InstanceType<typeof NewCampusModal> | null>(null)
-
-watch(query, (value) => {
-  campus.campuses = []
-  campus.fetchCampuses(query.value)
-})
-
-onMounted(() => {
-  campus.fetchCampuses(query.value)
-})
 </script>
 
 <style scoped></style>

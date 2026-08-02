@@ -14,10 +14,12 @@ declare global {
   const authStore: typeof import('./stores/authStore').authStore
   const axios: typeof import('./plugins/axios').default
   const backendRoute: typeof import('./plugins/axios').backendRoute
-  const campusStore: typeof import('./stores/campusCache').campusStore
+  const campusStore: typeof import('./stores/campusStore').campusStore
+  const campuses: typeof import('./stores/campusStore').campuses
   const computed: typeof import('vue').computed
   const createApp: typeof import('vue').createApp
   const createPinia: typeof import('pinia').createPinia
+  const currentCampus: typeof import('./stores/campusStore').currentCampus
   const customRef: typeof import('vue').customRef
   const defineAsyncComponent: typeof import('vue').defineAsyncComponent
   const defineComponent: typeof import('vue').defineComponent
@@ -39,6 +41,7 @@ declare global {
   const isRef: typeof import('vue').isRef
   const isShallow: typeof import('vue').isShallow
   const librarianRoutes: typeof import('./router/librarianRoutes').default
+  const loading: typeof import('./stores/campusStore').loading
   const mapActions: typeof import('pinia').mapActions
   const mapGetters: typeof import('pinia').mapGetters
   const mapState: typeof import('pinia').mapState
@@ -86,6 +89,7 @@ declare global {
   const toValue: typeof import('vue').toValue
   const triggerRef: typeof import('vue').triggerRef
   const unref: typeof import('vue').unref
+  const use: typeof import('./stores/campusStore').use
   const useAttrs: typeof import('vue').useAttrs
   const useAuth: typeof import('./composables/useAuth').useAuth
   const useCampus: typeof import('./composables/useCampus').useCampus
@@ -119,8 +123,8 @@ declare global {
   export type { User } from './stores/authStore'
   import('./stores/authStore')
   // @ts-ignore
-  export type { CampusInfo } from './stores/campusCache'
-  import('./stores/campusCache')
+  export type { CampusInfo } from './stores/campusStore'
+  import('./stores/campusStore')
 }
 
 // for vue template auto import
@@ -136,7 +140,7 @@ declare module 'vue' {
     readonly authStore: UnwrapRef<typeof import('./stores/authStore')['authStore']>
     readonly axios: UnwrapRef<typeof import('./plugins/axios')['default']>
     readonly backendRoute: UnwrapRef<typeof import('./plugins/axios')['backendRoute']>
-    readonly campusStore: UnwrapRef<typeof import('./stores/campusCache')['campusStore']>
+    readonly campusStore: UnwrapRef<typeof import('./stores/campusStore')['campusStore']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
     readonly createApp: UnwrapRef<typeof import('vue')['createApp']>
     readonly createPinia: UnwrapRef<typeof import('pinia')['createPinia']>

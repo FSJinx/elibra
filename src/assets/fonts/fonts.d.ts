@@ -13,3 +13,5 @@ declare module '@fontsource/inter/500.css'
 declare module '@fontsource/inter/600.css'
 declare module '@fontsource/inter/700.css'
 declare module '@fontsource/inter/800.css'
+
+declare module '@openfonts/baskervville_latin'

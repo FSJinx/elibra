@@ -1,9 +1,11 @@
 <template>
-  <DashboardCards />
+  <div class="">
+    <DashboardCards />
 
-  <LogoLoader />
+    <LogoLoader />
 
-  
+    <div class="h-screen bg-danger"></div>
+  </div>
 </template>
 
 <script setup lang="ts">

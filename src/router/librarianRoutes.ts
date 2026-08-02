@@ -3,7 +3,7 @@ const librarianRoutes = [
     path: '/librarian',
     meta: { requiresAuth: true, role: 'librarian' },
     redirect: { name: 'librarian' },
-    component: () => import('@/layouts/management/Layout.vue'),
+    component: () => import('@/layouts/management/ManagementLayout.vue'),
     children: [
       {
         path: '',
