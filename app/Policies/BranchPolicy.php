@@ -21,20 +21,15 @@ class BranchPolicy
      */
     public function view(User $user, Branch $branch): bool
     {
-        // return $user->hasPrimaryRole('library admin');
         return false;
     }
 
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user, Branch $branch): bool
+    public function create(User $user): bool
     {
-        if(!$user->isAdmin()){
-            return false;
-        }
-
-        return $user->campus_id === $branch->campus_id;
+        return $user->isAdmin();
     }
 
     /**
@@ -42,12 +37,7 @@ class BranchPolicy
      */
     public function update(User $user, Branch $branch): bool
     {
-        // Librarians can only update branches in their own campus
-        if(!$user->isAdmin()){
-            return false;
-        }
-        
-        return $user->campus_id === $branch->campus_id;
+        return $user->isAdmin();
     }
 
     /**
@@ -55,7 +45,7 @@ class BranchPolicy
      */
     public function delete(User $user, Branch $branch): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
     /**
@@ -63,7 +53,7 @@ class BranchPolicy
      */
     public function restore(User $user, Branch $branch): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
     /**

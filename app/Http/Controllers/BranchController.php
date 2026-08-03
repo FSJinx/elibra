@@ -125,8 +125,12 @@ class BranchController extends Controller
     {
         DB::beginTransaction();
         try {
+            $data = $request->validated();
+            if($request->user()->isAdmin()){
+                $data['campus_id'] = $request->user()->campus_id;
+            }
 
-            $branch = Branch::create($request->validated());
+            $branch = Branch::create($data);
 
             DB::commit();
             CacheService::invalidate(CacheService::BRANCHES);

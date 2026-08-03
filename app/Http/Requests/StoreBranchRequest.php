@@ -12,33 +12,37 @@ use Illuminate\Validation\Rule;
 class StoreBranchRequest extends BaseRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return $this->user()->can('create', Branch::class);
-    }
+         * Determine if the user is authorized to make this request.
+         */
+        public function authorize(): bool
+        {
+            return $this->user()->can('create', Branch::class);
+        }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
-     */
-    public function rules(): array
-    {
-        return [
-            'name' => [ 'required', 'string', 'max:255' ],
-            'contact_info' => [ 'nullable', 'string', 'max:255' ],
-            'email' => [ 'nullable', 'email', 'max:255', Rule::unique('branches', 'email') ],
+        /**
+         * Get the validation rules that apply to the request.
+         *
+         * @return array<string, ValidationRule|array<mixed>|string>
+         */
+        public function rules(): array
+        {
+            return [
+                'name' => [ 'required', 'string', 'max:255' ],
+                'contact_info' => [ 'nullable', 'string', 'max:255' ],
+                'email' => [ 'nullable', 'email', 'max:255', Rule::unique('branches', 'email') ],
 
-            'opening_hour' => [ 'nullable', 'date_format:H:i', 'required_with:closing_hour', ],
-            'closing_hour' => [ 'nullable', 'date_format:H:i', 'required_with:opening_hour', 'after:opening_hour' ],
+                'opening_hour' => [ 'nullable', 'date_format:H:i', 'required_with:closing_hour', ],
+                'closing_hour' => [ 'nullable', 'date_format:H:i', 'required_with:opening_hour', 'after:opening_hour' ],
 
-            'logo_id' => [ 'nullable', Rule::exists((new Media)->getTable(), 'id') ],
-            'branch_head_id' => [ 'nullable',  Rule::exists((new Librarian)->getTable(), 'id') ],
-            'campus_id' => [ 'required', Rule::exists((new Campus)->getTable(), 'id') ]
-        ];
-    }
+                'logo_id' => [ 'nullable', Rule::exists((new Media)->getTable(), 'id') ],
+                'branch_head_id' => [ 'nullable',  Rule::exists((new Librarian)->getTable(), 'id') ],
+                // 'campus_id' => [ 'required', Rule::exists((new Campus)->getTable(), 'id') ]
+                'campus_id' => [
+                    Rule::requiredIf(fn () => $this->user()->isSuperAdmin()),
+                    Rule::exists('campuses', 'id'),
+                ],
+            ];
+        }
 
     /**
      * Get custom messages for validator errors.

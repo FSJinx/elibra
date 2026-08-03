@@ -157,7 +157,7 @@ Route::group(['prefix' => '/branch'], function () {
     });
 
     Route::group(['prefix' => '/create'], function () {
-        Route::post('', [BranchController::class, 'store'])->middleware('jwt.auth', 'role:super admin, admin', 'throttle:write');
+        Route::post('', [BranchController::class, 'store'])->middleware('jwt.auth', 'role:super admin,admin', 'throttle:write');
     });
 
     Route::group(['prefix' => '/update'], function () {
@@ -199,15 +199,15 @@ Route::group(['prefix' => '/branch_section'], function () {
     });
 
     Route::group(['prefix' => '/create'], function () {
-        Route::post('', [BranchSectionController::class, 'store'])->middleware('jwt.auth', 'role:super admin', 'throttle:write');
+        Route::post('', [BranchSectionController::class, 'store'])->middleware('jwt.auth', 'role:super admin,admin', 'throttle:write');
     });
 
     Route::group(['prefix' => '/update'], function () {
-        Route::put('{branchSection}', [BranchSectionController::class, 'update'])->middleware('jwt.auth', 'role:super admin', 'throttle:write');
+        Route::put('{branchSection}', [BranchSectionController::class, 'update'])->middleware('jwt.auth', 'role:super admin,admin', 'throttle:write');
     });
 
     Route::group(['prefix' => '/delete'], function () {
-        Route::delete('{branchSection}', [BranchSectionController::class, 'destroy'])->middleware('jwt.auth', 'role:super admin', 'throttle:delete');
+        Route::delete('{branchSection}', [BranchSectionController::class, 'destroy'])->middleware('jwt.auth', 'role:super admin,admin', 'throttle:delete');
     });
 
 });
