@@ -1,8 +1,6 @@
 <template>
   <section class="relative flex-1 flex shrink-0 rounded-xl border border-border overflow-y-auto scrollbar-none">
-    <div class="flex-1" v-if="loading">
-      <LogoLoader />
-    </div>
+    <Tload v-if="loading" />
 
     <table class="w-full text-left table-fixed text-sm border-collapse">
       <slot />
@@ -11,8 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import TableNoData from '@/components/table/TableNoData.vue'
-import TableLoading from '@/components/table/TableLoading.vue'
+import Tload from '@/components/table/Tload.vue'
 
 interface Props {
   loading?: boolean

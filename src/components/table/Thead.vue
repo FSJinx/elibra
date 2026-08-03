@@ -1,5 +1,5 @@
 <template>
-  <thead class="sticky top-0 -translate-y-1 bg-slate-50 shadow-[0_1px_0_0_var(--color-border)] z-10">
+  <thead class="sticky top-0 bg-slate-50 shadow-[0_1px_0_0_var(--color-border)] z-10">
     <slot />
   </thead>
 </template>
