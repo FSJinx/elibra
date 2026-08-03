@@ -41,6 +41,8 @@ const props = withDefaults(defineProps<Props>(), {
   size: 'normal',
 })
 
+const emit = defineEmits(['show'])
+
 const isOpen = ref(false)
 const modalRef = ref<HTMLElement | null>(null)
 const timer = ref<ReturnType<typeof setTimeout> | null>(null)
@@ -100,6 +102,8 @@ watch(isOpen, (opened) => {
   } else {
     document.body.style.removeProperty('overflow')
   }
+
+  emit('show', isOpen.value)
 })
 
 defineExpose({

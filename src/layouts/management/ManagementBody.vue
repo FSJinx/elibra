@@ -3,7 +3,9 @@
     <!-- Main Body Header -->
     <div class="sticky top-0 flex flex-col gap-5 lg:flex-row bg-background">
       <div class="flex items-center gap-3">
-        <Button variant="default" icon="sidebar-close" class="hover:drop-shadow"></Button>
+        <Button variant="default" @click="system.toggleSidebar" class="group hover:drop-shadow">
+          <Icon :icon="system.sidebar ? 'sidebar-close' : 'sidebar-open'" class="transition-all duration-300" :class="system.sidebar ? 'group-hover:-translate-x-0.5 ' : 'group-hover:translate-x-0.5 '" />
+        </Button>
         <p class="text-primary uppercase tracking-wide font-medium text-shadow-md text-shadow-primary/15">Good day, {{ auth.user?.first_name }}!👋</p>
       </div>
 
@@ -13,7 +15,7 @@
       </div>
     </div>
 
-    <div class="p-2 my-5 space-y-1">
+    <div class="p-2 mb-5 space-y-1">
       <h1 class="text-2xl font-semibold">{{ route.meta.title ?? 'Untitled' }}</h1>
       <p class="text-sm text-muted">{{ route.meta.description ?? `This is you're today's preview for ${route.meta.title}.` }}</p>
     </div>
@@ -32,6 +34,7 @@ import ManagementSearchButton from '@/layouts/management/ManagementSearchButton.
 
 const route = useRoute()
 const auth = authStore()
+const system = systemStore()
 </script>
 
 <style scoped></style>

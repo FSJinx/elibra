@@ -12,7 +12,7 @@
         <!-- Slot para sa Prefix Icon (Optional) -->
         <Icon :icon="leftIcon" v-if="leftIcon" class="mr-3 -ml-0.5" />
 
-        <input :id="id" :name="id" v-model="model" :type="inputType" :placeholder="inputPlaceholder" :required="required" :disabled="disabled" :autocomplete="autocomplete" class="w-full bg-transparent transition-all duration-150 focus:outline-none disabled:cursor-not-allowed" />
+        <input ref="input" :id="id" :name="id" v-model="model" :type="inputType" :placeholder="inputPlaceholder" :required="required" :disabled="disabled" :autocomplete="autocomplete" class="w-full tracking-tight bg-transparent transition-all duration-150 focus:outline-none disabled:cursor-not-allowed" />
 
         <!-- Clear Button -->
         <span class="h-full px-4 cursor-pointer -mr-4" v-if="enableClear && hasValue && !disabled && inputType !== 'password'" type="button" size="small" aria-label="Clear input" @click="model = ''">
@@ -51,6 +51,7 @@ interface Props {
   error?: boolean
   errorMessage?: string
   size?: Sizes
+  focus?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -64,11 +65,13 @@ const props = withDefaults(defineProps<Props>(), {
   error: false,
   errorMessage: '',
   size: 'default',
+  focus: false,
 })
 
 const model = defineModel<string | number>({ default: '' })
 const active = ref(false)
 const show = ref(false)
+const input = ref<HTMLInputElement | null>(null)
 
 // Safe value check
 const hasValue = computed(() => String(model.value ?? '').length > 0)
@@ -102,6 +105,12 @@ const inputPlaceholder = computed(() => {
     return !props.label ? (props.placeholder ?? '') : ''
   }
   return props.placeholder ?? props.label ?? ''
+})
+
+onMounted(() => {
+  if (props.focus) {
+    input.value?.focus()
+  }
 })
 </script>
 

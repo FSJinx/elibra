@@ -59,7 +59,7 @@ api.interceptors.response.use(
       } catch (refreshError) {
         my.clearUser()
         // elpop.error('Session expired, please re-login to continue.')
-        router.push({ name: 'Home' })
+        router.push({ name: 'home' })
         return Promise.reject(refreshError)
       } finally {
         refreshed = false

@@ -7,31 +7,25 @@
     </div>
   </section>
 
-
   <Table>
     <Thead>
       <tr>
-        <th>Campus Name</th>
+        <th class="text-left">Campus Name</th>
         <th>Code</th>
         <th>Address</th>
-        <th class="text-center">Actions</th>
       </tr>
     </Thead>
 
     <Tbody>
       <tr v-for="i in 20" :key="i">
-        <td>Campus Branch {{ i }}</td>
+        <td class="text-left">Campus Branch {{ i }}</td>
         <td>CB-00{{ i }}</td>
         <td>123 University Avenue, Metro City</td>
-        <td class="text-center">
-          <Button class="text-xs py-1 px-3 border border-border">View</Button>
-        </td>
       </tr>
     </Tbody>
   </Table>
 </template>
 
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
 <style scoped></style>

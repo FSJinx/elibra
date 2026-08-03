@@ -1,5 +1,5 @@
 <template>
-  <section class="relative flex-1 flex shrink-0 rounded-xl overflow-y-auto scrollbar-none">
+  <section class="relative flex-1 flex shrink-0 rounded-xl border border-border overflow-y-auto scrollbar-none">
     <div class="flex-1" v-if="loading">
       <LogoLoader />
     </div>

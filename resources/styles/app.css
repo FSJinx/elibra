@@ -45,12 +45,12 @@ body {
 @layer components {
   /* ============ TABLE CELLS ============ */
   th {
-    @apply px-5 py-5 font-semibold text-primary;
+    @apply p-5 font-semibold text-primary text-center;
   }
   td {
-    @apply px-5 py-2;
+    @apply px-5 py-4 text-center;
   }
   tbody tr {
-    @apply border-b border-border cursor-pointer font-light hover:font-medium hover:bg-primary-soft hover:text-primary-soft-foreground transition-all duration-300;
+    @apply border-b border-border cursor-pointer font-light hover:font-medium hover:bg-primary-soft/75 hover:text-primary-soft-foreground transition-all duration-300;
   }
 }
