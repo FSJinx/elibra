@@ -6,6 +6,9 @@ use App\Models\BranchSection;
 use App\Http\Requests\StoreBranchSectionRequest;
 use App\Http\Requests\UpdateBranchSectionRequest;
 use App\Models\Branch;
+use App\Services\CacheService;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class BranchSectionController extends Controller
 {
@@ -16,28 +19,24 @@ class BranchSectionController extends Controller
     {
         $user = $this->user();
 
-        // if user os authenticated and a library admin
-        if ($user && $user->hasPrimaryRole('library admin')) {
-            $campusId = $user->librarian->branch->campus_id;
-
-            $branchSections = BranchSection::where('branch_id', $campusId)->get();
-
+        if ($user && $user->isAdmin()) {
+            $branchSections = BranchSection::whereHas('branch', function ($query) use ($user) {
+                    $query->where('campus_id', $user->campus_id);
+                })->get();
+        } elseif ($user) {
+            $branchSections = BranchSection::whereHas('branch', function ($query) use ($user) {
+                    $query->where('campus_id', $user->campus_id);
+                })->get();
         } else {
-            //returns all the branch sections
-            $branchSections = BranchSection::get([
-                'section_head_id',
-                'branch_id',
-                'section_id'
-            ]);
+            $branchSections = BranchSection::all(); 
         }
-        
+
         return $this->response(
             'success',
             'Branch Sections retrieved successfully',
             $branchSections->toArray(),
             200
         );
-        
     }
 
     /**
@@ -53,18 +52,26 @@ class BranchSectionController extends Controller
      */
     public function store(StoreBranchSectionRequest $request)
     {
-        $branch = Branch::findOrFail($request->branch_id);
 
-        $this->authorize('create', [BranchSection::class, $branch]);
+        DB::beginTransaction();
+        try {
 
-        $branchSection = BranchSection::create($request->validated());
+            $branchSection = BranchSection::create($request->validated());
 
-        return $this->response(
-            'success',
-            'Branch Section created successfully',
-            $branchSection->toArray(),
-            201
-        );
+            DB::commit();
+            CacheService::invalidate(CacheService::BRANCH_SECTIONS);
+
+            return $this->response(
+                'success',
+                'Branch Section created successfully',
+                $branchSection->toArray(),
+                201
+            );
+        } catch (Throwable $e) {
+            DB::rollBack();
+
+            throw $e;
+        }
     }
 
     /**
@@ -89,20 +96,29 @@ class BranchSectionController extends Controller
     public function update(UpdateBranchSectionRequest $request, BranchSection $branchSection)
     {
 
-        $branch = $request->filled('branch_id')  // This will check if the request contains a new  branch_id
-                ? Branch::findOrFail($request->branch_id) // Kung yes, get that branch from db
-                : $branchSection->branch; //if not, use the BranchSection's current branch.
+        // $branch = $request->filled('branch_id')  // This will check if the request contains a new  branch_id
+        //         ? Branch::findOrFail($request->branch_id) // Kung yes, get that branch from db
+        //         : $branchSection->branch; //if not, use the BranchSection's current branch.
 
-        $this->authorize('update', [$branchSection, $branch]); // gamit array if multiple parameter galing policy
+        DB::beginTransaction();
+        try {
+            $branchSection->update($request->validated());
 
-        $branchSection->update($request->validated());
+            DB::commit();
+            CacheService::invalidate(CacheService::BRANCH_SECTIONS);
 
-        return $this->response(
-            'success',
-            'Branch Section updated successfully',
-            $branchSection->toArray(),
-            200
-        );
+            return $this->response(
+                'success',
+                'Branch Section updated successfully',
+                $branchSection->toArray(),
+                200
+            );
+
+        } catch (Throwable $e) {
+            DB::rollBack();
+
+            throw $e;
+        }
 
     }
 
@@ -111,16 +127,26 @@ class BranchSectionController extends Controller
      */
     public function destroy(BranchSection $branchSection)
     {
-        $this->authorize('delete', $branchSection);
 
-        $branchSection->delete();
+        DB::beginTransaction();
+        try {
+            $branchSection->delete();
 
-        return $this->response(
-            'success',
-            'Branch Section deleted successfully.',
-            [],
-            200
-        );
+            DB::commit();
+            CacheService::invalidate(CacheService::BRANCH_SECTIONS);
+
+            return $this->response(
+                'success',
+                'Branch Section deleted successfully',
+                null,
+                200
+            );
+
+        } catch (Throwable $e) {
+            DB::rollBack();
+
+            throw $e;
+        }
 
     }
 }

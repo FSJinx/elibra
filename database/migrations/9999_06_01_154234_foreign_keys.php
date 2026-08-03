@@ -18,10 +18,11 @@ return new class extends Migration
             $table->foreign('campus_id')->references('id')->on('campuses')->onDelete('cascade');
         });
 
-        // Sections Up
+        // Branch Sections Up
         Schema::table('branch_sections', function (Blueprint $table) {
             $table->foreign('section_id')->references('id')->on('sections')->onDelete('cascade');
             $table->foreign('branch_id')->references('id')->on('branches')->onDelete('cascade');
+            $table->unique(['branch_id', 'section_id']);
         });
 
         // Departments Up
@@ -156,10 +157,11 @@ return new class extends Migration
             $table->dropForeign(['campus_id']);
         });
 
-        // Sections Down
+        // Branch Sections Down
         Schema::table('branch_sections', function (Blueprint $table) {
             $table->dropForeign(['branch_id']);
             $table->dropForeign(['section_id']);
+             $table->dropUnique(['branch_id', 'section_id']);
         });
 
         // Branches Down

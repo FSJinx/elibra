@@ -30,15 +30,11 @@ class BranchSectionPolicy
      */
     public function create(User $user, Branch $branch): bool // i will pass the campus_id here, para dito ma validate
     {
-        if($user->isAdmin()){
-            return true;
-        }
-
-        if (! $user->hasPrimaryRole('library admin')) {
+        if(!$user->isAdmin()){
             return false;
         }
 
-        return $branch->campus_id === $user->librarian->branch->campus_id;
+        return $branch->campus_id === $user->campus_id;
     }
 
     /**
@@ -46,39 +42,35 @@ class BranchSectionPolicy
      */
     public function update(User $user, BranchSection $branchSection, Branch $branch): bool
     {
-        if($user->isAdmin()){
-            return true;
-        }
-
-        if(! $user->hasPrimaryRole('library admin')){
+        if(!$user->isAdmin()){
             return false;
         }
 
-        return $branch->campus_id === $user->librarian->branch->campus_id;
+        return $branch->campus_id === $user->campus_id;
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, BranchSection $branchSection): bool
+    public function delete(User $user, BranchSection $branchSection, Branch $branch): bool
     {
-        if($user->isAdmin()){
-            return true;
-        }
-
-        if(! $user->hasPrimaryRole('library admin')){
+        if(!$user->isAdmin()){
             return false;
         }
 
-        return $branchSection->branch->campus_id === $user->librarian->branch->campus_id;
+        return $branch->campus_id === $user->campus_id;
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, BranchSection $branchSection): bool
+    public function restore(User $user, BranchSection $branchSection, Branch $branch): bool
     {
-        return false;
+        if(!$user->isAdmin()){
+            return false;
+        }
+
+        return $branch->campus_id === $user->campus_id;
     }
 
     /**
