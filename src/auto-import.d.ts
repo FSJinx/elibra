@@ -15,18 +15,15 @@ declare global {
   const axios: typeof import('./plugins/axios').default
   const backendRoute: typeof import('./plugins/axios').backendRoute
   const campusStore: typeof import('./stores/campusStore').campusStore
-  const campuses: typeof import('./stores/campusStore').campuses
   const computed: typeof import('vue').computed
   const createApp: typeof import('vue').createApp
   const createPinia: typeof import('pinia').createPinia
-  const currentCampus: typeof import('./stores/campusStore').currentCampus
   const customRef: typeof import('vue').customRef
   const defineAsyncComponent: typeof import('vue').defineAsyncComponent
   const defineComponent: typeof import('vue').defineComponent
   const defineStore: typeof import('pinia').defineStore
   const effectScope: typeof import('vue').effectScope
   const errorRoutes: typeof import('./router/errorRoutes').errorRoutes
-  const export: typeof import('./composables/useError').export
   const getActivePinia: typeof import('pinia').getActivePinia
   const getCurrentInstance: typeof import('vue').getCurrentInstance
   const getCurrentScope: typeof import('vue').getCurrentScope
@@ -41,7 +38,6 @@ declare global {
   const isRef: typeof import('vue').isRef
   const isShallow: typeof import('vue').isShallow
   const librarianRoutes: typeof import('./router/librarianRoutes').default
-  const loading: typeof import('./stores/campusStore').loading
   const mapActions: typeof import('pinia').mapActions
   const mapGetters: typeof import('pinia').mapGetters
   const mapState: typeof import('pinia').mapState
@@ -66,9 +62,9 @@ declare global {
   const onUpdated: typeof import('vue').onUpdated
   const onWatcherCleanup: typeof import('vue').onWatcherCleanup
   const patronRoutes: typeof import('./router/patronRoutes').default
+  const preload: typeof import('./composables/data/usePreload').preload
   const provide: typeof import('vue').provide
   const publicRoutes: typeof import('./router/publicRoutes').default
-  const radi: typeof import('./composables/useType').radi
   const reactive: typeof import('vue').reactive
   const readonly: typeof import('vue').readonly
   const ref: typeof import('vue').ref
@@ -80,7 +76,6 @@ declare global {
   const shallowReadonly: typeof import('vue').shallowReadonly
   const shallowRef: typeof import('vue').shallowRef
   const sizes: typeof import('./composables/useType').sizes
-  const state: typeof import('./composables/useError').state
   const storeToRefs: typeof import('pinia').storeToRefs
   const systemStore: typeof import('./stores/systemStore').systemStore
   const toRaw: typeof import('vue').toRaw
@@ -89,17 +84,17 @@ declare global {
   const toValue: typeof import('vue').toValue
   const triggerRef: typeof import('vue').triggerRef
   const unref: typeof import('vue').unref
-  const use: typeof import('./stores/campusStore').use
   const useAttrs: typeof import('vue').useAttrs
-  const useAuth: typeof import('./composables/useAuth').useAuth
-  const useCampus: typeof import('./composables/useCampus').useCampus
-  const useClickOutside: typeof import('./composables/useClickOutside').useClickOutside
+  const useAuth: typeof import('./composables/data/useAuth').useAuth
+  const useCampus: typeof import('./composables/data/useCampus').useCampus
+  const useClickOutside: typeof import('./composables/utils/useClickOutside').useClickOutside
   const useCssModule: typeof import('vue').useCssModule
   const useCssVars: typeof import('vue').useCssVars
   const useError: typeof import('./composables/useError').default
   const useId: typeof import('vue').useId
   const useLink: typeof import('vue-router').useLink
   const useModel: typeof import('vue').useModel
+  const useParser: typeof import('./composables/utils/useParse').useParser
   const useRoute: typeof import('vue-router').useRoute
   const useRouter: typeof import('vue-router').useRouter
   const useSlots: typeof import('vue').useSlots
@@ -188,6 +183,7 @@ declare module 'vue' {
     readonly onUpdated: UnwrapRef<typeof import('vue')['onUpdated']>
     readonly onWatcherCleanup: UnwrapRef<typeof import('vue')['onWatcherCleanup']>
     readonly patronRoutes: UnwrapRef<typeof import('./router/patronRoutes')['default']>
+    readonly preload: UnwrapRef<typeof import('./composables/data/usePreload')['preload']>
     readonly provide: UnwrapRef<typeof import('vue')['provide']>
     readonly publicRoutes: UnwrapRef<typeof import('./router/publicRoutes')['default']>
     readonly reactive: UnwrapRef<typeof import('vue')['reactive']>
@@ -210,15 +206,16 @@ declare module 'vue' {
     readonly triggerRef: UnwrapRef<typeof import('vue')['triggerRef']>
     readonly unref: UnwrapRef<typeof import('vue')['unref']>
     readonly useAttrs: UnwrapRef<typeof import('vue')['useAttrs']>
-    readonly useAuth: UnwrapRef<typeof import('./composables/useAuth')['useAuth']>
-    readonly useCampus: UnwrapRef<typeof import('./composables/useCampus')['useCampus']>
-    readonly useClickOutside: UnwrapRef<typeof import('./composables/useClickOutside')['useClickOutside']>
+    readonly useAuth: UnwrapRef<typeof import('./composables/data/useAuth')['useAuth']>
+    readonly useCampus: UnwrapRef<typeof import('./composables/data/useCampus')['useCampus']>
+    readonly useClickOutside: UnwrapRef<typeof import('./composables/utils/useClickOutside')['useClickOutside']>
     readonly useCssModule: UnwrapRef<typeof import('vue')['useCssModule']>
     readonly useCssVars: UnwrapRef<typeof import('vue')['useCssVars']>
     readonly useError: UnwrapRef<typeof import('./composables/useError')['default']>
     readonly useId: UnwrapRef<typeof import('vue')['useId']>
     readonly useLink: UnwrapRef<typeof import('vue-router')['useLink']>
     readonly useModel: UnwrapRef<typeof import('vue')['useModel']>
+    readonly useParser: UnwrapRef<typeof import('./composables/utils/useParse')['useParser']>
     readonly useRoute: UnwrapRef<typeof import('vue-router')['useRoute']>
     readonly useRouter: UnwrapRef<typeof import('vue-router')['useRouter']>
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>

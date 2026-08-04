@@ -4,6 +4,7 @@ export interface CampusInfo {
   code: string | null
   address: string | null
   heading: string | null
+  status: string | null
   created_at: string | null
   updated_at: string | null
 }
@@ -19,12 +20,13 @@ export const campusStore = defineStore('campus', () => {
   // SETTERS
   function setCampuses(data: CampusInfo[] | null) {
     campuses.value = data
+    // console.log(data);
   }
 
   function setCurrentCampus(data: CampusInfo | null) {
     currentCampus.value = data
   }
-  
+
   function setLoading(status: boolean) {
     loading.value = status
   }

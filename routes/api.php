@@ -32,8 +32,8 @@ Route::group(['prefix' => '/auth'], function () {
 
 // Public Routes
 Route::get('/try', [TestController::class, 'index']);
-
 Route::post('/upload-media', [MediaController::class, 'upload'])->middleware('jwt.auth', 'role:admin');
+
 
 //User Permission Routes
 Route::group(['prefix' => '/user-permission'], function () {

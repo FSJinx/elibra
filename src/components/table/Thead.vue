@@ -4,6 +4,16 @@
   </thead>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const slots = useSlots()
+
+const th = computed(() => {
+  const tr = slots.default?.()[0]
+
+  return tr?.children?.length ?? 0
+})
+
+provide('th', th)
+</script>
 
 <style scoped></style>

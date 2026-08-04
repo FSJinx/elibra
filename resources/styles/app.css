@@ -56,6 +56,6 @@ body {
     @apply divide-y divide-border;
   }
   tbody tr {
-    @apply cursor-pointer font-light hover:font-medium hover:bg-primary-soft hover:text-primary-soft-foreground transition-all duration-300;
+    @apply cursor-pointer hover:bg-primary-soft hover:text-primary-soft-foreground transition-all duration-300;
   }
 }

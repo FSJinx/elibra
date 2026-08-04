@@ -15,6 +15,7 @@
   --color-container-tertiary: var(--container-tertiary);
 
   --color-foreground: var(--foreground);
+  --color-foreground-secondary: var(--foreground-secondary);
   --color-muted: var(--muted);
   --color-link: var(--link);
 

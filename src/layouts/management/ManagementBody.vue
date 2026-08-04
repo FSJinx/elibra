@@ -18,7 +18,7 @@
 
       <div class="space-y-1">
         <h1 class="text-2xl font-semibold">{{ route.meta.title ?? 'Untitled' }}</h1>
-        <p class="text-sm text-muted">{{ route.meta.description ?? `This is you're today's preview for ${route.meta.title}.` }}</p>
+        <p class="text-sm text-foreground-secondary">{{ route.meta.description ?? `This is you're today's preview for ${route.meta.title}.` }}</p>
       </div>
     </div>
 

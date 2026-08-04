@@ -1,29 +1,45 @@
 <template>
-  <div class="flex items-center justify-end gap-2 w-full mb-4">
-    <Input id="campus-query" left-icon="search" class="max-w-85" placeholder="Search by name, code, address" />
-
+  <div class="flex justify-end mb-3">
     <Button variant="primary">Create New</Button>
   </div>
 
-  <Table>
+  <Table name="Campus Table" v-model="campusSearch" @refresh="refresh">
     <Thead>
       <tr>
+        <th class="w-20">ID</th>
         <th class="text-left">Campus Name</th>
         <th>Code</th>
-        <th>Address</th>
+        <th class="w-50">Status</th>
       </tr>
     </Thead>
 
-    <Tbody>
-      <tr v-for="i in 20" :key="i">
-        <td class="text-left">Campus Branch {{ i }}</td>
-        <td>CB-00{{ i }}</td>
-        <td>123 University Avenue, Metro City</td>
+    <Tbody :loading="store.loading" :columns="4">
+      <tr v-for="c in store.campuses">
+        <td>{{ c.id }}</td>
+        <td class="text-left">{{ c.name ?? 'No name' }}</td>
+        <Td :data="c.code" />
+        <td>
+          <Badge :variant="parse.status(c?.status)">{{ parse.toCapital(c.status) }}</Badge>
+        </td>
       </tr>
     </Tbody>
   </Table>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const campus = useCampus()
+const store = campusStore()
+
+const campusSearch = ref('')
+const parse = useParser()
+
+function refresh() {
+  campusSearch.value = ''
+
+  campus.fetchCampus()
+}
+
+campus.fetchCampus()
+</script>
 
 <style scoped></style>

@@ -56,20 +56,20 @@ router.beforeEach(async (to, from) => {
   const permission = matched.find((route) => route.meta.permission)?.meta.permission
   const maintenance = matched.find((route) => route.meta.maintenance)?.meta.maintenance
 
-  const auth = authStore()
+  const auth = useAuth()
+  const store = authStore()
   const error = useError()
-  const { goHome } = useAuth()
-  const my = computed(() => auth?.user)
+  const my = computed(() => store?.user)
   const accessRoles = String(role ?? '')
 
   // console.log(matched)
 
-  if (auth.token && !auth.isAuthenticated) {
-    await auth.getUser()
+  if (store.token && !store.isAuthenticated) {
+    await store.getUser()
   }
 
-  if (to.name === 'login' && auth.isAuthenticated) {
-    goHome()
+  if (to.name === 'login' && store.isAuthenticated) {
+    auth.goHome()
   }
 
   if (maintenance) {

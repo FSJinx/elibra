@@ -10,7 +10,7 @@
           </div>
           <div>
             <h1 class="text-lg font-bold tracking-tight text-primary">e-Libra</h1>
-            <p class="text-xs text-muted font-medium">Isabela State University ILMS</p>
+            <p class="text-xs text-foreground-secondary font-medium">Isabela State University ILMS</p>
           </div>
         </div>
         <!-- <ManagementSearch /> -->
@@ -19,7 +19,7 @@
       <!-- Sidebar Menu -->
       <nav class="flex-1 overflow-y-auto scrollbar-thumb-transparent hover:scrollbar-thumb-foreground/20 transition-all duration-200">
         <div class="p-3 pb-0 space-y-1" v-for="menu in filteredMenus" :key="menu.name">
-          <h6 class="font-medium tracking-normal text-muted text-sm">{{ menu.name }}</h6>
+          <h6 class="font-medium tracking-normal text-foreground-secondary text-sm">{{ menu.name }}</h6>
           <!-- Menu Children -->
           <div class="p-2 space-y-1">
             <router-link v-for="child in menu.children" :key="child.path" :to="{ name: child.path }" class="relative flex items-center gap-3.5 px-5 py-3 rounded-xl border cursor-pointer transition-all duration-200" :class="[active(child.path) ? 'text-primary bg-primary-soft hover:bg-primary-soft border-primary/25' : 'border-transparent hover:bg-default/50']" :data-title="active(child.path) ? child.name + ' (Selected)' : child.name">
