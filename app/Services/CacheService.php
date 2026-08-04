@@ -19,6 +19,11 @@ class CacheService
     public const SECTIONS = 'sections';
     public const BRANCH_SECTIONS = 'branch_sections';
 
+    public const SUBSCRIPTIONS = 'subscriptions';
+    public const SUBSCRIPTION_CREDENTIALS = 'subscription_credentials';
+
+    public const MEDIA = 'medias';
+
     
     /**
      * Cache a query using a versioned cache key.

@@ -8,6 +8,9 @@ use App\Models\SubscriptionCredential;
 use App\Models\Subscription;
 use App\Models\System;
 use App\Models\Branch;
+use App\Services\CacheService;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class SubscriptionController extends Controller
 {
@@ -29,14 +32,25 @@ class SubscriptionController extends Controller
      */
     public function store(StoreSubscriptionRequest $request)
     {
-        
-    $subscription = Subscription::create($request->validated());
+        DB::beginTransaction();
+        try {
 
-      return $this->response(
-        'success', 
-        'Subscription created successfully', 
-        $subscription->toArray(), 
-        201);
+            $subscription = Subscription::create($request->validated());
+            
+            DB::commit();
+            CacheService::invalidate(CacheService::SUBSCRIPTIONS);
+
+            return $this->response(
+                'success', 
+                'Subscription created successfully', 
+                $subscription->toArray(), 
+                200
+            );
+        } catch (Throwable $e) {
+            DB::rollBack();
+           
+            throw $e;
+        }
     }
 
     /**
@@ -51,22 +65,33 @@ class SubscriptionController extends Controller
     {
         $user = $this->user();
 
-       $accessibility = System::where('key', 'subscription_visibility')->first();
+            $accessibility = System::where('key', 'subscription_visibility')->value('value');
 
-       $query = Subscription::with('media');
+            $subscriptions = CacheService::remember(
+                CacheService::SUBSCRIPTIONS,
+                [
+                    'user' => (bool) $user,
+                    'visibility' => $accessibility,
+                ],
+                now()->addMinutes(30),
+                function () use ($user, $accessibility) {
 
-        // Show credentials unless guest + private
-        if ($user || $accessibility === 'public') {
-            $query->with('subscriptionCredentials');
-        }
+                    $query = Subscription::with('media');
 
-        $subscriptions = $query->get();
+                    if ($user || $accessibility === 'public') {
+                        $query->with('subscriptionCredentials');
+                    }
 
-        if ($subscriptions->isEmpty()) {
-            return $this->response('error', 'No subscriptions found.', null, 404);
-        }
+                    return $query->get();
+                }
+            );
 
-        return $this->response('success', 'Subscriptions retrieved successfully', $subscriptions->toArray(), 200);
+            return $this->response(
+                'success',
+                'Subscriptions retrieved successfully',
+                $subscriptions->toArray(),
+                200
+            );
     }
     /**
      * Show the form for editing the specified resource.
@@ -81,25 +106,24 @@ class SubscriptionController extends Controller
      */
     public function update(UpdateSubscriptionRequest $request, Subscription $subscription)
     {
-        $user = $this->user();
+        DB::beginTransaction();
+        try {
+            $subscription->update($request->validated());
 
-        if (!in_array($user?->role, ['admin', 'librarian'])) {
+            DB::commit();
+            CacheService::invalidate(CacheService::SUBSCRIPTIONS);
+
             return $this->response(
-                'error',
-                'You are not authorized to perform this action.',
-                null,
-                403
+                'success',
+                'Subscription updated successfully',
+                $subscription->toArray(),
+                200
             );
+        } catch (Throwable $e) {
+            DB::rollBack();
+
+            throw $e;
         }
-
-        $subscription->update($request->validated());
-
-        return $this->response(
-            'success', 
-            'Subscription updated successfully', 
-            $subscription->toArray(), 
-            200
-        );
     }
 
     /**
@@ -107,24 +131,25 @@ class SubscriptionController extends Controller
      */
     public function destroy(Subscription $subscriptionId)
     {
-        $user = $this->user();
 
-        if (!in_array($user?->role, ['admin', 'librarian'])) {
+        $this->authorize('delete', $subscriptionId);
+        DB::beginTransaction();
+        try {
+            $subscriptionId->delete();
+
+            DB::commit();
+            CacheService::invalidate(CacheService::SUBSCRIPTIONS);
+
             return $this->response(
-                'error',
-                'You are not authorized to perform this action.',
-                null,
-                403
+                'success', 
+                'Subscription deleted successfully', 
+                null, 
+                200
             );
+        } catch (Throwable $e) {
+            DB::rollBack();
+
+            throw $e;
         }
-
-        $subscriptionId->delete();
-
-        return $this->response(
-            'success', 
-            'Subscription deleted successfully', 
-            null, 
-            200
-        );
     }
 }

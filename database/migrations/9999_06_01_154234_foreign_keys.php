@@ -73,7 +73,7 @@ return new class extends Migration
         // Academics Up
         Schema::table('academics', function (Blueprint $table) {
             $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade');
-            $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');
+            $table->foreign('department_id')->references('id'   )->on('departments')->onDelete('cascade');
         });
 
         // User Permission

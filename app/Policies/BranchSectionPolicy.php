@@ -30,11 +30,9 @@ class BranchSectionPolicy
      */
     public function create(User $user, Branch $branch): bool // i will pass the campus_id here, para dito ma validate
     {
-        if(!$user->isAdmin()){
-            return false;
-        }
-
-        return $branch->campus_id === $user->campus_id;
+        return $user->isAdmin()
+            && $user->hasPermission('branch.section.create')
+            && $branch->campus_id === $user->campus_id;
     }
 
     /**
@@ -42,11 +40,9 @@ class BranchSectionPolicy
      */
     public function update(User $user, BranchSection $branchSection, Branch $branch): bool
     {
-        if(!$user->isAdmin()){
-            return false;
-        }
-
-        return $branch->campus_id === $user->campus_id;
+        return $user->isAdmin()
+            && $user->hasPermission('branch.section.update')
+            && $branch->campus_id === $user->campus_id;
     }
 
     /**
@@ -54,11 +50,9 @@ class BranchSectionPolicy
      */
     public function delete(User $user, BranchSection $branchSection, Branch $branch): bool
     {
-        if(!$user->isAdmin()){
-            return false;
-        }
-
-        return $branch->campus_id === $user->campus_id;
+        return $user->isAdmin()
+            && $user->hasPermission('branch.section.delete')
+            && $branch->campus_id === $user->campus_id;
     }
 
     /**
@@ -66,18 +60,18 @@ class BranchSectionPolicy
      */
     public function restore(User $user, BranchSection $branchSection, Branch $branch): bool
     {
-        if(!$user->isAdmin()){
-            return false;
-        }
-
-        return $branch->campus_id === $user->campus_id;
+        return $user->isAdmin()
+            && $user->hasPermission('branch.section.restore')
+            && $branch->campus_id === $user->campus_id;
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, BranchSection $branchSection): bool
+    public function forceDelete(User $user, BranchSection $branchSection, Branch $branch): bool
     {
-        return false;
+        return $user->isAdmin()
+            && $user->hasPermission('branch.section.forceDelete')
+            && $branch->campus_id === $user->campus_id;
     }
 }

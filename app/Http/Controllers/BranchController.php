@@ -125,12 +125,7 @@ class BranchController extends Controller
     {
         DB::beginTransaction();
         try {
-            $data = $request->validated();
-            if($request->user()->isAdmin()){
-                $data['campus_id'] = $request->user()->campus_id;
-            }
-
-            $branch = Branch::create($data);
+            $branch = Branch::create($request->validated());
 
             DB::commit();
             CacheService::invalidate(CacheService::BRANCHES);
@@ -197,6 +192,8 @@ class BranchController extends Controller
      */
     public function destroy(Branch $branch)
     {
+        $this->authorize('delete', $branch);
+
         DB::beginTransaction();
         try{
 

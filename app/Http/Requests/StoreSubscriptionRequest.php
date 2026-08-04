@@ -2,8 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Media;
+use App\Models\Subscription;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreSubscriptionRequest extends BaseRequest
 {
@@ -12,11 +15,7 @@ class StoreSubscriptionRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        // return true;
-        $user = $this->user();
-
-        return $user && ($user->role === 'librarian' || $user->role === 'admin');
-
+        return $this->user()->can('create', Subscription::class);
     }
 
     /**
@@ -27,11 +26,10 @@ class StoreSubscriptionRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'link' => 'required|url',
-            'thumbnail_id' => 'nullable|integer|exists:media,id',
+            'name' => [ 'required', 'string', 'max:255' ],
+            'description' => [ 'nullable', 'string' ],
+            'link' => [ 'required', 'url' ],
+            'thumbnail_id' => [ 'nullable', 'integer', Rule::exists((new Media)->getTable(), 'id') ],
         ];
-
     }
 }
