@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Media;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Foundation\Http\FormRequest;
 
 class StoreMediaRequest extends BaseRequest
 {
@@ -12,7 +12,7 @@ class StoreMediaRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user()->can('create', Media::class);
     }
 
     /**
@@ -23,8 +23,8 @@ class StoreMediaRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'image_type' => 'required|string|max:255',
+            'image' => [ 'required', 'image',  'mimes:jpg,jpeg,png,webp', 'max:2048' ],
+            'image_type' => [ 'required', 'string', 'max:255' ],
         ];
     }
 }

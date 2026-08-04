@@ -22,6 +22,8 @@ class CacheService
     public const SUBSCRIPTIONS = 'subscriptions';
     public const SUBSCRIPTION_CREDENTIALS = 'subscription_credentials';
 
+    public const MEDIA = 'medias';
+
     
     /**
      * Cache a query using a versioned cache key.

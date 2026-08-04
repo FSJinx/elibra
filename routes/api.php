@@ -33,7 +33,24 @@ Route::group(['prefix' => '/auth'], function () {
 // Public Routes
 Route::get('/try', [TestController::class, 'index']);
 
-Route::post('/upload-media', [MediaController::class, 'upload'])->middleware('jwt.auth', 'role:admin');
+// Route::post('/upload-media', [MediaController::class, 'upload'])->middleware('jwt.auth', 'role:admin');
+Route::group(['prefix' => '/media'], function () {
+    Route::group(['prefix' => '/create'], function () {
+        Route::post('', [MediaController::class, 'upload'])->middleware('jwt.auth', 'role:super admin,admin', 'throttle:write');
+    });
+
+    Route::group(['prefix' => '/get'], function () {
+        Route::get('', [MediaController::class, 'index'])->middleware('throttle:read');
+    });
+
+    Route::group(['prefix' => '/update'], function () {
+        Route::put('{media}', [MediaController::class, 'update'])->middleware('jwt.auth', 'role:super admin,admin', 'throttle:write');
+    });
+
+    Route::group(['prefix' => '/delete'], function () {
+        Route::delete('{media}', [MediaController::class, 'destroy'])->middleware('jwt.auth', 'role:super admin,admin', 'throttle:delete');
+    });
+});
 
 //User Permission Routes
 Route::group(['prefix' => '/user-permission'], function () {
