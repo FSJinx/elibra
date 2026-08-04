@@ -174,19 +174,19 @@ Route::group(['prefix' => '/branch'], function () {
 Route::group(['prefix' => '/section'], function () {
 
     Route::group(['prefix' => '/get'], function () {
-        Route::get('', [SectionsController::class, 'index']);
+        Route::get('', [SectionsController::class, 'index'])->middleware('throttle:read');
     });
 
     Route::group(['prefix' => '/create'], function () {
-        Route::post('', [SectionsController::class, 'store'])->middleware('jwt.auth', 'role:admin');
+        Route::post('', [SectionsController::class, 'store'])->middleware('jwt.auth', 'role:super admin', 'throttle:write');
     });
 
     Route::group(['prefix' => '/update'], function () {
-        Route::put('{section}', [SectionsController::class, 'update'])->middleware('jwt.auth', 'role:admin');
+        Route::put('{section}', [SectionsController::class, 'update'])->middleware('jwt.auth', 'role:super admin', 'throttle:write');
     });
 
     Route::group(['prefix' => '/delete'], function () {
-        Route::delete('{section}', [SectionsController::class, 'destroy'])->middleware('jwt.auth', 'role:admin');
+        Route::delete('{section}', [SectionsController::class, 'destroy'])->middleware('jwt.auth', 'role:super admin', 'throttle:delete');
     });
 
 });
@@ -195,7 +195,7 @@ Route::group(['prefix' => '/section'], function () {
 Route::group(['prefix' => '/branch_section'], function () {
 
     Route::group(['prefix' => '/get'], function () {
-        Route::get('', [BranchSectionController::class, 'index']);
+        Route::get('', [BranchSectionController::class, 'index'])->middleware('throttle:read');
     });
 
     Route::group(['prefix' => '/create'], function () {
