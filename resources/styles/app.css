@@ -47,12 +47,15 @@ body {
   /* ============ TABLE CELLS ============ */
   th,
   td {
-    @apply px-5 py-4;
+    @apply text-center px-5 py-4;
   }
   th {
     @apply font-semibold text-primary;
   }
+  tbody {
+    @apply divide-y divide-border;
+  }
   tbody tr {
-    @apply border-b border-border cursor-pointer font-light hover:font-medium hover:bg-primary-soft hover:text-primary-soft-foreground transition-all duration-300;
+    @apply cursor-pointer font-light hover:font-medium hover:bg-primary-soft hover:text-primary-soft-foreground transition-all duration-300;
   }
 }

@@ -1,11 +1,9 @@
 <template>
-  <section class="flex flex-col gap-5 overflow-hidden mb-3">
-    <div class="flex items-center justify-end gap-2 w-full">
-      <Input id="campus-query" left-icon="search" class="max-w-85" placeholder="Search by name, code, address" />
+  <div class="flex items-center justify-end gap-2 w-full mb-4">
+    <Input id="campus-query" left-icon="search" class="max-w-85" placeholder="Search by name, code, address" />
 
-      <Button variant="primary">Create New</Button>
-    </div>
-  </section>
+    <Button variant="primary">Create New</Button>
+  </div>
 
   <Table>
     <Thead>
