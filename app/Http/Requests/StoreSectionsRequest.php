@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Sections;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreSectionsRequest extends BaseRequest
 {
@@ -12,7 +14,7 @@ class StoreSectionsRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user()->can('create', Sections::class);
     }
 
     /**
@@ -23,7 +25,12 @@ class StoreSectionsRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique((new Sections)->getTable(), 'name'),
+            ]
         ];
     }
 
@@ -37,6 +44,7 @@ class StoreSectionsRequest extends BaseRequest
     {
         return [
             'name.required' => 'Section name is required',
+            'name.unique' => 'Section name has already been taken',
         ];
     }
 }

@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Media;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateSubscriptionRequest extends BaseRequest
 {
@@ -12,9 +14,7 @@ class UpdateSubscriptionRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        $user = $this->user();
-
-        return $user && $user->role === 'librarian';
+        return $this->user()->can('update', $this->route('subscription'));
     }
 
     /**
@@ -25,10 +25,10 @@ class UpdateSubscriptionRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'link' => 'required|url',
-            'thumbnail_id' => 'required|integer|exists:media,id',
-        ];
+            'name' => [ 'sometimes', 'required', 'string', 'max:255' ],
+            'description' => [ 'sometimes', 'nullable', 'string' ],
+            'link' => [ 'sometimes', 'required', 'url' ],
+            'thumbnail_id' => [ 'sometimes', 'nullable', 'integer', Rule::exists((new Media)->getTable(), 'id') ],
+        ]; 
     }
 }

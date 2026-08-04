@@ -29,7 +29,7 @@ class BranchPolicy
      */
     public function create(User $user): bool
     {
-        return $user->isAdmin();
+        return $user->isAdmin() && $user->hasPermission('branch.create');
     }
 
     /**
@@ -37,7 +37,7 @@ class BranchPolicy
      */
     public function update(User $user, Branch $branch): bool
     {
-        return $user->isAdmin();
+        return $user->isAdmin() && $user->hasPermission('branch.update');
     }
 
     /**
@@ -45,7 +45,7 @@ class BranchPolicy
      */
     public function delete(User $user, Branch $branch): bool
     {
-        return $user->isAdmin();
+        return $user->isAdmin() && $user->hasPermission('branch.delete');
     }
 
     /**
@@ -53,7 +53,7 @@ class BranchPolicy
      */
     public function restore(User $user, Branch $branch): bool
     {
-        return $user->isAdmin();
+        return $user->isAdmin() && $user->hasPermission('branch.restore');
     }
 
     /**
@@ -61,6 +61,6 @@ class BranchPolicy
      */
     public function forceDelete(User $user, Branch $branch): bool
     {
-        return false;
+        return $user->isAdmin() && $user->hasPermission('branch.forceDelete');
     }
 }

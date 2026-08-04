@@ -7,6 +7,8 @@ use App\Http\Requests\StoreBranchSectionRequest;
 use App\Http\Requests\UpdateBranchSectionRequest;
 use App\Models\Branch;
 use App\Services\CacheService;
+use App\Services\QueryService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -15,28 +17,76 @@ class BranchSectionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = $this->user();
 
-        if ($user && $user->isAdmin()) {
-            $branchSections = BranchSection::whereHas('branch', function ($query) use ($user) {
-                    $query->where('campus_id', $user->campus_id);
-                })->get();
-        } elseif ($user) {
-            $branchSections = BranchSection::whereHas('branch', function ($query) use ($user) {
-                    $query->where('campus_id', $user->campus_id);
-                })->get();
-        } else {
-            $branchSections = BranchSection::all(); 
-        }
+            [
+                'search' => $search,
+                'sort' => $sort,
+                'order' => $order,
+                'page' => $page,
+                'per_page' => $perPage,
+            ] = QueryService::filters($request);
 
-        return $this->response(
-            'success',
-            'Branch Sections retrieved successfully',
-            $branchSections->toArray(),
-            200
-        );
+            $campusId = $user?->campus_id;
+
+            $branchSections = CacheService::remember(
+                CacheService::BRANCH_SECTIONS,
+                [
+                    'campus_id' => $campusId,
+                    'search' => $search,
+                    'sort' => $sort,
+                    'order' => $order,
+                    'page' => $page,
+                    'per_page' => $perPage,
+                ],
+                now()->addHour(),
+                function () use ($campusId, $search, $sort, $order, $perPage) {
+
+                    $allowedSortFields = [
+                        'created_at',
+                        'branch_id',
+                        'section_id',
+                    ];
+
+                    $query = BranchSection::query()
+                        ->with(['branch', 'section']);
+
+                    // Guests can see all.
+                    // Logged-in users only see records from their campus.
+                    if (! is_null($campusId)) {
+                        $query->whereHas('branch', function ($q) use ($campusId) {
+                            $q->where('campus_id', $campusId);
+                        });
+                    }
+
+                    if ($search) {
+                        $query->whereHas('section', function ($q) use ($search) {
+                            $q->where('name', 'LIKE', "%{$search}%");
+                        });
+                    }
+
+                    if (is_array($sort) && ! empty($sort)) {
+                        foreach ($sort as $field) {
+                            if (in_array($field, $allowedSortFields, true)) {
+                                $query->orderBy($field, $order === 'desc' ? 'desc' : 'asc');
+                            }
+                        }
+                    } else {
+                        $query->latest();
+                    }
+
+                    return $query->paginate($perPage);
+                }
+            );
+
+            return $this->response(
+                'success',
+                'Branch Sections retrieved successfully',
+                $branchSections->toArray(),
+                200
+            );
     }
 
     /**
@@ -52,7 +102,6 @@ class BranchSectionController extends Controller
      */
     public function store(StoreBranchSectionRequest $request)
     {
-
         DB::beginTransaction();
         try {
 
@@ -95,11 +144,6 @@ class BranchSectionController extends Controller
      */
     public function update(UpdateBranchSectionRequest $request, BranchSection $branchSection)
     {
-
-        // $branch = $request->filled('branch_id')  // This will check if the request contains a new  branch_id
-        //         ? Branch::findOrFail($request->branch_id) // Kung yes, get that branch from db
-        //         : $branchSection->branch; //if not, use the BranchSection's current branch.
-
         DB::beginTransaction();
         try {
             $branchSection->update($request->validated());
@@ -127,6 +171,7 @@ class BranchSectionController extends Controller
      */
     public function destroy(BranchSection $branchSection)
     {
+        $this->authorize('delete', $branchSection);
 
         DB::beginTransaction();
         try {

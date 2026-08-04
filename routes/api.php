@@ -32,8 +32,25 @@ Route::group(['prefix' => '/auth'], function () {
 
 // Public Routes
 Route::get('/try', [TestController::class, 'index']);
-Route::post('/upload-media', [MediaController::class, 'upload'])->middleware('jwt.auth', 'role:admin');
 
+// Route::post('/upload-media', [MediaController::class, 'upload'])->middleware('jwt.auth', 'role:admin');
+Route::group(['prefix' => '/media'], function () {
+    Route::group(['prefix' => '/create'], function () {
+        Route::post('', [MediaController::class, 'upload'])->middleware('jwt.auth', 'role:super admin,admin', 'throttle:write');
+    });
+
+    Route::group(['prefix' => '/get'], function () {
+        Route::get('', [MediaController::class, 'index'])->middleware('throttle:read');
+    });
+
+    Route::group(['prefix' => '/update'], function () {
+        Route::put('{media}', [MediaController::class, 'update'])->middleware('jwt.auth', 'role:super admin,admin', 'throttle:write');
+    });
+
+    Route::group(['prefix' => '/delete'], function () {
+        Route::delete('{media}', [MediaController::class, 'destroy'])->middleware('jwt.auth', 'role:super admin,admin', 'throttle:delete');
+    });
+});
 
 //User Permission Routes
 Route::group(['prefix' => '/user-permission'], function () {
@@ -60,30 +77,38 @@ Route::group(['prefix' => '/user-permission'], function () {
 Route::group(['prefix' => '/item'], function () {
 
     Route::group(['prefix' => '/get'], function () {
-        Route::get('subscriptions', [SubscriptionController::class, 'getResources']);
-        Route::get('subscription-credential/{subscriptionId}', [SubscriptionCredentialController::class, 'getCredential']);
+        /* SUBSCRIPTION ROUTES */
+        Route::get('subscriptions', [SubscriptionController::class, 'getResources'])->middleware('throttle:read');
+        Route::get('subscription-credential/{subscriptionId}', [SubscriptionCredentialController::class, 'getCredential'])->middleware('throttle:read');
     });
 
     Route::group(['prefix' => '/create'], function () {
         /* SUBSCRIPTION ROUTES */
-        Route::post('subscription', [SubscriptionController::class, 'store'])->middleware('jwt.auth', 'role:librarian,admin');
-        Route::post('subscription_credential', [SubscriptionCredentialController::class, 'store'])->middleware('jwt.auth', 'role:librarian,admin');
+        Route::post('subscription', [SubscriptionController::class, 'store'])->middleware('jwt.auth', 'role:super admin', 'throttle:write');
+        Route::post('subscription_credential', [SubscriptionCredentialController::class, 'store'])->middleware('jwt.auth', 'role:super admin,admin,librarian');
 
         /* ACADEMICS ROUTES */
         Route::post('academic', [AcademicController::class, 'store'])->middleware('jwt.auth', 'role:librarian');
     });
 
     Route::group(['prefix' => '/update'], function () {
-        Route::put('subscription-credential/{subscriptionCredentialId}', [SubscriptionCredentialController::class, 'update'])->middleware('jwt.auth', 'role:librarian,admin');
+         /* SUBSCRIPTION ROUTES */
+        Route::put('subscription/{subscription}', [SubscriptionController::class, 'update'])->middleware('jwt.auth', 'role:super admin', 'throttle:write');
+        Route::put('subscription-credential/{subscriptionCredentialId}', [SubscriptionCredentialController::class, 'update'])->middleware('jwt.auth', 'role:super admin,admin,librarian');
+
+        /* ACADEMICS ROUTES */
         Route::put('academic/{academic}', [AcademicController::class, 'update'])->middleware('jwt.auth', 'role:librarian');
 
     });
 
     Route::group(['prefix' => '/delete'], function () {
-        Route::delete('subscription/{subscriptionId}', [SubscriptionController::class, 'destroy'])->middleware('jwt.auth', 'role:librarian,admin');
+        /* SUBSCRIPTION ROUTES */
+        Route::delete('subscription/{subscriptionId}', [SubscriptionController::class, 'destroy'])->middleware('jwt.auth', 'role:super admin', 'throttle:delete');
+
+        /* ACADEMICS ROUTES */
         Route::delete('academic/{academic}', [AcademicController::class, 'destroy'])->middleware('jwt.auth', 'role:librarian');
     });
-});
+    });
 
 // Campus Routes
 Route::group(['prefix' => '/campus'], function () {
@@ -111,19 +136,19 @@ Route::group(['prefix' => '/campus'], function () {
 Route::group(['prefix' => '/department'], function () {
 
     Route::group(['prefix' => '/get'], function () {
-        Route::get('', [DepartmentController::class, 'index']);
+        Route::get('', [DepartmentController::class, 'index'])->middleware('throttle:read');
     });
 
     Route::group(['prefix' => '/create'], function () {
-        Route::post('', [DepartmentController::class, 'store'])->middleware('jwt.auth', 'role:super admin');
+        Route::post('', [DepartmentController::class, 'store'])->middleware('jwt.auth', 'role:super admin,admin', 'throttle:write');
     });
 
     Route::group(['prefix' => '/update'], function () {
-        Route::put('{department}', [DepartmentController::class, 'update'])->middleware('jwt.auth', 'role:super admin');
+        Route::put('{department}', [DepartmentController::class, 'update'])->middleware('jwt.auth', 'role:super admin,admin', 'throttle:write');
     });
 
     Route::group(['prefix' => '/delete'], function () {
-        Route::delete('{department}', [DepartmentController::class, 'destroy'])->middleware('jwt.auth', 'role:super admin');
+        Route::delete('{department}', [DepartmentController::class, 'destroy'])->middleware('jwt.auth', 'role:super admin,admin', 'throttle:delete');
     });
 
 });
@@ -132,19 +157,19 @@ Route::group(['prefix' => '/department'], function () {
 Route::group(['prefix' => '/program'], function () {
 
     Route::group(['prefix' => '/get'], function () {
-        Route::get('', [ProgramsController::class, 'index']);
+        Route::get('', [ProgramsController::class, 'index'])->middleware('throttle:read');
     });
 
     Route::group(['prefix' => '/create'], function () {
-        Route::post('', [ProgramsController::class, 'store'])->middleware('jwt.auth', 'role:super admin');
+        Route::post('', [ProgramsController::class, 'store'])->middleware('jwt.auth', 'role:super admin,admin', 'throttle:write');
     });
 
     Route::group(['prefix' => '/update'], function () {
-        Route::put('{department}', [ProgramsController::class, 'update'])->middleware('jwt.auth', 'role:super admin');
+        Route::put('{program}', [ProgramsController::class, 'update'])->middleware('jwt.auth', 'role:super admin,admin', 'throttle:write');
     });
 
     Route::group(['prefix' => '/delete'], function () {
-        Route::delete('{program}', [ProgramsController::class, 'destroy'])->middleware('jwt.auth', 'role:super admin');
+        Route::delete('{program}', [ProgramsController::class, 'destroy'])->middleware('jwt.auth', 'role:super admin,admin', 'throttle:delete ');
     });
 
 });
@@ -174,19 +199,19 @@ Route::group(['prefix' => '/branch'], function () {
 Route::group(['prefix' => '/section'], function () {
 
     Route::group(['prefix' => '/get'], function () {
-        Route::get('', [SectionsController::class, 'index']);
+        Route::get('', [SectionsController::class, 'index'])->middleware('throttle:read');
     });
 
     Route::group(['prefix' => '/create'], function () {
-        Route::post('', [SectionsController::class, 'store'])->middleware('jwt.auth', 'role:admin');
+        Route::post('', [SectionsController::class, 'store'])->middleware('jwt.auth', 'role:super admin', 'throttle:write');
     });
 
     Route::group(['prefix' => '/update'], function () {
-        Route::put('{section}', [SectionsController::class, 'update'])->middleware('jwt.auth', 'role:admin');
+        Route::put('{section}', [SectionsController::class, 'update'])->middleware('jwt.auth', 'role:super admin', 'throttle:write');
     });
 
     Route::group(['prefix' => '/delete'], function () {
-        Route::delete('{section}', [SectionsController::class, 'destroy'])->middleware('jwt.auth', 'role:admin');
+        Route::delete('{section}', [SectionsController::class, 'destroy'])->middleware('jwt.auth', 'role:super admin', 'throttle:delete');
     });
 
 });
@@ -195,7 +220,7 @@ Route::group(['prefix' => '/section'], function () {
 Route::group(['prefix' => '/branch_section'], function () {
 
     Route::group(['prefix' => '/get'], function () {
-        Route::get('', [BranchSectionController::class, 'index']);
+        Route::get('', [BranchSectionController::class, 'index'])->middleware('throttle:read');
     });
 
     Route::group(['prefix' => '/create'], function () {

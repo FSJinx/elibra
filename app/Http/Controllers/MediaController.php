@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Media;
 use App\Http\Requests\StoreMediaRequest;
 use App\Http\Requests\UpdateMediaRequest;
+use App\Services\CacheService;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class MediaController extends Controller
 {
@@ -29,24 +32,33 @@ class MediaController extends Controller
      */
     public function upload(StoreMediaRequest $request)
     {
-        $this->authorize('create', Media::class);
+        DB::beginTransaction();
+        try {
+            $file = $request->file('image');
+            $path = $file->store('media','public');
 
-        // if(!$user) {
-        //     return $this->response('error', 'You must be logged in to upload image.', null, 401);
-        // }
+            $media = Media::create([
+                'file_name'  => $file->getClientOriginalName(),
+                'file_path'  => $path,
+                'mime_type'  => $file->getMimeType(),
+                'file_size'  => $file->getSize(),
+                'image_type' => $request->image_type,
+            ]);
 
-        $file = $request->file('image');
-        $path = $file->store('media','public');
+            DB::commit();
+            CacheService::invalidate(CacheService::MEDIA);
 
-        $media = Media::create([
-            'file_name'  => $file->getClientOriginalName(),
-            'file_path'  => $path,
-            'mime_type'  => $file->getMimeType(),
-            'file_size'  => $file->getSize(),
-            'image_type' => $request->image_type,
-        ]);
+            return $this->response(
+                'success',
+                'Media uploaded successfully',
+                $media->toArray(),
+                201
+            );
+        } catch (Throwable $e){
+            DB::rollBack();
 
-        return $this->response('success', 'Media uploaded successfully', $media->toArray(), 201);
+            throw $e;
+        }
     }
 
     /**
@@ -70,7 +82,24 @@ class MediaController extends Controller
      */
     public function update(UpdateMediaRequest $request, Media $media)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $media->update($request->validated());
+
+            DB::commit();
+            CacheService::invalidate(CacheService::MEDIA);
+
+            return $this->response(
+                'success',
+                'Media updated successfully',
+                $media->toArray(),
+                200
+            );
+        } catch (Throwable $e){
+            DB::rollBack();
+
+            throw $e;
+        }
     }
 
     /**
@@ -78,6 +107,25 @@ class MediaController extends Controller
      */
     public function destroy(Media $media)
     {
-        //
+        $this->authorize('delete', $media);
+        DB::beginTransaction();
+        try{
+            $media->delete();
+
+            DB::commit();
+            CacheService::invalidate(CacheService::MEDIA);
+
+            return $this->response(
+                'success',
+                'Media deleted successfully',
+                $media->toArray(),
+                200
+            );
+
+        } catch (Throwable $e){ 
+            DB::rollBack();
+
+            throw $e;
+        }
     }
 }

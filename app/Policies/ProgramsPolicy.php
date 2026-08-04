@@ -29,7 +29,7 @@ class ProgramsPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->isAdmin() && $user->hasPermission('program.create');
     }
 
     /**
@@ -37,7 +37,7 @@ class ProgramsPolicy
      */
     public function update(User $user, Programs $programs): bool
     {
-        return false;
+        return $user->isAdmin() && $user->hasPermission('program.update');
     }
 
     /**
@@ -45,7 +45,7 @@ class ProgramsPolicy
      */
     public function delete(User $user, Programs $programs): bool
     {
-        return false;
+        return $user->isAdmin() && $user->hasPermission('program.delete');
     }
 
     /**
@@ -53,7 +53,7 @@ class ProgramsPolicy
      */
     public function restore(User $user, Programs $programs): bool
     {
-        return false;
+        return $user->isAdmin() && $user->hasPermission('program.restore');
     }
 
     /**
@@ -61,6 +61,6 @@ class ProgramsPolicy
      */
     public function forceDelete(User $user, Programs $programs): bool
     {
-        return false;
+        return $user->isAdmin() && $user->hasPermission('program.forceDelete');
     }
 }
