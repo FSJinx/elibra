@@ -29,7 +29,7 @@ class DepartmentPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->isAdmin() && $user->hasPermission('department.create');
     }
 
     /**
@@ -37,7 +37,7 @@ class DepartmentPolicy
      */
     public function update(User $user, Department $department): bool
     {
-        return false;
+        return $user->isAdmin() && $user->hasPermission('department.update');
     }
 
     /**
@@ -45,7 +45,7 @@ class DepartmentPolicy
      */
     public function delete(User $user, Department $department): bool
     {
-        return false;
+        return $user->isAdmin() && $user->hasPermission('department.delete');
     }
 
     /**
@@ -53,7 +53,7 @@ class DepartmentPolicy
      */
     public function restore(User $user, Department $department): bool
     {
-        return false;
+        return $user->isAdmin() && $user->hasPermission('department.restore');
     }
 
     /**
@@ -61,6 +61,6 @@ class DepartmentPolicy
      */
     public function forceDelete(User $user, Department $department): bool
     {
-        return false;
+        return $user->isAdmin() && $user->hasPermission('department.forceDelete');
     }
 }

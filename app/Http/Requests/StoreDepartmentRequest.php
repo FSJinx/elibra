@@ -28,8 +28,20 @@ class StoreDepartmentRequest extends BaseRequest
         return [
             'name' => [ 'required', 'string', 'max:255' ],
             'code' => [ 'required', 'string', 'max:10' ],
-            'campus_id' => [ 'required',  Rule::exists((new Campus)->getTable(), 'id') ]
+
+            'campus_id' => [
+                Rule::requiredIf(fn () => $this->user()->isSuperAdmin()),
+                Rule::exists((new Campus)->getTable(), 'id'),
+            ],
         ];
+    }
+    protected function prepareForValidation(): void
+    {
+        if ($this->user()->isAdmin()) {
+            $this->merge([
+                'campus_id' => $this->user()->campus_id,
+            ]);
+        }
     }
 
 
@@ -47,6 +59,7 @@ class StoreDepartmentRequest extends BaseRequest
 
             'campus_id.required' => 'Campus is required.',
             'campus_id.exists' => 'The selected campus does not exist.'
+            
         ];
     }
 }

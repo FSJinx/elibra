@@ -12,6 +12,7 @@ class UserService
     private const ROLE_PERMISSIONS = [
         'admin' => [
             'user.create',
+            'user.view',
             'user.update',
             'user.delete',
 
@@ -19,7 +20,27 @@ class UserService
             'branch.view',
             'branch.update',
             'branch.delete',
-            'branch.forceDelete',
+
+            'branchSection.create',
+            'branchSection.view',
+            'branchSection.update',
+            'branchSection.delete',
+
+
+            'department.create',
+            'department.view',
+            'department.update',
+            'department.delete',
+
+            'program.create',
+            'program.view',
+            'program.update',
+            'program.delete',
+            
+            'subscription.credential.create',
+            'subscription.credential.view',
+            'subscription.credential.update',
+            'subscription.credential.delete',
         ],
         'librarian' => [
             'book.create',

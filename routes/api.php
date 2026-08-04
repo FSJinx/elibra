@@ -119,19 +119,19 @@ Route::group(['prefix' => '/campus'], function () {
 Route::group(['prefix' => '/department'], function () {
 
     Route::group(['prefix' => '/get'], function () {
-        Route::get('', [DepartmentController::class, 'index']);
+        Route::get('', [DepartmentController::class, 'index'])->middleware('throttle:read');
     });
 
     Route::group(['prefix' => '/create'], function () {
-        Route::post('', [DepartmentController::class, 'store'])->middleware('jwt.auth', 'role:super admin');
+        Route::post('', [DepartmentController::class, 'store'])->middleware('jwt.auth', 'role:super admin,admin', 'throttle:write');
     });
 
     Route::group(['prefix' => '/update'], function () {
-        Route::put('{department}', [DepartmentController::class, 'update'])->middleware('jwt.auth', 'role:super admin');
+        Route::put('{department}', [DepartmentController::class, 'update'])->middleware('jwt.auth', 'role:super admin,admin', 'throttle:write');
     });
 
     Route::group(['prefix' => '/delete'], function () {
-        Route::delete('{department}', [DepartmentController::class, 'destroy'])->middleware('jwt.auth', 'role:super admin');
+        Route::delete('{department}', [DepartmentController::class, 'destroy'])->middleware('jwt.auth', 'role:super admin,admin', 'throttle:delete');
     });
 
 });
@@ -140,19 +140,19 @@ Route::group(['prefix' => '/department'], function () {
 Route::group(['prefix' => '/program'], function () {
 
     Route::group(['prefix' => '/get'], function () {
-        Route::get('', [ProgramsController::class, 'index']);
+        Route::get('', [ProgramsController::class, 'index'])->middleware('throttle:read');
     });
 
     Route::group(['prefix' => '/create'], function () {
-        Route::post('', [ProgramsController::class, 'store'])->middleware('jwt.auth', 'role:super admin');
+        Route::post('', [ProgramsController::class, 'store'])->middleware('jwt.auth', 'role:super admin,admin', 'throttle:write');
     });
 
     Route::group(['prefix' => '/update'], function () {
-        Route::put('{department}', [ProgramsController::class, 'update'])->middleware('jwt.auth', 'role:super admin');
+        Route::put('{program}', [ProgramsController::class, 'update'])->middleware('jwt.auth', 'role:super admin,admin', 'throttle:write');
     });
 
     Route::group(['prefix' => '/delete'], function () {
-        Route::delete('{program}', [ProgramsController::class, 'destroy'])->middleware('jwt.auth', 'role:super admin');
+        Route::delete('{program}', [ProgramsController::class, 'destroy'])->middleware('jwt.auth', 'role:super admin,admin', 'throttle:delete ');
     });
 
 });

@@ -36,12 +36,21 @@ class StoreBranchRequest extends BaseRequest
 
                 'logo_id' => [ 'nullable', Rule::exists((new Media)->getTable(), 'id') ],
                 'branch_head_id' => [ 'nullable',  Rule::exists((new Librarian)->getTable(), 'id') ],
-                // 'campus_id' => [ 'required', Rule::exists((new Campus)->getTable(), 'id') ]
+
                 'campus_id' => [
                     Rule::requiredIf(fn () => $this->user()->isSuperAdmin()),
-                    Rule::exists('campuses', 'id'),
+                    Rule::exists((new Campus)->getTable(), 'id'),
                 ],
             ];
+        }
+
+        protected function prepareForValidation(): void
+        {
+            if ($this->user()->isAdmin()) {
+                $this->merge([
+                    'campus_id' => $this->user()->campus_id,
+                ]);
+            }
         }
 
     /**
