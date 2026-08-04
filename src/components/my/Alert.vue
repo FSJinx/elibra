@@ -17,7 +17,7 @@ const alertClass = computed(() => {
   const variants: Record<Variants, string> = {
     primary: 'bg-primary-soft text-primary-soft-foreground border-primary',
     default: 'bg-background text-foreground border-border',
-    danger: 'bg-danger-soft text-danger-soft-foreground border-danger',
+    danger: 'bg-danger-soft/75 text-danger-soft-foreground border-danger',
     info: 'bg-info-soft text-info-soft-foreground border-info',
     restore: 'bg-restore-soft text-restore-soft-foreground border-restore',
     success: 'bg-success-soft text-success-soft-foreground border-success',

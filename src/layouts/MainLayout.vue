@@ -1,11 +1,13 @@
 <template>
-  <div class="relative flex flex-col min-h-dvh">
+  <div class="relative flex flex-col">
     <FeatureBelt />
-    <Header />
+    <div class="flex flex-col min-h-dvh">
+      <Header />
 
-    <main class="flex-1 flex flex-col">
-      <slot />
-    </main>
+      <main classs="flex-1">
+        <slot />
+      </main>
+    </div>
 
     <Footer />
   </div>

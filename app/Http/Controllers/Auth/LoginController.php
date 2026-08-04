@@ -19,7 +19,7 @@ class LoginController extends Controller
 
         // Returns if username is not found in the system
         if (! $user) {
-            return $this->response('error', 'User not found.', statusCode: 403);
+            return $this->response('error', data: ['username' => 'User not found.'], statusCode: 403);
         }
 
         // Returns if user has logged on multiple times
@@ -47,7 +47,12 @@ class LoginController extends Controller
                 }
             }
 
-            return $this->response('error', 'Wrong password, please try again. Remaining attempts: '.(5 - $user->login_attempts), statusCode: 403);
+            return $this->response(
+                'error',
+                'Remaining attempts: '.(5 - $user->login_attempts),
+                data: ['password' => 'Wrong password, please try again.'],
+                statusCode: 403
+            );
         }
     }
 }

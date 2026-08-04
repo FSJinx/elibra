@@ -21,6 +21,7 @@ export function useAuth() {
     return router.push({ name: routes[roleKey] })
   }
 
+  // ================ LOGIN FUNCTION =================
   async function login({ username = null, password = null }: { username?: string | null; password?: string | null } = {}) {
     loading.value = true
     errorMessage.value = null
@@ -43,16 +44,9 @@ export function useAuth() {
       await auth.getUser()
 
       goHome()
-      return { success: true }
+      return { success: true, data: response?.data }
     } catch (error: any) {
-      // Kunin ang error message mula sa Axios response o fallback sa generic error
-      const message = error.response?.data?.message || error.response?.data?.error || error.message || 'An unexpected error occurred.'
-
-      errorMessage.value = message
-      console.error('Login Error:', message)
-
-      // Nagre-return ng status para madaling gamitin sa UI component
-      return { success: false, message }
+      return { success: false, data: error.response?.data ?? { message: error.message } }
     } finally {
       loading.value = false
     }

@@ -20,7 +20,7 @@
         </span>
 
         <!-- Toggle Password Button -->
-        <span class="h-full px-4 cursor-pointer -mr-4" v-if="type === 'password' && !disabled" type="button" size="small" :aria-label="show ? 'Hide password' : 'Show password'" @click="show = !show">
+        <span class="h-full place-content-center px-4 cursor-pointer -mr-4" v-if="type === 'password' && !disabled" type="button" size="small" :aria-label="show ? 'Hide password' : 'Show password'" @click="show = !show">
           <Icon variant="default-hover" :icon="show ? 'Eye' : 'EyeClosed'" :name="show ? 'Hide Password' : 'Show Password'" />
         </span>
 
@@ -28,6 +28,8 @@
         <Icon :icon="rightIcon" v-if="rightIcon" class="ml-4 -mr-0.5" />
       </div>
     </div>
+
+    <div class="text-[0.85rem] text-danger wrap-break-word -mt-0.5" v-if="errorMessage && errorMessage.length > 0">{{ errorMessage }}</div>
   </div>
 </template>
 

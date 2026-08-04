@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scrollbar-thin scrollbar-track-transparent scrollbar-thumb-inverse/50">
 
 <head>
     @vite(['resources/styles/app.css', 'src/app.ts'])
@@ -9,7 +9,7 @@
 </head>
 
 <body class="relative">
-    <div id="e-Libra" class="relative bg-background text-foreground"></div>
+    <div id="e-Libra" class="relative bg-background text-foreground scrollbar-thin"></div>
 </body>
 
 </html>

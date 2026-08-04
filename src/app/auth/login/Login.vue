@@ -7,13 +7,13 @@
           <Logo />
         </Button>
         <h1 class="font-bold text-2xl">Welcome Back!</h1>
-        <p class="text-muted text-sm">Login now and continue where we left off.</p>
+        <p class="text-muted text-sm">Login now and continue where we left off</p>
       </div>
-      <Alert v-if="error" variant="danger">{{ error }}</Alert>
+      <Alert v-if="error.message && error.message.length > 0" variant="danger" class="mb-5">{{ error.message }}</Alert>
       <!-- Form -->
       <form @submit.prevent="handleSubmit" class="flex flex-col space-y-3">
-        <Input id="username" label="Username" label-position="top" type="username" v-model="credentials.username" required :disabled="loading" />
-        <Input id="password" label="Password" label-position="top" type="password" v-model="credentials.password" required :disabled="loading" />
+        <Input id="username" label="Username" label-position="top" type="username" v-model="credentials.username" required :disabled="loading" :error-message="error?.username ?? ''" />
+        <Input id="password" label="Password" label-position="top" type="password" v-model="credentials.password" required :disabled="loading" :error-message="error?.password ?? ''" />
         <Button as="link" :to="{ name: '' }" size="small" variant="text" class="ml-auto text-primary">Forgot password?</Button>
         <Button variant="primary" type="submit" :loading="loading">Login</Button>
       </form>
@@ -25,7 +25,11 @@
 <script setup lang="ts">
 const { login, loading } = useAuth()
 
-const error = ref('')
+const error = ref({
+  message: '',
+  username: '',
+  password: '',
+})
 
 const credentials = ref({
   username: '',
@@ -33,11 +37,19 @@ const credentials = ref({
 })
 
 async function handleSubmit() {
+  error.value = {
+    message: '',
+    username: '',
+    password: '',
+  }
   const res = await login({ username: credentials.value.username, password: credentials.value.password })
 
   if (!res.success) {
-    error.value = res.message
-  } else {
+    error.value = {
+      message: res.data?.message,
+      username: res.data?.data?.username,
+      password: res.data?.data?.password,
+    }
   }
 }
 </script>

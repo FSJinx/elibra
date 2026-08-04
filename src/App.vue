@@ -4,7 +4,8 @@
       <LogoLoader class="text-lg" />
     </div>
   </div>
-  <router-view class="" />
+
+  <router-view />
   <Error />
 </template>
 
