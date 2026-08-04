@@ -45,7 +45,7 @@ class SubscriptionPolicy
      */
     public function delete(User $user, Subscription $subscription): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
     /**

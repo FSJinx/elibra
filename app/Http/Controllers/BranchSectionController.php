@@ -102,7 +102,6 @@ class BranchSectionController extends Controller
      */
     public function store(StoreBranchSectionRequest $request)
     {
-
         DB::beginTransaction();
         try {
 
@@ -145,11 +144,6 @@ class BranchSectionController extends Controller
      */
     public function update(UpdateBranchSectionRequest $request, BranchSection $branchSection)
     {
-
-        // $branch = $request->filled('branch_id')  // This will check if the request contains a new  branch_id
-        //         ? Branch::findOrFail($request->branch_id) // Kung yes, get that branch from db
-        //         : $branchSection->branch; //if not, use the BranchSection's current branch.
-
         DB::beginTransaction();
         try {
             $branchSection->update($request->validated());
@@ -177,6 +171,7 @@ class BranchSectionController extends Controller
      */
     public function destroy(BranchSection $branchSection)
     {
+        $this->authorize('delete', $branchSection);
 
         DB::beginTransaction();
         try {

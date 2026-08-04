@@ -197,6 +197,8 @@ class BranchController extends Controller
      */
     public function destroy(Branch $branch)
     {
+        $this->authorize('delete', $branch);
+        
         DB::beginTransaction();
         try{
 
