@@ -33,13 +33,14 @@ Route::group(['prefix' => '/auth'], function () {
 // Public Routes
 Route::get('/try', [TestController::class, 'index']);
 
+// Media Routes
 Route::group(['prefix' => '/media'], function () {
     Route::group(['prefix' => '/create'], function () {
         Route::post('', [MediaController::class, 'upload'])->middleware('jwt.auth', 'role:super admin,admin', 'throttle:write');
     });
 
     Route::group(['prefix' => '/get'], function () {
-        Route::get('', [MediaController::class, 'index'])->middleware('throttle:read');
+        Route::get('', [MediaController::class, 'index'])->middleware('jwt.auth', 'role:super admin', 'throttle:read');
     });
 
     Route::group(['prefix' => '/update'], function () {
