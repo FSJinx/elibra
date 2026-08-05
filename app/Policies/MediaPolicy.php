@@ -39,7 +39,7 @@ class MediaPolicy
     public function update(User $user, Media $media): bool
     {
         return $user->isAdmin()
-            && $user->hasPermission('media.create');
+            && $user->hasPermission('media.update');
     }
 
     /**
@@ -48,7 +48,7 @@ class MediaPolicy
     public function delete(User $user, Media $media): bool
     {
         return $user->isAdmin()
-            && $user->hasPermission('media.create');
+            && $user->hasPermission('media.delete');
     }
 
     /**
@@ -57,7 +57,7 @@ class MediaPolicy
     public function restore(User $user, Media $media): bool
     {
         return $user->isAdmin()
-            && $user->hasPermission('media.create');
+            && $user->hasPermission('media.restore');
     }
 
     /**
@@ -66,6 +66,6 @@ class MediaPolicy
     public function forceDelete(User $user, Media $media): bool
     {
         return $user->isAdmin()
-            && $user->hasPermission('media.create');
+            && $user->hasPermission('media.force.delete');
     }
 }

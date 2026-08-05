@@ -33,7 +33,6 @@ Route::group(['prefix' => '/auth'], function () {
 // Public Routes
 Route::get('/try', [TestController::class, 'index']);
 
-// Route::post('/upload-media', [MediaController::class, 'upload'])->middleware('jwt.auth', 'role:admin');
 Route::group(['prefix' => '/media'], function () {
     Route::group(['prefix' => '/create'], function () {
         Route::post('', [MediaController::class, 'upload'])->middleware('jwt.auth', 'role:super admin,admin', 'throttle:write');

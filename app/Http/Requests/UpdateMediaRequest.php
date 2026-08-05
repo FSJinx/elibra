@@ -12,7 +12,7 @@ class UpdateMediaRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->user()->can('update', $this->route('media'));
     }
 
     /**
@@ -23,7 +23,8 @@ class UpdateMediaRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            //
+            'image' => [ 'sometimes', 'image',  'mimes:jpg,jpeg,png,webp', 'max:2048' ],
+            // 'image_type' => [ 'required_with:image', 'string', 'max:255' ],
         ];
     }
 }
