@@ -10,6 +10,7 @@ declare global {
   const acceptHMRUpdate: typeof import('pinia').acceptHMRUpdate
   const adminRoutes: typeof import('./router/adminRoutes').adminRoutes
   const api: typeof import('./plugins/axios').api
+  const aut: typeof import('./stores/authStore').aut
   const authRoute: typeof import('./router/authRoute').authRoute
   const authStore: typeof import('./stores/authStore').authStore
   const axios: typeof import('./plugins/axios').default
@@ -62,7 +63,7 @@ declare global {
   const onUpdated: typeof import('vue').onUpdated
   const onWatcherCleanup: typeof import('vue').onWatcherCleanup
   const patronRoutes: typeof import('./router/patronRoutes').default
-  const preload: typeof import('./composables/data/usePreload').preload
+  const preload: typeof import('./composables/data/usePreloader').preload
   const provide: typeof import('vue').provide
   const publicRoutes: typeof import('./router/publicRoutes').default
   const reactive: typeof import('vue').reactive
@@ -95,6 +96,7 @@ declare global {
   const useLink: typeof import('vue-router').useLink
   const useModel: typeof import('vue').useModel
   const useParser: typeof import('./composables/utils/useParse').useParser
+  const usePreloader: typeof import('./composables/data/usePreloader').usePreloader
   const useRoute: typeof import('vue-router').useRoute
   const useRouter: typeof import('vue-router').useRouter
   const useSlots: typeof import('vue').useSlots
@@ -183,7 +185,6 @@ declare module 'vue' {
     readonly onUpdated: UnwrapRef<typeof import('vue')['onUpdated']>
     readonly onWatcherCleanup: UnwrapRef<typeof import('vue')['onWatcherCleanup']>
     readonly patronRoutes: UnwrapRef<typeof import('./router/patronRoutes')['default']>
-    readonly preload: UnwrapRef<typeof import('./composables/data/usePreload')['preload']>
     readonly provide: UnwrapRef<typeof import('vue')['provide']>
     readonly publicRoutes: UnwrapRef<typeof import('./router/publicRoutes')['default']>
     readonly reactive: UnwrapRef<typeof import('vue')['reactive']>
@@ -216,6 +217,7 @@ declare module 'vue' {
     readonly useLink: UnwrapRef<typeof import('vue-router')['useLink']>
     readonly useModel: UnwrapRef<typeof import('vue')['useModel']>
     readonly useParser: UnwrapRef<typeof import('./composables/utils/useParse')['useParser']>
+    readonly usePreloader: UnwrapRef<typeof import('./composables/data/usePreloader')['usePreloader']>
     readonly useRoute: UnwrapRef<typeof import('vue-router')['useRoute']>
     readonly useRouter: UnwrapRef<typeof import('vue-router')['useRouter']>
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>

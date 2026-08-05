@@ -6,7 +6,7 @@
         <h1 class="font-black text-2xl shrink-0">e-Libra</h1>
       </router-link>
       <div class="flex items-center gap-1.5 sm:gap-3">
-        <template v-if="!auth.user?.isAuthenticated">
+        <template v-if="!store.isAuthenticated">
           <Button as="link" :to="{ name: 'login' }" class="text-primary" variant="text">Login</Button>
           <Button as="link" :to="{ name: '' }" variant="primary">Register</Button>
         </template>
@@ -20,6 +20,7 @@
 
 <script setup lang="ts">
 const auth = useAuth()
+const store = authStore()
 
 const quickLinks = ref({
   home: { label: 'Home', icon: 'House', path: '' },

@@ -3,7 +3,7 @@
     <Button variant="primary">Create New</Button>
   </div>
 
-  <Table name="Campus Table" v-model="campusSearch" @refresh="refresh">
+  <Table name="Campus Table" @search="campus.getCampuses({ query: $event.target })" @refresh="refresh">
     <Thead>
       <tr>
         <th class="w-20">ID</th>
@@ -36,10 +36,8 @@ const parse = useParser()
 function refresh() {
   campusSearch.value = ''
 
-  campus.fetchCampus()
+  campus.getCampuses()
 }
-
-campus.fetchCampus()
 </script>
 
 <style scoped></style>

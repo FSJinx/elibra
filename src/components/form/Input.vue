@@ -12,15 +12,15 @@
         <!-- Slot para sa Prefix Icon (Optional) -->
         <Icon :icon="leftIcon" v-if="leftIcon" class="mr-3 -ml-0.5" />
 
-        <input ref="input" :id="id" title="" :name="id" v-model="model" :type="inputType" :placeholder="inputPlaceholder" :required="required" :disabled="disabled" :autocomplete="autocomplete" class="py-2 w-full tracking-tight bg-transparent transition-all duration-150 focus:outline-none disabled:cursor-not-allowed" />
+        <input ref="input" :id="id" title="" :name="id" v-model="model" :type="inputType" :placeholder="inputPlaceholder" :required="required" :disabled="disabled" :autocomplete="autocomplete" class="py-2 w-full bg-transparent transition-all duration-150 focus:outline-none disabled:cursor-not-allowed" />
 
         <!-- Clear Button -->
-        <span class="h-full px-4 cursor-pointer -mr-4" v-if="enableClear && hasValue && !disabled && inputType !== 'password'" type="button" size="small" aria-label="Clear input" @click="model = ''">
+        <span class="h-full place-content-center px-3 cursor-pointer -mr-4" v-if="enableClear && hasValue && !disabled && inputType !== 'password'" type="button" size="small" aria-label="Clear input" @click="model = ''">
           <Icon icon="X" name="Clear Input" />
         </span>
 
         <!-- Toggle Password Button -->
-        <span class="h-full place-content-center px-4 cursor-pointer -mr-4" v-if="type === 'password' && !disabled" type="button" size="small" :aria-label="show ? 'Hide password' : 'Show password'" @click="show = !show">
+        <span class="h-full place-content-center px-3 cursor-pointer -mr-4" v-if="type === 'password' && !disabled" type="button" size="small" :aria-label="show ? 'Hide password' : 'Show password'" @click="show = !show">
           <Icon variant="default-hover" :icon="show ? 'Eye' : 'EyeClosed'" :name="show ? 'Hide Password' : 'Show Password'" />
         </span>
 

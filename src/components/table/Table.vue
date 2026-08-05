@@ -3,9 +3,9 @@
     <div class="flex items-center justify-end gap-2 w-full p-4">
       <div class="mr-auto">
         <h1 class="tracking-tight font-semibold text-lg mr-auto">{{ name }}</h1>
-        <p class="text-sm text-foreground-secondary">{{ description ?? 'This is the default description for ' + name + '.' }}</p>
+        <p class="text-sm text-foreground-secondary line-clamp-1">{{ description ?? 'This is the default description for ' + name + '.' }}</p>
       </div>
-      <Input id="searchQuery" v-model="search" left-icon="search" class="max-w-85" placeholder="Search by name, code, address" />
+      <Input id="searchQuery" enable-clear v-model="query" left-icon="search" class="max-w-80" placeholder="Search by name, code, address" />
 
       <Button variant="info" icon="rotate-ccw" @click="emit('refresh')"></Button>
     </div>
@@ -24,8 +24,17 @@ interface Props {
   description?: string
 }
 
-const search = defineModel<string>()
+const query = defineModel<string>()
 
 const props = defineProps<Props>()
-const emit = defineEmits(['refresh'])
+const emit = defineEmits(['refresh', 'search'])
+const timer = ref()
+
+watch(query, () => {
+  if (timer) clearTimeout(timer.value)
+
+  timer.value = setTimeout(() => {
+    emit('search', query.value)
+  }, 500)
+})
 </script>

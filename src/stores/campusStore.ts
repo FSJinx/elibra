@@ -15,12 +15,10 @@ export const campusStore = defineStore('campus', () => {
   const currentCampus = ref<CampusInfo | null>(null)
   const loading = ref<boolean>(false)
 
-  // ============= ACTIONS ===============
-
-  // SETTERS
+  
+  // ============= SETTERS ===============
   function setCampuses(data: CampusInfo[] | null) {
     campuses.value = data
-    // console.log(data);
   }
 
   function setCurrentCampus(data: CampusInfo | null) {
@@ -37,7 +35,7 @@ export const campusStore = defineStore('campus', () => {
     currentCampus,
     loading,
 
-    // ============= ACTIONS ===============
+    // ============= SETTERS ===============
     setCampuses,
     setCurrentCampus,
     setLoading,

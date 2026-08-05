@@ -1,13 +1,13 @@
 <template>
   <main class="relative flex-1 flex flex-col overflow-hidden bg-background border border-border rounded-2xl font-poppins">
     <!-- Main Body Header -->
-    <div class="sticky top-0 flex flex-col gap-3 p-5 pb-0 bg-background">
+    <div class="sticky top-0 flex flex-col gap-3 p-5 bg-background">
       <div class="flex md:items-center flex-col md:flex-row gap-5">
         <div class="flex items-center gap-3">
           <Button variant="default" @click="system.toggleSidebar" class="group hover:drop-shadow">
             <Icon :icon="system.sidebar ? 'sidebar-close' : 'sidebar-open'" class="transition-all duration-300" :class="system.sidebar ? 'group-hover:-translate-x-0.5 ' : 'group-hover:translate-x-0.5 '" />
           </Button>
-          <p class="text-primary uppercase tracking-wide font-medium text-shadow-md text-shadow-primary/15 line-clamp-1">Good day, {{ auth.user?.first_name }}!👋</p>
+          <p class="text-primary text-lg uppercase tracking-wide font-medium text-shadow-md text-shadow-primary/15 line-clamp-1">Good day, {{ auth.user?.first_name }}!👋</p>
         </div>
 
         <div class="flex items-end gap-2 ml-auto">
@@ -23,8 +23,8 @@
     </div>
 
     <!-- Main Body Content -->
-    <div class="flex-1 flex flex-col p-5 overflow-hidden">
-      <div class="flex-1 flex flex-col rounded-xl overflow-y-auto scrollbar-none transition-all duration-200">
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <div class="flex-1 flex flex-col rounded-xl p-5 overflow-y-auto scrollbar-none transition-all duration-200">
         <router-view />
       </div>
     </div>
