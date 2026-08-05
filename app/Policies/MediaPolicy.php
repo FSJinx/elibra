@@ -13,7 +13,7 @@ class MediaPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user-> hasPermission('media.view.any');
     }
 
     /**
@@ -21,7 +21,7 @@ class MediaPolicy
      */
     public function view(User $user, Media $media): bool
     {
-        return false;
+        return $user->hasPermission('media.view');
     }
 
     /**
@@ -38,8 +38,7 @@ class MediaPolicy
      */
     public function update(User $user, Media $media): bool
     {
-        return $user->isAdmin()
-            && $user->hasPermission('media.create');
+        return $user->hasPermission('media.update');
     }
 
     /**
@@ -47,8 +46,7 @@ class MediaPolicy
      */
     public function delete(User $user, Media $media): bool
     {
-        return $user->isAdmin()
-            && $user->hasPermission('media.create');
+        return $user->hasPermission('media.delete');
     }
 
     /**
@@ -56,8 +54,7 @@ class MediaPolicy
      */
     public function restore(User $user, Media $media): bool
     {
-        return $user->isAdmin()
-            && $user->hasPermission('media.create');
+        return $user->hasPermission('media.restore');
     }
 
     /**
@@ -65,7 +62,6 @@ class MediaPolicy
      */
     public function forceDelete(User $user, Media $media): bool
     {
-        return $user->isAdmin()
-            && $user->hasPermission('media.create');
+        return $user->hasPermission('media.force.delete');
     }
 }

@@ -23,8 +23,18 @@ class StoreMediaRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'image' => [ 'required', 'image',  'mimes:jpg,jpeg,png,webp', 'max:2048' ],
-            'image_type' => [ 'required', 'string', 'max:255' ],
+            'image' => [ 
+                'required', 
+                'image',  
+                'mimes:jpg,jpeg,png,webp', 
+                'max:2048' 
+            ],
+
+
+            'image_type' => [
+                'required',
+                'in:profile,logo,book_cover,document,banner,other',
+            ],
         ];
     }
 }

@@ -29,7 +29,8 @@ class SubscriptionCredentialPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->isAdmin()
+            || ($user->isLibrarian() && $user->hasPermission('subscription.credential.create'));
     }
 
     /**
@@ -37,7 +38,8 @@ class SubscriptionCredentialPolicy
      */
     public function update(User $user, SubscriptionCredential $subscriptionCredential): bool
     {
-        return false;
+        return $user->isAdmin()
+            || ($user->isLibrarian() && $user->hasPermission('subscription.credential.update'));
     }
 
     /**
@@ -45,7 +47,8 @@ class SubscriptionCredentialPolicy
      */
     public function delete(User $user, SubscriptionCredential $subscriptionCredential): bool
     {
-        return false;
+        return $user->isAdmin()
+            || ($user->isLibrarian() && $user->hasPermission('subscription.credential.delete'));
     }
 
     /**

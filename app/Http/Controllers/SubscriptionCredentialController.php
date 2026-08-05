@@ -7,6 +7,9 @@ use App\Http\Requests\StoreSubscriptionCredentialRequest;
 use App\Http\Requests\UpdateSubscriptionCredentialRequest;
 use App\Models\System;
 use App\Models\Branch;
+use App\Services\CacheService;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class SubscriptionCredentialController extends Controller
 {
@@ -31,26 +34,24 @@ class SubscriptionCredentialController extends Controller
      */
     public function store(StoreSubscriptionCredentialRequest $request)
     {
-        $user = $this->user();
+        DB::beginTransaction();
+        try {
+            $subscriptionCredential = SubscriptionCredential::create($request->validated());
+            
+            DB::commit();
+            CacheService::invalidate(CacheService::SUBSCRIPTION_CREDENTIALS);
 
-        if($user?->role == 'librarian' || $user?->role == 'admin') {
-            $credential = SubscriptionCredential::create([
-                'username' => $request->username,
-                'password' => $request->password,
+            return $this->response(
+                'success',
+                'Subscription credential created successfully',
+                $subscriptionCredential->toArray(),
+                201
+            );
 
-                'subscription_id' => $request->subscription_id,
-                'campus_id' => $request->campus_id,
-            ]);
-        } else {
-            return $this->response('error', 'You are not authorized to perform this action.', null, 403);
+        } catch(Throwable $e) {
+            DB::rollBack();
+            throw $e;
         }
-
-        return $this->response(
-            'success', 
-            'Subscription credential added successfully', 
-            $credential->toArray(),
-            // null,
-            201);
     }
 
     /**
@@ -58,29 +59,52 @@ class SubscriptionCredentialController extends Controller
      */
     public function getCredential($subscriptionId)
     {
-       $user = $this->user();
+        $user = $this->user();
 
-       $accessibility = System::where('key', 'subscription_visibility')->first();
+        $visibility = System::where('key', 'subscription_visibility')->value('value');
 
-       //Check Accessibility Value if private
-       if(!$user &&$accessibility->value === 'private'){
-            return $this->response('error', 'You must be logged in to access this resource.', null, 401);
-       }
-    
-        // If accessibility is public, retrieve the subscription credentials based on the subscription ID
-        $credential = SubscriptionCredential::where('subscription_id', $subscriptionId)->first();
-
-        if(!$credential) {
-            return $this->response('error', 'No credentials found for the specified subscription.', null, 404);
+        // Guests cannot access credentials when visibility is private
+        if (! $user && $visibility === 'private') {
+            return $this->response(
+                'error',
+                'You must be logged in to access this resource.',
+                null,
+                401
+            );
         }
-        
-        return $this->response(
-            'success', 
-            'Subscription credential decoded successfully', 
-            $credential ? $credential->toArray() : null,
-        200);
-    }
 
+        $campusId = $user?->isSuperAdmin() ? 'all' : ($user?->campus_id ?? 'guest');
+
+        $cacheKey = CacheService::SUBSCRIPTION_CREDENTIALS
+            . ":subscription:{$subscriptionId}:campus:{$campusId}";
+
+        $credential = cache()->remember($cacheKey, now()->addMinutes(30), function () use ($subscriptionId, $user) {
+            $query = SubscriptionCredential::where('subscription_id', $subscriptionId);
+
+            // Admins and Librarians can only access credentials from their own campus
+            if ($user && ! $user->isSuperAdmin()) {
+                $query->where('campus_id', $user->campus_id);
+            }
+
+            return $query->first();
+        });
+
+        if (! $credential) {
+            return $this->response(
+                'error',
+                'No credentials found for the specified subscription.',
+                null,
+                404
+            );
+        }
+
+        return $this->response(
+            'success',
+            'Subscription credential retrieved successfully',
+            $credential->toArray(),
+            200
+        );
+    }
     /**
      * Show the form for editing the specified resource.
      */
@@ -94,19 +118,23 @@ class SubscriptionCredentialController extends Controller
      */
     public function update(UpdateSubscriptionCredentialRequest $request, SubscriptionCredential $subscriptionCredentialId)
     {
-        $user = $this->user();
-        
-        if($user?->role == 'librarian' || $user?->role == 'admin') {
+        DB::beginTransaction();
+        try {
             $subscriptionCredentialId->update($request->validated());
-        } else {
-            return $this->response('error', 'You are not authorized to perform this action.', null, 403);
-        }
+            
+            DB::commit();
+            CacheService::invalidate(CacheService::SUBSCRIPTION_CREDENTIALS);
 
-        return $this->response(
-            'success', 
-            'Subscription credential updated successfully', 
-            $subscriptionCredentialId->toArray(),
-            200);
+            return $this->response(
+                'success',
+                'Subscription credential updated successfully',
+                $subscriptionCredentialId->toArray(),
+                200
+            );
+        } catch(Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 
     /**
@@ -114,6 +142,24 @@ class SubscriptionCredentialController extends Controller
      */
     public function destroy(SubscriptionCredential $subscriptionCredential)
     {
-        //
+        $this->authorize('delete', $subscriptionCredential);
+
+        DB::beginTransaction();
+        try {
+            $subscriptionCredential->delete();
+            DB::commit();
+
+            CacheService::invalidate(CacheService::SUBSCRIPTION_CREDENTIALS);
+
+            return $this->response(
+                'success',
+                'Subscription credential deleted successfully',
+                null,
+                200
+            );
+        } catch(Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 }

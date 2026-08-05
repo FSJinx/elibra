@@ -6,17 +6,79 @@ use App\Models\Media;
 use App\Http\Requests\StoreMediaRequest;
 use App\Http\Requests\UpdateMediaRequest;
 use App\Services\CacheService;
+use App\Services\MediaService;
+use App\Services\QueryService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Throwable;
 
 class MediaController extends Controller
 {
+    public function __construct(
+        private MediaService $mediaService
+    ) {}
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $this->authorize('view', Media::class);
+
+    $request->validate([
+            'query' => ['nullable', 'string', 'max:255'],
+            'image_type' => ['nullable', 'in:profile,logo,book_cover,document,banner,other'],
+            'page' => ['nullable', 'integer', 'min:1'],
+            'per_page' => ['nullable', 'integer', 'min:1', 'max:100'],
+        ]);
+
+        $filters = QueryService::filters($request);
+
+        $parameters = array_merge($filters, [
+            'image_type' => $request->query('image_type'),
+        ]);
+
+        $media = CacheService::remember(
+            CacheService::MEDIA,
+            $parameters,
+            now()->addHour(),
+            function () use ($filters, $request) {
+
+                $query = Media::query();
+
+                if ($request->filled('image_type')) {
+                    $query->where('image_type', $request->image_type);
+                }
+
+                if ($filters['search'] !== '') {
+                    $query->where(
+                        'file_name',
+                        'like',
+                        '%' . $filters['search'] . '%'
+                    );
+                }
+
+                return $query
+                    ->latest()
+                    ->paginate($filters['per_page'])
+                    ->withQueryString();
+            }
+        );
+        if(is_null($media) || $media->isEmpty()){
+            return $this->response(
+                'success',
+                'No media found',
+                [],
+                200
+            );
+        }
+
+        return $this->response(
+            'success',
+            'Media retrieved successfully',
+            $media->toArray(),
+            200
+        );
     }
 
     /**
@@ -34,18 +96,14 @@ class MediaController extends Controller
     {
         DB::beginTransaction();
         try {
-            $file = $request->file('image');
-            $path = $file->store('media','public');
 
-            $media = Media::create([
-                'file_name'  => $file->getClientOriginalName(),
-                'file_path'  => $path,
-                'mime_type'  => $file->getMimeType(),
-                'file_size'  => $file->getSize(),
-                'image_type' => $request->image_type,
-            ]);
+            $media = $this->mediaService->store(
+                $request->file('image'),
+                $request->image_type
+            );
 
             DB::commit();
+
             CacheService::invalidate(CacheService::MEDIA);
 
             return $this->response(
@@ -54,7 +112,7 @@ class MediaController extends Controller
                 $media->toArray(),
                 201
             );
-        } catch (Throwable $e){
+        } catch (Throwable $e) {
             DB::rollBack();
 
             throw $e;
@@ -84,7 +142,7 @@ class MediaController extends Controller
     {
         DB::beginTransaction();
         try {
-            $media->update($request->validated());
+            $media = $this->mediaService->replaceFile($media, $request->file('image'));
 
             DB::commit();
             CacheService::invalidate(CacheService::MEDIA);
@@ -110,7 +168,7 @@ class MediaController extends Controller
         $this->authorize('delete', $media);
         DB::beginTransaction();
         try{
-            $media->delete();
+            $this ->mediaService->delete($media);
 
             DB::commit();
             CacheService::invalidate(CacheService::MEDIA);
@@ -118,7 +176,7 @@ class MediaController extends Controller
             return $this->response(
                 'success',
                 'Media deleted successfully',
-                $media->toArray(),
+                [],
                 200
             );
 
