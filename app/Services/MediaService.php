@@ -13,6 +13,7 @@ class MediaService
         return match ($imageType) {
             Media::PROFILE   => 'media/profiles',
             Media::LOGO      => 'media/logos',
+            Media::SUBSCRIPTION => 'media/subscriptions',
             Media::BOOK_COVER=> 'media/books',
             Media::DOCUMENT  => 'media/documents',
             Media::BANNER    => 'media/banners',

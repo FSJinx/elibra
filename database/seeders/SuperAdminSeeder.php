@@ -19,7 +19,7 @@ class SuperAdminSeeder extends Seeder
             'uuid' => Str::uuid()->toString(),
             'first_name' => 'System Administrator',
             'sex' => 'male',
-            'role' => 'super admin',
+            'role' => 'super_admin',
             'username' => 'super',
             'email' => 'elibra@isu.edu.ph',
             'email_verified_at' => now(),

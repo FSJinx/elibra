@@ -15,12 +15,10 @@ class CampusController extends Controller
 {
     public function index(Request $request)
     {
-          [
+        [
             'search' => $search,
             'sort' => $sort,
             'order' => $order,
-            'page' => $page,
-            'per_page' => $perPage,
         ] = QueryService::filters($request);
 
         $campuses = CacheService::remember(
@@ -31,12 +29,13 @@ class CampusController extends Controller
                 'order' => $order,
             ],
             now()->addMinutes(10),
-            function () use ($search, $sort, $order){
+            function () use ($search, $sort, $order) {
 
                 $allowedSortFields = ['name', 'code'];
+
                 $query = Campus::query();
 
-                if ($search) {
+                if (!empty($search)) {
                     $query->where(function ($query) use ($search) {
                         $query->where('name', 'LIKE', "%{$search}%")
                             ->orWhere('code', 'LIKE', "%{$search}%");
@@ -55,35 +54,80 @@ class CampusController extends Controller
                 } else {
                     $query->orderBy('name');
                 }
-                return $query->get();
+
+                return $query->select('name', 'code', 'address')->get();
             }
         );
 
-        if ($campuses->isEmpty() && $search !== '') {
+        // No exact match found
+        if ($campuses->isEmpty() && !empty($search)) {
 
-            $campuses = Campus::all()
-                ->sortBy(function ($campus) use ($search) {
-                    return levenshtein(
-                        strtolower($search),
-                        strtolower($campus->name)
+            $search = strtolower(trim($search));
+
+            $suggestions = Campus::all()
+                ->map(function ($campus) use ($search) {
+
+                    // Remove "Campus" from the name
+                    $cleanName = strtolower(
+                        str_replace(' campus', '', $campus->name)
                     );
+
+                    // Compare against every word
+                    $distance = collect(explode(' ', $cleanName))
+                        ->map(fn($word) => levenshtein($search, $word))
+                        ->min();
+
+                    similar_text($search, $cleanName, $similarity);
+
+                    $campus->distance = $distance;
+                    $campus->similarity = $similarity;
+
+                    return $campus;
+                })
+                ->filter(function ($campus) {
+                    return $campus->distance <= 2
+                        || $campus->similarity >= 70;
+                })
+                ->sort(function ($a, $b) {
+
+                    if ($a->distance === $b->distance) {
+                        return $b->similarity <=> $a->similarity;
+                    }
+
+                    return $a->distance <=> $b->distance;
                 })
                 ->take(3)
-                ->values();
-        }
+                ->values()
+                ->map(function ($campus) {
+                    unset($campus->distance);
+                    unset($campus->similarity);
 
-        if ($campuses->isEmpty()) {
+                    return [
+                        'name' => $campus->name,
+                        'code' => $campus->code,
+                        'address' => $campus->address,
+                    ];
+                });
+
+            if ($suggestions->isNotEmpty()) {
+                return $this->response(
+                    'You may have mistyped the campus name.',
+                    'Campus not found. Did you mean one of these?',
+                    $suggestions->toArray(),
+                    404
+                );
+            }
+
             return $this->response(
                 'error',
-                'Campus not found.',
-                [],
-                200
+                data: ['campus' => 'Not Found'],
+                statusCode: 404
             );
         }
 
         return $this->response(
             'success',
-            'Campuses retrieved successfully',
+            'Campuses retrieved successfully.',
             $campuses->toArray(),
             200
         );
