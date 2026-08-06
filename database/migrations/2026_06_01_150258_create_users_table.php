@@ -31,7 +31,7 @@ return new class extends Migration
             $table->string('username')->nullable()->unique();
             $table->string('password');
 
-            $table->enum('role', ['super admin', 'admin', 'librarian', 'patron']);
+            $table->enum('role', ['super_admin', 'admin', 'librarian', 'patron']);
             $table->enum('status', ['active', 'inactive', 'suspended', 'expired'])->default('active');
 
             $table->unsignedTinyInteger('login_attempts')->default(0);

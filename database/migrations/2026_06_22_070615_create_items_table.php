@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->id();
+            // $table->uuid('uuid')->unique();
+
             $table->string('title');
             $table->string('subtitle');
             $table->string('description');
