@@ -2,8 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Academic;
+use App\Models\Branch;
+use App\Models\Department;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreAcademicRequest extends BaseRequest
 {
@@ -12,7 +15,7 @@ class StoreAcademicRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user()->can('create', Academic::class);
     }
 
     /**
@@ -22,23 +25,27 @@ class StoreAcademicRequest extends BaseRequest
      */
     public function rules(): array
     {
-        return [
-            // Item table fields
-            'title' => 'required|string|max:255',
-            'subtitle' => 'nullable|string|max:255',
-            'description' => 'nullable|string',
-            'keywords' => 'nullable|string',
-            'branch_id' => 'required|exists:branches,id',
+        $rules = [
+            //Item Fields
+            'title' => [ 'required', 'string', 'max:255' ],
+            'subtitle' => [ 'nullable', 'string', 'max:255' ],
+            'description' => [ 'nullable', 'string' ],
+            'call_number' => [ 'nullable', 'string', 'max:255', Rule::unique((new Academic)->getTable(), 'call_number') ],
+            'language' => [ 'required', 'string', 'max:255' ],
+            'publication_year' => [ 'nullable', 'integer', 'min:1900', 'max:' . date('Y') ],
+            'keywords' => [ 'nullable', 'string' ],
+            'electronic_file' => [ 'nullable', 'file', 'mimes:pdf,doc,docx' ],
+            'branch_id' => [ 'required', Rule::exists((new Branch)->getTable(), 'id') ],
 
-            // Academic table fields
-            'call_number' => 'required|string|max:255|unique:academics,call_number',
-            'language' => 'required|string|max:255',
-            'category' => 'required|string|max:255',
-            'publication_year' => 'nullable|integer|min:1900|max:' . date('Y'),
-            'subjects' => 'nullable|array',
-            'subjects.*' => 'string|max:255',
-            'department_id' => 'required|exists:departments,id',
+            //Acdemic Fields
+            'category' => [ 'required', Rule::in(['undergraduate thesis', 'graduate thesis', 'case study', 'research paper', 'feasibility study']) ],
+            'subjects' => [ 'nullable', 'array' ],
+            'subjects.*' => [ 'string', 'max:255' ],
+            'doi' => [ 'nullable', 'string', 'max:255' ],
+            'department_id' => [ 'required', Rule::exists((new Department)->getTable(), 'id') ],
+
         ];
+        return $rules;
     }
 
     /**

@@ -10,35 +10,41 @@ class AcademicService
 {
     public function create(array $data): Academic
     {
-        return DB::transaction(function () use ($data){
+        $academic = DB::transaction(function () use ($data){
 
             $item = Item::create(
                 Arr::only($data, [
                     'title', 
                     'subtitle', 
                     'description', 
+                    'call_number',
+                    'language',
+                    'publication_year',
                     'keywords',
+                    'electronic_file',
                     'branch_id'
                 ])
             );
 
             return $item->academic()->create(
                 Arr::only($data, [
-                    'call_number', 
-                    'language', 
                     'category', 
-                    'publication_year', 
                     'subjects',
+                    'doi', 
                     'department_id'
                 ])
             );
 
         });
+
+        CacheService::invalidate(CacheService::ACADEMICS);
+
+        return $academic;
     }
 
     public function update(Academic $academic, array $data): Academic
     {
-        return DB::transaction(function () use ($academic, $data){
+        $academic = DB::transaction(function () use ($academic, $data){
             
             $academic->item->update(
                 Arr::only($data, [
@@ -64,6 +70,8 @@ class AcademicService
             // Refresh the academic model to get the latest data from the database
             return $academic->refresh(); 
         });
+        CacheService::invalidate(CacheService::ACADEMICS);
+        return $academic;
     }
 
     public function delete(Academic $academic): void
@@ -72,5 +80,7 @@ class AcademicService
             $academic->item->delete();
             $academic->delete();
         });
+        
+        CacheService::invalidate(CacheService::ACADEMICS);
     }
 }

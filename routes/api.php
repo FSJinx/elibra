@@ -88,7 +88,7 @@ Route::group(['prefix' => '/item'], function () {
         Route::post('subscription_credential', [SubscriptionCredentialController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin,librarian');
 
         /* ACADEMICS ROUTES */
-        Route::post('academic', [AcademicController::class, 'store'])->middleware('jwt.auth', 'role:librarian');
+        Route::post('academic', [AcademicController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
     });
 
     Route::group(['prefix' => '/update'], function () {
@@ -97,7 +97,7 @@ Route::group(['prefix' => '/item'], function () {
         Route::put('subscription-credential/{subscriptionCredential}', [SubscriptionCredentialController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin,librarian');
 
         /* ACADEMICS ROUTES */
-        Route::put('academic/{academic}', [AcademicController::class, 'update'])->middleware('jwt.auth', 'role:librarian');
+        Route::put('academic/{academic}', [AcademicController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
 
     });
 
@@ -106,7 +106,7 @@ Route::group(['prefix' => '/item'], function () {
         Route::delete('subscription/{subscriptionId}', [SubscriptionController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin', 'throttle:delete');
 
         /* ACADEMICS ROUTES */
-        Route::delete('academic/{academic}', [AcademicController::class, 'destroy'])->middleware('jwt.auth', 'role:librarian');
+        Route::delete('academic/{academic}', [AcademicController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:delete');
     });
 });
 
