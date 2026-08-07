@@ -7,6 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use App\Models\Academic;
 use App\Models\Branch;
 use App\Models\Department;
+use App\Models\Item;
 use Illuminate\Validation\Rule;
 
 class UpdateAcademicRequest extends BaseRequest
@@ -43,6 +44,7 @@ class UpdateAcademicRequest extends BaseRequest
             'subjects' => [ 'sometimes', 'nullable', 'array' ],
             'subjects.*' => [ 'string', 'max:255' ],
             'doi' => [ 'sometimes', 'nullable', 'string', 'max:255' ],
+            'item_id' => [ 'sometimes', Rule::exists((new Item)->getTable(), 'id') ],
             'department_id' => [ 'sometimes', 'required', Rule::exists((new Department)->getTable(), 'id') ],
         ];
         return $rules;

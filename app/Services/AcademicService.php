@@ -30,7 +30,8 @@ class AcademicService
                 Arr::only($data, [
                     'category', 
                     'subjects',
-                    'doi', 
+                    'doi',
+                    'item_id',
                     'department_id'
                 ])
             );
@@ -51,18 +52,21 @@ class AcademicService
                     'title', 
                     'subtitle', 
                     'description', 
+                    'call_number',
+                    'language',
+                    'publication_year',
                     'keywords',
+                    'electronic_file',
                     'branch_id'
                 ])
             );
 
             $academic->update(
                 Arr::only($data, [
-                    'call_number',
-                    'language',
-                    'category',
-                    'publication_year',
+                    'category', 
                     'subjects',
+                    'doi',
+                    'item_id',
                     'department_id'
                 ])
             );

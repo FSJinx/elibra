@@ -25,6 +25,7 @@ class CacheService
     public const MEDIA = 'medias';
 
     public const ACADEMICS = 'academics';
+    public const SERIALS = 'serials'; 
 
     
     /**

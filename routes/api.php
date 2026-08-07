@@ -12,10 +12,10 @@ use App\Http\Controllers\BranchSectionController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ProgramsController;
 use App\Http\Controllers\SectionsController;
+use App\Http\Controllers\SerialController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserPermissionController;
-use App\Models\BranchSection;
 use Illuminate\Support\Facades\Route;
 
 // Authentication Routes
@@ -85,10 +85,12 @@ Route::group(['prefix' => '/item'], function () {
     Route::group(['prefix' => '/create'], function () {
         /* SUBSCRIPTION ROUTES */
         Route::post('subscription', [SubscriptionController::class, 'store'])->middleware('jwt.auth', 'role:super_admin', 'throttle:write');
-        Route::post('subscription_credential', [SubscriptionCredentialController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin,librarian');
+        Route::post('subscription_credential', [SubscriptionCredentialController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle::write');
 
         /* ACADEMICS ROUTES */
         Route::post('academic', [AcademicController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
+        /* SERIAL ROUTES */
+        Route::post('serial', [SerialController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
     });
 
     Route::group(['prefix' => '/update'], function () {
@@ -98,7 +100,8 @@ Route::group(['prefix' => '/item'], function () {
 
         /* ACADEMICS ROUTES */
         Route::put('academic/{academic}', [AcademicController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
-
+        /* SERIAL ROUTES */
+        Route::put('serial/{serial}', [SerialController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
     });
 
     Route::group(['prefix' => '/delete'], function () {
@@ -107,6 +110,9 @@ Route::group(['prefix' => '/item'], function () {
 
         /* ACADEMICS ROUTES */
         Route::delete('academic/{academic}', [AcademicController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:delete');
+        /* SERIAL ROUTES */
+        Route::delete('serial/{serial}', [SerialController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:delete');
+        
     });
 });
 

@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Models\Academic;
 use App\Models\Branch;
 use App\Models\Department;
+use App\Models\Item;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Validation\Rule;
 
@@ -42,6 +43,7 @@ class StoreAcademicRequest extends BaseRequest
             'subjects' => [ 'nullable', 'array' ],
             'subjects.*' => [ 'string', 'max:255' ],
             'doi' => [ 'nullable', 'string', 'max:255' ],
+            'item_id' => [ 'required', Rule::exists((new Item)->getTable(), 'id') ],
             'department_id' => [ 'required', Rule::exists((new Department)->getTable(), 'id') ],
 
         ];
@@ -63,6 +65,8 @@ class StoreAcademicRequest extends BaseRequest
             'call_number.unique' => 'Call number already exists',
             'language.required' => 'Language is required',
             'category.required' => 'Category is required',
+            'item_id.required' => 'Item is required',
+            'item_id.exists' => 'Selected item does not exist',
             'department_id.required' => 'Department is required',
             'department_id.exists' => 'Selected department does not exist',
         ];

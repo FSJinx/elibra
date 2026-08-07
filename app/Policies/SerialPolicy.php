@@ -8,6 +8,10 @@ use App\Models\User;
 
 class SerialPolicy
 {
+    public function isAuthorized(User $user): bool 
+    {
+        return in_array($user->role, [$user->isAdmin(), $user->isLibrarian()]);
+    }
     /**
      * Determine whether the user can view any models.
      */
@@ -29,7 +33,7 @@ class SerialPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->hasPermission('serial.create');
     }
 
     /**
@@ -37,7 +41,7 @@ class SerialPolicy
      */
     public function update(User $user, Serial $serial): bool
     {
-        return false;
+        return $user->hasPermission('serial.update');
     }
 
     /**
@@ -45,7 +49,7 @@ class SerialPolicy
      */
     public function delete(User $user, Serial $serial): bool
     {
-        return false;
+        return $user->hasPermission('serial.delete');
     }
 
     /**

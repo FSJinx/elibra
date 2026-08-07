@@ -6,9 +6,16 @@ use App\Models\Serial;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreSerialRequest;
 use App\Http\Requests\UpdateSerialRequest;
+use App\Services\SerialService;
 
 class SerialController extends Controller
 {
+    protected SerialService $serialService;
+    public function __construct(SerialService $serialService)
+    {
+        $this->serialService = $serialService;
+    }
+    
     /**
      * Display a listing of the resource.
      */
@@ -30,7 +37,14 @@ class SerialController extends Controller
      */
     public function store(StoreSerialRequest $request)
     {
-        //
+        $serial = $this->serialService->create($request->validated());
+
+        return $this->response(
+            'success', 
+            'Serial created successfully', 
+            $serial->load('item')->toArray(),            
+            201
+        );
     }
 
     /**
@@ -54,7 +68,17 @@ class SerialController extends Controller
      */
     public function update(UpdateSerialRequest $request, Serial $serial)
     {
-        //
+        $serial = $this->serialService->update(
+            $serial,
+            $request->validated()
+        );
+
+        return $this->response(
+            'success',
+            'Serial updated successfully',
+            $serial->load('item')->toArray(),
+            200
+        );
     }
 
     /**
@@ -62,6 +86,15 @@ class SerialController extends Controller
      */
     public function destroy(Serial $serial)
     {
-        //
+        $this->authorize('delete', $serial);
+
+        $this->serialService->delete($serial);
+
+        return $this->response(
+            'success',
+            'Serial deleted successfully',
+            [],
+            200
+        );
     }
 }
