@@ -3,14 +3,18 @@ namespace App\Services;
 
 use App\Models\Academic;
 use App\Models\Item;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class AcademicService
 {
     public function create(array $data): Academic
     {
         $academic = DB::transaction(function () use ($data){
+
+        $this->saveElectronicFile($data);
 
             $item = Item::create(
                 Arr::only($data, [
@@ -31,7 +35,6 @@ class AcademicService
                     'category', 
                     'subjects',
                     'doi',
-                    'item_id',
                     'department_id'
                 ])
             );
@@ -40,13 +43,19 @@ class AcademicService
 
         CacheService::invalidate(CacheService::ACADEMICS);
 
-        return $academic;
+        return $academic->load('item');
     }
 
     public function update(Academic $academic, array $data): Academic
     {
+        $oldFile = $academic->item->electronic_file;
+
         $academic = DB::transaction(function () use ($academic, $data){
-            
+
+            if (!$this->saveElectronicFile($data)) {
+                unset($data['electronic_file']);
+            }
+                
             $academic->item->update(
                 Arr::only($data, [
                     'title', 
@@ -66,14 +75,23 @@ class AcademicService
                     'category', 
                     'subjects',
                     'doi',
-                    'item_id',
                     'department_id'
                 ])
             );
             
             // Refresh the academic model to get the latest data from the database
-            return $academic->refresh(); 
+            return $academic->fresh(['item']);
         });
+
+         // Delete the old file only after the database update succeeds
+        if (
+            isset($data['electronic_file']) &&
+            $oldFile &&
+            $oldFile !== $data['electronic_file']
+        ) {
+            Storage::disk('public')->delete($oldFile);
+        }
+
         CacheService::invalidate(CacheService::ACADEMICS);
         return $academic;
     }
@@ -86,5 +104,20 @@ class AcademicService
         });
         
         CacheService::invalidate(CacheService::ACADEMICS);
+    }
+
+    private function saveElectronicFile(array &$data): bool
+    {
+        if (
+            isset($data['electronic_file']) &&
+            $data['electronic_file'] instanceof UploadedFile
+        ) {
+            $data['electronic_file'] = $data['electronic_file']
+                ->store('item/academics', 'public');
+
+            return true;
+        }
+
+        return false;
     }
 }

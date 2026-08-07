@@ -10,6 +10,9 @@ class Item extends Model
 {
     /** @use HasFactory<\Database\Factories\ItemFactory> */
     use HasFactory, SoftDeletes;
+    // protected $hidden = [
+    //     'electronic_file',
+    // ];
     
     protected $fillable = [
         'title',

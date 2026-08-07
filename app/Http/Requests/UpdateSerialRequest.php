@@ -30,7 +30,7 @@ class UpdateSerialRequest extends BaseRequest
             'title' => [ 'sometimes', 'sometimes', 'required', 'string', 'max:255' ],
             'subtitle' => [ 'sometimes', 'sometimes', 'nullable', 'string', 'max:255' ],
             'description' => [ 'sometimes', 'nullable', 'string' ],
-            'call_number' => [ 'sometimes', 'nullable', 'string', 'max:255', Rule::unique((new Academic)->getTable(), 'call_number') ],
+            'call_number' => [ 'sometimes', 'nullable', 'string', 'max:255', Rule::unique((new Item)->getTable(), 'call_number') ],
             'language' => [ 'sometimes', 'required', 'string', 'max:255' ],
             'publication_year' => [ 'sometimes', 'nullable', 'integer', 'min:1900', 'max:' . date('Y') ],
             'keywords' => [ 'sometimes', 'nullable', 'string' ],
@@ -43,7 +43,7 @@ class UpdateSerialRequest extends BaseRequest
             'issue' => ['sometimes',  'nullable', 'string', 'max:255' ],
             'pages' => [ 'sometimes', 'nullable', 'string', 'max:255' ],
             'doi' => [ 'sometimes', 'nullable', 'string', 'max:255' ],
-            'item_id' => [ 'sometimes', 'required', Rule::exist((new Item)->getTable(), 'id') ], 
+            // 'item_id' => [ 'sometimes', 'required', Rule::exist((new Item)->getTable(), 'id') ], 
         ];
 
         return $rules;

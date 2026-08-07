@@ -22,7 +22,7 @@ return new class extends Migration
             $table->year('publication_year');
 
             $table->string('keywords');
-            $table->binary('electronic_file');
+            $table->string('electronic_file')->nullable();
             $table->unsignedBigInteger('branch_id');
 
             $table->timestamps();
