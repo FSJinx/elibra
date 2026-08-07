@@ -27,12 +27,12 @@ class UpdateAcademicRequest extends BaseRequest
      */
     public function rules(): array
     {
-        $rules = [
+        $rules = [  
             //Item Fields
             'title' => [ 'sometimes', 'required', 'string', 'max:255' ],
             'subtitle' => [ 'sometimes', 'nullable', 'string', 'max:255' ],
             'description' => [ 'sometimes', 'nullable', 'string' ],
-            'call_number' => [ 'sometimes', 'nullable', 'string', 'max:255', Rule::unique((new Academic)->getTable(), 'call_number')->ignore($this->route('academic')) ],
+            'call_number' => [ 'sometimes', 'nullable', 'string', 'max:255', Rule::unique((new Item)->getTable(), 'call_number')->ignore($this->route('academic')) ],
             'language' => [ 'sometimes', 'required', 'string', 'max:255' ],
             'publication_year' => [ 'sometimes', 'nullable', 'integer', 'min:1900', 'max:' . date('Y') ],
             'keywords' => [ 'sometimes', 'nullable', 'string' ],

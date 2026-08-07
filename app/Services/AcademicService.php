@@ -96,14 +96,18 @@ class AcademicService
         return $academic;
     }
 
-    public function delete(Academic $academic): void
+    public function delete(Academic $academic): bool
     {
-        DB::transaction(function () use ($academic){
+        $deleted = DB::transaction(function () use ($academic){
             $academic->item->delete();
             $academic->delete();
         });
         
-        CacheService::invalidate(CacheService::ACADEMICS);
+        if ($deleted) {
+            CacheService::invalidate(CacheService::ACADEMICS);
+        }
+
+        return $deleted;
     }
 
     private function saveElectronicFile(array &$data): bool

@@ -90,16 +90,36 @@ class AcademicController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Academic $academic)
+    public function destroy(int $academicId)
     {
+        $academic = Academic::find($academicId);
+
+        if (!$academic) {
+            return $this->response(
+                'Error',
+                'The selected Academic record could not be found.',
+                null,
+                404
+            );
+        }
+
         $this->authorize('delete', $academic);
 
-        $this->academicService->delete($academic);
+        $deleted = $this->academicService->delete($academic);
+
+        if (!$deleted) {
+            return $this->response(
+                'Error',
+                'The selected Academic record could not be deleted.',
+                null,
+                500
+            );
+        }
 
         return $this->response(
             'success',
             'Academic deleted successfully',
-            [],
+            null,
             200
         );
     }

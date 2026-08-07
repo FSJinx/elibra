@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Item;
 use App\Models\Serial;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
@@ -79,13 +80,32 @@ class SerialService
         return $serial;
     }
 
-    Public function delete(Serial $serial): void
+    Public function delete(Serial $serial): bool
     {
-        DB::transaction(function () use ($serial){
+        $deleted = DB::transaction(function () use ($serial){
             $serial->item->delete();
             $serial->delete();
         });
 
-        CacheService::invalidate(CacheService::ACADEMICS);
+        if($deleted){
+            CacheService::invalidate(CacheService::ACADEMICS);
+        }
+
+        return $deleted;
+    }
+
+    private function saveElectronicFile(array &$data): bool
+    {
+        if (
+            isset($data['electronic_file']) &&
+            $data['electronic_file'] instanceof UploadedFile
+        ) {
+            $data['electronic_file'] = $data['electronic_file']
+                ->store('item/serials', 'public');
+
+            return true;
+        }
+
+        return false;
     }
 }
