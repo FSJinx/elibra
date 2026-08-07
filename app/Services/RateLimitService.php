@@ -52,6 +52,6 @@ class RateLimitService
         RateLimiter::for('upload', function (Request $request) {
             return Limit::perMinute(10)
                 ->by($request->user()?->id ?: $request->ip());
-        });
+        }); 
     }
 }

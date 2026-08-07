@@ -4,6 +4,11 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Academic;
+use App\Models\Branch;
+use App\Models\Department;
+use App\Models\Item;
+use Illuminate\Validation\Rule;
 
 class UpdateAcademicRequest extends BaseRequest
 {
@@ -12,7 +17,7 @@ class UpdateAcademicRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user()->can('update', $this->route('academic'));
     }
 
     /**
@@ -22,22 +27,26 @@ class UpdateAcademicRequest extends BaseRequest
      */
     public function rules(): array
     {
-        return [
-            // Item table fields
-            'title' => 'sometimes|required|string|max:255',
-            'subtitle' => 'nullable|string|max:255',
-            'description' => 'nullable|string',
-            'keywords' => 'nullable|string',
-            'branch_id' => 'sometimes|required|exists:branches,id',
+        $rules = [
+            //Item Fields
+            'title' => [ 'sometimes', 'required', 'string', 'max:255' ],
+            'subtitle' => [ 'sometimes', 'nullable', 'string', 'max:255' ],
+            'description' => [ 'sometimes', 'nullable', 'string' ],
+            'call_number' => [ 'sometimes', 'nullable', 'string', 'max:255', Rule::unique((new Academic)->getTable(), 'call_number')->ignore($this->route('academic')) ],
+            'language' => [ 'sometimes', 'required', 'string', 'max:255' ],
+            'publication_year' => [ 'sometimes', 'nullable', 'integer', 'min:1900', 'max:' . date('Y') ],
+            'keywords' => [ 'sometimes', 'nullable', 'string' ],
+            'electronic_file' => [ 'sometimes', 'nullable', 'file', 'mimes:pdf,doc,docx' ],
+            'branch_id' => [ 'sometimes', 'required', Rule::exists((new Branch)->getTable(), 'id') ],
 
-            // Academic table fields
-            'call_number' => 'sometimes|required|string|max:255|unique:academics,call_number,' . $this->route('academic')->id,
-            'language' => 'sometimes|required|string|max:255',
-            'category' => 'sometimes|required|string|max:255',
-            'publication_year' => 'nullable|integer|min:1900|max:' . date('Y'),
-            'subjects' => 'nullable|array',
-            'subjects.*' => 'string|max:255',
-            'department_id' => 'sometimes|required|exists:departments,id',
+            //Academic Fields
+            'category' => [ 'sometimes', 'required', Rule::in(['undergraduate thesis', 'graduate thesis', 'case study', 'research paper', 'feasibility study']) ],
+            'subjects' => [ 'sometimes', 'nullable', 'array' ],
+            'subjects.*' => [ 'string', 'max:255' ],
+            'doi' => [ 'sometimes', 'nullable', 'string', 'max:255' ],
+            'item_id' => [ 'sometimes', Rule::exists((new Item)->getTable(), 'id') ],
+            'department_id' => [ 'sometimes', 'required', Rule::exists((new Department)->getTable(), 'id') ],
         ];
+        return $rules;
     }
 }

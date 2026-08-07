@@ -8,6 +8,10 @@ use Illuminate\Auth\Access\Response;
 
 class AcademicPolicy
 {
+    public function isAuthorized(User $user): bool
+    {
+        return in_array($user->role, [$user->isAdmin(), $user->isLibrarian()]);
+    }
     /**
      * Determine whether the user can view any models.
      */
@@ -29,7 +33,7 @@ class AcademicPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasPrimaryRole('academics');
+        return $user->hasPermission('academic.create');
     }
 
     /**
@@ -37,7 +41,7 @@ class AcademicPolicy
      */
     public function update(User $user, Academic $academic): bool
     {
-        return $user->hasPrimaryRole('academics');
+        return $user->hasPermission('academic.update');
     }
 
     /**
@@ -45,7 +49,7 @@ class AcademicPolicy
      */
     public function delete(User $user, Academic $academic): bool
     {
-        return $user->hasPrimaryRole('academics');
+        return $user->hasPermission('academic.delete');
     }
 
     /**

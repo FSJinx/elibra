@@ -7,7 +7,8 @@ use App\Models\Item;
 use App\Services\AcademicService;
 use App\Http\Requests\StoreAcademicRequest;
 use App\Http\Requests\UpdateAcademicRequest;
-
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class AcademicController extends Controller
 {
@@ -40,17 +41,13 @@ class AcademicController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(StoreAcademicRequest $request)
-    {        
-        // Authorize the user through the policy
-        $this->authorize('create', Academic::class);
-        
-        // Use the AcademicService to create the academic resource
+    {   
         $academic = $this->academicService->create($request->validated());
 
         return $this->response( 
             'success', 
             'Academic created successfully', 
-            $academic->toArray(), 
+            $academic->load('item')->toArray(),            
             201
         );
     }
@@ -76,14 +73,16 @@ class AcademicController extends Controller
      */
     public function update(UpdateAcademicRequest $request, Academic $academic)
     {
-        $this->authorize('update', $academic);
 
-        $academic = $this->academicService->update($academic, $request->validated());
+        $academic = $this->academicService->update(
+                $academic, 
+                $request->validated()
+        );
 
         return $this->response(
             'success', 
             'Academic updated successfully', 
-            $academic->toArray(), 
+            $academic->load('item')->toArray(), 
             200
         );
     }

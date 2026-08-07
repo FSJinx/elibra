@@ -24,6 +24,9 @@ class CacheService
 
     public const MEDIA = 'medias';
 
+    public const ACADEMICS = 'academics';
+    public const SERIALS = 'serials'; 
+
     
     /**
      * Cache a query using a versioned cache key.
