@@ -1,4 +1,4 @@
-interface Query {
+interface Params {
   query: string
   sort: string
   order: 'asc' | 'desc'
@@ -6,36 +6,41 @@ interface Query {
   per_page: number
 }
 
+const defaultParams: Readonly<Params> = {
+  query: '',
+  sort: '',
+  order: 'asc',
+  page: 1,
+  per_page: 10,
+}
+
+// ========== Api Route ==========
+const url = {
+  get: 'campus/get',
+  post: 'campus/post',
+}
+
 export function useCampus() {
   const store = campusStore()
-
-  const query = reactive<Query>({
-    query: '',
-    sort: '',
-    order: 'asc',
-    page: 1,
-    per_page: 10,
-  })
+  const params = reactive<Params>({ ...defaultParams })
 
   // --------- FETCH CAMPUS ---------
-  async function getCampuses(params: Partial<Query> = {}) {
-    if (params.query && params.query?.length > 0) console.log('search')
-
-    if (store.campuses && store.campuses?.length > 0) return store.campuses
+  async function getCampuses(forced = false) {
+    // Returns the cached data if fetch is not forced
+    if (!forced && store.campuses && store.campuses.length) {
+      return store.campuses
+    }
 
     store.setLoading(true)
 
     try {
-      const res = await api.get('/campus/get', {
+      const res = await api.get(url.get, {
         params: {
-          ...query,
           ...params,
         },
       })
 
       store.setCampuses(res.data.data)
-
-      return res.data.data
     } catch (err) {
       return []
     } finally {
@@ -43,7 +48,25 @@ export function useCampus() {
     }
   }
 
+  // --------- FETCH CAMPUS ---------
+  async function refresh() {
+    Object.assign(params, defaultParams)
+  }
+
+  // ---------- SEARCHING FUNCTION -----------
+  watchDebounced(
+    () => ({ ...params }),
+    (p) => {
+      getCampuses(true)
+    },
+    // {
+    //   debounce: 200,
+    // },
+  )
+
   return {
+    params,
     getCampuses,
+    refresh,
   }
 }

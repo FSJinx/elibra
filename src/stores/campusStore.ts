@@ -15,7 +15,6 @@ export const campusStore = defineStore('campus', () => {
   const currentCampus = ref<CampusInfo | null>(null)
   const loading = ref<boolean>(false)
 
-  
   // ============= SETTERS ===============
   function setCampuses(data: CampusInfo[] | null) {
     campuses.value = data

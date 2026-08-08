@@ -22,6 +22,8 @@ class DatabaseSeeder extends Seeder
             SuperAdminSeeder::class,
             AdminSeeder::class,
             SectionsSeeder::class,
+            ItemTypeSeeder::class,
+            ItemTypeCategorySeeder::class,
 
             // Dev Seeds
             CampusSeeder::class,

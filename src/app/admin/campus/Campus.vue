@@ -3,13 +3,13 @@
     <Button variant="primary">Create New</Button>
   </div>
 
-  <Table name="Campus Table" @search="campus.getCampuses({ query: $event.target })" @refresh="refresh">
+  <Table name="Campus Table" @search="campus.params.query = $event" @refresh="campus.getCampuses(true)">
     <Thead>
       <tr>
-        <th class="w-20">ID</th>
+        <th>ID</th>
         <th class="text-left">Campus Name</th>
         <th>Code</th>
-        <th class="w-50">Status</th>
+        <th>Status</th>
       </tr>
     </Thead>
 
@@ -30,14 +30,17 @@
 const campus = useCampus()
 const store = campusStore()
 
-const campusSearch = ref('')
 const parse = useParser()
 
-function refresh() {
-  campusSearch.value = ''
+onMounted(() => {
+  if (!store.campuses) {
+    campus.getCampuses()
+  }
+})
 
-  campus.getCampuses()
-}
+onBeforeUnmount(() => {
+  campus.refresh()
+})
 </script>
 
 <style scoped></style>
