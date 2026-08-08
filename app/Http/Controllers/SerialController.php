@@ -84,16 +84,36 @@ class SerialController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Serial $serial)
+    public function destroy(int $serialId)
     {
+        $serial = Serial::find($serialId);
+
+        if(!$serial) {
+            return $this->response(
+                'Error',
+                'The selected serial record could not be found.',
+                null,
+                404
+            );
+        }
+
         $this->authorize('delete', $serial);
 
-        $this->serialService->delete($serial);
+        $deleted = $this->serialService->delete($serial);
+
+        if(!$deleted) {
+            return $this->response(
+                'Error',
+                'The selected serial record could not be found.',
+                null,
+                500
+            );
+        }
 
         return $this->response(
             'success',
             'Serial deleted successfully',
-            [],
+            null,
             200
         );
     }
