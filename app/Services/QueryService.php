@@ -11,19 +11,16 @@ class QueryService
         int $defaultPerPage = 15,
         int $maxPerPage = 100
     ): array {
+        $perPage = $request->integer('per_page', $defaultPerPage);
 
-         $perPage = $request->integer('per_page', $defaultPerPage);
-
-        // Limit per_page between 1 and the configured maximum.
         $perPage = max(1, min($perPage, $maxPerPage));
 
         return [
             'search' => trim($request->query('query', '')),
-            'sort' => $request->query('sort', []),
+            'sort' => $request->query('sort', 'id'),
             'order' => strtolower($request->query('order', 'asc')),
             'page' => $request->integer('page', 1),
             'per_page' => $perPage,
         ];
-
     }
 }

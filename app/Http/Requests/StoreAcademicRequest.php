@@ -6,6 +6,8 @@ use App\Models\Academic;
 use App\Models\Branch;
 use App\Models\Department;
 use App\Models\Item;
+use App\Models\ItemType;
+use App\Models\ItemTypeCategory;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Validation\Rule;
 
@@ -36,16 +38,15 @@ class StoreAcademicRequest extends BaseRequest
             'publication_year' => [ 'nullable', 'integer', 'min:1900', 'max:' . date('Y') ],
             'keywords' => [ 'nullable', 'string' ],
             'electronic_file' => [ 'nullable', 'file', 'mimes:pdf,doc,docx' ],
+            'item_type_id' => [ 'required', Rule::exists((new ItemType)->getTable(), 'id') ],
+            'item_type_category_id' => [ 'required', Rule::exists((new ItemTypeCategory)->getTable(), 'id') ],
             'branch_id' => [ 'required', Rule::exists((new Branch)->getTable(), 'id') ],
 
             //Acdemic Fields
-            'category' => [ 'required', Rule::in(['undergraduate thesis', 'graduate thesis', 'case study', 'research paper', 'feasibility study']) ],
             'subjects' => [ 'nullable', 'array' ],
             'subjects.*' => [ 'string', 'max:255' ],
             'doi' => [ 'nullable', 'string', 'max:255' ],
-            // 'item_id' => [ 'required', Rule::exists((new Item)->getTable(), 'id') ],
             'department_id' => [ 'required', Rule::exists((new Department)->getTable(), 'id') ],
-
         ];
         return $rules;
     }
@@ -57,18 +58,53 @@ class StoreAcademicRequest extends BaseRequest
      */
     public function messages(): array
     {
-        return [
-            'title.required' => 'Title is required',
-            'branch_id.required' => 'Branch is required',
-            'branch_id.exists' => 'Selected branch does not exist',
-            'call_number.required' => 'Call number is required',
-            'call_number.unique' => 'Call number already exists',
-            'language.required' => 'Language is required',
-            'category.required' => 'Category is required',
-            'item_id.required' => 'Item is required',
-            'item_id.exists' => 'Selected item does not exist',
-            'department_id.required' => 'Department is required',
-            'department_id.exists' => 'Selected department does not exist',
-        ];
+    return [
+        // Item Fields
+        'title.required' => 'Title is required.',
+        'title.string' => 'Title must be a valid string.',
+        'title.max' => 'Title may not be greater than 255 characters.',
+
+        'subtitle.string' => 'Subtitle must be a valid string.',
+        'subtitle.max' => 'Subtitle may not be greater than 255 characters.',
+
+        'description.string' => 'Description must be a valid string.',
+
+        'call_number.string' => 'Call number must be a valid string.',
+        'call_number.max' => 'Call number may not be greater than 255 characters.',
+        'call_number.unique' => 'Call number already exists.',
+
+        'language.required' => 'Language is required.',
+        'language.string' => 'Language must be a valid string.',
+        'language.max' => 'Language may not be greater than 255 characters.',
+
+        'publication_year.integer' => 'Publication year must be a valid year.',
+        'publication_year.min' => 'Publication year must be 1900 or later.',
+        'publication_year.max' => 'Publication year cannot be greater than the current year.',
+
+        'keywords.string' => 'Keywords must be a valid string.',
+
+        'electronic_file.file' => 'Electronic file must be a valid file.',
+        'electronic_file.mimes' => 'Electronic file must be a PDF, DOC, or DOCX file.',
+
+        'item_type_id.required' => 'Item type is required.',
+        'item_type_id.exists' => 'Selected item type does not exist.',
+
+        'item_type_category_id.required' => 'Item type category is required.',
+        'item_type_category_id.exists' => 'Selected item type category does not exist.',
+
+        'branch_id.required' => 'Branch is required.',
+        'branch_id.exists' => 'Selected branch does not exist.',
+
+        // Academic Fields
+        'subjects.array' => 'Subjects must be provided as a valid list.',
+        'subjects.*.string' => 'Each subject must be a valid string.',
+        'subjects.*.max' => 'Each subject may not be greater than 255 characters.',
+
+        'doi.string' => 'DOI must be a valid string.',
+        'doi.max' => 'DOI may not be greater than 255 characters.',
+
+        'department_id.required' => 'Department is required.',
+        'department_id.exists' => 'Selected department does not exist.',
+    ];
     }
 }

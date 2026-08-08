@@ -10,6 +10,69 @@ use Illuminate\Support\Facades\Storage;
 
 class AcademicService
 {
+
+    public function index(array $filters)
+    {
+        return CacheService::remember(
+            CacheService::ACADEMICS,
+            $filters,
+            now()->addMinutes(10),
+            function () use ($filters) {
+
+                $query = Academic::query()
+                    ->with([
+                        'item',
+                        'department',
+                    ]);
+
+                if ($filters['search'] !== '') {
+                    $search = $filters['search'];
+
+                    $query->where(function ($q) use ($search) {
+                        $q->where('doi', 'like', "%{$search}%")
+                            ->orWhere('subjects', 'like', "%{$search}%")
+                            ->orWhereHas('item', function ($itemQuery) use ($search) {
+                                $itemQuery
+                                    ->where('title', 'like', "%{$search}%")
+                                    ->orWhere('subtitle', 'like', "%{$search}%")
+                                    ->orWhere('description', 'like', "%{$search}%")
+                                    ->orWhere('call_number', 'like', "%{$search}%")
+                                    ->orWhere('language', 'like', "%{$search}%")
+                                    ->orWhere('keywords', 'like', "%{$search}%");
+                            });
+                    });
+                }
+
+                $allowedSorts = [
+                    'id',
+                    'doi',
+                    'department_id',
+                    'created_at',
+                    'updated_at',
+                ];
+
+                $sort = $filters['sort'];
+
+                if (!in_array($sort, $allowedSorts)) {
+                    $sort = 'id';
+                }
+
+                $order = in_array($filters['order'], ['asc', 'desc'])
+                    ? $filters['order']
+                    : 'asc';
+
+                return $query
+                    ->orderBy($sort, $order)
+                    ->paginate(
+                        $filters['per_page'],
+                        ['*'],
+                        'page',
+                        $filters['page']
+                    );
+            }
+        );
+    }
+
     public function create(array $data): Academic
     {
         $academic = DB::transaction(function () use ($data){
@@ -26,13 +89,14 @@ class AcademicService
                     'publication_year',
                     'keywords',
                     'electronic_file',
+                    'item_type_id',
+                    'item_type_category_id',
                     'branch_id'
                 ])
             );
 
             return $item->academic()->create(
                 Arr::only($data, [
-                    'category', 
                     'subjects',
                     'doi',
                     'department_id'
@@ -66,13 +130,14 @@ class AcademicService
                     'publication_year',
                     'keywords',
                     'electronic_file',
+                    'item_type_id',
+                    'item_type_category_id',
                     'branch_id'
                 ])
             );
 
             $academic->update(
                 Arr::only($data, [
-                    'category', 
                     'subjects',
                     'doi',
                     'department_id'
@@ -101,6 +166,8 @@ class AcademicService
         $deleted = DB::transaction(function () use ($academic){
             $academic->item->delete();
             $academic->delete();
+
+            return true;
         });
         
         if ($deleted) {

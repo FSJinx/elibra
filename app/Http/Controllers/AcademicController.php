@@ -7,6 +7,8 @@ use App\Models\Item;
 use App\Services\AcademicService;
 use App\Http\Requests\StoreAcademicRequest;
 use App\Http\Requests\UpdateAcademicRequest;
+use App\Services\QueryService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -23,10 +25,19 @@ class AcademicController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //$this ->authorize('viewAny', Academic::class);
+        $filters = QueryService::filters($request);
 
+        $academics = $this->academicService->index($filters);
+
+        return $this->response(
+            'success',
+            'Academics retrieved successfully',
+            $academics,
+            200
+        );
+        
     }
 
     /**
@@ -101,7 +112,7 @@ class AcademicController extends Controller
                 null,
                 404
             );
-        }
+}
 
         $this->authorize('delete', $academic);
 

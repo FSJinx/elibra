@@ -82,6 +82,8 @@ return new class extends Migration
             'name' => 'items',
             'foreign_columns' => [
                 ['name' => 'branch_id', 'references' => 'id', 'on' => 'branches', 'onDelete' => 'cascade'],
+                ['name' => 'item_type_id', 'references' => 'id', 'on' => 'item_types', 'onDelete' => 'cascade'],
+                ['name' => 'item_type_category_id', 'references' => 'id', 'on' => 'item_type_categories', 'onDelete' => 'cascade'],
             ],
         ],
         [
@@ -89,6 +91,12 @@ return new class extends Migration
             'foreign_columns' => [
                 ['name' => 'item_id', 'references' => 'id', 'on' => 'items', 'onDelete' => 'cascade'],
                 ['name' => 'department_id', 'references' => 'id', 'on' => 'departments', 'onDelete' => 'cascade'],
+            ],
+        ],
+        [
+            'name' => 'serials',
+            'foreign_columns' => [
+                ['name' => 'item_id', 'references' => 'id', 'on' => 'items', 'onDelete' => 'cascade'],
             ],
         ],
         [

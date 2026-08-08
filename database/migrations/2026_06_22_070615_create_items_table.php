@@ -20,9 +20,10 @@ return new class extends Migration
             $table->string('call_number')->nullable();
             $table->string('language');
             $table->year('publication_year');
-
             $table->string('keywords');
             $table->string('electronic_file')->nullable();
+            $table->unsignedBigInteger('item_type_id');
+            $table->unsignedBigInteger('item_type_category_id');
             $table->unsignedBigInteger('branch_id');
 
             $table->timestamps();
