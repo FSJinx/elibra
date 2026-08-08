@@ -6,7 +6,9 @@ use App\Models\Serial;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreSerialRequest;
 use App\Http\Requests\UpdateSerialRequest;
+use App\Services\QueryService;
 use App\Services\SerialService;
+use Illuminate\Http\Request;
 
 class SerialController extends Controller
 {
@@ -19,9 +21,18 @@ class SerialController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $filters = QueryService::filters($request);
+
+        $serials = $this->serialService->index($filters);
+
+        return $this->response(
+            'success',
+            'Serials retrieved successfully',
+            $serials,
+            200
+        );
     }
 
     /**

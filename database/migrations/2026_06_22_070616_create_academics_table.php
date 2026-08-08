@@ -13,10 +13,8 @@ return new class extends Migration
     {
         Schema::create('academics', function (Blueprint $table) {
             $table->id();
-            $table->enum('category', ['undergraduate thesis', 'graduate thesis', 'case study', 'research paper', 'feasibility study']);
             $table->json('subjects')->nullable();
             $table->string('doi')->nullable();
-
             $table->unsignedBigInteger('item_id');
             $table->unsignedBigInteger('department_id');
 

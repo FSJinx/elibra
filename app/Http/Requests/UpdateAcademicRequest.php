@@ -8,6 +8,8 @@ use App\Models\Academic;
 use App\Models\Branch;
 use App\Models\Department;
 use App\Models\Item;
+use App\Models\ItemType;
+use App\Models\ItemTypeCategory;
 use Illuminate\Validation\Rule;
 
 class UpdateAcademicRequest extends BaseRequest
@@ -37,10 +39,11 @@ class UpdateAcademicRequest extends BaseRequest
             'publication_year' => [ 'sometimes', 'nullable', 'integer', 'min:1900', 'max:' . date('Y') ],
             'keywords' => [ 'sometimes', 'nullable', 'string' ],
             'electronic_file' => [ 'sometimes', 'nullable', 'file', 'mimes:pdf,doc,docx' ],
+            'item_type_id' => [ 'sometimes', 'required', Rule::exists((new ItemType)->getTable(), 'id') ],
+            'item_type_category_id' => [ 'sometimes', 'required', Rule::exists((new ItemTypeCategory)->getTable(), 'id') ],
             'branch_id' => [ 'sometimes', 'required', Rule::exists((new Branch)->getTable(), 'id') ],
 
             //Academic Fields
-            'category' => [ 'sometimes', 'required', Rule::in(['undergraduate thesis', 'graduate thesis', 'case study', 'research paper', 'feasibility study']) ],
             'subjects' => [ 'sometimes', 'nullable', 'array' ],
             'subjects.*' => [ 'string', 'max:255' ],
             'doi' => [ 'sometimes', 'nullable', 'string', 'max:255' ],

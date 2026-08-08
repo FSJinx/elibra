@@ -5,6 +5,8 @@ namespace App\Http\Requests;
 use App\Models\Academic;
 use App\Models\Branch;
 use App\Models\Item;
+use App\Models\ItemType;
+use App\Models\ItemTypeCategory;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Validation\Rule;
 
@@ -35,6 +37,8 @@ class UpdateSerialRequest extends BaseRequest
             'publication_year' => [ 'sometimes', 'nullable', 'integer', 'min:1900', 'max:' . date('Y') ],
             'keywords' => [ 'sometimes', 'nullable', 'string' ],
             'electronic_file' => [ 'sometimes', 'nullable', 'file', 'mimes:pdf,doc,docx' ],
+            'item_type_id' => [ 'sometimes', 'required', Rule::exists((new ItemType)->getTable(), 'id') ],
+            'item_type_category_id' => [ 'sometimes', 'required', Rule::exists((new ItemTypeCategory)->getTable(), 'id') ],
             'branch_id' => [ 'sometimes', 'required', Rule::exists((new Branch)->getTable(), 'id') ],
 
             //Serial Fields
@@ -43,10 +47,8 @@ class UpdateSerialRequest extends BaseRequest
             'issue' => ['sometimes',  'nullable', 'string', 'max:255' ],
             'pages' => [ 'sometimes', 'nullable', 'string', 'max:255' ],
             'doi' => [ 'sometimes', 'nullable', 'string', 'max:255' ],
-            // 'item_id' => [ 'sometimes', 'required', Rule::exist((new Item)->getTable(), 'id') ], 
         ];
 
         return $rules;
-
     }
 }
