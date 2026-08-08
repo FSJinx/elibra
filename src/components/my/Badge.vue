@@ -1,17 +1,15 @@
 <template>
-  <span class="inline-flex shrink-0 text-xs p-2 py-1 leading-normal rounded-xl" :class="[badgeClass]">
+  <span class="inline-flex shrink-0 text-xs px-3 py-1 leading-normal rounded-lg font-medium" :class="[badgeClass]">
     <slot />
   </span>
 </template>
 <script setup lang="ts">
-import { computed, ref } from 'vue'
 
 type Border = true | false
-type Variant = Variants
 
 interface Props {
   border?: Border
-  variant?: Variant
+  variant?: Variants
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -20,7 +18,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const badgeClass = computed(() => {
-  const variants: Record<Variant, string> = {
+  const variants: Record<Variants, string> = {
     danger: 'border border-danger/25 bg-danger-soft text-danger-soft-foreground',
     default: 'border border-default/25 bg-default-soft text-default-soft-foreground',
     info: 'border border-info/25 bg-info-soft text-info-soft-foreground',

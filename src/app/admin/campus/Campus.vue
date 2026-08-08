@@ -1,30 +1,25 @@
 <template>
-  <section class="flex flex-col gap-5 overflow-hidden mb-3">
-    <div class="flex items-center justify-end gap-2 w-full">
-      <Input id="campus-query" left-icon="search" class="max-w-85" placeholder="Search by name, code, address" />
+  <div class="flex justify-end mb-3">
+    <Button variant="primary">Create New</Button>
+  </div>
 
-      <Button variant="primary">Create New</Button>
-    </div>
-  </section>
-
-
-  <Table>
+  <Table name="Campus Table" @search="campus.params.query = $event" @refresh="campus.getCampuses(true)">
     <Thead>
       <tr>
-        <th>Campus Name</th>
+        <th>ID</th>
+        <th class="text-left">Campus Name</th>
         <th>Code</th>
-        <th>Address</th>
-        <th class="text-center">Actions</th>
+        <th>Status</th>
       </tr>
     </Thead>
 
-    <Tbody>
-      <tr v-for="i in 20" :key="i">
-        <td>Campus Branch {{ i }}</td>
-        <td>CB-00{{ i }}</td>
-        <td>123 University Avenue, Metro City</td>
-        <td class="text-center">
-          <Button class="text-xs py-1 px-3 border border-border">View</Button>
+    <Tbody :loading="store.loading" :columns="4">
+      <tr v-for="c in store.campuses">
+        <td>{{ c.id }}</td>
+        <td class="text-left">{{ c.name ?? 'No name' }}</td>
+        <Td :data="c.code" />
+        <td>
+          <Badge :variant="parse.status(c?.status)">{{ parse.toCapital(c.status) }}</Badge>
         </td>
       </tr>
     </Tbody>
@@ -32,6 +27,20 @@
 </template>
 
 <script setup lang="ts">
+const campus = useCampus()
+const store = campusStore()
+
+const parse = useParser()
+
+onMounted(() => {
+  if (!store.campuses) {
+    campus.getCampuses()
+  }
+})
+
+onBeforeUnmount(() => {
+  campus.refresh()
+})
 </script>
 
 <style scoped></style>

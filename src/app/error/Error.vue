@@ -1,6 +1,7 @@
 <template>
   <Teleport to="body">
     <Transition name="popup">
+      <!-- Alert Popup -->
       <div v-show="state.show" class="inset-0 fixed flex bg-backdrop h-dvh w-full cursor-pointer" @click="close()">
         <div class="popup-card flex flex-col justify-center items-center bg-background rounded-2xl m-auto w-125 p-10 text-center" @click.stop>
           <!-- Logo -->

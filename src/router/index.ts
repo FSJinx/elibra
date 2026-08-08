@@ -56,20 +56,25 @@ router.beforeEach(async (to, from) => {
   const permission = matched.find((route) => route.meta.permission)?.meta.permission
   const maintenance = matched.find((route) => route.meta.maintenance)?.meta.maintenance
 
-  const auth = authStore()
+  // ======== STORES ===========
+  const store = authStore()
+
+  // ======== COMPOSABLES ===========
+  const auth = useAuth()
   const error = useError()
-  const { goHome } = useAuth()
-  const my = computed(() => auth?.user)
+  const preload = usePreloader()
+
   const accessRoles = String(role ?? '')
 
-  // console.log(matched)
-
-  if (auth.token && !auth.isAuthenticated) {
+  // ======== AUTHENTICATED PRELOAD ===========
+  if (store.token && !store.isAuthenticated) {
     await auth.getUser()
   }
 
-  if (to.name === 'login' && auth.isAuthenticated) {
-    goHome()
+  await preload
+
+  if (to.name === 'login' && store.isAuthenticated) {
+    auth.goHome()
   }
 
   if (maintenance) {
@@ -84,13 +89,13 @@ router.beforeEach(async (to, from) => {
     return
   }
 
-  if (requiresAuth && !accessRoles.split(',').includes(String(my.value?.role ?? ''))) {
+  if (requiresAuth && !accessRoles.split(',').includes(String(store.user?.role ?? ''))) {
     error.forbidden()
     router.resolve(from)
     return false
   }
 
-  document.title = typeof to.meta.title === 'string' ? 'e-Libra: ' + my.value?.role?.charAt(0).toUpperCase() + my.value?.role?.slice(1) + ' | ' + to.meta.title : 'e-Libra: The ISU-1 Library Management and Resource Monitoring System'
+  document.title = typeof to.meta.title === 'string' ? 'e-Libra: ' + store.user?.role?.charAt(0).toUpperCase() + store.user?.role?.slice(1) + ' | ' + to.meta.title : 'e-Libra: The ISU-1 Library Management and Resource Monitoring System'
 })
 
 export default router

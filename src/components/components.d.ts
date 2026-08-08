@@ -50,11 +50,14 @@ declare module 'vue' {
     SearchBody: typeof import('./../layouts/management/search/SearchBody.vue')['default']
     SearchInput: typeof import('./form/SearchInput.vue')['default']
     Sidebar: typeof import('./../layouts/sidebar/Sidebar.vue')['default']
+    Skeleton: typeof import('./my/Skeleton.vue')['default']
     Spinner: typeof import('./loaders/Spinner.vue')['default']
     Table: typeof import('./table/Table.vue')['default']
     TableLoading: typeof import('./table/TableLoading.vue')['default']
     TableNoData: typeof import('./table/TableNoData.vue')['default']
     Tbody: typeof import('./table/Tbody.vue')['default']
+    Td: typeof import('./table/Td.vue')['default']
     Thead: typeof import('./table/Thead.vue')['default']
+    Tload: typeof import('./table/Tload.vue')['default']
   }
 }

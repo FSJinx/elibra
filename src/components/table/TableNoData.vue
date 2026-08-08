@@ -1,6 +1,6 @@
 <template>
   <tr>
-    <td :colspan="colspan">
+    <td class="" :colspan="columns">
       <div class="flex flex-col items-center gap-2 p-10 text-slate-500 mt-50">
         <MessageCircleX class="mb-2" />
         <p class="font-semibold">No data found.</p>
@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 interface Props {
-  colspan: any
+  columns: any
 }
 
 const props = defineProps<Props>()

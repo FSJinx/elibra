@@ -6,170 +6,147 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+    private array $tables = [
+        [
+            'name' => 'item_type_categories',
+            'foreign_columns' => [
+                ['name' => 'item_type_id', 'references' => 'id', 'on' => 'item_types', 'onDelete' => 'restrict'],
+            ],
+        ],
+        [
+            'name' => 'branches',
+            'foreign_columns' => [
+                ['name' => 'logo_id', 'references' => 'id', 'on' => 'media', 'onDelete' => 'cascade'],
+                ['name' => 'branch_head_id', 'references' => 'id', 'on' => 'librarians', 'onDelete' => 'cascade'],
+                ['name' => 'campus_id', 'references' => 'id', 'on' => 'campuses', 'onDelete' => 'cascade'],
+            ],
+        ],
+        [
+            'name' => 'branch_sections',
+            'foreign_columns' => [
+                ['name' => 'section_id', 'references' => 'id', 'on' => 'sections', 'onDelete' => 'cascade'],
+                ['name' => 'branch_id', 'references' => 'id', 'on' => 'branches', 'onDelete' => 'cascade'],
+            ],
+            'unique_columns' => [
+                ['branch_id', 'section_id'],
+            ],
+        ],
+        [
+            'name' => 'departments',
+            'foreign_columns' => [
+                ['name' => 'campus_id', 'references' => 'id', 'on' => 'campuses', 'onDelete' => 'cascade'],
+            ],
+        ],
+        [
+            'name' => 'programs',
+            'foreign_columns' => [
+                ['name' => 'department_id', 'references' => 'id', 'on' => 'departments', 'onDelete' => 'cascade'],
+            ],
+        ],
+        [
+            'name' => 'users',
+            'foreign_columns' => [
+                ['name' => 'profile_picture_id', 'references' => 'id', 'on' => 'media', 'onDelete' => 'cascade'],
+                ['name' => 'campus_id', 'references' => 'id', 'on' => 'campuses', 'onDelete' => 'cascade'],
+            ],
+        ],
+        [
+            'name' => 'librarians',
+            'foreign_columns' => [
+                ['name' => 'user_id', 'references' => 'id', 'on' => 'users', 'onDelete' => 'cascade'],
+                ['name' => 'branch_id', 'references' => 'id', 'on' => 'branches', 'onDelete' => 'cascade'],
+            ],
+        ],
+        [
+            'name' => 'patrons',
+            'foreign_columns' => [
+                ['name' => 'user_id', 'references' => 'id', 'on' => 'users', 'onDelete' => 'cascade'],
+                ['name' => 'program_id', 'references' => 'id', 'on' => 'programs', 'onDelete' => 'cascade'],
+                ['name' => 'patron_type_id', 'references' => 'id', 'on' => 'patron_types', 'onDelete' => 'cascade'],
+            ],
+        ],
+        [
+            'name' => 'subscriptions',
+            'foreign_columns' => [
+                ['name' => 'thumbnail_id', 'references' => 'id', 'on' => 'media', 'onDelete' => 'cascade'],
+            ],
+        ],
+        [
+            'name' => 'subscription_credentials',
+            'foreign_columns' => [
+                ['name' => 'subscription_id', 'references' => 'id', 'on' => 'subscriptions', 'onDelete' => 'cascade'],
+                ['name' => 'campus_id', 'references' => 'id', 'on' => 'campuses', 'onDelete' => 'cascade'],
+            ],
+        ],
+        [
+            'name' => 'items',
+            'foreign_columns' => [
+                ['name' => 'branch_id', 'references' => 'id', 'on' => 'branches', 'onDelete' => 'cascade'],
+            ],
+        ],
+        [
+            'name' => 'academics',
+            'foreign_columns' => [
+                ['name' => 'item_id', 'references' => 'id', 'on' => 'items', 'onDelete' => 'cascade'],
+                ['name' => 'department_id', 'references' => 'id', 'on' => 'departments', 'onDelete' => 'cascade'],
+            ],
+        ],
+        [
+            'name' => 'user_permissions',
+            'foreign_columns' => [
+                ['name' => 'user_id', 'references' => 'id', 'on' => 'users', 'onDelete' => 'cascade'],
+                ['name' => 'permission_id', 'references' => 'id', 'on' => 'permissions', 'onDelete' => 'cascade'],
+            ],
+        ],
+        [
+            'name' => 'librarian_sections',
+            'foreign_columns' => [
+                ['name' => 'librarian_id', 'references' => 'id', 'on' => 'librarians', 'onDelete' => 'cascade'],
+                ['name' => 'branch_section_id', 'references' => 'id', 'on' => 'branch_sections', 'onDelete' => 'cascade'],
+            ],
+        ],
+    ];
+
+    // ============= LINKS RELATIONSHIPS ===============
     public function up(): void
     {
-        // Branches Up
-        Schema::table('branches', function (Blueprint $table) {
-            $table->foreign('logo_id')->references('id')->on('media')->onDelete('cascade');
-            $table->foreign('branch_head_id')->references('id')->on('librarians')->onDelete('cascade');
-            $table->foreign('campus_id')->references('id')->on('campuses')->onDelete('cascade');
-        });
+        foreach ($this->tables as $table) {
+            Schema::table($table['name'], function (Blueprint $t) use ($table) {
+                if (! empty($table['foreign_columns'])) {
+                    foreach ($table['foreign_columns'] as $column) {
+                        $t->foreign($column['name'])
+                            ->references($column['references'])
+                            ->on($column['on'])
+                            ->onDelete($column['onDelete']);
+                    }
+                }
 
-        // Branch Sections Up
-        Schema::table('branch_sections', function (Blueprint $table) {
-            $table->foreign('section_id')->references('id')->on('sections')->onDelete('cascade');
-            $table->foreign('branch_id')->references('id')->on('branches')->onDelete('cascade');
-            $table->unique(['branch_id', 'section_id']);
-        });
-
-        // Departments Up
-        Schema::table('departments', function (Blueprint $table) {
-            $table->foreign('campus_id')->references('id')->on('campuses')->onDelete('cascade');
-        });
-
-        // Programs Up
-        Schema::table('programs', function (Blueprint $table) {
-            $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');
-        });
-
-        // Users Up
-        Schema::table('users', function (Blueprint $table) {
-            $table->foreign('profile_picture_id')->references('id')->on('media')->onDelete('cascade');
-            $table->foreign('campus_id')->references('id')->on('campuses')->onDelete('cascade');
-        });
-
-        // Librarians Up
-        Schema::table('librarians', function (Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('branch_id')->references('id')->on('branches')->onDelete('cascade');
-        });
-
-        // Patrons Up
-        Schema::table('patrons', function (Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('program_id')->references('id')->on('programs')->onDelete('cascade');
-            $table->foreign('patron_type_id')->references('id')->on('patron_types')->onDelete('cascade');
-        });
-
-        // Subscriptions Up
-        Schema::table('subscriptions', function (Blueprint $table) {
-            $table->foreign('thumbnail_id')->references('id')->on('media')->onDelete('cascade');
-        });
-
-        // Subscription Credentials Up
-        Schema::table('subscription_credentials', function (Blueprint $table) {
-            $table->foreign('subscription_id')->references('id')->on('subscriptions')->onDelete('cascade');
-            $table->foreign('campus_id')->references('id')->on('campuses')->onDelete('cascade');
-        });
-
-        // Items Up
-        Schema::table('items', function (Blueprint $table) {
-            $table->foreign('branch_id')->references('id')->on('branches')->onDelete('cascade');
-        });
-
-        // Academics Up
-        Schema::table('academics', function (Blueprint $table) {
-            $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade');
-            $table->foreign('department_id')->references('id'   )->on('departments')->onDelete('cascade');
-        });
-
-        // User Permission
-        Schema::table('user_permissions', function (Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('permission_id')->references('id')->on('permissions')->onDelete('cascade');
-        });
-
-        // Library Sections
-        Schema::table('librarian_sections', function (Blueprint $table) {
-            $table->foreign('librarian_id')->references('id')->on('librarians')->onDelete('cascade');
-            $table->foreign('branch_section_id')->references('id')->on('branch_sections')->onDelete('cascade');
-        });
+                if (! empty($table['unique_columns'])) {
+                    foreach ($table['unique_columns'] as $column) {
+                        $t->unique($column);
+                    }
+                }
+            });
+        }
     }
 
-    /**
-     * Reverse the migrations.
-     */
+    // =========== REMOVES THE RELATIONSHIPS =============
     public function down(): void
     {
-        // Library Sections
-        Schema::table('librarian_sections', function (Blueprint $table){
-            $table->dropForeign(['librarian_id']);
-            $table->dropForeign(['branch_section_id']);
-        });
+        foreach (array_reverse($this->tables) as $table) {
+            Schema::table($table['name'], function (Blueprint $t) use ($table) {
+                if (! empty($table['foreign_columns'])) {
+                    foreach ($table['foreign_columns'] as $column) {
+                        $t->dropForeign([$column['name']]);
+                    }
+                }
 
-        // User Permissions Down
-        Schema::table('user_permissions', function (Blueprint $table) {
-            $table->dropForeign(['user_id']);
-            $table->dropForeign(['permission_id']);
-        });
-
-        // Academics Down
-        Schema::table('academics', function (Blueprint $table) {
-            $table->dropForeign(['item_id']);
-            $table->dropForeign(['department_id']);
-        });
-        // if (Schema::hasTable('academics')) { Schema::table('academics', function (Blueprint $table) { $table->dropForeign(['item_id']); $table->dropForeign(['department_id']); }); }
-
-        Schema::table('items', function (Blueprint $table) {
-            $table->dropForeign(['branch_id']);
-        });
-
-        // Subscriptions Down
-        Schema::table('subscription_credentials', function (Blueprint $table) {
-            $table->dropForeign(['subscription_id']);
-            $table->dropForeign(['campus_id']);
-        });
-
-        // Subscriptions Down
-        Schema::table('subscriptions', function (Blueprint $table) {
-            $table->dropForeign(['thumbnail_id']);
-        });
-
-        // Patrons Down
-        Schema::table('patrons', function (Blueprint $table) {
-            $table->dropForeign(['user_id']);
-            $table->dropForeign(['program_id']);
-            $table->dropForeign(['patron_type_id']);
-        });
-
-        // Librarians Down
-        Schema::table('librarians', function (Blueprint $table) {
-            $table->dropForeign(['user_id']);
-            $table->dropForeign(['branch_id']);
-        });
-
-        // Users Down
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign(['campus_id']);
-            $table->dropForeign(['profile_picture_id']);
-        });
-
-        // Programs Down
-        Schema::table('programs', function (Blueprint $table) {
-            $table->dropForeign(['department_id']);
-        });
-
-        // Departments Down
-        Schema::table('departments', function (Blueprint $table) {
-            $table->dropForeign(['campus_id']);
-        });
-
-        // Branch Sections Down
-        Schema::table('branch_sections', function (Blueprint $table) {
-            $table->dropForeign(['branch_id']);
-            $table->dropForeign(['section_id']);
-             $table->dropUnique(['branch_id', 'section_id']);
-        });
-
-        // Branches Down
-        Schema::table('branches', function (Blueprint $table) {
-            $table->dropForeign(['campus_id']);
-            $table->dropForeign(['branch_head_id']);
-            $table->dropForeign(['logo_id']);
-        });
-
+                if (! empty($table['unique_columns'])) {
+                    foreach ($table['unique_columns'] as $column) {
+                        $t->dropUnique($column);
+                    }
+                }
+            });
+        }
     }
 };

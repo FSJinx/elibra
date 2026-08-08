@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-screen w-full p-4 pr-5 gap-4 bg-secondary overflow-hidden">
+  <div class="relative flex h-screen w-full p-2 gap-2 bg-secondary overflow-hidden">
     <!-- Sidebar -->
     <ManagementSidebar />
 

@@ -1,15 +1,17 @@
 <template>
   <div class="logo-loader-wrapper text-primary size-full">
     <Logo class="logo-loader text-[3em]" />
-    <p>Please wait while we prepare your tools...</p>
+    <p>{{ message }}</p>
   </div>
 </template>
 
 <script setup lang="ts">
-// Component props (optional) kung gusto mong baguhin ang size per usage
-defineProps<{
-  size?: string // hal. 'w-12 h-12' o 'w-16 h-16'
-}>()
+interface Props {
+  message?: string
+}
+const props = withDefaults(defineProps<Props>(), {
+  message: 'Please wait while we prepare your tools...',
+})
 </script>
 
 <style scoped>

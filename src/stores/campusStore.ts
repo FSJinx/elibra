@@ -4,6 +4,7 @@ export interface CampusInfo {
   code: string | null
   address: string | null
   heading: string | null
+  status: string | null
   created_at: string | null
   updated_at: string | null
 }
@@ -14,9 +15,7 @@ export const campusStore = defineStore('campus', () => {
   const currentCampus = ref<CampusInfo | null>(null)
   const loading = ref<boolean>(false)
 
-  // ============= ACTIONS ===============
-
-  // SETTERS
+  // ============= SETTERS ===============
   function setCampuses(data: CampusInfo[] | null) {
     campuses.value = data
   }
@@ -24,7 +23,7 @@ export const campusStore = defineStore('campus', () => {
   function setCurrentCampus(data: CampusInfo | null) {
     currentCampus.value = data
   }
-  
+
   function setLoading(status: boolean) {
     loading.value = status
   }
@@ -35,7 +34,7 @@ export const campusStore = defineStore('campus', () => {
     currentCampus,
     loading,
 
-    // ============= ACTIONS ===============
+    // ============= SETTERS ===============
     setCampuses,
     setCurrentCampus,
     setLoading,

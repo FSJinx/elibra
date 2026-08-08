@@ -21,7 +21,7 @@ export default defineConfig(({ mode }) => {
       AutoImport({
         dts: 'src/auto-import.d.ts',
 
-        imports: ['vue', 'vue-router', 'pinia'],
+        imports: ['vue', 'vue-router', 'pinia', '@vueuse/core'],
 
         dirs: ['src/composables/**', 'src/stores/**', 'src/router/*', 'src/assets/images/*', 'src/plugins/*'],
 

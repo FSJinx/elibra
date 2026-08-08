@@ -18,7 +18,7 @@
       <span class="flex-1 text-end text-3xl font-medium">{{ card.data.toLocaleString() }}</span>
 
       <!-- Label -->
-      <p class="text-end text-muted tracking-tight text-sm capitalize">{{ card.label }}</p>
+      <p class="text-end text-foreground-secondary tracking-tight text-sm capitalize">{{ card.label }}</p>
     </div>
   </div>
 </template>

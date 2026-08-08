@@ -4,7 +4,7 @@
 
     <Icon :icon="leftIcon" v-if="leftIcon" :class="['mr-1.5', props.loading && 'invisible']" />
     <Icon :icon="icon" v-if="icon" :class="[props.loading && 'invisible']" />
-    <span class="flex justify-center items-center w-full gap-1.5 text-[1em]" :class="[props.loading && 'invisible']"><slot /></span>
+    <span class="flex justify-center items-center w-full tracking-tight gap-1.5 text-[1em]" :class="[props.loading && 'invisible']"><slot /></span>
     <Icon :icon="rightIcon" v-if="rightIcon" :class="['ml-1.5', props.loading && 'invisible']" />
   </component>
 </template>
