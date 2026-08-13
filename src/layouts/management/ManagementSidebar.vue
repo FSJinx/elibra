@@ -1,6 +1,6 @@
 <template>
   <Transition name="sidebar">
-    <aside v-if="system.sidebar" class="w-75 shrink-0 flex flex-col h-full bg-background rounded-2xl border border-border overflow-hidden">
+    <aside v-if="system.sidebar" class="w-75 shrink-0 flex flex-col h-full bg-background rounded-md border border-border overflow-hidden">
       <!-- Inner Fixed-Width Container prevents inner layout distortion -->
       <div class="w-75 flex flex-col h-full shrink-0 whitespace-nowrap">
         <!-- Header Logo -->
@@ -22,7 +22,7 @@
             <h6 class="font-medium tracking-normal text-foreground-secondary text-sm">{{ menu.name }}</h6>
             <!-- Menu Children -->
             <div class="p-2 space-y-1">
-              <router-link v-for="child in menu.children" :key="child.path" :to="{ name: child.path }" class="relative flex items-center gap-3.5 px-5 py-3 rounded-xl border cursor-pointer transition-all duration-200" :class="[active(child.path) ? 'text-primary bg-primary-soft hover:bg-primary-soft border-primary/25' : 'border-transparent hover:bg-default/50']" :data-title="active(child.path) ? child.name + ' (Selected)' : child.name">
+              <router-link v-for="child in menu.children" :key="child.path" :to="{ name: child.path }" class="relative flex items-center gap-3.5 px-5 py-3 rounded-md border cursor-pointer transition-all duration-200" :class="[active(child.path) ? 'text-primary bg-primary-soft/25 hover:bg-primary-soft border-primary/25' : 'border-transparent hover:bg-default/50']" :data-title="active(child.path) ? child.name + ' (Selected)' : child.name">
                 <div class="absolute left-0 bg-primary h-[50%] rounded-r-full transition-all duration-200" :class="[active(child.path) ? 'w-[0.30rem]' : 'w-0']"></div>
                 <Icon :icon="child.icon" />
                 <span>{{ child.name }}</span>
@@ -33,7 +33,7 @@
         </nav>
 
         <!-- Profile Icon at the Bottom -->
-        <div class="flex items-center overflow-hidden gap-3 border border-border bg-default/10 rounded-2xl p-4 py-3 m-3 hover:border-primary cursor-pointer transition-all duration-200">
+        <div class="flex items-center overflow-hidden gap-3 border border-border bg-default/10 rounded-md p-4 py-3 m-3 hover:border-primary cursor-pointer transition-all duration-200">
           <!-- Avatar -->
           <img :src="images.user" alt="" class="size-6 rounded-full shrink-0" />
 

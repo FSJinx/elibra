@@ -1,7 +1,6 @@
 <template>
   <MainLayout>
     <NewHero />
-    <section class="h-screen"></section>
   </MainLayout>
 </template>
 

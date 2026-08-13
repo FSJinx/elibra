@@ -38,9 +38,8 @@ body {
 }
 
 ::selection {
-  background-color: var(--color-tertiary);
-  /* color: #ffffff; */
-  color: var(--color-foreground);
+  background-color: var(--color-foreground);
+  color: var(--color-background);
 }
 
 @layer components {

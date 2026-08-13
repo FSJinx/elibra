@@ -1,11 +1,11 @@
 <template>
-  <div class="belt w-full py-2 bg-primary text-white text-xs overflow-hidden">
+  <div class="belt w-full py-2 bg-primary-soft text-primary border-b border-primary/15 text-xs overflow-hidden">
     <div class="belt-track flex w-max">
       <div class="belt-group gap-5 pr-5">
         <div v-for="(campus, index) in campuses" :key="`${campus}-${index}`" class="belt-item">
           <Logo width="10" />
 
-          <span>{{ campus }}</span>
+          <span class="tracking-wider">{{ campus }}</span>
         </div>
       </div>
 
@@ -14,7 +14,7 @@
         <div v-for="(campus, index) in campuses" :key="`${campus}-duplicate-${index}`" class="belt-item">
           <Logo width="10" />
 
-          <span>{{ campus }}</span>
+          <span class="tracking-wider">{{ campus }}</span>
         </div>
       </div>
     </div>

@@ -17,12 +17,13 @@ import '@fontsource/inter/700.css'
 import '@fontsource/inter/800.css'
 
 // Font Baskervville
-import '@openfonts/baskervville_latin';
+import '@openfonts/baskervville_latin'
 
 // Icons
 // import '@flaticon/flaticon-uicons/css/regular/all.css'
-import '@flaticon/flaticon-uicons/css/all/all.css'
 import icons from '@/plugins/icons.js'
+import '@flaticon/flaticon-uicons/css/all/all.css'
+import 'bootstrap-icons/font/bootstrap-icons.min.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'

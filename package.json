@@ -26,6 +26,7 @@
     "@openfonts/baskervville_latin": "^1.0.3",
     "@vitejs/plugin-vue": "^6.0.7",
     "@vueuse/core": "^14.3.0",
+    "bootstrap-icons": "^1.13.1",
     "pinia": "^3.0.4",
     "pinia-plugin-persistedstate": "^4.7.1",
     "vue": "^3.5.38",
