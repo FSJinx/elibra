@@ -120,7 +120,7 @@ Route::group(['prefix' => '/item'], function () {
 Route::group(['prefix' => '/campus'], function () {
 
     Route::group(['prefix' => '/get'], function () {
-        Route::get('', [CampusController::class, 'index'])->middleware('throttle:read');
+        Route::get('', [CampusController::class, 'index']);
         Route::get('{campus}', [CampusController::class, 'show'])->middleware('jwt.auth', 'role:super_admin', 'throttle:api');
     });
 

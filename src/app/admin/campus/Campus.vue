@@ -1,12 +1,8 @@
 <template>
-  <div class="flex justify-end mb-3">
-    <Button variant="primary">Create New</Button>
-  </div>
-
-  <Table name="Campus Table" @search="campus.params.query = $event" @refresh="campus.getCampuses(true)">
+  <Table name="Campus Table" description="List of Campuses in Isabela State University" @search="campus.params.query = $event" @refresh="campus.getCampuses(true)">
     <Thead>
       <tr>
-        <th>ID</th>
+        <th class="w-25">ID</th>
         <th class="text-left">Campus Name</th>
         <th>Code</th>
         <th>Status</th>
@@ -15,7 +11,7 @@
 
     <Tbody :loading="store.loading" :columns="4">
       <tr v-for="c in store.campuses">
-        <td>{{ c.id }}</td>
+        <Td :data="c.id" />
         <td class="text-left">{{ c.name ?? 'No name' }}</td>
         <Td :data="c.code" />
         <td>

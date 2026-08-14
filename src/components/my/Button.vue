@@ -1,12 +1,14 @@
 <template>
-  <component :is="buttonAs" :type="type" class="relative inline-flex items-center justify-center font-medium rounded-md gap-1.5 p-3 transition-all duration-100 outline-none tracking-tight leading-none" :class="[btnClass]" :disabled="disabled || loading" @mouseup="($event.currentTarget as HTMLButtonElement).blur()">
-    <Spinner class="absolute" v-if="loading" />
+  <component :is="buttonAs" :type="type" class="relative inline-flex items-center justify-center font-medium rounded-md gap-1.5 px-3 transition-all duration-100 outline-none tracking-tight leading-none" :class="[btnClass, sizeClass]" :disabled="disabled" @mouseup="($event.currentTarget as HTMLButtonElement).blur()">
+    <Spinner class="absolute" v-if="disabled" />
 
-    <Icon :icon="leftIcon" v-if="leftIcon" :class="[props.loading && 'invisible']" />
+    <Icon :icon="leftIcon" v-if="leftIcon" :class="[disabled && 'invisible']" />
 
-    <Icon :icon="icon" v-if="icon" :class="[props.loading && 'invisible']" />
-    <slot :class="[props.loading && 'invisible']" />
-    <Icon :icon="rightIcon" v-if="rightIcon" :class="[props.loading && 'invisible']" />
+    <Icon :icon="icon" v-if="icon" :class="[disabled && 'invisible']" />
+    <span v-if="$slots.default?.() && $slots.default?.().length > 0" class="inline-flex flex-1 justify-center items-center" :class="[disabled && 'invisible']">
+      <slot />
+    </span>
+    <Icon :icon="rightIcon" v-if="rightIcon" :class="[disabled && 'invisible']" />
   </component>
 </template>
 
@@ -23,7 +25,7 @@ interface Props {
   type?: Types
   variant?: Variants
   disabled?: boolean
-  // size?: Sizes
+  size?: Sizes
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -31,9 +33,19 @@ const props = withDefaults(defineProps<Props>(), {
   as: 'button',
   variant: 'default',
   disabled: false,
-  size: 'default',
+  size: 'md',
   type: 'button',
 })
+
+const sizes: Record<Sizes, string> = {
+  xs: 'text-xs h-6',
+  sm: 'text-sm h-8',
+  md: 'text-base h-10',
+  lg: 'text-lg h-12',
+  xl: 'text-xl h-14',
+}
+
+const sizeClass = computed(() => sizes[props.size])
 
 const buttonAs = computed(() => {
   const asses: Record<Ases, string> = {

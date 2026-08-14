@@ -25,7 +25,7 @@
         </Control>
 
         <Button as="link" :to="{ name: '' }" size="small" variant="text" class="ml-auto text-primary">Forgot password?</Button>
-        <Button variant="primary" type="submit" :loading="store.loading">Login</Button>
+        <Button variant="primary" type="submit" :disabled="store.loading">Login</Button>
       </form>
       <span class="text-sm text-center mt-5">Don't have an account yet? <router-link :to="{ name: '' }" class="text-primary">Create an account.</router-link></span>
     </div>
@@ -64,9 +64,10 @@ async function handleSubmit() {
     error.value = {
       status: res.data?.status,
       message: res.data?.message,
-      username: res.data?.data?.username,
-      password: res.data?.data?.password,
+      username: res.data?.data.username,
+      password: res.data?.data.password,
     }
+    console.log(error.value)
   }
 }
 </script>

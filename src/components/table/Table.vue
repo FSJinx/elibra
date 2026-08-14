@@ -9,7 +9,8 @@
         <Input id="searchQuery" enable-clear v-model="query" left-icon="search" placeholder="Search by name, code, address" />
       </form>
 
-      <Button variant="info" icon="rotate-ccw" @click="emit('refresh')"></Button>
+      <Button variant="info" icon="arrow-clockwise" data-title="Reset & Refresh" @click="emit('refresh')"></Button>
+      <Button variant="primary" @click="emit('create')" data-title="Add new record">Create New</Button>
     </div>
 
     <div class="relative flex-1 shrink-0 border-t border-border overflow-y-auto scrollbar-none">
@@ -29,7 +30,7 @@ interface Props {
 const query = defineModel<string>()
 
 const props = defineProps<Props>()
-const emit = defineEmits(['refresh', 'search'])
+const emit = defineEmits(['refresh', 'search', 'create'])
 const timer = ref()
 
 watchDebounced(query, (newVal) => {

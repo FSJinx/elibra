@@ -43,7 +43,7 @@
   <div class="p-5 pb-10 space-x-2">
     <h1 class="text-xl font-bold mb-5">Different Types Input</h1>
     <div class="space-y-5">
-      <Input id="textInput" v-model="text" label="Default" placeholder="Input here..." />
+      <Input id="textInput" v-model="text" label="Default" left-icon="search" right-icon="eye" placeholder="Input here..." />
       <Input id="textInput" v-model="text" label="Number" placeholder="Input here..." type="number" />
       <Input id="textInput" v-model="text" label="Email" placeholder="Input here..." type="email" />
       <Input id="textInput" v-model="text" label="Password" placeholder="Input here..." type="password" />

@@ -11,7 +11,7 @@
         </span>
 
         <!-- Card Status -->
-        <Badge class="ml-auto max-w-30 line-clamp-1 font-semibold" :title="card.status" :class="[`bg-${card.color}-soft text-${card.color}-soft-foreground`]" v-if="card.status">{{ card.status }}</Badge>
+        <Badge class="ml-auto max-w-30 line-clamp-1 font-semibold" :title="card.status" :variant="card.color" v-if="card.status">{{ card.status }}</Badge>
       </div>
 
       <!-- Data -->
