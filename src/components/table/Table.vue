@@ -1,6 +1,7 @@
 <template>
   <section class="relative flex-1 flex flex-col shrink-0 rounded-xl border border-border overflow-hidden scrollbar-none">
-    <div class="flex items-center justify-end gap-1 w-full p-4">
+    <!-- Table Header -->
+    <div class="flex items-center justify-end gap-1.5 w-full p-4">
       <div class="mr-auto">
         <h1 class="tracking-tight font-semibold text-lg mr-auto">{{ name }}</h1>
         <p class="text-sm text-foreground-secondary line-clamp-1">{{ description ?? 'This is the default description for ' + name + '.' }}</p>

@@ -1,6 +1,5 @@
 <template>
-  <!-- Campus Table -->
-  <Table name="Campus Table" description="List of Campuses in Isabela State University" @search="campus.params.query = $event" @refresh="campus.getCampuses(true)" @create="createCampus?.open">
+  <Table name="Users Table" description="List of registered users of e-Libra." @search="campus.params.query = $event" @refresh="campus.getCampuses(true)">
     <Thead>
       <tr>
         <th class="w-25">ID</th>
@@ -21,17 +20,11 @@
       </tr>
     </Tbody>
   </Table>
-
-  <!-- Create Modal -->
-  <CreateNewCampusModal ref="createCampus" position="top" />
 </template>
 
 <script setup lang="ts">
-import CreateNewCampusModal from '@/app/admin/campus/CreateNewCampusModal.vue'
-
 const campus = useCampus()
 const store = campusStore()
-const createCampus = ref<InstanceType<typeof CreateNewCampusModal> | null>(null)
 
 const parse = useParser()
 

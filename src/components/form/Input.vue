@@ -52,6 +52,11 @@
       <span>Caps Lock is on</span>
     </div>
 
+    <div v-if="helper" class="flex text-info items-center gap-1 text-[0.85rem] wrap-break-word">
+      <Icon icon="info-circle" />
+      <span>{{ helper }}</span>
+    </div>
+
     <!-- Error Message -->
     <p v-if="error && error.length > 0" class="text-danger text-sm">
       {{ error }}
@@ -93,6 +98,7 @@ interface Props {
   rightIcon?: string
   error?: string
   size?: Sizes
+  helper?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {

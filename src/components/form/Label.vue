@@ -8,10 +8,11 @@
 <script setup lang="ts">
 interface Props {
   id: string
-  required: boolean
+  required?: boolean
 }
-
-defineProps<Props>()
+withDefaults(defineProps<Props>(), {
+  required: false,
+})
 </script>
 
 <style scoped></style>

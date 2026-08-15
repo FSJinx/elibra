@@ -23,6 +23,7 @@ declare module 'vue' {
     ErrorLayout: typeof import('./../layouts/ErrorLayout.vue')['default']
     FeatureBelt: typeof import('./layout/FeatureBelt.vue')['default']
     Footer: typeof import('./layout/Footer.vue')['default']
+    Form: typeof import('./form/Form.vue')['default']
     Group: typeof import('./form/Control.vue/index.js')['default']
     Header: typeof import('./layout/Header.vue')['default']
     Icon: typeof import('./my/Icon.vue')['default']

@@ -1,21 +1,20 @@
 <template>
   <Teleport to="body">
     <Transition name="fade">
-      <div v-if="isOpen" class="modal-wrapper fixed inset-0 flex items-center justify-center bg-backdrop h-screen overflow-y-auto p-10" :class="[hasInputs ? '' : 'cursor-pointer']" @click.self="close">
-        <div class="modal relative bg-background rounded-2xl shadow-2xl border border-border select-none" :class="[sizeClasses, positionClasses, position]" ref="modalRef">
-          <!-- <X class="absolute top-0 right-0 m-3" icon="X" @click="close" /> -->
-
+      <div v-if="isOpen" class="modal-wrapper fixed inset-0 flex items-center justify-center bg-backdrop h-dvh p-10" :class="[hasInputs ? '' : 'cursor-pointer']" @click.self="close">
+        <div class="modal relative bg-background rounded-lg shadow-2xl border border-border cursor-default overflow-hidden" :class="[sizeClasses, positionClasses, position]" ref="modalRef">
           <!-- Modal Header -->
-          <div class="p-5 py-4 border-b border-gray-300" v-if="$slots.header">
-            <slot name="header" />
+          <div class="flex items-start p-4 pl-5 border-b border-gray-300 text-xl font-semibold">
+            <slot name="header" v-if="$slots.header" />
+            <X class="ml-auto text-muted hover:text-foreground cursor-pointer transition duration-100" icon="X" @click="close" />
           </div>
 
-          <div class="p-5">
+          <div class="max-h-[76dvh] overflow-y-auto">
             <slot />
           </div>
 
           <!-- Modal Footer -->
-          <div class="py-3 px-5 border-t border-gray-300" v-if="$slots.footer">
+          <div class="p-3 border-t border-gray-300" v-if="$slots.footer">
             <slot name="footer" />
           </div>
         </div>

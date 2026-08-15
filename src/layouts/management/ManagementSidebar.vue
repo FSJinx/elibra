@@ -33,7 +33,7 @@
         </nav>
 
         <!-- Profile Icon at the Bottom -->
-        <div class="flex items-center overflow-hidden gap-3 border border-border bg-default/10 rounded-lg p-4 py-3 m-3 hover:border-primary cursor-pointer transition-all duration-200">
+        <div class="flex items-center overflow-hidden gap-3 border border-border bg-default/10 rounded-lg p-4 py-3 m-3 hover:shadow-md cursor-pointer transition-all duration-200">
           <!-- Avatar -->
           <img :src="images.user" alt="" class="size-6 rounded-full shrink-0" />
 
