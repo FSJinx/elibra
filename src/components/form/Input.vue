@@ -3,7 +3,7 @@
     <!-- Input Container -->
     <div class="relative inline-flex shrink-0 items-center bg-slate-50 w-full border transition-colors min-w-20 rounded-md overflow-hidden focus-within:ring-4" :class="[sizeClass, error && error?.length > 0 ? 'border-danger focus-within:border-danger focus-within:ring-danger/20' : 'border-border focus-within:ring-success/25 focus-within:border-primary/50', { 'opacity-60 cursor-not-allowed': disabled }]">
       <!-- Slot for Prefix Icon (Optional) -->
-      <span class="absolute left-2 h-full place-content-center" data-title="Show Password" v-if="leftIcon" type="button" size="small">
+      <span class="absolute left-3 h-full place-content-center" data-title="Show Password" v-if="leftIcon" type="button" size="small">
         <Icon :icon="leftIcon" />
       </span>
 
@@ -27,7 +27,8 @@
         @click="checkCapsLock"
         @keydown="checkCapsLock"
         @keyup="checkCapsLock"
-        class="px-4 h-full w-full bg-transparent autofill:bg-primary transition-all duration-150 focus:outline-none disabled:cursor-not-allowed"
+        :class="[inputPadding]"
+        class="h-full w-full bg-transparent autofill:bg-primary transition-all duration-150 focus:outline-none disabled:cursor-not-allowed"
       />
 
       <!-- Toggle Password Button -->
@@ -155,13 +156,13 @@ const resetCapsLock = () => {
 
 const inputPadding = computed(() => {
   const padding = ['py']
-  if (props.leftIcon) {
-    padding.push('pl-6')
+  if (props.leftIcon || props.rightIcon) {
+    padding.push('px-5')
+  } else {
+    padding.push('px-3')
   }
 
-  if (props.rightIcon) {
-    padding.push('pr-4')
-  }
+  return padding
 })
 
 onMounted(() => {

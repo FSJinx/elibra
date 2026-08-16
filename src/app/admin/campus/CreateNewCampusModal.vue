@@ -4,6 +4,9 @@
 
     <div class="p-5">
       <Form id="campus-form" cols="2" @submit="submitForm">
+        <template #header v-if="hasInputs">
+          <Button class="ml-auto" @click="clearInput">Clear</Button>
+        </template>
         <template #body>
           <Control direction="col">
             <Label required id="campus-name">Campus Name</Label>
@@ -23,9 +26,8 @@
 
     <template #footer>
       <div class="flex items-center justify-end-safe gap-2">
-        <Button @click="clearInput">Clear</Button>
-        <Button type="submit" variant="primary" form="campus-form">Create</Button>
         <Button variant="danger" @click="(clearInput(), nextTick(() => close()))">Cancel</Button>
+        <Button type="submit" variant="primary" form="campus-form">Create</Button>
       </div>
     </template>
   </Modal>

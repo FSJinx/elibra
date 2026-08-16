@@ -1,20 +1,6 @@
 <template>
-  <section class="relative flex-1 flex flex-col shrink-0 rounded-xl border border-border overflow-hidden scrollbar-none">
-    <!-- Table Header -->
-    <div class="flex items-center justify-end gap-1.5 w-full p-4">
-      <div class="mr-auto">
-        <h1 class="tracking-tight font-semibold text-lg mr-auto">{{ name }}</h1>
-        <p class="text-sm text-foreground-secondary line-clamp-1">{{ description ?? 'This is the default description for ' + name + '.' }}</p>
-      </div>
-      <form class="min-w-85" @submit.prevent="() => emit('search', query)">
-        <Input id="searchQuery" enable-clear v-model="query" left-icon="search" placeholder="Search by name, code, address" />
-      </form>
-
-      <Button variant="info" icon="arrow-clockwise" data-title="Reset & Refresh" @click="emit('refresh')"></Button>
-      <Button variant="primary" @click="emit('create')" data-title="Add new record">Create New</Button>
-    </div>
-
-    <div class="relative flex-1 shrink-0 border-t border-border overflow-y-auto scrollbar-none">
+  <section class="relative flex-1 flex flex-col shrink-0 rounded-md border border-border overflow-hidden scrollbar-none">
+    <div class="relative flex-1 shrink-0 overflow-y-auto scrollbar-none">
       <table class="relative w-full text-left table-auto text-sm border-collapse">
         <slot />
       </table>
@@ -22,7 +8,7 @@
   </section>
 </template>
 
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 interface Props {
   name: string
   description?: string
@@ -47,4 +33,4 @@ watchDebounced(query, (newVal) => {
     }, 500)
   }
 })
-</script>
+</script> -->

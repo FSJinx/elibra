@@ -85,6 +85,7 @@
 import TestButton from '@/app/test/TestButton.vue'
 import TestColor from '@/app/test/TestColor.vue'
 import TestInput from '@/app/test/TestInput.vue'
+import TestSelect from '@/app/test/TestSelect.vue'
 
 const pages = ref([
   {
@@ -98,6 +99,10 @@ const pages = ref([
       {
         name: 'Inputs',
         component: markRaw(TestInput),
+      },
+      {
+        name: 'Select',
+        component: markRaw(TestSelect),
       },
     ],
   },

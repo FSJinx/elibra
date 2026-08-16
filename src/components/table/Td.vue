@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 interface Props {
-  data: any | null
+  data?: any | null
   nullMessage?: string
 }
 

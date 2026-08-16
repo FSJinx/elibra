@@ -1,4 +1,3 @@
-import { Variants } from './useType'
 
 export function useParser() {
   return {

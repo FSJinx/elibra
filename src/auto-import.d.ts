@@ -348,7 +348,7 @@ declare global {
   export type { User } from './stores/authStore'
   import('./stores/authStore')
   // @ts-ignore
-  export type { CampusInfo } from './stores/campusStore'
+  export type { Campus } from './stores/campusStore'
   import('./stores/campusStore')
 }
 
