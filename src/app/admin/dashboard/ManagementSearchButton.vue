@@ -1,7 +1,7 @@
 <template>
-  <Button variant="default" class="justify-between w-75" left-icon="search" @click="openSearch">
+  <Button variant="default" class="w-75 px-3" left-icon="search" @click="openSearch">
     Search
-    <p class="ml-auto shrink-0"><Icon icon="component" /> + K</p>
+    <span class="ml-auto shrink-0"><Icon icon="command" /> + K</span>
   </Button>
 
   <Modal ref="searchModal" position="top" size="normal" @show="() => (searchQuery = '')">

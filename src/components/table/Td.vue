@@ -1,6 +1,6 @@
 <template>
   <td v-if="hasData" :class="{ 'text-muted': data === null || data.length === 0 }">
-    {{ data ?? 'No Data' }}
+    {{ data ?? nullMessage }}
   </td>
 
   <!-- Slot fallback kapag undefined ang data prop -->
@@ -11,10 +11,13 @@
 
 <script setup lang="ts">
 interface Props {
-  data: string | null
+  data?: any | null
+  nullMessage?: string
 }
 
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  nullMessage: 'No data',
+})
 
 const hasData = computed(() => {
   return props.data !== undefined

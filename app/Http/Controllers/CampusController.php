@@ -35,14 +35,14 @@ class CampusController extends Controller
 
                 $query = Campus::query();
 
-                if (!empty($search)) {
+                if (! empty($search)) {
                     $query->where(function ($query) use ($search) {
                         $query->where('name', 'LIKE', "%{$search}%")
                             ->orWhere('code', 'LIKE', "%{$search}%");
                     });
                 }
 
-                if (is_array($sort) && !empty($sort)) {
+                if (is_array($sort) && ! empty($sort)) {
                     foreach ($sort as $field) {
                         if (in_array($field, $allowedSortFields, true)) {
                             $query->orderBy(
@@ -55,12 +55,12 @@ class CampusController extends Controller
                     $query->orderBy('name');
                 }
 
-                return $query->select('name', 'code', 'address')->get();
+                return $query->select('*')->get();
             }
         );
 
         // No exact match found
-        if ($campuses->isEmpty() && !empty($search)) {
+        if ($campuses->isEmpty() && ! empty($search)) {
 
             $search = strtolower(trim($search));
 
@@ -74,7 +74,7 @@ class CampusController extends Controller
 
                     // Compare against every word
                     $distance = collect(explode(' ', $cleanName))
-                        ->map(fn($word) => levenshtein($search, $word))
+                        ->map(fn ($word) => levenshtein($search, $word))
                         ->min();
 
                     similar_text($search, $cleanName, $similarity);
@@ -102,11 +102,12 @@ class CampusController extends Controller
                     unset($campus->distance);
                     unset($campus->similarity);
 
-                    return [
-                        'name' => $campus->name,
-                        'code' => $campus->code,
-                        'address' => $campus->address,
-                    ];
+                    return $campus;
+                    // return [
+                    //     'name' => $campus->name,
+                    //     'code' => $campus->code,
+                    //     'address' => $campus->address,
+                    // ];
                 });
 
             if ($suggestions->isNotEmpty()) {

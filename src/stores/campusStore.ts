@@ -1,4 +1,4 @@
-export interface CampusInfo {
+export interface Campus {
   id: number | null
   name: string | null
   code: string | null
@@ -11,16 +11,16 @@ export interface CampusInfo {
 
 export const campusStore = defineStore('campus', () => {
   // ============= STATES ===============
-  const campuses = ref<CampusInfo[] | null>(null)
-  const currentCampus = ref<CampusInfo | null>(null)
+  const campuses = ref<Campus[] | null>(null)
+  const currentCampus = ref<Campus | null>(null)
   const loading = ref<boolean>(false)
 
   // ============= SETTERS ===============
-  function setCampuses(data: CampusInfo[] | null) {
+  function setCampuses(data: Campus[] | null) {
     campuses.value = data
   }
 
-  function setCurrentCampus(data: CampusInfo | null) {
+  function setCurrentCampus(data: Campus | null) {
     currentCampus.value = data
   }
 

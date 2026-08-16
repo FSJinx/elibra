@@ -16,7 +16,7 @@
 [data-title-bottom]:not([data-title-bottom=''])::after,
 [data-title-left]:not([data-title-left=''])::after,
 [data-title-right]:not([data-title-right=''])::after {
-  position: absolute;
+  position: fixed;
 
   /* Modern Tooltip Styling */
   background-color: var(--color-background);
@@ -122,7 +122,6 @@
 [data-title-right]:hover::after {
   transform: translateY(-50%) translateX(0);
 }
-
 
 /* =========================================================
    3. SAFETY NET: ABSOLUTE HIDE ON EMPTY ATTRIBUTES

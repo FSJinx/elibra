@@ -1,130 +1,175 @@
 <template>
-  <div class="form-input w-full" :class="[positions.parent[labelPosition], { 'opacity-60 cursor-not-allowed': disabled }]" @focusin="active = true" @focusout="active = false" :data-title="required ? (label ? `${label} is required.` : 'Required field.') : `${label || ''} Input`">
-    <!-- Label -->
-    <label v-if="label" :for="id" class="text-md shrink-0 transition-all duration-150" :class="[positions.label[labelPosition], { 'label-floating': (active || hasValue) && labelPosition === 'float' }, error ? 'text-danger' : '']">
-      <span>{{ label }}</span>
-      <span v-if="required" class="text-danger">*</span>
-    </label>
-
+  <div class="flex w-full flex-col gap-2">
     <!-- Input Container -->
-    <div class="flex w-full">
-      <div class="relative flex shrink-0 items-center bg-slate-50 w-full border transition-colors min-h-10 min-w-20 px-4 rounded-xl overflow-hidden focus-within:ring-4" :class="[error ? 'border-danger focus-within:border-danger focus-within:ring-danger/20' : 'border-border focus-within:ring-primary-soft focus-within:border-primary/50']">
-        <!-- Slot para sa Prefix Icon (Optional) -->
-        <Icon :icon="leftIcon" v-if="leftIcon" class="mr-3 -ml-0.5" />
+    <div class="relative inline-flex shrink-0 items-center bg-slate-50 w-full border transition-colors min-w-20 rounded-md overflow-hidden focus-within:ring-4" :class="[sizeClass, error && error?.length > 0 ? 'border-danger focus-within:border-danger focus-within:ring-danger/20' : 'border-border focus-within:ring-success/25 focus-within:border-primary/50', { 'opacity-60 cursor-not-allowed': disabled }]">
+      <!-- Slot for Prefix Icon (Optional) -->
+      <span class="absolute left-3 h-full place-content-center" data-title="Show Password" v-if="leftIcon" type="button" size="small">
+        <Icon :icon="leftIcon" />
+      </span>
 
-        <input ref="input" :id="id" title="" :name="id" v-model="model" :type="inputType" :placeholder="inputPlaceholder" :required="required" :disabled="disabled" :autocomplete="autocomplete" class="py-2 w-full bg-transparent transition-all duration-150 focus:outline-none disabled:cursor-not-allowed" />
+      <input
+        ref="input"
+        :id="id"
+        :name="id"
+        v-model="model"
+        :type="inputType"
+        :placeholder="placeholder"
+        :required="required"
+        :disabled="disabled"
+        :readonly="readonly"
+        :min="min"
+        :max="max"
+        :pattern="pattern"
+        :autocomplete="autocomplete"
+        :spellcheck="spellcheck"
+        @focus="checkCapsLock"
+        @blur="resetCapsLock"
+        @click="checkCapsLock"
+        @keydown="checkCapsLock"
+        @keyup="checkCapsLock"
+        :class="[inputPadding]"
+        class="h-full w-full bg-transparent autofill:bg-primary transition-all duration-150 focus:outline-none disabled:cursor-not-allowed"
+      />
 
-        <!-- Clear Button -->
-        <span class="h-full place-content-center px-3 cursor-pointer -mr-4" v-if="enableClear && hasValue && !disabled && inputType !== 'password'" type="button" size="small" aria-label="Clear input" @click="model = ''">
-          <Icon icon="X" name="Clear Input" />
-        </span>
+      <!-- Toggle Password Button -->
+      <span class="h-full place-content-center py-2 px-3 cursor-pointer border-l border-border" data-title="Show Password" v-if="type === 'password' && !disabled" type="button" size="small" :aria-label="show ? 'Hide password' : 'Show password'" @click="show = !show">
+        <Icon variant="default-hover" :icon="show ? 'eye' : 'eye-slash'" :name="show ? 'Hide Password' : 'Show Password'" />
+      </span>
 
-        <!-- Toggle Password Button -->
-        <span class="h-full place-content-center px-3 cursor-pointer -mr-4" v-if="type === 'password' && !disabled" type="button" size="small" :aria-label="show ? 'Hide password' : 'Show password'" @click="show = !show">
-          <Icon variant="default-hover" :icon="show ? 'Eye' : 'EyeClosed'" :name="show ? 'Hide Password' : 'Show Password'" />
-        </span>
+      <!-- Clear Button -->
+      <span class="h-full place-content-center p-2 px-3 cursor-pointer border-l border-border" v-if="enableClear && hasValue && !disabled" type="button" size="small" aria-label="Clear input" @click="model = ''">
+        <Icon icon="x" name="Clear Input" />
+      </span>
 
-        <!-- Slot para sa Suffix Icon (Optional) -->
-        <Icon :icon="rightIcon" v-if="rightIcon" class="ml-4 -mr-0.5" />
-      </div>
+      <!-- Slot for Suffix Icon (Optional) -->
+      <span class="h-full place-content-center py-2 pr-3" data-title="Show Password" v-if="rightIcon" type="button" size="small">
+        <Icon :icon="rightIcon" />
+      </span>
     </div>
 
-    <div class="text-[0.85rem] text-danger wrap-break-word -mt-0.5" v-if="errorMessage && errorMessage.length > 0">{{ errorMessage }}</div>
+    <!-- Info / Caps Lock Message -->
+    <div v-if="isCapsLockOn && checkcapslock" class="flex text-warning items-center gap-1 text-[0.85rem] wrap-break-word">
+      <Icon icon="info-circle" />
+      <span>Caps Lock is on</span>
+    </div>
+
+    <div v-if="helper" class="flex text-info items-center gap-1 text-[0.85rem] wrap-break-word">
+      <Icon icon="info-circle" />
+      <span>{{ helper }}</span>
+    </div>
+
+    <!-- Error Message -->
+    <p v-if="error && error.length > 0" class="text-danger text-sm">
+      {{ error }}
+    </p>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
+
 type Types = 'text' | 'number' | 'password' | 'email' | 'tel' | 'username' | 'hidden'
 type Autocomplete = 'on' | 'off' | string
-type LabelPosition = 'float' | 'default' | 'top'
 
 interface Props {
+  // Base
   id: string
-  label?: string
   type?: Types
-  autocomplete?: Autocomplete
   placeholder?: string
-  labelPosition?: LabelPosition
+
+  // Validation
   required?: boolean
+  min?: number | string
+  max?: number | string
+  pattern?: string
+
+  // Behavior
   disabled?: boolean
+  readonly?: boolean
+  autocomplete?: Autocomplete
+  autoFocus?: boolean
+  spellcheck?: boolean
+
+  // Actions
   enableClear?: boolean
+  checkcapslock?: boolean
+
+  // Others
   leftIcon?: string
   rightIcon?: string
-  error?: boolean
-  errorMessage?: string
+  error?: string
   size?: Sizes
-  focus?: boolean
+  helper?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
   type: 'text',
-  radius: 'xl',
+  placeholder: '',
   autocomplete: 'off',
-  labelPosition: 'default',
   required: false,
   disabled: false,
+  readonly: false,
+  autoFocus: false,
+  checkCapsLock: false,
   enableClear: false,
-  error: false,
-  errorMessage: '',
-  size: 'default',
-  focus: false,
+  size: 'md',
 })
 
 const model = defineModel<string | number>({ default: '' })
-const active = ref(false)
 const show = ref(false)
+const isCapsLockOn = ref(false)
 const input = ref<HTMLInputElement | null>(null)
 
 // Safe value check
 const hasValue = computed(() => String(model.value ?? '').length > 0)
 
-// Dynamic input type (password toggle)
+const sizes: Record<Sizes, string> = {
+  xs: 'text-xs h-6',
+  sm: 'text-sm h-8',
+  md: 'text-base h-10',
+  lg: 'text-lg h-12',
+  xl: 'text-xl h-14',
+}
+
+const sizeClass = computed(() => sizes[props.size])
+
+// Dynamic input type (password toggle & custom types mapping)
 const inputType = computed(() => {
   if (props.type === 'password') {
     return show.value ? 'text' : 'password'
   }
+  if (props.type === 'username') {
+    return 'text'
+  }
   return props.type
 })
 
-const positions = computed(() => ({
-  parent: {
-    float: `relative inline-flex items-center ${props.label ? 'py-2' : ''}`,
-    default: 'inline-flex items-center gap-5',
-    top: 'inline-flex flex-col gap-2.5',
-  },
-  label: {
-    float: 'absolute label-float left-0 pl-4 z-1 text-slate-500 pointer-events-none',
-    default: 'w-35 line-clamp-1',
-    top: '',
-  },
-}))
-
-const inputPlaceholder = computed(() => {
-  if (props.labelPosition === 'float') {
-    if (active.value) {
-      return props.placeholder ?? props.label ?? ''
-    }
-    return !props.label ? (props.placeholder ?? '') : ''
+const checkCapsLock = (e: Event) => {
+  if (props.checkcapslock && 'getModifierState' in e && typeof (e as KeyboardEvent).getModifierState === 'function') {
+    isCapsLockOn.value = (e as KeyboardEvent).getModifierState('CapsLock')
   }
-  return props.placeholder ?? props.label ?? ''
+}
+
+const resetCapsLock = () => {
+  isCapsLockOn.value = false
+}
+
+const inputPadding = computed(() => {
+  const padding = ['py']
+  if (props.leftIcon || props.rightIcon) {
+    padding.push('px-5')
+  } else {
+    padding.push('px-3')
+  }
+
+  return padding
 })
 
 onMounted(() => {
-  if (props.focus) {
+  if (props.autoFocus) {
     input.value?.focus()
   }
 })
 </script>
 
-<style scoped>
-.label-floating {
-  transform: translate(-0.5em, -2.4em);
-  font-size: var(--text-sm, 0.875rem);
-  transition: all 0.2s ease-in-out;
-}
-
-.form-input:focus-within label,
-.form-input:hover label {
-  color: var(--color-primary, inherit);
-}
-</style>
+<style scoped></style>

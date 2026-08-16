@@ -37,25 +37,21 @@ body {
   cursor: not-allowed;
 }
 
-::selection {
-  background-color: var(--color-tertiary);
-  /* color: #ffffff; */
-  color: var(--color-foreground);
-}
+/* ::selection {
+  background-color: var(--color-foreground);
+  color: var(--color-background);
+} */
 
 @layer components {
   /* ============ TABLE CELLS ============ */
   th,
   td {
-    @apply text-center px-5 py-4;
+    @apply text-center px-4 py-4;
   }
   th {
-    @apply font-semibold text-primary;
-  }
-  tbody {
-    @apply divide-y divide-border;
+    @apply font-semibold;
   }
   tbody tr {
-    @apply cursor-pointer hover:bg-primary-soft hover:text-primary-soft-foreground transition-all duration-300;
+    @apply border-b border-border/75 cursor-pointer hover:bg-neutral-100 transition-all duration-300;
   }
 }

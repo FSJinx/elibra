@@ -1,21 +1,25 @@
 <template>
   <Teleport to="body">
     <Transition name="fade">
-      <div v-if="isOpen" class="modal-wrapper fixed inset-0 flex items-center justify-center bg-backdrop h-screen overflow-y-auto p-10" :class="[hasInputs ? '' : 'cursor-pointer']" @click.self="close">
-        <div class="modal relative bg-background rounded-2xl shadow-2xl border border-border select-none" :class="[sizeClasses, positionClasses, position]" ref="modalRef">
-          <!-- <X class="absolute top-0 right-0 m-3" icon="X" @click="close" /> -->
-
+      <div v-if="isOpen" class="modal-wrapper fixed inset-0 flex items-center justify-center bg-backdrop h-dvh p-10" :class="[hasInputs ? '' : 'cursor-pointer']" @click.self="close">
+        <div class="modal relative bg-background rounded-xl shadow-2xl border border-border cursor-default overflow-hidden" :class="[sizeClasses, positionClasses, position]" ref="modalRef">
           <!-- Modal Header -->
-          <div class="p-5 py-4 border-b border-gray-300" v-if="$slots.header">
-            <slot name="header" />
+          <div class="flex items-start p-4 px-5 gap-3 border-b border-gray-300 text-xl font-semibold">
+            <slot name="header" v-if="$slots.header" />
+            <span class="ml-auto text-muted hover:text-foreground/50 cursor-pointer transition duration-100">
+              <Icon icon="x-lg" @click="close" v-if="closeButton" style="-webkit-text-stroke: 1px" />
+            </span>
           </div>
 
-          <div class="p-5">
-            <slot />
+          <div class="max-h-[76dvh] flex flex-col overflow-y-auto">
+            <div class="flex-1 place-content-center min-h-100" v-if="loading">
+              <LogoLoader message="Loading content, please wait..." />
+            </div>
+            <slot v-else />
           </div>
 
           <!-- Modal Footer -->
-          <div class="py-3 px-5 border-t border-gray-300" v-if="$slots.footer">
+          <div class="p-3 border-t border-gray-300" v-if="$slots.footer && !loading">
             <slot name="footer" />
           </div>
         </div>
@@ -24,8 +28,6 @@
   </Teleport>
 </template>
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
-
 type ModalPosition = 'top' | 'center' | 'bottom'
 type ModalSize = 'small' | 'normal' | 'large' | 'xlarge' | '2xlarge' | 'full'
 
@@ -33,12 +35,15 @@ interface Props {
   hasInputs?: boolean
   position?: ModalPosition
   size?: ModalSize
+  closeButton?: boolean
+  loading?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   hasInputs: false,
   position: 'center',
   size: 'normal',
+  closeButton: true,
 })
 
 const emit = defineEmits(['show'])

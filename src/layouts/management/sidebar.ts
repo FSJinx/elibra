@@ -3,7 +3,7 @@ export const menus = {
     general: {
       name: 'General',
       children: {
-        dashboard: { path: 'admin', name: 'Dashboard', icon: 'Home' },
+        dashboard: { path: 'admin', name: 'Dashboard', icon: 'grid-1x2' },
       },
     },
 
@@ -21,7 +21,8 @@ export const menus = {
       name: 'Management',
       children: [
         // { path: 'admin.subscriptions', name: 'Subscriptions', icon: 'GlobeCheck' },
-        { path: 'admin.campus', name: 'Campus', icon: 'Building' },
+        { path: 'admin.campus', name: 'Campus', icon: 'buildings' },
+        { path: 'admin.users', name: 'Users', icon: 'people' },
       ],
     },
   },

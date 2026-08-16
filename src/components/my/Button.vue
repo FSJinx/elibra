@@ -1,11 +1,14 @@
 <template>
-  <component :is="buttonAs" :type="type" class="shrink-0 relative inline-flex items-center justify-center rounded-xl max-h-max min-h-10 min-w-10 py-2 px-3 font-medium transition-all duration-100 outline-none" :class="[btnClass]" :disabled="disabled || loading" @mouseup="($event.currentTarget as HTMLButtonElement).blur()">
-    <Spinner class="absolute" v-if="loading" />
+  <component :is="buttonAs" :type="type" class="relative inline-flex items-center justify-center font-medium rounded-md gap-1.5 px-3 transition-all duration-100 outline-none tracking-tight leading-none" :class="[btnClass, sizeClass]" :disabled="disabled" @mouseup="($event.currentTarget as HTMLButtonElement).blur()">
+    <Spinner class="absolute" v-if="disabled" />
 
-    <Icon :icon="leftIcon" v-if="leftIcon" :class="['mr-1.5', props.loading && 'invisible']" />
-    <Icon :icon="icon" v-if="icon" :class="[props.loading && 'invisible']" />
-    <span class="flex justify-center items-center w-full tracking-tight gap-1.5 text-[1em]" :class="[props.loading && 'invisible']"><slot /></span>
-    <Icon :icon="rightIcon" v-if="rightIcon" :class="['ml-1.5', props.loading && 'invisible']" />
+    <Icon :icon="leftIcon" v-if="leftIcon" :class="[disabled && 'invisible']" />
+
+    <Icon :icon="icon" v-if="icon" :class="[disabled && 'invisible']" />
+    <span v-if="$slots.default?.() && $slots.default?.().length > 0" class="inline-flex flex-1 justify-center items-center" :class="[disabled && 'invisible']">
+      <slot />
+    </span>
+    <Icon :icon="rightIcon" v-if="rightIcon" :class="[disabled && 'invisible']" />
   </component>
 </template>
 
@@ -22,17 +25,27 @@ interface Props {
   type?: Types
   variant?: Variants
   disabled?: boolean
-  // size?: Sizes
+  size?: Sizes
 }
 
 const props = withDefaults(defineProps<Props>(), {
   loading: false,
   as: 'button',
-  variant: 'text',
+  variant: 'default',
   disabled: false,
-  size: 'default',
+  size: 'md',
   type: 'button',
 })
+
+const sizes: Record<Sizes, string> = {
+  xs: 'text-xs h-6',
+  sm: 'text-sm h-8',
+  md: 'text-base h-10',
+  lg: 'text-lg h-12',
+  xl: 'text-xl h-14',
+}
+
+const sizeClass = computed(() => sizes[props.size])
 
 const buttonAs = computed(() => {
   const asses: Record<Ases, string> = {
@@ -46,7 +59,7 @@ const buttonAs = computed(() => {
 const btnClass = computed(() => {
   const variants: Record<Variants, string> = {
     primary: 'border-primary bg-primary text-primary-foreground hover:bg-primary-hover',
-    default: 'border-border bg-background text-default-foreground hover:text-primary-hover',
+    default: 'border-border bg-background text-default-foreground hover:text-primary-hover hover:border-primary/50',
     info: 'border-info bg-info text-info-foreground hover:bg-info-hover',
     success: 'border-success bg-success text-success-foreground hover:bg-success-hover',
     danger: 'border-danger bg-danger text-danger-foreground hover:bg-danger-hover',

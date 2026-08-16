@@ -11,7 +11,7 @@
         </span>
 
         <!-- Card Status -->
-        <Badge class="ml-auto max-w-30 line-clamp-1 font-semibold" :title="card.status" :class="[`bg-${card.color}-soft text-${card.color}-soft-foreground`]" v-if="card.status">{{ card.status }}</Badge>
+        <Badge class="ml-auto max-w-30 line-clamp-1 font-semibold" :title="card.status" :variant="card.color" v-if="card.status">{{ card.status }}</Badge>
       </div>
 
       <!-- Data -->
@@ -27,10 +27,10 @@
 const datas = computed(() => {
   return [
     { icon: 'building', data: 8, status: '', label: 'Total active campus', color: 'info' },
-    { icon: 'file-user', data: 11, status: '5%', label: 'Total library staff', color: 'success' },
-    { icon: 'users', data: 1250, status: '12%', label: 'Total active students', color: 'warning' },
-    { icon: 'book', data: 5420, status: '8%', label: 'Total books available', color: 'danger' },
-    { icon: 'bookmark-check', data: 340, status: '2%', label: 'Books borrowed today', color: 'restore' },
+    { icon: 'person-workspace', data: 11, status: '5%', label: 'Total library staff', color: 'success' },
+    { icon: 'person-square', data: 1250, status: '12%', label: 'Total active students', color: 'warning' },
+    { icon: 'book-half', data: 5420, status: '8%', label: 'Total books available', color: 'danger' },
+    { icon: 'journals', data: 340, status: '2%', label: 'Books borrowed today', color: 'restore' },
   ]
 })
 </script>
