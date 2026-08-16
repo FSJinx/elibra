@@ -22,7 +22,7 @@
             <h6 class="font-medium tracking-normal text-foreground-secondary text-sm">{{ menu.name }}</h6>
             <!-- Menu Children -->
             <div class="p-2 space-y-1">
-              <router-link v-for="child in menu.children" :key="child.path" :to="{ name: child.path }" class="relative flex items-center gap-3.5 px-5 py-3 rounded-lg border cursor-pointer transition-all duration-200" :class="[active(child.path) ? 'text-primary bg-primary-soft/25 hover:bg-primary-soft border-primary/25' : 'border-transparent hover:bg-default/50']" :data-title-right="active(child.path) ? child.name + ' (Selected)' : child.name">
+              <router-link v-for="child in menu.children" :key="child.path" :to="{ name: child.path }" class="relative flex items-center gap-3.5 px-5 py-3 rounded-lg border cursor-pointer transition-all duration-200" :class="[active(child.path) ? 'text-primary bg-primary-soft/25 hover:bg-primary-soft border-primary/25' : 'border-transparent hover:bg-default/50']" :data-title="active(child.path) ? child.name + ' (Selected)' : child.name">
                 <div class="absolute left-0 bg-primary h-[40%] rounded-r-full transition-all duration-200" :class="[active(child.path) ? 'w-[0.30rem]' : 'w-0']"></div>
                 <Icon :icon="child.icon" />
                 <span>{{ child.name }}</span>
@@ -35,9 +35,9 @@
         <!-- Profile Icon at the Bottom -->
         <div class="flex items-center overflow-hidden gap-2 border-t border-border/50 bg-default/10 rounded-lg p-4 cursor-pointer transition-all duration-200">
           <!-- Avatar -->
-          <div class="flex items-center justify-center place-items-center rounded-full p-0.5 border border-primary size-9 overflow-hidden">
+          <div class="flex items-center justify-center place-items-center rounded-full shadow p-0.5 size-9 overflow-hidden">
             <img :src="auth.user?.profile_photo" alt="" class="size-6 rounded-full shrink-0" v-if="auth.user?.profile_photo" />
-            <span v-else class="size-full flex items-center justify-center bg-primary text-primary-foreground text-xs rounded-full">{{ auth.getInitials }}</span>
+            <span v-else class="size-full flex items-center justify-center text-primary text-xs rounded-full">{{ auth.getInitials }}</span>
           </div>
 
           <!-- User Info (Dinagdagan ng min-w-0 para hindi itulak ang icon) -->
