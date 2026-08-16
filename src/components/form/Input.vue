@@ -156,11 +156,16 @@ const resetCapsLock = () => {
 
 const inputPadding = computed(() => {
   const padding = ['py']
-  if (props.leftIcon || props.rightIcon) {
-    padding.push('px-5')
-  } else {
-    padding.push('px-3')
-  }
+  let leftPadding = 0
+  let rightPadding = 0
+
+  leftPadding += props.leftIcon ? 5 : 3
+  rightPadding += props.rightIcon ? 5 : 3
+
+  leftPadding += props.enableClear ? 5.5 : 0
+  leftPadding += props.type === 'password' ? 5.5 : 0
+
+  padding.push(`pl-${leftPadding} pr-${rightPadding}`)
 
   return padding
 })

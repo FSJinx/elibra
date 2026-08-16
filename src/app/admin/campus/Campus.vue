@@ -1,38 +1,36 @@
 <template>
-  <div class="mb-5 grid grid-cols-1 sm:grid-cols-2 items-start gap-4">
-    <!-- Page Heading -->
-    <div class="space-y-1">
-      <p class="text-primary text-md uppercase tracking-wide font-medium text-shadow-md text-shadow-primary/15">Good day, {{ auth.user?.first_name }}! 👋</p>
+  <!-- Page Heading -->
+  <div class="space-y-1 shrink-0">
+    <p class="text-primary text-md uppercase tracking-wide font-medium text-shadow-md text-shadow-primary/15">Good day, {{ auth.user?.first_name }}! 👋</p>
 
-      <h1 class="text-2xl font-semibold">
-        {{ $route.meta.title ?? 'Untitled' }}
-      </h1>
+    <h1 class="text-2xl font-semibold">
+      {{ $route.meta.title ?? 'Untitled' }}
+    </h1>
 
-      <p class="text-sm text-foreground-secondary">
-        {{ $route.meta.description ?? `This is your today's preview for ${$route.meta.title}.` }}
-      </p>
-    </div>
+    <p class="text-sm text-foreground-secondary">
+      {{ $route.meta.description ?? `This is your today's preview for ${$route.meta.title}.` }}
+    </p>
+  </div>
 
-    <!-- Actions -->
-    <div class="flex flex-wrap items-center justify-end gap-1.5 mt-auto">
-      <!-- Search -->
-      <form class="min-w-85" @submit.prevent>
-        <Input id="searchQuery" v-model="filters.query" enable-clear left-icon="search" placeholder="Search by name, code, address" />
-      </form>
+  <!-- Actions -->
+  <div class="flex w-full flex-wrap items-center justify-end gap-1.5 mb-3 mt-5">
+    <!-- Search -->
+    <form class="min-w-85" @submit.prevent>
+      <Input id="searchQuery" v-model="filters.query" enable-clear left-icon="search" placeholder="Search by name, code, address" />
+    </form>
 
-      <!-- Status Filter -->
-      <select v-model="filters.status" class="h-10 rounded-md border border-border bg-background px-3 text-sm outline-none focus:border-primary">
-        <option value="">All Status</option>
-        <option value="active">Active</option>
-        <option value="inactive">Inactive</option>
-      </select>
+    <!-- Status Filter -->
+    <Select class="max-w-max" id="status" v-model="filters.status" title="statuses">
+      <Option value="">All Status</Option>
+      <Option value="active">Active</Option>
+      <Option value="inactive">Inactive</Option>
+    </Select>
 
-      <!-- Refresh -->
-      <Button variant="info" icon="arrow-clockwise" data-title="Reset & Refresh" :loading="loading" @click="refresh" />
+    <!-- Refresh -->
+    <Button variant="info" icon="arrow-clockwise" data-title="Reset & Refresh" :loading="loading" @click="refresh" />
 
-      <!-- Create -->
-      <Button variant="primary" data-title="Add new record" @click="createCampus?.open"> Create New </Button>
-    </div>
+    <!-- Create -->
+    <Button variant="primary" data-title="Add new record" @click="createCampus?.open"> Create New </Button>
   </div>
 
   <!-- Campus Table -->
