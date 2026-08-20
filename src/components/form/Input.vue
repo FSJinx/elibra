@@ -1,12 +1,13 @@
 <template>
-  <div class="flex w-full flex-col gap-2">
+  <div class="flex w-full flex-col gap-1.5">
     <!-- Input Container -->
-    <div class="relative inline-flex shrink-0 items-center bg-slate-50 w-full border transition-colors min-w-20 rounded-md overflow-hidden focus-within:ring-4" :class="[sizeClass, error && error?.length > 0 ? 'border-danger focus-within:border-danger focus-within:ring-danger/20' : 'border-border focus-within:ring-success/25 focus-within:border-primary/50', { 'opacity-60 cursor-not-allowed': disabled }]">
-      <!-- Slot for Prefix Icon (Optional) -->
-      <span class="absolute left-3 h-full place-content-center" data-title="Show Password" v-if="leftIcon" type="button" size="small">
+    <div class="group relative flex w-full items-center bg-background border transition-all duration-150 min-w-20 rounded-md overflow-hidden focus-within:ring-4" :class="[sizeConfig.container, error && error.length > 0 ? 'border-danger focus-within:border-danger focus-within:ring-danger/20' : 'border-border focus-within:ring-success/25 focus-within:border-primary/50', { 'opacity-60 cursor-not-allowed bg-slate-100': disabled }]">
+      <!-- Prefix Icon -->
+      <span v-if="leftIcon" class="flex items-center justify-center shrink-0 pl-3 text-slate-400">
         <Icon :icon="leftIcon" />
       </span>
 
+      <!-- Native Input -->
       <input
         ref="input"
         :id="id"
@@ -27,39 +28,43 @@
         @click="checkCapsLock"
         @keydown="checkCapsLock"
         @keyup="checkCapsLock"
-        :class="[inputPadding]"
-        class="h-full w-full bg-transparent autofill:bg-primary transition-all duration-150 focus:outline-none disabled:cursor-not-allowed"
+        class="h-full w-full flex-1 bg-transparent text-slate-900 transition-all duration-150 focus:outline-none disabled:cursor-not-allowed autofill:bg-primary"
+        :class="[sizeConfig.input, leftIcon ? 'pl-2' : 'pl-3', hasSuffixActions ? 'pr-2' : 'pr-3']"
       />
 
-      <!-- Toggle Password Button -->
-      <span class="h-full place-content-center py-2 px-3 cursor-pointer border-l border-border" data-title="Show Password" v-if="type === 'password' && !disabled" type="button" size="small" :aria-label="show ? 'Hide password' : 'Show password'" @click="show = !show">
-        <Icon variant="default-hover" :icon="show ? 'eye' : 'eye-slash'" :name="show ? 'Hide Password' : 'Show Password'" />
-      </span>
+      <!-- Suffix Actions Container -->
+      <div v-if="hasSuffixActions" class="flex items-center h-full shrink-0">
+        <!-- Toggle Password Button -->
+        <button v-if="type === 'password' && !disabled" type="button" class="flex h-full items-center justify-center px-3 text-slate-500 hover:text-slate-800 focus:outline-none border-l border-border transition-colors" :aria-label="show ? 'Hide password' : 'Show password'" @click="show = !show">
+          <Icon variant="default-hover" :icon="show ? 'eye' : 'eye-slash'" :name="show ? 'Hide Password' : 'Show Password'" />
+        </button>
 
-      <!-- Clear Button -->
-      <span class="h-full place-content-center p-2 px-3 cursor-pointer border-l border-border" v-if="enableClear && hasValue && !disabled" type="button" size="small" aria-label="Clear input" @click="model = ''">
-        <Icon icon="x" name="Clear Input" />
-      </span>
+        <!-- Clear Button -->
+        <button v-if="enableClear && hasValue && !disabled" type="button" class="flex h-full items-center justify-center px-3 text-slate-500 hover:text-slate-800 focus:outline-none border-l border-border transition-colors" aria-label="Clear input" @click="model = ''">
+          <Icon icon="x" name="Clear Input" />
+        </button>
 
-      <!-- Slot for Suffix Icon (Optional) -->
-      <span class="h-full place-content-center py-2 pr-3" data-title="Show Password" v-if="rightIcon" type="button" size="small">
-        <Icon :icon="rightIcon" />
-      </span>
+        <!-- Suffix Icon -->
+        <span v-if="rightIcon" class="flex h-full items-center justify-center pr-3 pl-2 text-slate-400">
+          <Icon :icon="rightIcon" />
+        </span>
+      </div>
     </div>
 
-    <!-- Info / Caps Lock Message -->
-    <div v-if="isCapsLockOn && checkcapslock" class="flex text-warning items-center gap-1 text-[0.85rem] wrap-break-word">
+    <!-- Caps Lock Warning -->
+    <div v-if="isCapsLockOn && checkcapslock" class="flex items-center gap-1.5 text-xs text-warning">
       <Icon icon="info-circle" />
       <span>Caps Lock is on</span>
     </div>
 
-    <div v-if="helper" class="flex text-info items-center gap-1 text-[0.85rem] wrap-break-word">
+    <!-- Helper Text -->
+    <div v-if="helper" class="flex items-center gap-1.5 text-xs text-info">
       <Icon icon="info-circle" />
       <span>{{ helper }}</span>
     </div>
 
     <!-- Error Message -->
-    <p v-if="error && error.length > 0" class="text-danger text-sm">
+    <p v-if="error && error.length > 0" class="text-xs font-medium text-danger">
       {{ error }}
     </p>
   </div>
@@ -68,6 +73,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 
+type Sizes = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 type Types = 'text' | 'number' | 'password' | 'email' | 'tel' | 'username' | 'hidden'
 type Autocomplete = 'on' | 'off' | string
 
@@ -94,7 +100,7 @@ interface Props {
   enableClear?: boolean
   checkcapslock?: boolean
 
-  // Others
+  // Display
   leftIcon?: string
   rightIcon?: string
   error?: string
@@ -110,7 +116,7 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   readonly: false,
   autoFocus: false,
-  checkCapsLock: false,
+  checkcapslock: false,
   enableClear: false,
   size: 'md',
 })
@@ -123,17 +129,23 @@ const input = ref<HTMLInputElement | null>(null)
 // Safe value check
 const hasValue = computed(() => String(model.value ?? '').length > 0)
 
-const sizes: Record<Sizes, string> = {
-  xs: 'text-xs h-6',
-  sm: 'text-sm h-8',
-  md: 'text-base h-10',
-  lg: 'text-lg h-12',
-  xl: 'text-xl h-14',
+// Check if any suffix elements exist
+const hasSuffixActions = computed(() => {
+  return (props.type === 'password' && !props.disabled) || (props.enableClear && hasValue.value && !props.disabled) || Boolean(props.rightIcon)
+})
+
+// Container and font size configurations
+const sizeMap: Record<Sizes, { container: string; input: string }> = {
+  xs: { container: 'h-7', input: 'text-xs' },
+  sm: { container: 'h-8', input: 'text-sm' },
+  md: { container: 'h-10', input: 'text-base' },
+  lg: { container: 'h-12', input: 'text-lg' },
+  xl: { container: 'h-14', input: 'text-xl' },
 }
 
-const sizeClass = computed(() => sizes[props.size])
+const sizeConfig = computed(() => sizeMap[props.size] ?? sizeMap.md)
 
-// Dynamic input type (password toggle & custom types mapping)
+// Dynamic input type
 const inputType = computed(() => {
   if (props.type === 'password') {
     return show.value ? 'text' : 'password'
@@ -145,8 +157,8 @@ const inputType = computed(() => {
 })
 
 const checkCapsLock = (e: Event) => {
-  if (props.checkcapslock && 'getModifierState' in e && typeof (e as KeyboardEvent).getModifierState === 'function') {
-    isCapsLockOn.value = (e as KeyboardEvent).getModifierState('CapsLock')
+  if (props.checkcapslock && e instanceof KeyboardEvent && typeof e.getModifierState === 'function') {
+    isCapsLockOn.value = e.getModifierState('CapsLock')
   }
 }
 
@@ -154,27 +166,9 @@ const resetCapsLock = () => {
   isCapsLockOn.value = false
 }
 
-const inputPadding = computed(() => {
-  const padding = ['py']
-  let leftPadding = 0
-  let rightPadding = 0
-
-  leftPadding += props.leftIcon ? 5 : 3
-  rightPadding += props.rightIcon ? 5 : 3
-
-  leftPadding += props.enableClear ? 5.5 : 0
-  leftPadding += props.type === 'password' ? 5.5 : 0
-
-  padding.push(`pl-${leftPadding} pr-${rightPadding}`)
-
-  return padding
-})
-
 onMounted(() => {
   if (props.autoFocus) {
     input.value?.focus()
   }
 })
 </script>
-
-<style scoped></style>

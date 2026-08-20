@@ -151,7 +151,7 @@ class ProgramsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Programs $programs)
+    public function show(Programs $program)
     {
         //
     }
@@ -159,7 +159,7 @@ class ProgramsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Programs $programs)
+    public function edit(Programs $program)
     {
         //
     }
@@ -167,12 +167,12 @@ class ProgramsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProgramsRequest $request, Programs $programs)
+    public function update(UpdateProgramsRequest $request, Programs $program)
     {
         DB::beginTransaction();
         try{
 
-            $programs->update($request->validated());
+            $program->update($request->validated());
 
             DB::commit();
 
@@ -181,7 +181,7 @@ class ProgramsController extends Controller
             return $this->response(
                 'success',
                 'Programs updated successfully',
-                $programs->toArray(),
+                $program->toArray(),
                 200
             );
 
@@ -195,13 +195,13 @@ class ProgramsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Programs $programs)
+    public function destroy(Programs $program)
     {
-        $this->authorize('delete', $programs);
+        $this->authorize('delete', $program);
 
         DB::beginTransaction();
         try {
-            $programs->delete();
+            $program->delete();
 
             DB::commit();
 

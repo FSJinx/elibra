@@ -1,6 +1,6 @@
 <template>
   <Modal ref="createCampus" :has-inputs="hasInputs">
-    <template #header>New Campus Form</template>
+    <template #header>{{ campus.id ? 'Edit Campus' : 'New Campus Form' }}</template>
 
     <div class="p-5">
       <Form id="campus-form" cols="2" @submit="submitForm">
@@ -27,7 +27,7 @@
     <template #footer>
       <div class="flex items-center justify-end-safe gap-2">
         <Button variant="danger" @click="(clearInput(), nextTick(() => close()))">Cancel</Button>
-        <Button type="submit" variant="primary" form="campus-form">Create</Button>
+        <Button type="submit" variant="primary" form="campus-form">{{ campus.id ? 'Save' : 'Create' }}</Button>
       </div>
     </template>
   </Modal>
@@ -36,19 +36,36 @@
 <script setup lang="ts">
 import Modal from '@/components/my/Modal.vue'
 
+const emit = defineEmits<{ created: [] }>()
+
 const createCampus = ref<InstanceType<typeof Modal> | null>(null)
 
 const campus = reactive({
+  id: null as number | null,
   name: '',
   code: '',
   address: '',
 })
 
-const open = () => createCampus.value?.open()
+const open = (existing?: Partial<Campus>) => {
+  campus.id = existing?.id ?? null
+  campus.name = existing?.name ?? ''
+  campus.code = existing?.code ?? ''
+  campus.address = existing?.address ?? ''
+  createCampus.value?.open()
+}
 const close = () => createCampus.value?.close()
 
-const submitForm = () => {
-  console.log(campus)
+const submitForm = async () => {
+  try {
+    if (campus.id) await api.put(`campus/update/${campus.id}`, campus)
+    else await api.post('campus/create', campus)
+    emit('created')
+    clearInput()
+    close()
+  } catch (error) {
+    console.error('Failed to create campus:', error)
+  }
 }
 
 const hasInputs = computed(() => {
@@ -56,6 +73,7 @@ const hasInputs = computed(() => {
 })
 
 const clearInput = () => {
+  campus.id = null
   campus.address = ''
   campus.code = ''
   campus.name = ''

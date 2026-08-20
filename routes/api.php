@@ -1,18 +1,19 @@
 <?php
+
 use App\Http\Controllers\AcademicController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\CampusController;
-use App\Http\Controllers\MediaController;
-use App\Http\Controllers\SubscriptionController;
-use App\Http\Controllers\SubscriptionCredentialController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BranchSectionController;
+use App\Http\Controllers\CampusController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\MediaController;
 use App\Http\Controllers\ProgramsController;
 use App\Http\Controllers\SectionsController;
 use App\Http\Controllers\SerialController;
+use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\SubscriptionCredentialController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserPermissionController;
@@ -52,7 +53,7 @@ Route::group(['prefix' => '/media'], function () {
     });
 });
 
-//User Permission Routes
+// User Permission Routes
 Route::group(['prefix' => '/user-permission'], function () {
 
     Route::group(['prefix' => '/get'], function () {
@@ -94,7 +95,7 @@ Route::group(['prefix' => '/item'], function () {
     });
 
     Route::group(['prefix' => '/update'], function () {
-         /* SUBSCRIPTION ROUTES */
+        /* SUBSCRIPTION ROUTES */
         Route::put('subscription/{subscription}', [SubscriptionController::class, 'update'])->middleware('jwt.auth', 'role:super_admin', 'throttle:write');
         Route::put('subscription-credential/{subscriptionCredential}', [SubscriptionCredentialController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin,librarian');
 
@@ -112,7 +113,7 @@ Route::group(['prefix' => '/item'], function () {
         Route::delete('academic/{academic}', [AcademicController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:delete');
         /* SERIAL ROUTES */
         Route::delete('serial/{serial}', [SerialController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:delete');
-        
+
     });
 });
 
@@ -121,7 +122,7 @@ Route::group(['prefix' => '/campus'], function () {
 
     Route::group(['prefix' => '/get'], function () {
         Route::get('', [CampusController::class, 'index']);
-        Route::get('{campus}', [CampusController::class, 'show'])->middleware('jwt.auth', 'role:super_admin', 'throttle:api');
+        Route::get('{campus}', [CampusController::class, 'show'])->middleware('jwt.auth', 'role:super_admin,admin', 'throttle:api');
     });
 
     Route::group(['prefix' => '/create'], function () {
@@ -175,12 +176,12 @@ Route::group(['prefix' => '/program'], function () {
     });
 
     Route::group(['prefix' => '/delete'], function () {
-        Route::delete('{program}', [ProgramsController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin', 'throttle:delete ');
+        Route::delete('{program}', [ProgramsController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin', 'throttle:delete');
     });
 
 });
 
-//Branch Routes
+// Branch Routes
 Route::group(['prefix' => '/branch'], function () {
 
     Route::group(['prefix' => '/get'], function () {
@@ -192,7 +193,7 @@ Route::group(['prefix' => '/branch'], function () {
     });
 
     Route::group(['prefix' => '/update'], function () {
-        Route::put('{branch}', [BranchController::class, 'update'])->middleware('jwt.auth', 'role:super_admin, admin', 'throttle:write');
+        Route::put('{branch}', [BranchController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin', 'throttle:write');
     });
 
     Route::group(['prefix' => '/delete'], function () {
@@ -222,7 +223,7 @@ Route::group(['prefix' => '/section'], function () {
 
 });
 
-//Branch Section Routes
+// Branch Section Routes
 Route::group(['prefix' => '/branch_section'], function () {
 
     Route::group(['prefix' => '/get'], function () {
@@ -243,7 +244,7 @@ Route::group(['prefix' => '/branch_section'], function () {
 
 });
 
-//User Routes
+// User Routes
 Route::group(['prefix' => '/user'], function () {
 
     Route::group(['prefix' => '/create'], function () {
@@ -256,13 +257,13 @@ Route::group(['prefix' => '/user'], function () {
 
 });
 
-//Admin Routes
+// Admin Routes
 // Route::group(['prefix' => '/admin'], function () {
 
 //     Route::group(['prefix' => '/create'], function () {
 //         Route::post('', [AdminController::class, 'store'])->middleware('jwt.auth', 'role:super_admin');
 //     });
-    
+
 //     Route::group(['prefix' => '/update'], function () {
 //         Route::put('{admin}', [AdminController::class, 'update'])->middleware('jwt.auth', 'role:super_admin');
 //     });

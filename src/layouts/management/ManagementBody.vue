@@ -1,27 +1,14 @@
 <template>
-  <main class="relative flex-1 flex flex-col overflow-hidden bg-background border border-border rounded-xl">
-    <!-- Main Body Header -->
-    <!-- <div class="sticky top-0 flex flex-col gap-3 p-5 pb-0 bg-background">
-      <div class="flex md:items-center flex-col md:flex-row gap-5">
-        <div class="flex items-center gap-3">
-          <Button variant="default" @click="system.toggleSidebar" class="group hover:drop-shadow">
-            <Icon :icon="system.sidebar ? 'box-arrow-in-left' : 'box-arrow-in-right'" class="transition-all duration-300" />
-          </Button>
-          <img :src="images.isu" alt="" class="size-10" />
-          <div class="inline-block">
-            <h5 class="font-semibold text-xl">Isabela State University</h5>
-            <p class="text-sm font-normal">{{ subHeading }}</p>
-          </div>
-        </div>
-
-        
-      </div>
-
-    </div> -->
-
+  <main class="relative flex-1 flex flex-col overflow-hidden transition-all duration-200">
     <!-- Main Body Content -->
     <div class="flex-1 flex flex-col overflow-hidden">
-      <div class="flex-1 flex flex-col rounded-xl p-5 overflow-y-auto scrollbar-none transition-all duration-200">
+      <div class="flex-1 flex flex-col overflow-y-auto scrollbar-none transition-all duration-200">
+        <!-- Page Heading -->
+        <div class="shrink-0 p-5" v-if="$route.meta.title">
+          <p class="text-primary text-lg uppercase tracking-wide font-medium text-shadow-md text-shadow-primary/15 mb-1" v-if="$route.name?.toString().includes('.dashboard')">Good day, {{ auth.user?.first_name }}!👋</p>
+          <h1 class="text-2xl font-semibold" v-if="$route.meta.title">{{ $route.meta.title }}</h1>
+          <p class="text-foreground-secondary">{{ $route.meta.description ?? `This is your today's preview for ${$route.meta.title}.` }}</p>
+        </div>
         <router-view />
       </div>
     </div>
@@ -30,12 +17,6 @@
 
 <script setup lang="ts">
 const auth = authStore()
-const system = systemStore()
-const parse = useParser()
-
-const subHeading = computed(() => {
-  return `University Library, ${parse.toCapital(auth.user?.role || 'Unknown')}`
-})
 </script>
 
 <style scoped></style>

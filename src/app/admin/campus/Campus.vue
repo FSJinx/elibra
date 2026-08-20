@@ -1,19 +1,6 @@
 <template>
-  <!-- Page Heading -->
-  <div class="space-y-1 shrink-0">
-    <p class="text-primary text-md uppercase tracking-wide font-medium text-shadow-md text-shadow-primary/15">Good day, {{ auth.user?.first_name }}! 👋</p>
-
-    <h1 class="text-2xl font-semibold">
-      {{ $route.meta.title ?? 'Untitled' }}
-    </h1>
-
-    <p class="text-sm text-foreground-secondary">
-      {{ $route.meta.description ?? `This is your today's preview for ${$route.meta.title}.` }}
-    </p>
-  </div>
-
   <!-- Actions -->
-  <div class="flex w-full flex-wrap items-center justify-end gap-1.5 mb-3 mt-5">
+  <div class="flex w-full flex-wrap items-center justify-end gap-1.5 p-5">
     <!-- Search -->
     <form class="min-w-85" @submit.prevent>
       <Input id="searchQuery" v-model="filters.query" enable-clear left-icon="search" placeholder="Search by name, code, address" />
@@ -42,10 +29,11 @@
         <th>Code</th>
         <th>Address</th>
         <th>Status</th>
+        <th>Actions</th>
       </tr>
     </Thead>
 
-    <Tbody :loading="loading" :columns="5" :data="campuses">
+    <Tbody :loading="loading" :columns="6" :data="campuses">
       <!-- Results -->
       <tr v-for="c in campuses" class="cursor-pointer hover:bg-default/50" @click="viewCampus(c)">
         <Td :data="c.id" />
@@ -57,16 +45,23 @@
         <Td :data="c.address ?? 'No address'" />
 
         <Td>
-          <Badge :variant="parse.status(c.status)">
+          <Status :variant="parse.status(c.status)">
             {{ parse.toCapital(c.status) }}
-          </Badge>
+          </Status>
+        </Td>
+
+        <Td>
+          <div class="flex justify-center gap-1" @click.stop>
+            <Button class="hover:shadow hover:shadow-info/50" @click="createCampus?.open(c)">Edit</Button>
+            <Button class="hover:shadow hover:shadow-danger/50" @click="deleteCampus(c)">Delete</Button>
+          </div>
         </Td>
       </tr>
     </Tbody>
   </Table>
 
   <!-- Create Modal -->
-  <CreateNewCampusModal ref="createCampus" position="top" />
+  <CreateNewCampusModal ref="createCampus" position="top" @created="fetchCampuses" />
 </template>
 
 <script setup lang="ts">
@@ -83,6 +78,8 @@ const loading = ref(false)
 
 const filters = reactive({
   query: '',
+  sort: '',
+  order: '',
   status: '',
   page: '',
 })
@@ -98,14 +95,11 @@ const fetchCampuses = async () => {
 
   try {
     const res = await api.get('campus/get', {
-      params: {
-        query: filters.query || undefined,
-        status: filters.status || undefined,
-        page: filters.page,
-      },
+      params: filters,
     })
 
     campuses.value = res.data.data
+    store.setCampuses(campuses.value)
   } catch (error) {
     console.error('Failed to fetch campuses:', error)
   } finally {
@@ -142,6 +136,14 @@ const refresh = async () => {
   }
 }
 
+watchDebounced(
+  filters,
+  (val) => {
+    fetchCampuses()
+  },
+  { deep: true, debounce: 300 },
+)
+
 /*
 |--------------------------------------------------------------------------
 | Campus Actions
@@ -149,15 +151,25 @@ const refresh = async () => {
 */
 
 const viewCampus = (campus: any) => {
-  console.log('View campus:', campus)
+  router.push({
+    name: 'admin.campus.show',
+    params: {
+      id: campus.id,
+      name: campus.name,
+      code: campus.code,
+    },
+  })
+}
 
-  // Later:
-  // router.push({
-  //   name: 'admin.campus.show',
-  //   params: {
-  //     id: campus.id,
-  //   },
-  // })
+const deleteCampus = async (campus: Campus) => {
+  if (!window.confirm(`Delete ${campus.name}? This may affect its departments and branches.`)) return
+
+  try {
+    await api.delete(`campus/delete/${campus.id}`)
+    await fetchCampuses()
+  } catch (error) {
+    console.error('Failed to delete campus:', error)
+  }
 }
 
 /*

@@ -15,7 +15,7 @@ class UpdateProgramsRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('create', $this->route('program'));
+        return $this->user()->can('update', $this->route('program'));
     }
 
     /**

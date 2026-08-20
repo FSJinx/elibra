@@ -1,6 +1,6 @@
 <template>
   <div ref="dropdownRef" class="relative inline-flex items-center min-w-40 w-full">
-    <div type="button" @click="toggle" class="flex items-center h-10 text-left px-3 bg-secondary w-full rounded-md border border-border cursor-pointer disabled:cursor-not-allowed" :disabled="disabled" :aria-expanded="open" aria-haspopup="listbox" :data-title="title ? `${parse.toCapital(title)}: ${selectedOption.label}` : selectedOption.label">
+    <div type="button" @click="toggle" class="flex items-center h-10 text-left px-3 bg-slate-50 text-foreground w-full rounded-md border border-border cursor-pointer disabled:cursor-not-allowed" :disabled="disabled" :aria-expanded="open" aria-haspopup="listbox" :data-title="title ? `${parse.toCapital(title)}: ${selectedOption.label}` : selectedOption.label">
       <span class="line-clamp-1">{{ selectedOption.label }}</span>
       <Icon icon="chevron-down" class="ml-auto transition-all duration-150 pointer-events-none" :class="{ '-rotate-180': open }" />
     </div>
@@ -44,7 +44,6 @@ watch(
   selectedOption,
   (s) => {
     model.value = selectedOption.value
-    console.log(s)
   },
   { deep: true, immediate: true },
 )

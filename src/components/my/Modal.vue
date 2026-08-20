@@ -4,13 +4,14 @@
       <div v-if="isOpen" class="modal-wrapper fixed inset-0 flex items-center justify-center bg-backdrop h-dvh p-10" :class="[hasInputs ? '' : 'cursor-pointer']" @click.self="close">
         <div class="modal relative bg-background rounded-xl shadow-2xl border border-border cursor-default overflow-hidden" :class="[sizeClasses, positionClasses, position]" ref="modalRef">
           <!-- Modal Header -->
-          <div class="flex items-start p-4 px-5 gap-3 border-b border-gray-300 text-xl font-semibold">
+          <div class="flex items-start p-4 pb-3 px-5 gap-3 border-b border-gray-300 text-xl font-semibold" v-if="$slots.header || closeButton">
             <slot name="header" v-if="$slots.header" />
             <span class="ml-auto text-muted hover:text-foreground/50 cursor-pointer transition duration-100">
               <Icon icon="x-lg" @click="close" v-if="closeButton" style="-webkit-text-stroke: 1px" />
             </span>
           </div>
 
+          <!-- Modal Body -->
           <div class="max-h-[76dvh] flex flex-col overflow-y-auto">
             <div class="flex-1 place-content-center min-h-100" v-if="loading">
               <LogoLoader message="Loading content, please wait..." />

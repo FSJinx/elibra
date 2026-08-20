@@ -13,7 +13,7 @@ class DepartmentPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->isSuperAdmin() || $user->isAdmin();
     }
 
     /**
@@ -21,7 +21,7 @@ class DepartmentPolicy
      */
     public function view(User $user, Department $department): bool
     {
-        return false;
+        return $user->isSuperAdmin() || $user->isAdmin();
     }
 
     /**
@@ -29,7 +29,7 @@ class DepartmentPolicy
      */
     public function create(User $user): bool
     {
-        return $user->isAdmin() && $user->hasPermission('department.create');
+        return $user->isSuperAdmin() || ($user->isAdmin() && $user->hasPermission('department.create'));
     }
 
     /**
@@ -37,7 +37,7 @@ class DepartmentPolicy
      */
     public function update(User $user, Department $department): bool
     {
-        return $user->isAdmin() && $user->hasPermission('department.update');
+        return $user->isSuperAdmin() || ($user->isAdmin() && $user->hasPermission('department.update'));
     }
 
     /**
@@ -45,7 +45,7 @@ class DepartmentPolicy
      */
     public function delete(User $user, Department $department): bool
     {
-        return $user->isAdmin() && $user->hasPermission('department.delete');
+        return $user->isSuperAdmin() || ($user->isAdmin() && $user->hasPermission('department.delete'));
     }
 
     /**

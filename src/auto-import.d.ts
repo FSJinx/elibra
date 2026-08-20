@@ -37,6 +37,7 @@ declare global {
   const createSharedComposable: typeof import('@vueuse/core').createSharedComposable
   const createTemplatePromise: typeof import('@vueuse/core').createTemplatePromise
   const createUnrefFn: typeof import('@vueuse/core').createUnrefFn
+  const crumbsStore: typeof import('./stores/breadcrumbStore').crumbsStore
   const customRef: typeof import('vue').customRef
   const debouncedRef: typeof import('@vueuse/core').debouncedRef
   const debouncedWatch: typeof import('@vueuse/core').debouncedWatch
@@ -163,6 +164,7 @@ declare global {
   const useBase64: typeof import('@vueuse/core').useBase64
   const useBattery: typeof import('@vueuse/core').useBattery
   const useBluetooth: typeof import('@vueuse/core').useBluetooth
+  const useBreadcrumb: typeof import('./composables/utils/useBreadcrumbs').useBreadcrumb
   const useBreakpoints: typeof import('@vueuse/core').useBreakpoints
   const useBroadcastChannel: typeof import('@vueuse/core').useBroadcastChannel
   const useBrowserLocation: typeof import('@vueuse/core').useBrowserLocation
@@ -176,6 +178,7 @@ declare global {
   const useConfirmDialog: typeof import('@vueuse/core').useConfirmDialog
   const useCountdown: typeof import('@vueuse/core').useCountdown
   const useCounter: typeof import('@vueuse/core').useCounter
+  const useCrummbs: typeof import('./stores/breadcrumbStore').useCrummbs
   const useCssModule: typeof import('vue').useCssModule
   const useCssSupports: typeof import('@vueuse/core').useCssSupports
   const useCssVar: typeof import('@vueuse/core').useCssVar
@@ -512,6 +515,7 @@ declare module 'vue' {
     readonly useBase64: UnwrapRef<typeof import('@vueuse/core')['useBase64']>
     readonly useBattery: UnwrapRef<typeof import('@vueuse/core')['useBattery']>
     readonly useBluetooth: UnwrapRef<typeof import('@vueuse/core')['useBluetooth']>
+    readonly useBreadcrumb: UnwrapRef<typeof import('./composables/utils/useBreadcrumbs')['useBreadcrumb']>
     readonly useBreakpoints: UnwrapRef<typeof import('@vueuse/core')['useBreakpoints']>
     readonly useBroadcastChannel: UnwrapRef<typeof import('@vueuse/core')['useBroadcastChannel']>
     readonly useBrowserLocation: UnwrapRef<typeof import('@vueuse/core')['useBrowserLocation']>

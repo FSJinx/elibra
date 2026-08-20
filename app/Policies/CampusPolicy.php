@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use Illuminate\Auth\Access\Response;
 use App\Models\Campus;
 use App\Models\User;
 
@@ -13,15 +12,15 @@ class CampusPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->isSuperAdmin() || $user->isAdmin();
     }
 
     /**
      * Determine whether the user can view the model.
      */
     public function view(User $user, Campus $campus): bool
-    {        
-        return false;
+    {
+        return $user->isSuperAdmin() || $user->isAdmin();
     }
 
     /**
@@ -29,7 +28,7 @@ class CampusPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->isSuperAdmin();
     }
 
     /**
@@ -37,7 +36,7 @@ class CampusPolicy
      */
     public function update(User $user, Campus $campus): bool
     {
-        return false;
+        return $user->isSuperAdmin();
     }
 
     /**
@@ -45,7 +44,7 @@ class CampusPolicy
      */
     public function delete(User $user, Campus $campus): bool
     {
-        return false;
+        return $user->isSuperAdmin();
     }
 
     /**

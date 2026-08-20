@@ -13,7 +13,7 @@ class BranchPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->isSuperAdmin() || $user->isAdmin();
     }
 
     /**
@@ -21,7 +21,7 @@ class BranchPolicy
      */
     public function view(User $user, Branch $branch): bool
     {
-        return false;
+        return $user->isSuperAdmin() || $user->isAdmin();
     }
 
     /**
@@ -29,7 +29,7 @@ class BranchPolicy
      */
     public function create(User $user): bool
     {
-        return $user->isAdmin() && $user->hasPermission('branch.create');
+        return $user->isSuperAdmin() || ($user->isAdmin() && $user->hasPermission('branch.create'));
     }
 
     /**
@@ -37,7 +37,7 @@ class BranchPolicy
      */
     public function update(User $user, Branch $branch): bool
     {
-        return $user->isAdmin() && $user->hasPermission('branch.update');
+        return $user->isSuperAdmin() || ($user->isAdmin() && $user->hasPermission('branch.update'));
     }
 
     /**
@@ -45,7 +45,7 @@ class BranchPolicy
      */
     public function delete(User $user, Branch $branch): bool
     {
-        return $user->isAdmin() && $user->hasPermission('branch.delete');
+        return $user->isSuperAdmin() || ($user->isAdmin() && $user->hasPermission('branch.delete'));
     }
 
     /**
