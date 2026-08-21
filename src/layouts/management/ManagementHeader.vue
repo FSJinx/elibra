@@ -15,8 +15,8 @@
       <ManagementSearchButton />
       <Button icon="bell"></Button>
       <Button>
-        <span class="grid place-content-center border border-border rounded-full size-7 bg-primary mr-1">
-          <img :src="auth.user?.profile_picture" alt="" class="" v-if="auth.user?.profile_picture" />
+        <span class="grid place-content-center rounded-full mr-2">
+          <img :src="auth.user?.profile_picture" alt="" class="size-7" v-if="auth.user?.profile_picture" />
           <Icon icon="person-circle" v-else />
         </span>
         <span class="shrink-0">{{ auth.user?.first_name }}</span>
