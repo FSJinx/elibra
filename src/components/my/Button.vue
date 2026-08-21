@@ -1,14 +1,14 @@
 <template>
-  <component :is="buttonAs" :type="type" class="relative inline-flex items-center justify-center font-medium rounded-md gap-1.5 px-3 transition-all duration-100 outline-none tracking-tight leading-none" :class="[btnClass, sizeClass]" :disabled="disabled" @mouseup="($event.currentTarget as HTMLButtonElement).blur()">
+  <component :is="buttonAs" :type="type" class="relative inline-flex items-center justify-center font-medium rounded-md gap-2 px-3 transition-all duration-100 outline-none tracking-tight leading-none" :class="[btnClass, sizeClass]" :disabled="disabled" @mouseup="($event.currentTarget as HTMLButtonElement).blur()">
     <Spinner class="absolute" v-if="disabled" />
 
-    <Icon :icon="leftIcon" v-if="leftIcon" :class="[disabled && 'invisible']" />
+    <Icon :icon="leftIcon" v-if="leftIcon" :class="['mr-1', disabled && 'invisible']" />
 
-    <Icon :icon="icon" v-if="icon" :class="[disabled && 'invisible']" />
+    <Icon :icon="icon" v-if="icon" :class="['mr-1', disabled && 'invisible']" />
     <span v-if="$slots.default?.() && $slots.default?.().length > 0" class="inline-flex flex-1 justify-center items-center" :class="[disabled && 'invisible']">
       <slot />
     </span>
-    <Icon :icon="rightIcon" v-if="rightIcon" :class="[disabled && 'invisible']" />
+    <Icon :icon="rightIcon" v-if="rightIcon" :class="['ml-1', disabled && 'invisible']" />
   </component>
 </template>
 
@@ -41,8 +41,8 @@ const sizes: Record<Sizes, string> = {
   xs: 'text-xs h-6',
   sm: 'text-sm h-8',
   md: 'text-base h-10',
-  lg: 'text-lg h-12',
-  xl: 'text-xl h-14',
+  lg: 'text-lg h-11',
+  xl: 'text-xl h-12',
 }
 
 const sizeClass = computed(() => sizes[props.size])
@@ -59,7 +59,7 @@ const buttonAs = computed(() => {
 const btnClass = computed(() => {
   const variants: Record<Variants, string> = {
     primary: 'border-primary bg-primary text-primary-foreground hover:bg-primary-hover',
-    default: 'border-border bg-background text-default-foreground hover:text-primary-hover hover:border-primary/50',
+    default: 'border-border bg-background text-default-foreground',
     info: 'border-info bg-info text-info-foreground hover:bg-info-hover',
     success: 'border-success bg-success text-success-foreground hover:bg-success-hover',
     danger: 'border-danger bg-danger text-danger-foreground hover:bg-danger-hover',

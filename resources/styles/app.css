@@ -3,7 +3,6 @@
 /* File Imports */
 @import './theme/index.css';
 @import './z-index.css';
-@import './tooltip.css';
 @import './animations/index.css';
 @import './transitions/index.css';
 

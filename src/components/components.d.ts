@@ -36,6 +36,7 @@ declare module 'vue' {
     Loader: typeof import('./my/Loader.vue')['default']
     Logo: typeof import('./brand/Logo.vue')['default']
     LogoLoader: typeof import('./brand/LogoLoader.vue')['default']
+    LucideIcon: typeof import('./my/LucideIcon.vue')['default']
     MainLayout: typeof import('./../layouts/MainLayout.vue')['default']
     ManagementLayout: typeof import('../layouts/management/ManagementLayout.vue/index.js')['default']
     Modal: typeof import('./my/Modal.vue')['default']
@@ -60,6 +61,7 @@ declare module 'vue' {
     Sidebar: typeof import('./../layouts/sidebar/Sidebar.vue')['default']
     Skeleton: typeof import('./my/Skeleton.vue')['default']
     Spinner: typeof import('./loaders/Spinner.vue')['default']
+    Status: typeof import('./my/Status.vue')['default']
     Table: typeof import('./table/Table.vue')['default']
     TableLoading: typeof import('./table/TableLoading.vue')['default']
     TableNoData: typeof import('./table/TableNoData.vue')['default']
@@ -67,5 +69,6 @@ declare module 'vue' {
     Td: typeof import('./table/Td.vue')['default']
     Thead: typeof import('./table/Thead.vue')['default']
     Tload: typeof import('./table/Tload.vue')['default']
+    Tooltip: typeof import('./my/Tooltip.vue')['default']
   }
 }

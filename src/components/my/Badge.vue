@@ -1,5 +1,5 @@
 <template>
-  <span class="inline-flex shrink-0 text-xs px-3 py-1 leading-normal rounded-md" :class="[badgeClass]">
+  <span class="inline-flex shrink-0 items-center text-xs h-7 px-2 rounded-md leading-0 font-semibold" :class="[badgeClass]">
     <slot />
   </span>
 </template>
@@ -19,7 +19,7 @@ const props = withDefaults(defineProps<Props>(), {
 const badgeClass = computed(() => {
   const variants: Record<Variants | string, string> = {
     danger: 'border border-danger/25 bg-danger-soft/25 text-danger-soft-foreground',
-    default: 'border border-default/25 bg-default-soft text-default-soft-foreground',
+    default: '',
     info: 'border border-info/25 bg-info-soft text-info-soft-foreground',
     primary: 'border border-primary/25 bg-primary-soft text-primary-soft-foreground',
     restore: 'border border-restore/25 bg-restore-soft text-restore-soft-foreground',

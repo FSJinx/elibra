@@ -1,18 +1,27 @@
+import adminCampusRoutes from '@/router/admin/campusRoutes'
+
 export const adminRoutes = [
   {
     path: '/admin',
-    meta: { requiresAuth: true, role: 'admin' },
-    redirect: { name: 'admin' },
+    name: 'admin',
+    meta: {
+      breadcrumb: 'Admin',
+      requiresAuth: true,
+      role: 'admin',
+    },
+    redirect: { name: 'admin.dashboard' },
     component: () => import('@/layouts/management/ManagementLayout.vue'),
+
     children: [
       {
-        path: '',
-        name: 'admin',
+        path: 'dashboard',
+        name: 'admin.dashboard',
         meta: {
+          breadcrumb: 'Dashboard',
           title: 'Dashboard',
           description: "This is you're today's preview.",
-          permission: '',
           maintenance: false,
+          permission: '',
         },
         component: () => import('@/app/admin/dashboard/Dashboard.vue'),
       },
@@ -23,6 +32,7 @@ export const adminRoutes = [
         meta: {
           title: 'Subscriptions',
           description: "Manage your campus' online subscriptions.",
+          breadcrumb: 'Dashboard',
           permission: '',
           maintenance: false,
         },
@@ -33,12 +43,12 @@ export const adminRoutes = [
         path: 'campus',
         name: 'admin.campus',
         meta: {
-          title: 'Campus Management',
-          description: "Manage your campus' online subscriptions.",
+          breadcrumb: 'Campus Management',
           permission: '',
           maintenance: false,
         },
-        component: () => import('@/app/admin/campus/Campus.vue'),
+        redirect: { name: 'admin.campus.list' },
+        children: adminCampusRoutes,
       },
       {
         // Campus List
@@ -46,7 +56,7 @@ export const adminRoutes = [
         name: 'admin.users',
         meta: {
           title: 'User Management',
-          description: "Manage users accross campuses.",
+          description: 'Manage users accross campuses.',
           permission: '',
           maintenance: false,
         },

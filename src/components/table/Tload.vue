@@ -1,5 +1,5 @@
 <template>
-  <tr class="loading" v-for="i in 10">
+  <tr class="loading" v-for="i in 20">
     <td v-for="c in columns" :key="c">
       <div class="h-5">
         <Skeleton />

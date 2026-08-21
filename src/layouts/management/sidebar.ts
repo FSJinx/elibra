@@ -3,7 +3,7 @@ export const menus = {
     general: {
       name: 'General',
       children: {
-        dashboard: { path: 'admin', name: 'Dashboard', icon: 'grid-1x2' },
+        dashboard: { path: 'admin.dashboard', name: 'Dashboard', icon: 'grid-1x2' },
       },
     },
 

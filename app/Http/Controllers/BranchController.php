@@ -32,9 +32,12 @@ class BranchController extends Controller
         $campusId = null;
         $isGuest = is_null($user);
 
-        $campusId = ($user && !$user->isSuperAdmin())
-            ? $user->campus_id
-            : null;
+        $campusId = null;
+        if ($user && !$user->isSuperAdmin()) {
+            $campusId = $user->campus_id;
+        } elseif ($user && $request->filled('campus_id')) {
+            $campusId = $request->campus_id;
+        }
 
         $branches = CacheService::remember(
             CacheService::BRANCHES,

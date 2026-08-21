@@ -13,7 +13,7 @@ class ProgramsPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->isSuperAdmin() || $user->isAdmin();
     }
 
     /**
@@ -21,7 +21,7 @@ class ProgramsPolicy
      */
     public function view(User $user, Programs $programs): bool
     {
-        return false;
+        return $user->isSuperAdmin() || $user->isAdmin();
     }
 
     /**
@@ -29,7 +29,7 @@ class ProgramsPolicy
      */
     public function create(User $user): bool
     {
-        return $user->isAdmin() && $user->hasPermission('program.create');
+        return $user->isSuperAdmin() || ($user->isAdmin() && $user->hasPermission('program.create'));
     }
 
     /**
@@ -37,7 +37,7 @@ class ProgramsPolicy
      */
     public function update(User $user, Programs $programs): bool
     {
-        return $user->isAdmin() && $user->hasPermission('program.update');
+        return $user->isSuperAdmin() || ($user->isAdmin() && $user->hasPermission('program.update'));
     }
 
     /**
@@ -45,7 +45,7 @@ class ProgramsPolicy
      */
     public function delete(User $user, Programs $programs): bool
     {
-        return $user->isAdmin() && $user->hasPermission('program.delete');
+        return $user->isSuperAdmin() || ($user->isAdmin() && $user->hasPermission('program.delete'));
     }
 
     /**

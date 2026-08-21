@@ -1,6 +1,6 @@
 <template>
-  <section class="relative flex-1 flex flex-col shrink-0 rounded-md border border-border overflow-hidden scrollbar-none">
-    <div class="relative flex-1 shrink-0 overflow-y-auto scrollbar-none">
+  <section class="relative flex-1 flex flex-col min-h-150 border-y border-border overflow-hidden scrollbar-none">
+    <div class="relative flex-1 shrink-0 overflow-y-auto scrollbar-none bg-background">
       <table class="relative w-full text-left table-auto text-sm border-collapse">
         <slot />
       </table>

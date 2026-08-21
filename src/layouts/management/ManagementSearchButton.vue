@@ -5,10 +5,13 @@
   </Button>
 
   <Modal ref="searchModal" position="top" size="normal" @show="() => (searchQuery = '')">
-    <Input focus class="border-0" id="system-search" placeholder="Search for system settings..." left-icon="settings" v-model="searchQuery" enable-clear ref="searchInput" />
+    <template #header> Global Search </template>
+    <div class="p-5">
+      <Input focus class="border-0" id="system-search" placeholder="Search for system settings..." left-icon="gear" v-model="searchQuery" enable-clear ref="searchInput" />
 
-    <div class="mt-3">
-      <h1 class="uppercase font-semibold text-sm">Recent Searches</h1>
+      <div class="mt-5">
+        <h1 class="uppercase font-semibold text-sm">Recent Searches</h1>
+      </div>
     </div>
   </Modal>
 </template>

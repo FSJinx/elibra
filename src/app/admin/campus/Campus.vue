@@ -1,38 +1,23 @@
 <template>
-  <div class="mb-5 grid grid-cols-1 sm:grid-cols-2 items-start gap-4">
-    <!-- Page Heading -->
-    <div class="space-y-1">
-      <p class="text-primary text-md uppercase tracking-wide font-medium text-shadow-md text-shadow-primary/15">Good day, {{ auth.user?.first_name }}! 👋</p>
+  <!-- Actions -->
+  <div class="flex w-full flex-wrap items-center justify-end gap-1.5 p-5">
+    <!-- Search -->
+    <form class="min-w-85" @submit.prevent>
+      <Input id="searchQuery" v-model="filters.query" enable-clear left-icon="search" placeholder="Search by name, code, address" />
+    </form>
 
-      <h1 class="text-2xl font-semibold">
-        {{ $route.meta.title ?? 'Untitled' }}
-      </h1>
+    <!-- Status Filter -->
+    <Select class="max-w-max" id="status" v-model="filters.status" title="statuses">
+      <Option value="">All Status</Option>
+      <Option value="active">Active</Option>
+      <Option value="inactive">Inactive</Option>
+    </Select>
 
-      <p class="text-sm text-foreground-secondary">
-        {{ $route.meta.description ?? `This is your today's preview for ${$route.meta.title}.` }}
-      </p>
-    </div>
+    <!-- Refresh -->
+    <Button variant="info" icon="arrow-clockwise" data-title="Reset & Refresh" :loading="loading" @click="refresh" />
 
-    <!-- Actions -->
-    <div class="flex flex-wrap items-center justify-end gap-1.5 mt-auto">
-      <!-- Search -->
-      <form class="min-w-85" @submit.prevent>
-        <Input id="searchQuery" v-model="filters.query" enable-clear left-icon="search" placeholder="Search by name, code, address" />
-      </form>
-
-      <!-- Status Filter -->
-      <select v-model="filters.status" class="h-10 rounded-md border border-border bg-background px-3 text-sm outline-none focus:border-primary">
-        <option value="">All Status</option>
-        <option value="active">Active</option>
-        <option value="inactive">Inactive</option>
-      </select>
-
-      <!-- Refresh -->
-      <Button variant="info" icon="arrow-clockwise" data-title="Reset & Refresh" :loading="loading" @click="refresh" />
-
-      <!-- Create -->
-      <Button variant="primary" data-title="Add new record" @click="createCampus?.open"> Create New </Button>
-    </div>
+    <!-- Create -->
+    <Button variant="primary" data-title="Add new record" @click="createCampus?.open"> Create New </Button>
   </div>
 
   <!-- Campus Table -->
@@ -44,10 +29,11 @@
         <th>Code</th>
         <th>Address</th>
         <th>Status</th>
+        <th>Actions</th>
       </tr>
     </Thead>
 
-    <Tbody :loading="loading" :columns="5" :data="campuses">
+    <Tbody :loading="loading" :columns="6" :data="campuses">
       <!-- Results -->
       <tr v-for="c in campuses" class="cursor-pointer hover:bg-default/50" @click="viewCampus(c)">
         <Td :data="c.id" />
@@ -59,16 +45,23 @@
         <Td :data="c.address ?? 'No address'" />
 
         <Td>
-          <Badge :variant="parse.status(c.status)">
+          <Status :variant="parse.status(c.status)">
             {{ parse.toCapital(c.status) }}
-          </Badge>
+          </Status>
+        </Td>
+
+        <Td>
+          <div class="flex justify-center gap-1" @click.stop>
+            <Button class="hover:shadow hover:shadow-info/50" @click="createCampus?.open(c)">Edit</Button>
+            <Button class="hover:shadow hover:shadow-danger/50" @click="deleteCampus(c)">Delete</Button>
+          </div>
         </Td>
       </tr>
     </Tbody>
   </Table>
 
   <!-- Create Modal -->
-  <CreateNewCampusModal ref="createCampus" position="top" />
+  <CreateNewCampusModal ref="createCampus" position="top" @created="fetchCampuses" />
 </template>
 
 <script setup lang="ts">
@@ -85,6 +78,8 @@ const loading = ref(false)
 
 const filters = reactive({
   query: '',
+  sort: '',
+  order: '',
   status: '',
   page: '',
 })
@@ -100,14 +95,11 @@ const fetchCampuses = async () => {
 
   try {
     const res = await api.get('campus/get', {
-      params: {
-        query: filters.query || undefined,
-        status: filters.status || undefined,
-        page: filters.page,
-      },
+      params: filters,
     })
 
     campuses.value = res.data.data
+    store.setCampuses(campuses.value)
   } catch (error) {
     console.error('Failed to fetch campuses:', error)
   } finally {
@@ -144,6 +136,14 @@ const refresh = async () => {
   }
 }
 
+watchDebounced(
+  filters,
+  (val) => {
+    fetchCampuses()
+  },
+  { deep: true, debounce: 300 },
+)
+
 /*
 |--------------------------------------------------------------------------
 | Campus Actions
@@ -151,15 +151,25 @@ const refresh = async () => {
 */
 
 const viewCampus = (campus: any) => {
-  console.log('View campus:', campus)
+  router.push({
+    name: 'admin.campus.show',
+    params: {
+      id: campus.id,
+      name: campus.name,
+      code: campus.code,
+    },
+  })
+}
 
-  // Later:
-  // router.push({
-  //   name: 'admin.campus.show',
-  //   params: {
-  //     id: campus.id,
-  //   },
-  // })
+const deleteCampus = async (campus: Campus) => {
+  if (!window.confirm(`Delete ${campus.name}? This may affect its departments and branches.`)) return
+
+  try {
+    await api.delete(`campus/delete/${campus.id}`)
+    await fetchCampuses()
+  } catch (error) {
+    console.error('Failed to delete campus:', error)
+  }
 }
 
 /*

@@ -1,15 +1,21 @@
 <template>
-  <div class="relative flex h-screen w-full py-2 px-3 gap-2 bg-secondary overflow-hidden">
-    <!-- Sidebar -->
-    <ManagementSidebar />
+  <div class="flex flex-col h-screen bg-secondary items-start overflow-hidden">
+    <ManagementHeader />
+    <ManagementBreadcrumb />
+    <div class="relative flex flex-1 w-full overflow-hidden">
+      <!-- Sidebar -->
+      <ManagementSidebar />
 
-    <!-- Body -->
-    <ManagementBody />
+      <!-- Body -->
+      <ManagementBody />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import ManagementBody from '@/layouts/management/ManagementBody.vue'
+import ManagementBreadcrumb from '@/layouts/management/ManagementBreadcrumb.vue';
+import ManagementHeader from '@/layouts/management/ManagementHeader.vue'
 import ManagementSidebar from '@/layouts/management/ManagementSidebar.vue'
 </script>
 

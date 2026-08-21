@@ -7,6 +7,7 @@
 
   <router-view v-else />
   <Error />
+  <Tooltip />
 </template>
 
 <script setup lang="ts">
