@@ -10,7 +10,7 @@ return new class extends Migration
         [
             'name' => 'item_type_categories',
             'foreign_columns' => [
-                ['name' => 'item_type_id', 'references' => 'id', 'on' => 'item_types', 'onDelete' => 'restrict'],
+                ['name' => 'item_type_id', 'references' => 'id', 'on' => 'item_types', 'onDelete' => 'cascade'],
             ],
         ],
         [

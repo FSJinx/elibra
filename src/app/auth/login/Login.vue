@@ -3,8 +3,8 @@
     <div class="flex flex-col w-full max-w-120 p-8 mx-auto sm:bg-background border border-border/50 rounded-2xl sm:drop-shadow-sm hover:drop-shadow-xl transition-all duration-200">
       <!-- Logo Header -->
       <div class="flex flex-col items-center text-primary gap-1 mb-5">
-        <Button as="link" :to="{ name: 'home' }" variant="text" class="mx-auto text-4xl mt-1">
-          <Logo />
+        <Button as="link" :to="{ name: 'home' }" variant="text" class="mx-auto my-3">
+          <Logo class="text-4xl" />
         </Button>
         <h1 class="font-bold text-2xl">Welcome Back!</h1>
         <p class="text-muted text-sm">Login now and continue where we left off</p>
@@ -24,7 +24,7 @@
           <Input id="password" type="password" placeholder="Enter Password" v-model="credentials.password" required :disabled="store.loading" :error="error?.password ?? ''" checkcapslock />
         </Control>
 
-        <Button as="link" :to="{ name: '' }" size="small" variant="text" class="ml-auto text-primary">Forgot password?</Button>
+        <Button as="link" :to="{ name: '' }" size="sm" variant="text" class="ml-auto text-primary">Forgot password?</Button>
         <Button variant="primary" type="submit" :disabled="store.loading">Login</Button>
       </form>
       <span class="text-sm text-center mt-5">Don't have an account yet? <router-link :to="{ name: '' }" class="text-primary">Create an account.</router-link></span>
