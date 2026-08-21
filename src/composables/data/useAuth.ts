@@ -7,7 +7,7 @@ export function useAuth() {
     const routes: Record<string, string> = {
       admin: 'admin',
       librarian: 'librarian',
-      patron: 'Patron',
+      patron: 'patron',
       default: 'home',
     }
 
