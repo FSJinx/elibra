@@ -7,30 +7,3 @@
     </div>
   </section>
 </template>
-
-<!-- <script setup lang="ts">
-interface Props {
-  name: string
-  description?: string
-}
-
-const query = defineModel<string>()
-
-const props = defineProps<Props>()
-const emit = defineEmits(['refresh', 'search', 'create'])
-const timer = ref()
-
-watchDebounced(query, (newVal) => {
-  if (!newVal) {
-    emit('search', query.value)
-  } else {
-    if (timer.value) {
-      clearTimeout(timer.value)
-    }
-
-    timer.value = setTimeout(() => {
-      emit('search', query.value)
-    }, 500)
-  }
-})
-</script> -->

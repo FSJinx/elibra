@@ -31,6 +31,9 @@ const router = createRouter({
     // Librarian Route
     ...librarianRoutes,
 
+    // Patron Route
+    ...patronRoutes,
+
     // Error Routes
     {
       path: '/:pathMatch(.*)*',

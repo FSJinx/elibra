@@ -1,14 +1,14 @@
 <template>
-  <component :is="buttonAs" :type="type" class="relative inline-flex items-center justify-center font-medium rounded-md gap-2 px-3 transition-all duration-100 outline-none tracking-tight leading-none" :class="[btnClass, sizeClass]" :disabled="disabled" @mouseup="($event.currentTarget as HTMLButtonElement).blur()">
+  <component :is="buttonAs" :type="type" class="relative inline-flex items-center justify-center font-medium rounded-md gap-4 px-3 transition-all duration-100 outline-none tracking-tight leading-none" :class="[btnClass, sizeClass]" :disabled="disabled" @mouseup="($event.currentTarget as HTMLButtonElement).blur()">
     <Spinner class="absolute" v-if="disabled" />
 
-    <Icon :icon="leftIcon" v-if="leftIcon" :class="['mr-1', disabled && 'invisible']" />
+    <Icon :icon="leftIcon" v-if="leftIcon" :class="[disabled && 'invisible']" />
 
-    <Icon :icon="icon" v-if="icon" :class="['mr-1', disabled && 'invisible']" />
+    <Icon :icon="icon" v-if="icon" :class="[disabled && 'invisible']" />
     <span v-if="$slots.default?.() && $slots.default?.().length > 0" class="inline-flex flex-1 justify-center items-center" :class="[disabled && 'invisible']">
       <slot />
     </span>
-    <Icon :icon="rightIcon" v-if="rightIcon" :class="['ml-1', disabled && 'invisible']" />
+    <Icon :icon="rightIcon" v-if="rightIcon" :class="[disabled && 'invisible']" />
   </component>
 </template>
 
