@@ -7,9 +7,14 @@ export const patronRoutes = [
       requiresAuth: true,
       role: 'patron',
     },
-    redirect: { name: 'patron.profile' },
+    redirect: { name: 'patron.dashboard' },
     component: () => import('@/layouts/patron/PatronLayout.vue'),
     children: [
+      {
+        path: '',
+        name: 'patron.dashboard',
+        component: () => import('@/app/patron/dashboard/Dashboard.vue'),
+      },
       {
         path: 'profile',
         name: 'patron.profile',
