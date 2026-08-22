@@ -14,18 +14,13 @@
     <div class="flex items-center justify-end gap-1.5 ml-auto">
       <ManagementSearchButton />
       <Button icon="bell"></Button>
-      <Button>
-        <span class="grid place-content-center rounded-full mr-2">
-          <img :src="auth.user?.profile_picture" alt="" class="size-7" v-if="auth.user?.profile_picture" />
-          <Icon icon="person-circle" v-else />
-        </span>
-        <span class="shrink-0">{{ auth.user?.first_name }}</span>
-      </Button>
+      <ManagementProfileButton />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import ManagementProfileButton from '@/layouts/management/ManagementProfileButton.vue'
 import ManagementSearchButton from '@/layouts/management/ManagementSearchButton.vue'
 
 const auth = authStore()

@@ -286,6 +286,7 @@ declare global {
   const useStorageAsync: typeof import('@vueuse/core').useStorageAsync
   const useStyleTag: typeof import('@vueuse/core').useStyleTag
   const useSupported: typeof import('@vueuse/core').useSupported
+  const useSwal: typeof import('./composables/useSwal').useSwal
   const useSwipe: typeof import('@vueuse/core').useSwipe
   const useSystemStore: typeof import('./stores/themeStore').useSystemStore
   const useTemplateRef: typeof import('vue').useTemplateRef
@@ -636,6 +637,7 @@ declare module 'vue' {
     readonly useStorageAsync: UnwrapRef<typeof import('@vueuse/core')['useStorageAsync']>
     readonly useStyleTag: UnwrapRef<typeof import('@vueuse/core')['useStyleTag']>
     readonly useSupported: UnwrapRef<typeof import('@vueuse/core')['useSupported']>
+    readonly useSwal: UnwrapRef<typeof import('./composables/useSwal')['useSwal']>
     readonly useSwipe: UnwrapRef<typeof import('@vueuse/core')['useSwipe']>
     readonly useSystemStore: UnwrapRef<typeof import('./stores/themeStore')['useSystemStore']>
     readonly useTemplateRef: UnwrapRef<typeof import('vue')['useTemplateRef']>

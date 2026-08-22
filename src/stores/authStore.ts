@@ -17,6 +17,7 @@ export const authStore = defineStore(
     const user = ref<User | null>(null)
     const isAuthenticated = ref<boolean>(false)
     const loading = ref<boolean>(false)
+    const swal = useSwal()
 
     // ============= SETTERS ===============
     const setUser = (data: User) => {
@@ -57,8 +58,8 @@ export const authStore = defineStore(
     // ============= ACTIONS ===============
     function clearUser() {
       token.value = null
-      user.value = null
-      isAuthenticated.value = false
+        user.value = null
+        isAuthenticated.value = false
     }
 
     return {

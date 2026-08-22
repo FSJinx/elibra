@@ -27,7 +27,6 @@
         <th class="w-25">ID</th>
         <th class="text-left">Campus Name</th>
         <th>Code</th>
-        <th>Address</th>
         <th>Status</th>
         <th>Actions</th>
       </tr>
@@ -42,8 +41,6 @@
 
         <Td :data="c.code" />
 
-        <Td :data="c.address ?? 'No address'" />
-
         <Td>
           <Status :variant="parse.status(c.status)">
             {{ parse.toCapital(c.status) }}
@@ -52,8 +49,8 @@
 
         <Td>
           <div class="flex justify-center gap-1" @click.stop>
-            <Button class="hover:shadow hover:shadow-info/50" @click="createCampus?.open(c)">Edit</Button>
-            <Button class="hover:shadow hover:shadow-danger/50" @click="deleteCampus(c)">Delete</Button>
+            <Button size="sm" class="hover:shadow hover:shadow-info/50" @click="createCampus?.open(c)">Edit</Button>
+            <Button size="sm" class="hover:shadow hover:shadow-danger/50" @click="deleteCampus(c)">Delete</Button>
           </div>
         </Td>
       </tr>
@@ -129,11 +126,7 @@ const resetFilters = () => {
 */
 
 const refresh = async () => {
-  if (store.campuses) {
-    campuses.value = store.campuses
-  } else {
-    await fetchCampuses()
-  }
+  await fetchCampuses()
 }
 
 watchDebounced(

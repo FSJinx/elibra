@@ -1,11 +1,11 @@
 <template>
-  <component :is="buttonAs" :type="type" class="relative inline-flex items-center justify-center font-medium rounded-md gap-3 px-3 transition-all duration-100 outline-none tracking-tight leading-none" :class="[btnClass, sizeClass]" :disabled="disabled" @mouseup="($event.currentTarget as HTMLButtonElement).blur()">
+  <component :is="buttonAs" :type="type" class="relative inline-flex items-center font-medium rounded-md gap-3 px-3.5 transition-all duration-100 outline-none tracking-tight leading-0" :class="[btnClass, sizeClass]" :disabled="disabled" @mouseup="($event.currentTarget as HTMLButtonElement).blur()" @click="$emit('click')">
     <Spinner class="absolute" v-if="disabled" />
 
     <Icon :icon="leftIcon" v-if="leftIcon && leftIcon.length > 0" :class="[disabled && 'invisible']" />
 
     <Icon :icon="icon" v-if="icon && icon.length > 0" :class="[disabled && 'invisible']" />
-    <span v-if="$slots.default?.() && $slots.default?.().length > 0" class="inline-flex flex-1 justify-center items-center" :class="[disabled && 'invisible']">
+    <span v-if="$slots.default?.() && $slots.default?.().length > 0" class="inline-flex flex-1 items-center" :class="[align[props.align], disabled && 'invisible']">
       <slot />
     </span>
     <Icon :icon="rightIcon" v-if="rightIcon && rightIcon.length > 0" :class="[disabled && 'invisible']" />
@@ -26,6 +26,7 @@ interface Props {
   variant?: Variants
   disabled?: boolean
   size?: Sizes
+  align?: 'left' | 'center' | 'right'
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -35,14 +36,15 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   size: 'md',
   type: 'button',
+  align: 'center',
 })
 
 const sizes: Record<Sizes, string> = {
-  xs: 'text-xs h-6',
-  sm: 'text-sm h-8',
-  md: 'text-base h-10',
-  lg: 'text-lg h-11',
-  xl: 'text-xl h-12',
+  xs: 'text-xs h-8',
+  sm: 'text-sm h-10',
+  md: 'text-base h-11',
+  lg: 'text-lg h-14',
+  xl: 'text-xl h-18',
 }
 
 const sizeClass = computed(() => sizes[props.size])
@@ -55,6 +57,12 @@ const buttonAs = computed(() => {
 
   return asses[props.as]
 })
+
+const align: Record<string, string> = {
+  left: 'justify-start',
+  center: 'justify-center',
+  right: 'justify-end',
+}
 
 const btnClass = computed(() => {
   const variants: Record<Variants, string> = {
@@ -76,7 +84,7 @@ const btnClass = computed(() => {
     danger: ' focus:ring-4 focus:ring-danger/25',
     warning: ' focus:ring-4 focus:ring-warning/25',
     restore: ' focus:ring-4 focus:ring-restore/25',
-    text: 'focus:text-primary ',
+    text: '',
   }
 
   const border = props.variant === 'text' ? '' : 'border'
@@ -84,8 +92,10 @@ const btnClass = computed(() => {
   const disabled = props.disabled || props.loading ? 'opacity-75 cursor-not-allowed' : 'cursor-pointer'
   const design = variants[props.variant ?? 'text']
 
-  return [focus[props.variant], design, disabled, border]
+  return [focus[props.variant], design, disabled, border, align[props.align]]
 })
+
+defineEmits(['click'])
 </script>
 
 <style scoped></style>

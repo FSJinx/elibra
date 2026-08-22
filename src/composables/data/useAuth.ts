@@ -1,5 +1,6 @@
 export function useAuth() {
   const store = authStore()
+  const swal = useSwal()
 
   // ========== ACTIONS ===========
   // ---------- FUNCTION TO GO HOME ----------
@@ -59,9 +60,29 @@ export function useAuth() {
     }
   }
 
+  // ================ LOGOUT FUNCTION =================
+  async function logout() {
+    const result = await swal.fire({
+      title: 'Logout',
+      text: 'Are you sure you want to logout?',
+      icon: 'warning',
+      showCancelButton: true,
+    })
+
+    if (result.isConfirmed) {
+      store.clearUser()
+      nextTick(() => {
+        goHome()
+      })
+
+      console.log('Logged out successfully.')
+    }
+  }
+
   return {
     goHome,
     getUser,
     login,
+    logout
   }
 }

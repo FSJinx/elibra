@@ -33,7 +33,7 @@
         </nav>
 
         <!-- Profile Icon at the Bottom -->
-        <div class="flex items-center overflow-hidden gap-3 border-border/50 p-5 cursor-pointer transition-all duration-200">
+        <div class="flex items-center overflow-hidden gap-3 p-5 border-t border-border transition-all duration-200">
           <!-- Avatar -->
           <div class="flex items-center justify-center place-items-center rounded-full shadow p-0.5 size-9 overflow-hidden border border-border">
             <img :src="auth.user?.profile_photo" alt="" class="size-6 rounded-full shrink-0" v-if="auth.user?.profile_photo" />
@@ -42,7 +42,7 @@
 
           <!-- User Info (Dinagdagan ng min-w-0 para hindi itulak ang icon) -->
           <div class="flex flex-col text-sm tracking-tight min-w-0 flex-1">
-            <h1 class="font-semibold line-clamp-1 truncate">{{ auth.getFullName }}</h1>
+            <h1 class="font-semibold line-clamp-1 truncate capitalize">{{ auth.getFullName }}</h1>
             <p class="text-foreground-secondary text-sm truncate">
               <span class="capitalize">{{ auth.user?.role }}</span> - @{{ auth.user?.username }}
             </p>
