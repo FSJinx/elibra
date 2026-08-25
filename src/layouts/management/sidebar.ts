@@ -28,10 +28,11 @@ export const menus = {
   },
 
   librarian: {
-    general: {
-      name: 'General',
+    overview: {
+      name: 'Overview',
       children: {
-        dashboard: { path: 'librarian', name: 'Dashboard', icon: 'Home' },
+        dashboard: { path: 'librarian.dashboard', name: 'Dashboard', icon: 'grid' },
+        notifications: { path: 'librarian.notifications', name: 'Notifications', icon: 'bell' },
       },
     },
 

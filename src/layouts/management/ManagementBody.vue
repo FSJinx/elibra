@@ -1,14 +1,23 @@
 <template>
-  <main class="relative flex-1 flex flex-col overflow-hidden transition-all duration-200">
+  <main class="relative flex-1 flex flex-col overflow-hidden bg-slate-50 transition-all duration-200">
     <!-- Main Body Content -->
     <div class="flex-1 flex flex-col overflow-hidden">
-      <div class="flex-1 flex flex-col overflow-y-auto scrollbar-none transition-all duration-200">
-        <!-- Page Heading -->
-        <div class="shrink-0 p-5" v-if="$route.meta.title">
-          <p class="text-primary text-lg uppercase tracking-wide font-medium text-shadow-md text-shadow-primary/15 mb-1" v-if="$route.name?.toString().includes('.dashboard')">Good day, {{ auth.user?.first_name }}!👋</p>
-          <h1 class="text-2xl font-semibold" v-if="$route.meta.title">{{ $route.meta.title }}</h1>
-          <p class="text-foreground-secondary">{{ $route.meta.description ?? `This is your today's preview for ${$route.meta.title}.` }}</p>
+      <!-- Page Heading -->
+      <header class="flex flex-col gap-4 p-5 sm:flex-row sm:items-end sm:justify-between" v-if="($route.name as string).includes('.dashboard')">
+        <div>
+          <p class="mb-2 text-sm font-medium uppercase tracking-wide text-primary">{{ auth.user?.role }} workspace</p>
+          <h1 class="text-3xl font-semibold tracking-tight text-slate-900">
+            Good morning, <span class="capitalize">{{ auth.user?.first_name }}</span>
+          </h1>
+          <p class="mt-1 max-w-2xl text-sm text-slate-500">Your collection overview and daily library activity will appear here.</p>
         </div>
+
+        <div class="flex items-center gap-2 text-slate-500">
+          <Icon icon="calendar" />
+          <span>{{ today }}</span>
+        </div>
+      </header>
+      <div class="flex-1 flex flex-col overflow-y-auto scrollbar-none transition-all duration-200">
         <router-view />
       </div>
     </div>
@@ -17,6 +26,28 @@
 
 <script setup lang="ts">
 const auth = authStore()
+const today = ref()
+
+const currentDate = () => {
+  const now = new Date()
+  const date = now.toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  })
+
+  const time = now.toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+    second: 'numeric',
+  })
+
+  today.value = `Today, ${date} - ${time}`
+}
+
+setInterval(() => {
+  currentDate()
+}, 1000)
 </script>
 
 <style scoped></style>

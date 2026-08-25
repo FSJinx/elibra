@@ -82,4 +82,13 @@ class AuthController extends Controller
             return $this->response('error', 'Session expired, please login again.', statusCode: 401);
         }
     }
+
+    public function logout()
+    {
+        if ($this->auth()->check()) {
+            $this->auth()->logout();
+        }
+
+        return $this->response('success', 'Logged out succesfully.');
+    }
 }

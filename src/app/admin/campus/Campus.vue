@@ -28,11 +28,11 @@
         <th class="text-left">Campus Name</th>
         <th>Code</th>
         <th>Status</th>
-        <th>Actions</th>
+        <!-- <th>Actions</th> -->
       </tr>
     </Thead>
 
-    <Tbody :loading="loading" :columns="6" :data="campuses">
+    <Tbody :loading="loading" :columns="4" :data="campuses">
       <!-- Results -->
       <tr v-for="c in campuses" class="cursor-pointer hover:bg-default/50" @click="viewCampus(c)">
         <Td :data="c.id" />
@@ -47,12 +47,12 @@
           </Status>
         </Td>
 
-        <Td>
+        <!-- <Td>
           <div class="flex justify-center gap-1" @click.stop>
             <Button size="sm" class="hover:shadow hover:shadow-info/50" @click="createCampus?.open(c)">Edit</Button>
             <Button size="sm" class="hover:shadow hover:shadow-danger/50" @click="deleteCampus(c)">Delete</Button>
           </div>
-        </Td>
+        </Td> -->
       </tr>
     </Tbody>
   </Table>

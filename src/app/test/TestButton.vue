@@ -100,9 +100,20 @@
       <Button size="xl" class="text-4xl" variant="default">xlarge</Button>
     </div>
   </div>
+  <div class="">
+    <h1 class="section-title">Popups</h1>
+    <div class="flex flex-col gap-3">
+      <Button variant="success" @click="pop.success('You successfully clicked the button!')">Success</Button>
+      <Button variant="danger" @click="pop.error('You encountered an error clicking the button!')">Error</Button>
+      <Button variant="info" @click="pop.info('You can now logout!')">Info</Button>
+      <Button variant="warning" @click="pop.warning('You cannot click this button!')">Warning</Button>
+    </div>
+  </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const pop = usePopup()
+</script>
 
 <style scoped>
 .section-title {
