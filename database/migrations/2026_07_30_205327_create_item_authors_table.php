@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('item_authors', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('author_id');
+            $table->unsignedBigInteger('item_id');
+
+            $table->unique(['item_id', 'author_id']);
             $table->timestamps();
         });
     }

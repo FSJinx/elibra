@@ -113,6 +113,13 @@ return new class extends Migration
                 ['name' => 'branch_section_id', 'references' => 'id', 'on' => 'branch_sections', 'onDelete' => 'cascade'],
             ],
         ],
+        [
+            'name' => 'item_authors',
+            'foreign_columns' => [
+                ['name' => 'author_id', 'references' => 'id', 'on' => 'authors', 'onDelete' => 'cascade'],
+                ['name' => 'item_id', 'references' => 'id', 'on' => 'items', 'onDelete' => 'cascade'],
+            ],
+        ],
     ];
 
     // ============= LINKS RELATIONSHIPS ===============
