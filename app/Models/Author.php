@@ -13,7 +13,10 @@ class Author extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'name'
+        'first_name',
+        'middle_name',
+        'last_name',
+        'suffix',
     ];
 
 
