@@ -37,7 +37,6 @@ export function useAuth() {
   // ================ LOGIN FUNCTION =================
   async function login({ username = null, password = null }: { username?: string | null; password?: string | null } = {}) {
     store.loading = true
-    pop.load()
 
     try {
       const response = await api.post('auth/login', {
@@ -60,7 +59,6 @@ export function useAuth() {
     } catch (error: any) {
       return { success: false, data: error.response?.data ?? { message: error.message } }
     } finally {
-      pop.unload()
       store.loading = false
     }
   }
@@ -89,8 +87,8 @@ export function useAuth() {
           })
 
         console.log('Logged out successfully.')
-      } finally {
-        pop.unload()
+      } catch (e) {
+        throw e
       }
     }
   }

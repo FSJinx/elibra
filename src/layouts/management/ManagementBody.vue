@@ -3,13 +3,14 @@
     <!-- Main Body Content -->
     <div class="flex-1 flex flex-col overflow-hidden">
       <!-- Page Heading -->
-      <header class="flex flex-col gap-4 p-5 sm:flex-row sm:items-end sm:justify-between" v-if="($route.name as string).includes('dashboard')">
+      <header class="flex flex-col gap-4 p-5 sm:flex-row sm:items-end sm:justify-between" v-if="$route.meta.title">
         <div>
           <p class="mb-2 text-sm font-medium uppercase tracking-wide text-primary">{{ auth.user?.role }} workspace</p>
-          <h1 class="text-3xl font-semibold tracking-tight text-slate-900">
-            Good morning, <span class="capitalize">{{ auth.user?.first_name }}</span>
-          </h1>
-          <p class="mt-1 max-w-2xl text-sm text-slate-500">Your collection overview and daily library activity will appear here.</p>
+          <H1>
+            <template v-if="$route.name && $route.name.toString().includes('overview')"> Good day, {{ parse.toCapital(auth.user?.first_name as string) }}! </template>
+            <template v-else>{{ $route.meta?.title }}</template>
+          </H1>
+          <p class="mt-1 max-w-2xl text-sm text-slate-500">{{ $route.meta.description ?? 'This is the default description for pages.' }}</p>
         </div>
 
         <div class="flex items-center gap-2 text-slate-500">
@@ -17,7 +18,7 @@
           <span>{{ today }}</span>
         </div>
       </header>
-      <div class="flex-1 flex flex-col overflow-y-auto scrollbar-none transition-all duration-200">
+      <div class="flex-1 overflow-y-auto scrollbar-thumb-transparent hover:scrollbar-thumb-foreground/20 transition-all duration-200">
         <router-view />
       </div>
     </div>
@@ -26,6 +27,7 @@
 
 <script setup lang="ts">
 const auth = authStore()
+const parse = useParser()
 const today = ref()
 
 const currentDate = () => {

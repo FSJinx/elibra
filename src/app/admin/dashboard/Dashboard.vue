@@ -9,10 +9,11 @@
 
   <div class="p-5">
     <DashboardCards />
-
+  
     <LogoLoader />
-
-    <div class="h-screen bg-danger"></div>
+  
+    <div class="h-screen bg-danger border-b"></div>
+    <div class="h-screen bg-danger border-b"></div>
   </div>
 </template>
 

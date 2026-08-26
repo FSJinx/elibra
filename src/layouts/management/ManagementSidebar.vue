@@ -23,7 +23,7 @@
 
             <!-- Menu Children -->
             <div class="space-y-1 pt-1">
-              <router-link v-for="child in menu.children" :key="child.path" :to="{ name: child.path }" class="relative flex items-center gap-3.5 px-4 py-3 rounded-xl border font-medium cursor-pointer transition-all duration-200" :class="[isActive(child.path) ? 'text-primary bg-primary-soft/25 hover:bg-primary-soft border-primary/25 shadow-sm' : 'border-transparent hover:bg-default/50 text-foreground-secondary hover:text-foreground']" :aria-current="isActive(child.path) ? 'page' : undefined">
+              <router-link v-for="child in menu.children" :key="child.path" :to="{ name: child.path }" class="relative flex items-center gap-3.5 px-4 py-3 rounded-xl border font-medium cursor-pointer transition-all duration-200" :class="[isActive(child.path) ? 'text-primary bg-primary-soft/25 hover:bg-primary-soft border-primary/25 shadow-sm' : 'border-transparent hover:bg-slate-50 text-foreground-secondary hover:text-foreground']" :aria-current="isActive(child.path) ? 'page' : undefined">
                 <!-- Active Indicator Bar -->
                 <div class="absolute left-0 bg-primary h-[50%] rounded-r-full transition-all duration-200" :class="[isActive(child.path) ? 'w-1.5' : 'w-0']" />
 
@@ -37,20 +37,21 @@
         <!-- Profile Footer Section -->
         <div class="flex items-center gap-3 p-5 border-t border-border bg-background/50 shrink-0">
           <!-- Avatar -->
-          <div class="relative size-9 rounded-full shrink-0 border border-border overflow-hidden bg-background flex items-center justify-center">
+          <div class="relative size-10 rounded-full shrink-0 border border-border overflow-hidden bg-background flex items-center justify-center">
             <img v-if="auth.user?.profile_photo" :src="auth.user.profile_photo" :alt="auth.getFullName" class="size-full object-cover" />
-            <span v-else class="font-semibold text-primary text-xs">
+            <span v-else class="font-semibold text-primary text-xs m-auto">
               {{ auth.getInitials }}
             </span>
           </div>
 
           <!-- User Info -->
-          <div class="flex flex-col text-xs min-w-0 flex-1">
-            <span class="font-semibold text-foreground truncate capitalize text-sm">
+          <div class="flex flex-col flex-1">
+            <span class="font-semibold text-foreground truncate capitalize">
               {{ auth.getFullName || 'User' }}
             </span>
-            <span class="text-foreground-secondary truncate capitalize">
-              {{ auth.user?.role || 'Guest' }} <template v-if="auth.user?.username">• @{{ auth.user.username }}</template>
+            <span class="text-foreground-secondary truncate text-xs">
+              {{ parse.toCapital(auth.user?.role || 'Guest') }}
+              <template v-if="auth.user?.username">• @{{ auth.user.username }}</template>
             </span>
           </div>
         </div>
@@ -65,6 +66,7 @@ import { menus } from '@/layouts/management/sidebar'
 const route = useRoute()
 const auth = authStore()
 const system = systemStore()
+const parse = useParser()
 
 // Filtered Menu base sa Role (Reactivity preserved)
 const filteredMenus = computed(() => {
