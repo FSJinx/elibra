@@ -17,7 +17,6 @@ class IndexCatalogItemJob implements ShouldQueue
 
     public function handle(): void
     {
-        // $item = Item::find($this->itemId);
         $item = Item::with([
             'academic',
             'authors',

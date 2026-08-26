@@ -116,7 +116,7 @@ class AcademicService
         return $academic->load('item');
     }
 
-    public function update(Academic $academic, array $data): Academic
+    public function update(Academic $academic, array $data): Academic   
     {
         $oldFile = $academic->item->electronic_file;
 
