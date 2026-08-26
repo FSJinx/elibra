@@ -32,14 +32,53 @@ const librarianRoutes = [
       {
         path: 'cataloging',
         name: 'librarian.cataloging',
-        meta: { title: 'Cataloging', breadcrumb: 'Cataloging' },
-        redirect: { name: 'librarian.dashboard.overview' },
+        meta: { breadcrumb: 'Cataloging' },
+        redirect: { name: 'librarian.cataloging.catalog' },
         children: [
           {
             path: 'catalog',
-            name: 'librarian.cataloging.catalog',
-            meta: { title: 'Catalog', breadcrumb: 'Catalog' },
-            component: () => import('@/app/librarian/cataloging/catalog/Catalog.vue'),
+            meta: { breadcrumb: 'Catalog' },
+            children: [
+              {
+                path: '',
+                meta: { title: 'Catalog' },
+                name: 'librarian.cataloging.catalog',
+                component: () => import('@/app/librarian/cataloging/catalog/Catalog.vue'),
+              },
+              {
+                path: 'add-new',
+                meta: { breadcrumb: 'Add New' },
+                name: 'librarian.cataloging.add-new',
+                redirect: { name: 'librarian.cataloging.add-new.book' },
+                component: () => import('@/app/librarian/cataloging/catalog/NewCatalogItem.vue'),
+                children: [
+                  {
+                    path: 'book',
+                    meta: { breadcrumb: 'Book' },
+                    name: 'librarian.cataloging.add-new.book',
+                    component: () => import('@/app/librarian/cataloging/catalog/add_new/Book.vue'),
+                  },
+                  {
+                    path: 'academics',
+                    meta: { breadcrumb: 'Academics' },
+                    name: 'librarian.cataloging.add-new.academics',
+                    component: () => import('@/app/librarian/cataloging/catalog/add_new/Academics.vue'),
+                  },
+                  {
+                    path: 'serials',
+                    meta: { breadcrumb: 'Serials' },
+                    name: 'librarian.cataloging.add-new.serials',
+                    component: () => import('@/app/librarian/cataloging/catalog/add_new/Serials.vue'),
+                  },
+                  {
+                    path: 'subscriptions',
+                    meta: { breadcrumb: 'Subscriptions' },
+                    name: 'librarian.cataloging.add-new.subscriptions',
+                    component: () => import('@/app/librarian/cataloging/catalog/add_new/Subscriptions.vue'),
+                  },
+                ],
+              },
+            ],
           },
         ],
       },

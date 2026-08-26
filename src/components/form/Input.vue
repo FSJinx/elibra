@@ -74,7 +74,7 @@
 import { ref, computed, onMounted } from 'vue'
 
 type Sizes = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-type Types = 'text' | 'number' | 'password' | 'email' | 'tel' | 'username' | 'hidden'
+type Types = 'text' | 'number' | 'password' | 'email' | 'url' | 'tel' | 'username' | 'hidden'
 type Autocomplete = 'on' | 'off' | string
 
 interface Props {

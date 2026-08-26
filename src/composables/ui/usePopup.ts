@@ -12,11 +12,14 @@ export function usePopup() {
   async function confirm(options: SweetAlertOptions = {}) {
     return await swal.fire({
       icon: 'question',
-      title: 'Confirm',
-      text: 'Are you sure?',
+      iconColor: 'var(--color-restore)',
+
+      title: options.title ?? 'Confirm',
+      text: options.text ?? 'Are you sure?',
+
       showCancelButton: true,
       focusCancel: true,
-      ...options,
+      confirmButtonText: options.confirmButtonText ?? 'Confirm',
     })
   }
 
@@ -25,6 +28,7 @@ export function usePopup() {
       title: title ?? 'Success',
       text: message ?? 'Transaction successful, you can proceed now.',
       icon: 'success',
+      iconColor: 'var(--color-success)',
     })
   }
 
@@ -33,6 +37,7 @@ export function usePopup() {
       title: title ?? 'Error',
       text: message ?? 'Transaction unsuccessful, please try again.',
       icon: 'error',
+      iconColor: 'var(--color-danger)',
       confirmButtonColor: 'var(--color-danger)',
       confirmButtonText: 'Close',
     })
@@ -43,6 +48,7 @@ export function usePopup() {
       title: title ?? 'Warning',
       text: message ?? 'Are you sure you want to proceed? This action might be irreversible.',
       icon: 'warning',
+      iconColor: 'var(--color-warning)',
       confirmButtonColor: 'var(--color-warning)',
       confirmButtonText: 'Cancel',
     })
@@ -53,6 +59,7 @@ export function usePopup() {
       title: title ?? 'Info',
       text: message ?? 'Are you sure you want to proceed? This action might be irreversible.',
       icon: 'info',
+      iconColor: 'var(--color-info)',
       confirmButtonColor: 'var(--color-info)',
       confirmButtonText: 'Okay',
     })

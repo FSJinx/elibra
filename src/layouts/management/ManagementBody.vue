@@ -3,7 +3,7 @@
     <!-- Main Body Content -->
     <div class="flex-1 flex flex-col overflow-hidden">
       <!-- Page Heading -->
-      <header class="flex flex-col gap-4 p-5 sm:flex-row sm:items-end sm:justify-between" v-if="$route.meta.title">
+      <header class="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between" v-if="$route.meta.title">
         <div>
           <p class="mb-2 text-sm font-medium uppercase tracking-wide text-primary">{{ auth.user?.role }} workspace</p>
           <H1>

@@ -33,7 +33,7 @@ export const menus = {
       children: {
         dashboard: { path: 'librarian.dashboard.overview', name: 'Overview', icon: 'grid' },
         notifications: { path: 'librarian.dashboard.notifications', name: 'Notifications', icon: 'bell' },
-        tickets: { path: '', name: 'Tickets', icon: 'ticket-perforated' },
+        // tickets: { path: '', name: 'Tickets', icon: 'ticket-perforated' },
       },
     },
 
@@ -52,7 +52,7 @@ export const menus = {
     collections: {
       name: 'Cataloging & Collections',
       children: {
-        catalog: { path: 'librarian.cataloging.catalog', name: 'Catalog', icon: 'journal-plus' },
+        catalog: { path: 'librarian.cataloging', name: 'Catalog', icon: 'journal-plus' },
         // inventory: { path: '', name: 'Inventory', icon: 'boxes' },
         // classification: { path: '', name: 'Classification', icon: 'tags' },
         // author: { path: '', name: 'Authority Control', icon: 'shield-check' },
