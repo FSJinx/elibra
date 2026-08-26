@@ -6,9 +6,17 @@ use App\Models\Author;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAuthorRequest;
 use App\Http\Requests\UpdateAuthorRequest;
+use App\Services\AuthorService;
 
 class AuthorController extends Controller
 {
+    protected AuthorService $authorService;
+
+    public function __construct(AuthorService $authorService )
+    {
+        $this->authorService = $authorService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -22,7 +30,7 @@ class AuthorController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -30,7 +38,14 @@ class AuthorController extends Controller
      */
     public function store(StoreAuthorRequest $request)
     {
-        //
+        $author = $this->authorService->create($request->validated());
+
+        return $this->response(
+            'success',
+            'Author retrieved successfully',
+            $author->toArray(),
+            200
+        );
     }
 
     /**
@@ -54,7 +69,17 @@ class AuthorController extends Controller
      */
     public function update(UpdateAuthorRequest $request, Author $author)
     {
-        //
+        $author = $this->authorService->update(
+            $author,
+            $request->validated()
+        );
+
+        return $this->response(
+            'success', 
+            'Author updated successfully', 
+            $author->toArray(), 
+            200
+        );
     }
 
     /**
@@ -62,6 +87,13 @@ class AuthorController extends Controller
      */
     public function destroy(Author $author)
     {
-        //
+        $deleted = $this->authorService->delete($author);
+
+        return $this->response(
+            'success',
+            'Author deleted successfully',
+            null,
+            200
+        );
     }
 }

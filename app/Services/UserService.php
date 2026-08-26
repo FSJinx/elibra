@@ -41,6 +41,11 @@ class UserService
             'subscription.credential.view',
             'subscription.credential.update',
             'subscription.credential.delete',
+
+            'academic.create',
+            'academic.view',
+            'academic.update',
+            'academic.delete',
         ],
         'librarian' => [
             'book.create',

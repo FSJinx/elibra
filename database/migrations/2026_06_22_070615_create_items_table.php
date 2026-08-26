@@ -16,7 +16,7 @@ return new class extends Migration
 
             $table->string('title');
             $table->string('subtitle');
-            $table->string('description');
+            $table->text('description');
             $table->string('call_number')->nullable();
             $table->string('language');
             $table->year('publication_year');
