@@ -3,7 +3,7 @@
     <!-- Main Body Content -->
     <div class="flex-1 flex flex-col overflow-hidden">
       <!-- Page Heading -->
-      <header class="flex flex-col gap-4 p-5 sm:flex-row sm:items-end sm:justify-between" v-if="($route.name as string).includes('.dashboard')">
+      <header class="flex flex-col gap-4 p-5 sm:flex-row sm:items-end sm:justify-between" v-if="($route.name as string).includes('dashboard')">
         <div>
           <p class="mb-2 text-sm font-medium uppercase tracking-wide text-primary">{{ auth.user?.role }} workspace</p>
           <h1 class="text-3xl font-semibold tracking-tight text-slate-900">

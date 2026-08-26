@@ -7,22 +7,24 @@ const librarianRoutes = [
     component: () => import('@/layouts/management/ManagementLayout.vue'),
     children: [
       {
-        path: '',
+        path: 'dashboard',
         name: 'librarian.dashboard',
         meta: { title: 'Dashboard', breadcrumb: 'Dashboard' },
-        component: () => import('@/app/librarian/dashboard/Dashboard.vue'),
-      },
-      {
-        path: '',
-        name: 'librarian.notifications',
-        meta: { breadcrumb: 'Notifications' },
-        component: () => import('@/app/librarian/notifications/Notifications.vue'),
-      },
-      {
-        path: 'academics',
-        meta: { breadcrumb: 'Dashboard' },
-        name: 'librarian.academics',
-        component: () => import('@/app/librarian/academics/Academics.vue'),
+        redirect: { name: 'librarian.dashboard.overview' },
+        children: [
+          {
+            path: 'overview',
+            name: 'librarian.dashboard.overview',
+            meta: { title: 'Overview', breadcrumb: 'Overview' },
+            component: () => import('@/app/librarian/dashboard/overview/Overview.vue'),
+          },
+          {
+            path: '',
+            name: 'librarian.dashboard.notifications',
+            meta: { breadcrumb: 'Notifications' },
+            component: () => import('@/app/librarian/notifications/Notifications.vue'),
+          },
+        ],
       },
     ],
   },

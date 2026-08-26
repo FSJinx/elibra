@@ -15,7 +15,7 @@
         </router-link>
 
         <!-- Navigation Menu -->
-        <nav class="flex-1 overflow-y-auto p-3 space-y-4 scrollbar-thin scrollbar-thumb-foreground/20">
+        <nav class="flex-1 overflow-y-auto p-3 space-y-4 scrollbar-thin scrollbar-thumb-transparent hover:scrollbar-thumb-foreground/20 transition-all duration-200">
           <div v-for="menu in filteredMenus" :key="menu.name" class="space-y-1">
             <h2 class="px-3 text-xs font-semibold uppercase tracking-wider text-foreground-secondary/70">
               {{ menu.name }}
@@ -35,7 +35,7 @@
         </nav>
 
         <!-- Profile Footer Section -->
-        <div class="flex items-center gap-3 p-4 border-t border-border bg-background/50 shrink-0">
+        <div class="flex items-center gap-3 p-5 border-t border-border bg-background/50 shrink-0">
           <!-- Avatar -->
           <div class="relative size-9 rounded-full shrink-0 border border-border overflow-hidden bg-background flex items-center justify-center">
             <img v-if="auth.user?.profile_photo" :src="auth.user.profile_photo" :alt="auth.getFullName" class="size-full object-cover" />
