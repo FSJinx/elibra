@@ -21,7 +21,7 @@ class AuthorPolicy
      */
     public function view(User $user, Author $author): bool
     {
-        return false;
+        return $user->hasPermission('author.view');
     }
 
     /**
@@ -29,7 +29,7 @@ class AuthorPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->hasPermission('author.create');
     }
 
     /**
@@ -37,7 +37,7 @@ class AuthorPolicy
      */
     public function update(User $user, Author $author): bool
     {
-        return false;
+        return $user->hasPermission('author.update');
     }
 
     /**
@@ -45,7 +45,7 @@ class AuthorPolicy
      */
     public function delete(User $user, Author $author): bool
     {
-        return false;
+        return $user->hasPermission('author.delete');
     }
 
     /**

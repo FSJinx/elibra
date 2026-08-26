@@ -28,8 +28,39 @@ class Item extends Model
         'branch_id'
     ];
 
+    // NOT YET implemented
+    // public function book()
+    // {
+    //     return $this->hasOne(Book::class);
+    // }
+
     public function academic()
     {
         return $this->hasOne(Academic::class);
+    }
+
+    public function serial()
+    {
+        return $this->hasOne(Serial::class);
+    }
+
+    public function authors()
+    {
+        return $this->belongsToMany(
+            Author::class,
+            'item_authors',
+            'item_id',
+            'author_id',
+        );
+    }
+
+    public function itemType()
+    {
+        return $this->belongsTo(ItemType::class);
+    }
+
+    public function itemTypeCategory()
+    {
+        return $this->belongsTo( ItemTypeCategory::class);
     }
 }

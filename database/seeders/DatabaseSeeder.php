@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Author;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -33,6 +34,7 @@ class DatabaseSeeder extends Seeder
             LibrarianSeeder::class,
             PatronSeeder::class,
             UsersSeeder::class,
+            AuthorSeeder::class,
             // ItemSeeder::class,
             // AcademicSeeder::class,
         ]);
