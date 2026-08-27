@@ -104,6 +104,8 @@ class AcademicService
                 ])
             );
 
+            $item->authors()->sync($data['author_ids'] ?? []);
+
             IndexCatalogItemJob::dispatch($item->id)
                 ->afterCommit();
 
@@ -149,6 +151,9 @@ class AcademicService
                     'department_id'
                 ])
             );
+
+            // Update authors
+            $academic->item->authors()->sync( $data['author_ids'] ?? [] );
 
             // Queue indexing after the transaction commits.
             IndexCatalogItemJob::dispatch($academic->item_id)

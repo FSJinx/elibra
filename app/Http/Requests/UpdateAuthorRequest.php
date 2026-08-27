@@ -21,8 +21,13 @@ class UpdateAuthorRequest extends BaseRequest
      */
     public function rules(): array
     {
-        return [
-            'name' => [ 'sometimes', 'required', 'string', 'max:255' ],
+        $rules = [
+            'first_name' => [ 'sometimes', 'required', 'string', 'max:255' ],
+            'middle_name' => [ 'sometimes', 'required', 'string', 'max:255' ],
+            'last_name' => [ 'sometimes', 'required', 'string', 'max:255' ],
+            'suffix' => [ 'sometimes', 'required', 'string', 'max:10' ],
         ];
+
+        return $rules;
     }
 }
