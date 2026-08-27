@@ -13,9 +13,20 @@ class Author extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'name'
+        'first_name',
+        'middle_name',
+        'last_name',
+        'suffix',
     ];
 
-
+    public function items()
+    {
+        return $this->belongsToMany(
+            Item::class,
+            'item_authors',
+            'author_id',
+            'item_id'
+        );
+    }
 
 }

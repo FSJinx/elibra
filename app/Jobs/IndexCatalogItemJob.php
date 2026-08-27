@@ -2,9 +2,10 @@
 
 namespace App\Jobs;
 
-use App\Models\Item;
+use App\Services\CatalogIndexService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use App\Models\Item;
 use Illuminate\Support\Facades\Log;
 
 class IndexCatalogItemJob implements ShouldQueue
@@ -15,15 +16,9 @@ class IndexCatalogItemJob implements ShouldQueue
         public int $itemId
     ) {}
 
-    public function handle(): void
+    public function handle(CatalogIndexService $indexService): void
     {
-        $item = Item::with([
-            'academic',
-            'authors',
-            'itemType',
-            'itemTypeCategory',
-            'branch',
-        ])->find($this->itemId);
+        $item = Item::find($this->itemId);
 
         if (!$item) {
             Log::warning('Catalog item not found.', [
@@ -33,10 +28,6 @@ class IndexCatalogItemJob implements ShouldQueue
             return;
         }
 
-        Log::info('Catalog item ready for indexing.', [
-            'item_id' => $item->id,
-            'title' => $item->title,
-            'type' => $item->ItemType?->name,
-        ]);
+        $indexService->index($item);
     }
 }

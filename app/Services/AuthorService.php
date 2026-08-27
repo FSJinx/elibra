@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Author;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 class AuthorService
@@ -11,7 +12,12 @@ class AuthorService
     {
         $author = DB::transaction(function () use ($data) {
             return Author::create([
-                'name' => $data['name'],
+                Arr::only($data, [
+                    'first_name',
+                    'middle_name',
+                    'last_name',
+                    'suffix',
+                ])
             ]);
         });
 
@@ -23,7 +29,12 @@ class AuthorService
     {
         return DB::transaction(function () use ($author, $data) {
             $author->update([
-                'name' => $data['name'],
+                Arr::only($data, [
+                    'first_name',
+                    'middle_name',
+                    'last_name',
+                    'suffix',
+                ])
             ]);
             
             CacheService::invalidate(CacheService::AUTHORS);

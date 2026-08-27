@@ -106,6 +106,8 @@ class SerialService
                 ])
             );
 
+            $item->authors()->sync($data['author_ids'] ?? []);
+
             IndexCatalogItemJob::dispatch($item->id)
                 ->afterCommit();
 
@@ -152,6 +154,9 @@ class SerialService
                     'doi',
                 ])
             );
+
+            $serial->item->authors()->sync( $data['author_ids'] ?? []);
+            
             // Queue indexing after the transaction commits.
             IndexCatalogItemJob::dispatch($serial->item_id)
                 ->afterCommit();

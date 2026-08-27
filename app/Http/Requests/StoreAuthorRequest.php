@@ -24,15 +24,21 @@ class StoreAuthorRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'name' => [ 'required', 'string', 'max:255' ]
+            'first_name' => [ 'required', 'string', 'max:255' ],
+            'middle_name' => [ 'required', 'string', 'max:255' ],
+            'last_name' => [ 'required', 'string', 'max:255' ],
+            'suffix' => [ 'required', 'string', 'max:10' ],
         ];
     }
 
     #[Override]
     public function messages()
     {
-        return [
-            'name.required' => 'Name of author is requireed.',
+        $messages = [
+            'first_name.required' => 'First name of author is required.',
+            'last_name.required' => 'Last name of author is required.',
         ];
+
+        return $messages;
     }
 }
