@@ -25,7 +25,6 @@ const links = [
   { path: 'librarian.cataloging.add-new.book', name: 'Book' },
   { path: 'librarian.cataloging.add-new.academics', name: 'Academics' },
   { path: 'librarian.cataloging.add-new.serials', name: 'Serials' },
-  { path: 'librarian.cataloging.add-new.subscriptions', name: 'Subscriptions' },
 ]
 </script>
 

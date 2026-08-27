@@ -78,7 +78,7 @@ const btnClass = computed(() => {
 
   const focus: Record<Variants, string> = {
     primary: ' focus:ring-4 focus:ring-primary/25',
-    default: ' focus:ring-4 focus:ring-default/15',
+    default: ' focus:ring-4 focus:ring-default/75',
     info: ' focus:ring-4 focus:ring-info/25',
     success: ' focus:ring-4 focus:ring-success/25',
     danger: ' focus:ring-4 focus:ring-danger/25',

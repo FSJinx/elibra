@@ -3,18 +3,7 @@
     <!-- Header & Action -->
     <div class="flex items-center justify-end gap-2 p-5">
       <Input id="catalog-query" placeholder="Search for an item in the catalog..." class="max-w-100" enable-clear />
-      <Select id="catalog-category" title="Categories" class="max-w-max">
-        <Option value="">All Categories</Option>
-        <Option value="books">Books</Option>
-        <Option value="periodicals">Periodicals</Option>
-        <Option value="media">Media/DVDs</Option>
-      </Select>
-      <Select id="catalog-status" title="Status" class="max-w-max">
-        <Option value="">Status</Option>
-        <Option value="available">Available</Option>
-        <Option value="borrowed">Borrowed</Option>
-        <Option value="reserved">Reserved</Option>
-      </Select>
+      <CatalogFilter />
       <Button left-icon="plus-lg" variant="primary" as="link" :to="{ name: 'librarian.cataloging.add-new' }">Add New Item</Button>
     </div>
 
@@ -42,6 +31,8 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import CatalogFilter from '@/app/librarian/cataloging/catalog/CatalogFilter.vue'
+</script>
 
 <style scoped></style>
