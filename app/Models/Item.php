@@ -63,4 +63,9 @@ class Item extends Model
     {
         return $this->belongsTo( ItemTypeCategory::class);
     }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
+    }
 }

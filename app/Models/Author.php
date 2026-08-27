@@ -19,6 +19,14 @@ class Author extends Model
         'suffix',
     ];
 
-
+    public function items()
+    {
+        return $this->belongsToMany(
+            Item::class,
+            'item_authors',
+            'author_id',
+            'item_id'
+        );
+    }
 
 }

@@ -50,8 +50,8 @@ class StoreAcademicRequest extends BaseRequest
             'department_id' => [ 'required', Rule::exists((new Department)->getTable(), 'id') ],
 
             //Authors Field
-            'author_ids' => [ 'required', 'array', 'min:1' ],
-            'author_ids.*' => [ 'integer', Rule::exists((new Author)->getTable(), 'id') ],
+            'author_ids' => [ 'nullable', 'array', 'min:1' ],
+            'author_ids.*' => [ 'integer', Rule::exists((new Author)->getTable(), 'id')->whereNull('deleted_at') ],
         ];
         return $rules;
     }

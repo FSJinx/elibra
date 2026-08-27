@@ -27,4 +27,9 @@ class Academic extends Model
     {
         return $this->belongsTo(Item::class);
     }
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
 }
