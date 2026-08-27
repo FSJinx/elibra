@@ -23,7 +23,14 @@
 
             <!-- Menu Children -->
             <div class="space-y-1 pt-1">
-              <router-link v-for="child in menu.children" :key="child.path" :to="{ name: child.path }" class="relative flex items-center gap-3.5 px-4 py-3 rounded-xl border font-medium cursor-pointer transition-all duration-200" :class="[isActive(child.path) ? 'text-primary bg-primary-soft/25 hover:bg-primary-soft border-primary/25 shadow-sm' : 'border-transparent hover:bg-slate-50 text-foreground-secondary hover:text-foreground']" :aria-current="isActive(child.path) ? 'page' : undefined">
+              <router-link
+                v-for="child in childrenOf(menu.children)"
+                :key="child.path"
+                :to="{ name: child.path }"
+                class="relative flex items-center gap-3.5 px-4 py-3 rounded-xl border font-medium cursor-pointer transition-all duration-200"
+                :class="[isActive(child.path) ? 'text-primary bg-primary-soft/25 hover:bg-primary-soft border-primary/25 shadow-sm' : 'border-transparent hover:bg-slate-50 text-foreground-secondary hover:text-foreground']"
+                :aria-current="isActive(child.path) ? 'page' : undefined"
+              >
                 <!-- Active Indicator Bar -->
                 <div class="absolute left-0 bg-primary h-[50%] rounded-r-full transition-all duration-200" :class="[isActive(child.path) ? 'w-1.5' : 'w-0']" />
 
@@ -71,9 +78,12 @@ const parse = useParser()
 // Filtered Menu base sa Role (Reactivity preserved)
 const filteredMenus = computed(() => {
   const role = auth.user?.role as keyof typeof menus
-  console.log(menus[role])
   return menus[role] ?? []
 })
+
+function childrenOf(children: Record<string, any> | any[]) {
+  return Array.isArray(children) ? children : Object.values(children)
+}
 
 // Route Active Checker
 function isActive(path: string): boolean {

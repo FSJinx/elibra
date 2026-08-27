@@ -49,11 +49,11 @@ body {
     @apply text-center;
   }
   th {
-    @apply font-semibold uppercase text-slate-500 tracking-wide p-4;
+    @apply px-5 py-3 text-xs font-medium uppercase tracking-wide text-slate-500;
   }
 
   td {
-    @apply text-slate-600 px-4 py-3;
+    @apply px-5 py-4 text-sm text-slate-600;
   }
   tbody tr {
     @apply border-b border-border/75 cursor-pointer hover:bg-slate-50 transition-all duration-300;

@@ -3,20 +3,22 @@
     <!-- Main Body Content -->
     <div class="flex-1 flex flex-col overflow-hidden">
       <!-- Page Heading -->
-      <header class="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between" v-if="$route.meta.title">
-        <div>
-          <p class="mb-2 text-sm font-medium uppercase tracking-wide text-primary">{{ auth.user?.role }} workspace</p>
-          <H1>
-            <template v-if="$route.name && $route.name.toString().includes('overview')"> Good day, {{ parse.toCapital(auth.user?.first_name as string) }}! </template>
-            <template v-else>{{ $route.meta?.title }}</template>
-          </H1>
-          <p class="mt-1 max-w-2xl text-sm text-slate-500">{{ $route.meta.description ?? 'This is the default description for pages.' }}</p>
-        </div>
+      <header class="flex flex-col gap-4 p-2 sm:flex-row sm:items-center sm:justify-between" v-if="$route.meta.title">
+        <section class="flex items-end justify-between w-full rounded-xl bg-slate-950 p-5 text-white">
+          <div>
+            <p class="text-xs font-bold uppercase tracking-wide text-emerald-300 mb-2">{{ auth.user?.role }} Desk</p>
+            <H1 class="capitalize">
+              <template v-if="$route.name && $route.name.toString().includes('overview')"> Good day, {{ auth.user?.first_name }}! </template>
+              <template v-else>{{ $route.meta?.title }}</template>
+            </H1>
+            <p class="mt-1 max-w-2xl text-sm text-slate-300">{{ $route.meta.description ?? 'This is the default description for pages.' }}</p>
+          </div>
 
-        <div class="flex items-center gap-2 text-slate-500">
-          <Icon icon="calendar" />
-          <span>{{ today }}</span>
-        </div>
+          <div class="flex items-center gap-2 text-slate-300">
+            <Icon icon="calendar" />
+            <span>{{ today }}</span>
+          </div>
+        </section>
       </header>
       <div class="flex-1 overflow-y-auto scrollbar-thumb-transparent hover:scrollbar-thumb-foreground/20 transition-all duration-200">
         <router-view />
