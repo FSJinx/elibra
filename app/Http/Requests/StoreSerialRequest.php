@@ -34,7 +34,7 @@ class StoreSerialRequest extends BaseRequest
             'title' => [ 'required', 'string', 'max:255' ],
             'subtitle' => [ 'nullable', 'string', 'max:255' ],
             'description' => [ 'nullable', 'string' ],
-            'call_number' => [ 'nullable', 'string', 'max:255', Rule::unique((new Academic)->getTable(), 'call_number') ],
+            'call_number' => [ 'nullable', 'string', 'max:255', Rule::unique((new Item)->getTable(), 'call_number') ],
             'language' => [ 'required', 'string', 'max:255' ],
             'publication_year' => [ 'nullable', 'integer', 'min:1900', 'max:' . date('Y') ],
             'keywords' => [ 'nullable', 'string' ],

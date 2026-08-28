@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\Jobs\IndexCatalogItemJob;
+use App\Jobs\RemoveCatalogIndexJob;
 use App\Models\Academic;
+use App\Models\CatalogIndex;
 use App\Models\Item;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
@@ -180,9 +182,14 @@ class AcademicService
 
     public function delete(Academic $academic): bool
     {
-        $deleted = DB::transaction(function () use ($academic) {
-            $academic->item->delete();
+        $deleted = DB::transaction(function () use ($academic){
+            $item = $academic->item;
+
             $academic->delete();
+            $item->delete();
+
+            RemoveCatalogIndexJob::dispatch($item->id)
+                ->afterCommit();
 
             return true;
         });
