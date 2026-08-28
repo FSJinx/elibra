@@ -19,7 +19,7 @@ class ItemController extends Controller
             ->where('branch_id', $branchId)
             ->get(['id', 'title', 'subtitle', 'call_number', 'publication_year']);
 
-        return $this->response('success', $this->auth()->user()->librarian->branch->id, data: $items->toArray());
+        return $this->response('success', data: $items->toArray());
     }
 
     /**

@@ -1,10 +1,10 @@
 <template>
   <div class="flex flex-col size-full">
     <!-- Header & Action -->
-    <div class="grid grid-cols-2 items-center px-3 py-5">
+    <div class="grid grid-cols-2 items-center px-4 py-5">
       <div class="">
         <H6>Catalog List</H6>
-        <p class="text-sm text-foreground-secondary">65 records</p>
+        <p class="text-sm text-foreground-secondary">{{ items?.length ?? 0 }} records</p>
       </div>
 
       <div class="flex items-center justify-end gap-2">
@@ -18,20 +18,21 @@
     <Table>
       <Thead>
         <tr>
+          <Th>No</Th>
           <Th class="text-left">Title</Th>
-          <Th>Author</Th>
-          <Th>ISBN/ISSN</Th>
           <Th>Call Number</Th>
-          <Th>Status</Th>
+          <Th>Publication Year</Th>
         </tr>
       </Thead>
-      <Tbody :columns="5" :loading="false" :data="1">
-        <tr>
-          <Td class="text-left">Spider-man: Brand New Day</Td>
-          <Td>Bruce Lee</Td>
-          <Td>978-0061120084</Td>
-          <Td>120.283a 21</Td>
-          <Td> <Status variant="success">Available</Status> </Td>
+      <Tbody :columns="4" :loading="loading" :data="items">
+        <tr v-for="(item, index) in items">
+          <Td :data="(index as number) + 1" />
+          <Td class="text-left">
+            <p class="text-lg font-medium">{{ item.title }}</p>
+            <p>{{ item.subtitle }}</p>
+          </Td>
+          <Td :data="item.call_number" />
+          <Td :data="item.publication_year" />
         </tr>
       </Tbody>
     </Table>
@@ -40,6 +41,26 @@
 
 <script setup lang="ts">
 import CatalogFilter from '@/app/librarian/cataloging/catalog/CatalogFilter.vue'
+
+const items = ref()
+const loading = ref<boolean>(false)
+
+async function fetchCatalog() {
+  loading.value = true
+
+  await api
+    .get('item/get')
+    .then((res) => {
+      items.value = res.data?.data
+    })
+    .finally(() => {
+      loading.value = false
+    })
+}
+
+onMounted(() => {
+  fetchCatalog()
+})
 </script>
 
 <style scoped></style>
