@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('academics', function (Blueprint $table) {
             $table->id();
-            $table->json('subjects')->nullable();
+            // $table->json('subjects')->nullable();
             $table->string('doi')->nullable();
             $table->unsignedBigInteger('item_id');
-            $table->unsignedBigInteger('department_id');
+            $table->unsignedBigInteger('department_id')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

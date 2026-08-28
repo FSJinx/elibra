@@ -81,6 +81,7 @@ return new class extends Migration
         [
             'name' => 'items',
             'foreign_columns' => [
+                ['name' => 'language_id', 'references' => 'id', 'on' => 'languages', 'onDelete' => 'cascade'],
                 ['name' => 'branch_id', 'references' => 'id', 'on' => 'branches', 'onDelete' => 'cascade'],
                 ['name' => 'item_type_id', 'references' => 'id', 'on' => 'item_types', 'onDelete' => 'cascade'],
                 ['name' => 'item_type_category_id', 'references' => 'id', 'on' => 'item_type_categories', 'onDelete' => 'cascade'],

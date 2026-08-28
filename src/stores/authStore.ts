@@ -3,7 +3,7 @@ export interface User {
   first_name: string
   last_name: string
   middle_initial?: string | null
-  role: 'admin' | 'librarian' | 'patron' | null
+  role: 'super admin' | 'admin' | 'librarian' | 'patron' | null
   email?: string
   [key: string]: any
   tools: ['gendash', 'collacademic']
@@ -17,6 +17,7 @@ export const authStore = defineStore(
     const user = ref<User | null>(null)
     const isAuthenticated = ref<boolean>(false)
     const loading = ref<boolean>(false)
+    const swal = useSwal()
 
     // ============= SETTERS ===============
     const setUser = (data: User) => {
@@ -39,6 +40,11 @@ export const authStore = defineStore(
       const u = user.value
       return `${u.first_name} ${u.middle_initial ? u.middle_initial + '.' : ''} ${u.last_name}`
     })
+    
+    const displayRole = computed(() => {
+      if (!user.value)
+      return 
+    })
 
     const getFormalName = computed<string>(() => {
       if (!user.value) return ''
@@ -57,8 +63,8 @@ export const authStore = defineStore(
     // ============= ACTIONS ===============
     function clearUser() {
       token.value = null
-      user.value = null
-      isAuthenticated.value = false
+        user.value = null
+        isAuthenticated.value = false
     }
 
     return {

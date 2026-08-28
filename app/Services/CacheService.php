@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\Department;
 use Closure;
 use DateInterval;
 use DateTimeInterface;
@@ -12,40 +11,48 @@ class CacheService
 {
     // resources
     public const CAMPUSES = 'campuses';
+
     public const DEPARTMENTS = 'departments';
+
     public const PROGRAMS = 'programs';
 
     public const BRANCHES = 'branches';
+
     public const SECTIONS = 'sections';
+
     public const BRANCH_SECTIONS = 'branch_sections';
 
     public const SUBSCRIPTIONS = 'subscriptions';
+
     public const SUBSCRIPTION_CREDENTIALS = 'subscription_credentials';
 
     public const MEDIA = 'medias';
 
     public const ACADEMICS = 'academics';
-    public const SERIALS = 'serials'; 
+
+    public const BOOKS = 'books';
+
+    public const SERIALS = 'serials';
 
     public const AUTHORS = 'authors';
-    
+
     /**
      * Cache a query using a versioned cache key.
-     * 
+     *
      * A versioned cache key is used so that all cached entries for the same
      * resource can be invalidated by simply incrementing the resource version.
      *
-     * @param string $resource   Resource name (e.g. campuses, branches).
-     * @param array $parameters  Query parameters used to generate a unique cache key.
-     * @param DateTimeInterface|DateInterval|int $ttl Cache lifetime.
-     * @param Closure $callback  Callback executed when the cache is missing.
+     * @param  string  $resource  Resource name (e.g. campuses, branches).
+     * @param  array  $parameters  Query parameters used to generate a unique cache key.
+     * @param  DateTimeInterface|DateInterval|int  $ttl  Cache lifetime.
+     * @param  Closure  $callback  Callback executed when the cache is missing.
      */
     public static function remember(
         string $resource,
         array $parameters,
         DateTimeInterface|DateInterval|int $ttl,
         Closure $callback
-    ){
+    ) {
         // To ensure that same parameters always produce the same cache key [ REGARDLESS OF ORDER ]
         ksort($parameters);
 
@@ -61,7 +68,7 @@ class CacheService
         );
 
         return Cache::remember($cacheKey, $ttl, $callback);
-    
+
     }
 
     /**
@@ -72,13 +79,12 @@ class CacheService
      * Old cache entries will naturally expire based on their TTL.
      */
     public static function invalidate(string $resource): void
-    {   
+    {
         Cache::increment(self::versionKey($resource));
     }
-    
-    private static function versionKey(string $resource): string 
+
+    private static function versionKey(string $resource): string
     {
         return "{$resource}_version";
     }
-
 }

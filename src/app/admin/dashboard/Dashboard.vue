@@ -1,18 +1,6 @@
 <template>
-  <!-- <div class="mb-5 flex items-start">
-    <div class="space-y-1 mt-2">
-      <p class="text-primary text-md uppercase tracking-wide font-medium text-shadow-md text-shadow-primary/15">Good day, {{ auth.user?.first_name }}!👋</p>
-      <h1 class="text-2xl font-semibold">{{ $route.meta.title ?? 'Untitled' }}</h1>
-      <p class="text-sm text-foreground-secondary">{{ $route.meta.description ?? `This is you're today's preview for ${$route.meta.title}.` }}</p>
-    </div>
-  </div> -->
-
   <div class="p-5">
     <DashboardCards />
-
-    <LogoLoader />
-
-    <div class="h-screen bg-danger"></div>
   </div>
 </template>
 

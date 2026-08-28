@@ -4,10 +4,10 @@
       <div v-if="isOpen" class="modal-wrapper fixed inset-0 flex items-center justify-center bg-backdrop h-dvh p-10" :class="[hasInputs ? '' : 'cursor-pointer']" @click.self="close">
         <div class="modal relative bg-background rounded-xl shadow-2xl border border-border cursor-default overflow-hidden" :class="[sizeClasses, positionClasses, position]" ref="modalRef">
           <!-- Modal Header -->
-          <div class="flex items-start p-4 pb-3 px-5 gap-3 border-b border-gray-300 text-xl font-semibold" v-if="$slots.header || closeButton">
+          <div class="flex items-start p-5 pb-4 gap-3 border-b border-gray-300 text-xl font-semibold" v-if="$slots.header || enableCloseBtn">
             <slot name="header" v-if="$slots.header" />
             <span class="ml-auto text-muted hover:text-foreground/50 cursor-pointer transition duration-100">
-              <Icon icon="x-lg" @click="close" v-if="closeButton" style="-webkit-text-stroke: 1px" />
+              <Icon icon="x-lg" @click="close" v-if="enableCloseBtn" style="-webkit-text-stroke: 1px" />
             </span>
           </div>
 
@@ -36,7 +36,7 @@ interface Props {
   hasInputs?: boolean
   position?: ModalPosition
   size?: ModalSize
-  closeButton?: boolean
+  enableCloseBtn?: boolean
   loading?: boolean
 }
 
@@ -44,7 +44,7 @@ const props = withDefaults(defineProps<Props>(), {
   hasInputs: false,
   position: 'center',
   size: 'normal',
-  closeButton: true,
+  enableCloseBtn: false,
 })
 
 const emit = defineEmits(['show'])

@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
 
             $table->unsignedBigInteger('item_id')->nullable();
-                
+
             // semantic search -> content
-            $table-> longText('content');
+            $table->longText('content');
             $table->unsignedBigInteger('branch_id')->nullable();
             $table->unsignedBigInteger('item_type_id')->nullable();
             $table->unsignedBigInteger('item_type_category_id')->nullable();
@@ -48,6 +48,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('catalog_indexes');
+        Schema::dropIfExists('catalog_indices');
     }
 };

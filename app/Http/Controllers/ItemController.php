@@ -2,20 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Item;
 use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateItemRequest;
-use Illuminate\Http\Request;
+use App\Models\Item;
 
 class ItemController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $branchId = auth('api')->user()->librarian->branch_id;
+
+        $items = Item::query()
+            ->where('branch_id', $branchId)
+            ->get(['id', 'title', 'subtitle', 'call_number', 'publication_year']);
+
+        return $this->response('success', $this->auth()->user()->librarian->branch->id, data: $items->toArray());
     }
 
     /**

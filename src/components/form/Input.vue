@@ -74,7 +74,7 @@
 import { ref, computed, onMounted } from 'vue'
 
 type Sizes = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-type Types = 'text' | 'number' | 'password' | 'email' | 'tel' | 'username' | 'hidden'
+type Types = 'text' | 'number' | 'password' | 'email' | 'url' | 'tel' | 'username' | 'hidden'
 type Autocomplete = 'on' | 'off' | string
 
 interface Props {
@@ -136,11 +136,11 @@ const hasSuffixActions = computed(() => {
 
 // Container and font size configurations
 const sizeMap: Record<Sizes, { container: string; input: string }> = {
-  xs: { container: 'h-7', input: 'text-xs' },
-  sm: { container: 'h-8', input: 'text-sm' },
-  md: { container: 'h-10', input: 'text-base' },
-  lg: { container: 'h-12', input: 'text-lg' },
-  xl: { container: 'h-14', input: 'text-xl' },
+  xs: { container: 'h-8', input: 'text-xs' },
+  sm: { container: 'h-10', input: 'text-sm' },
+  md: { container: 'h-11', input: 'text-base' },
+  lg: { container: 'h-14', input: 'text-lg' },
+  xl: { container: 'h-18', input: 'text-xl' },
 }
 
 const sizeConfig = computed(() => sizeMap[props.size] ?? sizeMap.md)

@@ -25,6 +25,7 @@ import icons from '@/plugins/icons.js'
 import '@flaticon/flaticon-uicons/css/all/all.css'
 import 'bootstrap-icons/font/bootstrap-icons.min.css'
 
+
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
