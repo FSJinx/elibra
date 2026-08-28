@@ -3,14 +3,16 @@
 namespace App\Services;
 
 use App\Jobs\IndexCatalogItemJob;
-use App\Models\Academic;
+use App\Models\Book;
 use App\Models\Item;
+use App\Models\Language;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
-class AcademicService
+class BookService
 {
     public function index(array $filters)
     {
@@ -20,9 +22,9 @@ class AcademicService
             now()->addMinutes(10),
             function () use ($filters) {
 
-                $query = Academic::query()
+                $query = Book::query()
                     ->with([
-                        'item',
+                        'item.language',
                         'department',
                     ]);
 
@@ -38,7 +40,11 @@ class AcademicService
                                     ->orWhere('subtitle', 'like', "%{$search}%")
                                     ->orWhere('description', 'like', "%{$search}%")
                                     ->orWhere('call_number', 'like', "%{$search}%")
-                                    ->orWhere('language', 'like', "%{$search}%")
+                                    ->orWhereHas('language', function ($languageQuery) use ($search) {
+                                        $languageQuery
+                                            ->where('name', 'like', "%{$search}%")
+                                            ->orWhere('code', 'like', "%{$search}%");
+                                    })
                                     ->orWhere('keywords', 'like', "%{$search}%");
                             });
                     });
@@ -74,11 +80,12 @@ class AcademicService
         );
     }
 
-    public function create(array $data): Academic
+    public function create(array $data): Book
     {
-        $academic = DB::transaction(function () use (&$data) {
+        $book = DB::transaction(function () use (&$data) {
 
             $this->saveElectronicFile($data);
+            $data = $this->normalizeItemData($data);
 
             $item = Item::create(
                 Arr::only($data, [
@@ -98,11 +105,11 @@ class AcademicService
                 ])
             );
 
-            $academic = $item->academic()->create(
+            $book = $item->book()->create(
                 Arr::only($data, [
-                    'subjects',
-                    'doi',
-                    'department_id',
+                    'edition',
+                    'isbn_issn',
+                    'copyright_year',
                 ])
             );
 
@@ -111,25 +118,27 @@ class AcademicService
             IndexCatalogItemJob::dispatch($item->id)
                 ->afterCommit();
 
-            return $academic;
+            return $book;
         });
 
-        CacheService::invalidate(CacheService::ACADEMICS);
+        CacheService::invalidate(CacheService::BOOKS);
 
-        return $academic->load('item');
+        return $book->load('item');
     }
 
-    public function update(Academic $academic, array $data): Academic
+    public function update(Book $book, array $data): Book
     {
-        $oldFile = $academic->item->electronic_file;
+        $oldFile = $book->item->electronic_file;
 
-        $academic = DB::transaction(function () use (&$academic, &$data) {
+        $book = DB::transaction(function () use (&$book, &$data) {
 
             if (! $this->saveElectronicFile($data)) {
                 unset($data['electronic_file']);
             }
 
-            $academic->item->update(
+            $data = $this->normalizeItemData($data);
+
+            $book->item->update(
                 Arr::only($data, [
                     'title',
                     'subtitle',
@@ -141,11 +150,12 @@ class AcademicService
                     'electronic_file',
                     'item_type_id',
                     'item_type_category_id',
+                    'language_id',
                     'branch_id',
                 ])
             );
 
-            $academic->update(
+            $book->update(
                 Arr::only($data, [
                     'subjects',
                     'doi',
@@ -154,14 +164,14 @@ class AcademicService
             );
 
             // Update authors
-            $academic->item->authors()->sync($data['author_ids'] ?? []);
+            $book->item->authors()->sync($data['author_ids'] ?? []);
 
             // Queue indexing after the transaction commits.
-            IndexCatalogItemJob::dispatch($academic->item_id)
+            IndexCatalogItemJob::dispatch($book->item_id)
                 ->afterCommit();
 
-            // Refresh the academic model to get the latest data from the database
-            return $academic->fresh(['item']);
+            // Refresh the book model to get the latest data from the database
+            return $book->fresh(['item']);
         });
 
         // Delete the old file only after the database update succeeds
@@ -175,14 +185,14 @@ class AcademicService
 
         CacheService::invalidate(CacheService::ACADEMICS);
 
-        return $academic;
+        return $book;
     }
 
-    public function delete(Academic $academic): bool
+    public function delete(Book $book): bool
     {
-        $deleted = DB::transaction(function () use ($academic) {
-            $academic->item->delete();
-            $academic->delete();
+        $deleted = DB::transaction(function () use ($book) {
+            $book->item->delete();
+            $book->delete();
 
             return true;
         });
@@ -207,5 +217,32 @@ class AcademicService
         }
 
         return false;
+    }
+
+    private function normalizeItemData(array $data): array
+    {
+        if (array_key_exists('language', $data) && ! array_key_exists('language_id', $data)) {
+            $language = Language::query()
+                ->where('name', $data['language'])
+                ->orWhere('code', $data['language'])
+                ->firstOrFail();
+
+            $data['language_id'] = $language->id;
+        }
+
+        unset($data['language']);
+
+        if (array_key_exists('keywords', $data)) {
+            $keywords = is_array($data['keywords'])
+                ? $data['keywords']
+                : preg_split('/\s*,\s*/', trim((string) $data['keywords']), -1, PREG_SPLIT_NO_EMPTY);
+
+            $data['keywords'] = array_values(array_unique(array_map(
+                fn (string $keyword): string => Str::lower(trim($keyword)),
+                $keywords
+            )));
+        }
+
+        return $data;
     }
 }

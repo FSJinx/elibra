@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Author;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -22,6 +21,7 @@ class DatabaseSeeder extends Seeder
             SectionsSeeder::class,
             ItemTypeSeeder::class,
             ItemTypeCategorySeeder::class,
+            LanguageSeeder::class,
 
             // Dev Seeds
             CampusSeeder::class,
@@ -32,8 +32,7 @@ class DatabaseSeeder extends Seeder
             PatronSeeder::class,
             UsersSeeder::class,
             AuthorSeeder::class,
-            // ItemSeeder::class,
-            // AcademicSeeder::class,
+            ItemSeeder::class,
         ]);
     }
 }

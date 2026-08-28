@@ -12,14 +12,14 @@ class LanguageSeeder extends Seeder
      */
     public function run(): void
     {
-        $languages = [
-            ['code' => 'en', 'name' => 'english'],
+        collect([
+            ['code' => 'en',  'name' => 'english'],
             ['code' => 'fil', 'name' => 'tagalog'],
             ['code' => 'kor', 'name' => 'korean'],
-        ];
-
-        foreach ($languages as $language) {
-            Language::create($language);
-        }
+            ['code' => 'tha', 'name' => 'thai'],
+            ['code' => 'jap', 'name' => 'japanese'],
+            ['code' => 'chinman', 'name' => 'chinese (mandarin)'],
+            ['code' => 'chincan', 'name' => 'chinese (cantonese)'],
+        ])->each(fn ($lang) => Language::create($lang));
     }
 }

@@ -13,9 +13,13 @@ class ItemController extends Controller
      */
     public function index()
     {
-        $items = Item::all();
+        $branchId = auth('api')->user()->librarian->branch_id;
 
-        return $this->response('success', data: $items->toArray());
+        $items = Item::query()
+            ->where('branch_id', $branchId)
+            ->get(['id', 'title', 'subtitle', 'call_number', 'publication_year']);
+
+        return $this->response('success', $this->auth()->user()->librarian->branch->id, data: $items->toArray());
     }
 
     /**

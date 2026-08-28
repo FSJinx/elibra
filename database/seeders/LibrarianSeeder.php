@@ -24,6 +24,7 @@ class LibrarianSeeder extends Seeder
                 'role' => 'librarian',
                 'email' => 'angelo@isu.edu.ph',
                 'password' => bcrypt('elibra2026'),
+                'campus_id' => 1,
             ],
             [
                 'uuid' => Str::uuid()->toString(),
@@ -34,6 +35,7 @@ class LibrarianSeeder extends Seeder
                 'role' => 'librarian',
                 'email' => 'librarian_eugene@isu.edu.ph',
                 'password' => bcrypt('elibra2026'),
+                'campus_id' => 1,
             ],
             [
                 'uuid' => Str::uuid()->toString(),
@@ -44,6 +46,7 @@ class LibrarianSeeder extends Seeder
                 'role' => 'librarian',
                 'email' => 'christian@isu.edu.ph',
                 'password' => bcrypt('elibra2026'),
+                'campus_id' => 1,
             ],
         ];
 

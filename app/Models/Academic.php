@@ -13,7 +13,7 @@ class Academic extends Model
 
     protected $fillable = [
             'category',
-            'subjects',
+            // 'subjects',
             'doi',
             'item_id',
             'department_id'

@@ -4,7 +4,7 @@
     <div class="flex-1 flex flex-col overflow-hidden">
       <!-- Page Heading -->
       <header class="flex flex-col gap-4 p-2 pb-0 sm:flex-row sm:items-center sm:justify-between" v-if="$route.meta.title">
-        <section class="flex items-end justify-between w-full rounded-xl bg-slate-950 p-5 text-white">
+        <section class="flex items-end justify-between w-full rounded-xl bg-linear-to-r from-slate-950 to-slate-800 p-5 text-white">
           <div>
             <p class="text-xs font-bold uppercase tracking-wide text-emerald-300 mb-2">{{ auth.user?.role }} Desk</p>
             <H1 class="capitalize">
@@ -29,12 +29,7 @@
 
 <script setup lang="ts">
 const auth = authStore()
-const parse = useParser()
 const clock = useClock()
-
-// setInterval(() => {
-//   currentDate()
-// }, 1000)
 </script>
 
 <style scoped></style>

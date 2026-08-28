@@ -15,17 +15,17 @@ return new class extends Migration
             $table->id();
 
             $table->string('title');
-            $table->string('subtitle');
+            $table->string('subtitle')->nullable();
             $table->text('description');
             $table->string('call_number')->nullable();
-            $table->string('language')->nullable();
             $table->year('publication_year')->nullable();
-            $table->string('keywords');
             $table->string('electronic_file')->nullable();
+            $table->json('keywords');
             
             $table->unsignedBigInteger('item_type_id');
             $table->unsignedBigInteger('item_type_category_id');
             $table->unsignedBigInteger('branch_id');
+            $table->unsignedBigInteger('language_id')->nullable();
 
             $table->timestamps();
             $table->softDeletes();
