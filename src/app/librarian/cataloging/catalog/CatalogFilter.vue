@@ -6,6 +6,7 @@
       <Icon icon="filter" />
       Filter
     </template>
+    
     <Form class="p-5">
       <template #body>
         <Control direction="col">

@@ -6,7 +6,7 @@
       <Icon :icon="system.sidebar ? 'x-lg' : 'list'" class="hidden group-hover:block m-auto text-lg transition-all duration-300" />
     </span>
     <div class="inline-flex flex-col ml-3">
-      <h5 class="font-semibold text-lg leading-5">Isabela State University</h5>
+      <h5 class="font-semibold text-lg leading-5">{{ heading }}</h5>
       <p class="text-sm font-normal">{{ subHeading }}</p>
     </div>
 
@@ -28,7 +28,23 @@ const system = systemStore()
 const parse = useParser()
 
 const subHeading = computed(() => {
-  return `University Library, ${parse.toCapital(auth.user?.role || 'Unknown')}`
+  const branch = ref<string>('')
+  if (auth.user?.role === 'librarian') {
+    branch.value = auth.user?.library?.branch.name
+  }
+  return `${branch.value ?? 'Unknown'}, ${parse.toCapital(auth.user?.role || 'Unknown')}`
+})
+
+const heading = computed(() => {
+  const campus = ref<string>('')
+
+  if (auth.user?.role === 'librarian' || auth.user?.role === 'admin') {
+    campus.value = ' - ' + auth.user?.library?.campus.name
+  } else if (auth.user?.role === 'super admin') {
+    campus.value = ' - Global'
+  }
+
+  return 'Isabela State University' + campus.value
 })
 </script>
 

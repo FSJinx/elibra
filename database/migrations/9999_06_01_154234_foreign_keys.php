@@ -100,7 +100,7 @@ return new class extends Migration
             ],
         ],
         [
-            'name' => 'catalog_indexes',
+            'name' => 'catalog_indices',
             'foreign_columns' => [
                 ['name' => 'item_id', 'references' => 'id', 'on' => 'items', 'onDelete' => 'cascade'],
                 ['name' => 'branch_id', 'references' => 'id', 'on' => 'branches', 'onDelete' => 'cascade'],

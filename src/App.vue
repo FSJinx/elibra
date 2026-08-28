@@ -13,6 +13,7 @@ const authUse = useAuth()
 onMounted(async () => {
   if (auth.token && !auth.isAuthenticated) {
     await authUse.getUser()
+    console.log(auth.user)
   }
 })
 </script>

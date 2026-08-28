@@ -8,6 +8,7 @@ use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BranchSectionController;
 use App\Http\Controllers\CampusController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\ItemController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\ProgramsController;
 use App\Http\Controllers\SectionsController;
@@ -79,6 +80,8 @@ Route::group(['prefix' => '/user-permission'], function () {
 Route::group(['prefix' => '/item'], function () {
 
     Route::group(['prefix' => '/get'], function () {
+        Route::get('', [ItemController::class, 'index'])->middleware('jwt.auth');
+
         /* SUBSCRIPTION ROUTES */
         Route::get('subscriptions', [SubscriptionController::class, 'getResources'])->middleware('throttle:read');
         Route::get('subscription-credential/{subscriptionId}', [SubscriptionCredentialController::class, 'getCredential'])->middleware('throttle:read');

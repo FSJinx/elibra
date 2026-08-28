@@ -3,7 +3,7 @@
     <!-- Main Body Content -->
     <div class="flex-1 flex flex-col overflow-hidden">
       <!-- Page Heading -->
-      <header class="flex flex-col gap-4 p-2 sm:flex-row sm:items-center sm:justify-between" v-if="$route.meta.title">
+      <header class="flex flex-col gap-4 p-2 pb-0 sm:flex-row sm:items-center sm:justify-between" v-if="$route.meta.title">
         <section class="flex items-end justify-between w-full rounded-xl bg-slate-950 p-5 text-white">
           <div>
             <p class="text-xs font-bold uppercase tracking-wide text-emerald-300 mb-2">{{ auth.user?.role }} Desk</p>
@@ -16,7 +16,7 @@
 
           <div class="flex items-center gap-2 text-slate-300">
             <Icon icon="calendar" />
-            <span>{{ today }}</span>
+            <span>{{ clock.today }}</span>
           </div>
         </section>
       </header>
@@ -30,28 +30,11 @@
 <script setup lang="ts">
 const auth = authStore()
 const parse = useParser()
-const today = ref()
+const clock = useClock()
 
-const currentDate = () => {
-  const now = new Date()
-  const date = now.toLocaleDateString('en-US', {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-  })
-
-  const time = now.toLocaleTimeString('en-US', {
-    hour: 'numeric',
-    minute: '2-digit',
-    second: 'numeric',
-  })
-
-  today.value = `Today, ${date} - ${time}`
-}
-
-setInterval(() => {
-  currentDate()
-}, 1000)
+// setInterval(() => {
+//   currentDate()
+// }, 1000)
 </script>
 
 <style scoped></style>

@@ -1,10 +1,17 @@
 <template>
   <div class="flex flex-col size-full">
     <!-- Header & Action -->
-    <div class="flex items-center justify-end gap-2 p-5">
-      <Input id="catalog-query" placeholder="Search for an item in the catalog..." class="max-w-100" enable-clear />
-      <CatalogFilter />
-      <Button left-icon="plus-lg" variant="primary" as="link" :to="{ name: 'librarian.cataloging.add-new' }">Add New Item</Button>
+    <div class="grid grid-cols-2 items-center px-3 py-5">
+      <div class="">
+        <H6>Catalog List</H6>
+        <p class="text-sm text-foreground-secondary">65 records</p>
+      </div>
+
+      <div class="flex items-center justify-end gap-2">
+        <Input id="catalog-query" placeholder="Search for an item in the catalog..." class="max-w-100" enable-clear />
+        <CatalogFilter />
+        <Button left-icon="plus-lg" variant="primary" as="link" :to="{ name: 'librarian.cataloging.add-new' }">Add New Item</Button>
+      </div>
     </div>
 
     <!-- Catalog Table -->

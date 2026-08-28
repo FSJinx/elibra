@@ -20,7 +20,7 @@
           </div>
 
           <!-- Modal Footer -->
-          <div class="p-5 border-t border-gray-300" v-if="$slots.footer && !loading">
+          <div class="p-3 border-t border-gray-300" v-if="$slots.footer && !loading">
             <slot name="footer" />
           </div>
         </div>

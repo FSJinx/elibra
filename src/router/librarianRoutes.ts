@@ -56,7 +56,7 @@ const librarianRoutes = [
                 meta: { breadcrumb: 'Add New' },
                 name: 'librarian.cataloging.add-new',
                 redirect: { name: 'librarian.cataloging.add-new.book' },
-                component: () => import('@/app/librarian/cataloging/catalog/NewCatalogItem.vue'),
+                component: () => import('@/app/librarian/cataloging/catalog/AddCatalog.vue'),
                 children: [
                   {
                     path: 'book',

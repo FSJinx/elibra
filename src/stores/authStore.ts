@@ -3,7 +3,7 @@ export interface User {
   first_name: string
   last_name: string
   middle_initial?: string | null
-  role: 'admin' | 'librarian' | 'patron' | null
+  role: 'super admin' | 'admin' | 'librarian' | 'patron' | null
   email?: string
   [key: string]: any
   tools: ['gendash', 'collacademic']

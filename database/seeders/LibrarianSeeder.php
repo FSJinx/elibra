@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\Librarian;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 class LibrarianSeeder extends Seeder
@@ -49,7 +48,7 @@ class LibrarianSeeder extends Seeder
         ];
 
         foreach ($users as $user) {
-            $librarian = User::create(Arr::except($user, ['librarian']));
+            $librarian = User::create($user);
 
             Librarian::create([
                 'user_id' => $librarian->id,

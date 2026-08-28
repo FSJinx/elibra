@@ -74,6 +74,7 @@ declare module 'vue' {
     TableNoData: typeof import('./table/TableNoData.vue')['default']
     Tbody: typeof import('./table/Tbody.vue')['default']
     Td: typeof import('./table/Td.vue')['default']
+    Th: typeof import('./table/Th.vue')['default']
     Thead: typeof import('./table/Thead.vue')['default']
     Tload: typeof import('./table/Tload.vue')['default']
     Tooltip: typeof import('./my/Tooltip.vue')['default']

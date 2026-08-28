@@ -37,7 +37,7 @@
 +
 <script setup lang="ts">
 const key = String(useRoute().name).split('.').pop()
-const title = key?.charAt(0).toUpperCase() + key.slice(1)
+const title = key?.charAt(0).toUpperCase() + (key as string).slice(1)
 const metrics = [
   { label: title === 'Overdue' ? 'Overdue items' : 'Total activity', value: title === 'Overdue' ? '42' : '1,284', change: '+16%', width: '78%' },
   { label: 'Compared with last month', value: '1,106', change: '+8%', width: '64%' },
