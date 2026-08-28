@@ -31,6 +31,7 @@ return new class extends Migration
             $table->timestamp('indexed_at')->nullable();
 
             $table->timestamps();
+            $table->softDeletes();
 
             $table->index('branch_id');
             $table->index('item_type_id');
@@ -38,7 +39,8 @@ return new class extends Migration
             $table->index('department_id');
             $table->index('publication_year');
             $table->index('language');
-        });
+
+            });
     }
 
     /**

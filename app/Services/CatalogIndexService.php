@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Jobs\GenerateCatalogEmbeddingJob;
 use App\Models\CatalogIndex;
 use App\Models\Item;
 
@@ -24,7 +25,7 @@ class CatalogIndexService
 
         $content = $this->buildContent($item);
 
-        return CatalogIndex::updateOrCreate(
+        $catalogIndex = CatalogIndex::updateOrCreate(
             [
                 'item_id' => $item->id,
             ],
@@ -42,6 +43,13 @@ class CatalogIndexService
                 'indexed_at' => now(),
             ]
         );
+            // Generate/update embedding after catalog index is created
+            GenerateCatalogEmbeddingJob::dispatch(
+                $catalogIndex->id
+            );
+
+        return $catalogIndex;
+
     }
 
     private function buildContent(Item $item): string
@@ -73,7 +81,6 @@ class CatalogIndexService
             $content[] = "ISSN/ISBN: {$item->serial->isbn_issn}";
             $content[] = "Volume: {$item->serial->volume}";
             $content[] = "Issue: {$item->serial->issue}";
-            $content[] = "Pages: {$item->serial->pages}";
             $content[] = "DOI: {$item->serial->doi}";
         }
 
