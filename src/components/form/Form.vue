@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="$emit('submit')" class="flex flex-col">
+  <form @submit.prevent="$emit('submit')" class="">
     <div class="flex mb-5" v-if="$slots.header">
       <slot name="header" />
     </div>

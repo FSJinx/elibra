@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-10">
+  <div class="my-10">
     <!-- Header -->
     <div class="mb-6">
       <h1 class="text-3xl text-primary font-bold uppercase tracking-wide">Discover</h1>
@@ -11,7 +11,7 @@
       <Card v-for="item in paginatedItems" :key="item.id" class="p-4 hover:shadow-md transition">
         <div class="flex items-start gap-4">
           <!-- Thumbnail -->
-          <div class="w-24 h-32 flex-shrink-0 overflow-hidden rounded-md border border-gray-200 dark:border-gray-800 bg-gray-100">
+          <div class="w-24 h-32 shrink-0 overflow-hidden rounded-md border border-gray-200 dark:border-gray-800 bg-gray-100">
             <img :src="default_book" :alt="item.title" class="size-full object-cover" />
           </div>
 
@@ -59,8 +59,6 @@
       <button @click="currentPage++" :disabled="currentPage === totalPages" class="px-3 py-1.5 rounded border border-gray-300 dark:border-gray-700 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-gray-800 transition text-sm">Next</button>
     </div>
   </div>
-
-  <div class="h-screen"></div>
 </template>
 
 <script setup lang="ts">

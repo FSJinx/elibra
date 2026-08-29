@@ -49,11 +49,14 @@ export function useAuth() {
 
       if (!token) {
         throw new Error('Login succeeded but no token was returned.')
-      }
+      } 
 
       await store.setToken(token)
       await getUser()
-      await goHome()
+
+      nextTick(async () => {
+        await goHome()
+      })
 
       return { success: true, data: response?.data }
     } catch (error: any) {

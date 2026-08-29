@@ -1,58 +1,91 @@
 <template>
-  <div class="relative w-full max-w-[100rem] p-10 mx-auto">
-    <!-- ISU Header -->
-    <div class="flex flex-col items-center space-y-2 font-baskervville">
-      <div class="flex items-center justify-center gap-2 mb-10">
-        <img :src="isu" alt="" class="size-25 z-2 rounded-full" />
-        <div class="absolute size-25 z-1 rounded-full bg-primary/25 blur-md"></div>
-      </div>
+  <div class="relative flex w-full">
+    <div class="relative flex items-start gap-3 mx-auto w-full max-w-[120rem] p-5">
+      <!-- Sticky Sidebar 1: Filters -->
+      <aside class="sticky top-20 w-120 p-5 space-y-1 bg-background border border-border shadow rounded-xl">
+        <h5 class="font-semibold uppercase tracking-widest text-foreground-secondary">Filters</h5>
+        <h4 class="font-semibold text-2xl">Refine your results</h4>
 
-      <p class="font-medium text-xl">The Online Public Access Catalog (OPAC) of the</p>
-      <div class="text-5xl uppercase font-semibold text-green-700 tracking-tight"><span class="text-[125%]">I</span>sabela <span class="text-[125%]">S</span>tate <span class="text-[125%]">U</span>niversity</div>
-    </div>
+        <Form class="mt-5">
+          <template #body>
+            <Control direction="col">
+              <Label id="params-campus">Campus</Label>
+              <Select id="params-campus" title="Campus" v-model="params.campus">
+                <Option value="">All campus</Option>
+                <template v-for="item in campus.campuses">
+                  <Option :value="item?.id">{{ item?.name }}</Option>
+                </template>
+              </Select>
+            </Control>
 
-    <!-- Search Box Here -->
-    <form class="flex items-center justify-center w-full p-5 gap-2">
-      <Button size="lg" icon="funnel-fill" class="px-5">
-        <span class="hidden sm:inline font-normal">Filters</span>
-      </Button>
-      <Input id="search" placeholder="Search title, author, or call number..." size="lg" class="max-w-2xl" v-model="search.query" />
-      <Button size="lg" icon="search" variant="primary" class="px-5"> </Button>
-      <!-- <span class="hidden sm:inline font-normal">Search</span> -->
-    </form>
+            <Control direction="col">
+              <Label id="params-sort">Sort By</Label>
+              <Select id="params-sort" title="Sort By" v-model="params.sort">
+                <Option value="">Relevance</Option>
+                <Option value="title">Title</Option>
+                <Option value="publication_year">Year Published</Option>
+              </Select>
+            </Control>
 
-    <!-- Search Preview Here -->
-    <div class="space-y-2 p-5" v-if="search.query">
-      <h1 class="text-primary font-semibold uppercase tracking-wider">Showing results for</h1>
-      <p class="font-serif text-3xl italic">"{{ search.query }}"</p>
-    </div>
+            <Control direction="col" title="Order By">
+              <Label id="params-order">Order By</Label>
+              <Select id="params-order" v-model="params.order">
+                <Option value="asc">Ascending</Option>
+                <Option value="desc">Descending</Option>
+              </Select>
+            </Control>
+          </template>
+        </Form>
+      </aside>
 
-    <OpacDiscover v-else />
+      <!-- Main Body Content -->
+      <section class="flex-1 p-5 bg-background border border-border shadow rounded-xl">
+        <h4 class="font-semibold text-2xl mb-2">Search</h4>
+        <Form class="flex items-center gap-2 mb-5" @submit="search">
+          <Input id="params-search" placeholder="Search title, authors, or call number" v-model="params.search" />
+          <Button type="submit" icon="search" />
+        </Form>
 
-    <!-- Search Result Here -->
-    <div class="flex flex-col space-y-2 p-5" v-if="search.query && data">
-      <template v-for="(item, index) in libraryData" :key="index">
-        <Card>
-          <div class="grid grid-cols-4">
-            {{ index }}
-          </div>
-        </Card>
-      </template>
+        <div class="my-5 space-y-2">
+          <h5 class="font-semibold uppercase tracking-widest text-foreground-secondary">Results for</h5>
+          <span class="text-primary font-serif text-2xl">{{ $route.query.search || 'All Items' }}</span>
+        </div>
+
+        <!-- Catalog Content Placeholder -->
+        <div class="h-screen"></div>
+        <div class="h-screen"></div>
+        <div class="h-screen"></div>
+      </section>
+
+      <!-- Sticky Sidebar 2: History -->
+      <aside class="sticky top-20 w-120 p-5 space-y-1 bg-background border border-border shadow rounded-xl">
+        <h5 class="font-semibold uppercase tracking-widest text-foreground-secondary">History</h5>
+        <h4 class="font-semibold text-2xl">Your Recent Searches</h4>
+      </aside>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { libraryData } from '@/app/opac/opac_dummy_data'
-import OpacDiscover from '@/app/opac/OpacDiscover.vue'
-import isu from '@/assets/images/isu.png'
+import { reactive, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
+const campus = campusStore()
+const auth = authStore()
 const route = useRoute()
-const data = ref([])
+const router = useRouter()
 
-const search = reactive({
-  query: (route.query.search as string) ?? '',
+const params = reactive({
+  search: (route.query.search as string) ?? '',
+  campus: auth.user?.library?.campus?.id ?? '',
+  sort: (route.query.sort as string) ?? '',
+  order: (route.query.order as string) ?? 'asc',
 })
+
+function search() {
+  // Fixed: query instead of params, so URL becomes /opac?search=...&campus=...
+  router.replace({ name: 'opac', query: { ...params } })
+}
 </script>
 
 <style scoped></style>

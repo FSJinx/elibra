@@ -29,7 +29,7 @@
         @keydown="checkCapsLock"
         @keyup="checkCapsLock"
         class="h-full w-full flex-1 bg-transparent text-slate-900 transition-all duration-150 focus:outline-none disabled:cursor-not-allowed autofill:bg-primary"
-        :class="[sizeConfig.input, leftIcon ? 'pl-2' : 'pl-5', hasSuffixActions ? 'pr-2' : 'pr-5']"
+        :class="[sizeConfig.input, leftIcon ? 'pl-2' : 'pl-4', hasSuffixActions ? 'pr-2' : 'pr-4']"
       />
 
       <!-- Suffix Actions Container -->

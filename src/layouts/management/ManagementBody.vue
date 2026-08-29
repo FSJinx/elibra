@@ -30,6 +30,8 @@
 <script setup lang="ts">
 const auth = authStore()
 const clock = useClock()
+
+useClock()
 </script>
 
 <style scoped></style>
