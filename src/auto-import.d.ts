@@ -11,7 +11,6 @@ declare global {
   const adminRoutes: typeof import('./router/adminRoutes').adminRoutes
   const api: typeof import('./plugins/axios').api
   const asyncComputed: typeof import('@vueuse/core').asyncComputed
-  const aut: typeof import('./stores/authStore').aut
   const authRoute: typeof import('./router/authRoute').authRoute
   const authStore: typeof import('./stores/authStore').authStore
   const autoResetRef: typeof import('@vueuse/core').autoResetRef
@@ -37,7 +36,6 @@ declare global {
   const createSharedComposable: typeof import('@vueuse/core').createSharedComposable
   const createTemplatePromise: typeof import('@vueuse/core').createTemplatePromise
   const createUnrefFn: typeof import('@vueuse/core').createUnrefFn
-  const crumbsStore: typeof import('./stores/breadcrumbStore').crumbsStore
   const customRef: typeof import('vue').customRef
   const debouncedRef: typeof import('@vueuse/core').debouncedRef
   const debouncedWatch: typeof import('@vueuse/core').debouncedWatch
@@ -96,7 +94,6 @@ declare global {
   const onWatcherCleanup: typeof import('vue').onWatcherCleanup
   const patronRoutes: typeof import('./router/patronRoutes').patronRoutes
   const pausableWatch: typeof import('@vueuse/core').pausableWatch
-  const preload: typeof import('./composables/data/usePreloader').preload
   const provide: typeof import('vue').provide
   const provideLocal: typeof import('@vueuse/core').provideLocal
   const publicRoutes: typeof import('./router/publicRoutes').default
@@ -178,7 +175,6 @@ declare global {
   const useConfirmDialog: typeof import('@vueuse/core').useConfirmDialog
   const useCountdown: typeof import('@vueuse/core').useCountdown
   const useCounter: typeof import('@vueuse/core').useCounter
-  const useCrummbs: typeof import('./stores/breadcrumbStore').useCrummbs
   const useCssModule: typeof import('vue').useCssModule
   const useCssSupports: typeof import('@vueuse/core').useCssSupports
   const useCssVar: typeof import('@vueuse/core').useCssVar
@@ -294,7 +290,6 @@ declare global {
   const useTextDirection: typeof import('@vueuse/core').useTextDirection
   const useTextSelection: typeof import('@vueuse/core').useTextSelection
   const useTextareaAutosize: typeof import('@vueuse/core').useTextareaAutosize
-  const useTheme: typeof import('./composables/useTheme').useTheme
   const useThrottle: typeof import('@vueuse/core').useThrottle
   const useThrottleFn: typeof import('@vueuse/core').useThrottleFn
   const useThrottledRefHistory: typeof import('@vueuse/core').useThrottledRefHistory
