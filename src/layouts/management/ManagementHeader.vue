@@ -2,7 +2,7 @@
   <div class="flex items-center w-full py-3 px-4 bg-background border-b border-border">
     <!-- Right Side -->
     <span class="flex cursor-pointer size-11 group" :data-title="system.sidebar ? 'Close Sidebar' : 'Open Sidebar'" @click="system.toggleSidebar">
-      <img :src="images.isu" alt="" class="block size-11 group-hover:hidden" />
+      <img :src="isu" alt="" class="block size-11 group-hover:hidden" />
       <Icon :icon="system.sidebar ? 'x-lg' : 'list'" class="hidden group-hover:block m-auto text-lg transition-all duration-300" />
     </span>
     <div class="inline-flex flex-col ml-3">
@@ -22,6 +22,7 @@
 <script setup lang="ts">
 import ManagementProfileButton from '@/layouts/management/ManagementProfileButton.vue'
 import ManagementSearchButton from '@/layouts/management/ManagementSearchButton.vue'
+import isu from '@/assets/images/isu.png'
 
 const auth = authStore()
 const system = systemStore()

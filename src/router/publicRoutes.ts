@@ -12,6 +12,21 @@ const publicRoute = [
   },
 
   {
+    path: '/opac',
+    name: 'opac',
+    redirect: { name: 'opac.home' },
+    component: () => import('@/layouts/opac/OpacLayout.vue'),
+    children: [
+      {
+        path: '',
+        name: 'opac.home',
+        meta: { breadcrumb: 'OPAC' },
+        component: () => import('@/app/opac/Opac.vue'),
+      },
+    ],
+  },
+
+  {
     path: '/library',
     children: [
       {
