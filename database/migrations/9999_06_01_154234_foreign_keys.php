@@ -100,6 +100,16 @@ return new class extends Migration
             ],
         ],
         [
+            'name' => 'catalog_indexes',
+            'foreign_columns' => [
+                ['name' => 'item_id', 'references' => 'id', 'on' => 'items', 'onDelete' => 'cascade'],
+                ['name' => 'branch_id', 'references' => 'id', 'on' => 'branches', 'onDelete' => 'cascade'],
+                ['name' => 'item_type_id', 'references' => 'id', 'on' => 'item_types', 'onDelete' => 'cascade'],
+                ['name' => 'item_type_category_id', 'references' => 'id', 'on' => 'item_type_categories', 'onDelete' => 'cascade'],
+                ['name' => 'department_id', 'references' => 'id', 'on' => 'departments', 'onDelete' => 'cascade'],
+            ],
+        ],
+        [
             'name' => 'user_permissions',
             'foreign_columns' => [
                 ['name' => 'user_id', 'references' => 'id', 'on' => 'users', 'onDelete' => 'cascade'],
@@ -111,6 +121,13 @@ return new class extends Migration
             'foreign_columns' => [
                 ['name' => 'librarian_id', 'references' => 'id', 'on' => 'librarians', 'onDelete' => 'cascade'],
                 ['name' => 'branch_section_id', 'references' => 'id', 'on' => 'branch_sections', 'onDelete' => 'cascade'],
+            ],
+        ],
+        [
+            'name' => 'item_authors',
+            'foreign_columns' => [
+                ['name' => 'author_id', 'references' => 'id', 'on' => 'authors', 'onDelete' => 'cascade'],
+                ['name' => 'item_id', 'references' => 'id', 'on' => 'items', 'onDelete' => 'cascade'],
             ],
         ],
     ];

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Academic;
+use App\Models\Author;
 use App\Models\Branch;
 use App\Models\Item;
 use App\Models\ItemType;
@@ -48,7 +49,11 @@ class StoreSerialRequest extends BaseRequest
             'issue' => [ 'nullable', 'string', 'max:255' ],
             'pages' => [ 'nullable', 'string', 'max:255' ],
             'doi' => [ 'nullable', 'string', 'max:255' ],
-        ];
+
+            //Authors Field
+            'author_ids' => [ 'nullable', 'array', 'min:1' ],
+            'author_ids.*' => [ 'integer', Rule::exists((new Author)->getTable(), 'id')->whereNull('deleted_at'), ],
+        ];  
 
         return $rules;
     }

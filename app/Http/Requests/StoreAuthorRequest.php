@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Author;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Override;
 
 class StoreAuthorRequest extends BaseRequest
 {
@@ -11,7 +13,7 @@ class StoreAuthorRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->user()->can('create', Author::class);
     }
 
     /**
@@ -22,7 +24,21 @@ class StoreAuthorRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            //
+            'first_name' => [ 'required', 'string', 'max:255' ],
+            'middle_name' => [ 'required', 'string', 'max:255' ],
+            'last_name' => [ 'required', 'string', 'max:255' ],
+            'suffix' => [ 'required', 'string', 'max:10' ],
         ];
+    }
+
+    #[Override]
+    public function messages()
+    {
+        $messages = [
+            'first_name.required' => 'First name of author is required.',
+            'last_name.required' => 'Last name of author is required.',
+        ];
+
+        return $messages;
     }
 }

@@ -11,7 +11,7 @@ class UpdateAuthorRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->user()->can('update', $this->route('author'));
     }
 
     /**
@@ -21,8 +21,13 @@ class UpdateAuthorRequest extends BaseRequest
      */
     public function rules(): array
     {
-        return [
-            //
+        $rules = [
+            'first_name' => [ 'sometimes', 'required', 'string', 'max:255' ],
+            'middle_name' => [ 'sometimes', 'required', 'string', 'max:255' ],
+            'last_name' => [ 'sometimes', 'required', 'string', 'max:255' ],
+            'suffix' => [ 'sometimes', 'required', 'string', 'max:10' ],
         ];
+
+        return $rules;
     }
 }

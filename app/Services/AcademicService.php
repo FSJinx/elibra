@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 
+use App\Jobs\IndexCatalogItemJob;
 use App\Models\Academic;
 use App\Models\Item;
 use Illuminate\Http\UploadedFile;
@@ -75,7 +76,7 @@ class AcademicService
 
     public function create(array $data): Academic
     {
-        $academic = DB::transaction(function () use ($data){
+        $academic = DB::transaction(function () use (&$data){
 
         $this->saveElectronicFile($data);
 
@@ -95,7 +96,7 @@ class AcademicService
                 ])
             );
 
-            return $item->academic()->create(
+            $academic = $item->academic()->create(
                 Arr::only($data, [
                     'subjects',
                     'doi',
@@ -103,18 +104,25 @@ class AcademicService
                 ])
             );
 
+            $item->authors()->sync($data['author_ids'] ?? []);
+
+            IndexCatalogItemJob::dispatch($item->id)
+                ->afterCommit();
+
+            return $academic;
         });
 
         CacheService::invalidate(CacheService::ACADEMICS);
 
+
         return $academic->load('item');
     }
 
-    public function update(Academic $academic, array $data): Academic
+    public function update(Academic $academic, array $data): Academic   
     {
         $oldFile = $academic->item->electronic_file;
 
-        $academic = DB::transaction(function () use ($academic, $data){
+        $academic = DB::transaction(function () use (&$academic, &$data){
 
             if (!$this->saveElectronicFile($data)) {
                 unset($data['electronic_file']);
@@ -143,6 +151,13 @@ class AcademicService
                     'department_id'
                 ])
             );
+
+            // Update authors
+            $academic->item->authors()->sync( $data['author_ids'] ?? [] );
+
+            // Queue indexing after the transaction commits.
+            IndexCatalogItemJob::dispatch($academic->item_id)
+                ->afterCommit();
             
             // Refresh the academic model to get the latest data from the database
             return $academic->fresh(['item']);

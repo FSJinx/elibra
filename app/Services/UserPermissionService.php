@@ -20,6 +20,9 @@ class UserPermissionService
         'manage.delete',
         'manage.restore',
         'manage.forceDelete',
+
+        'academic.create',
+        'academic.update',
     ];
     /**
      * Reusable response 

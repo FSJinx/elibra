@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Jobs\IndexCatalogItemJob;
 use App\Models\Item;
 use App\Models\Serial;
 use Illuminate\Http\UploadedFile;
@@ -76,7 +77,7 @@ class SerialService
 
     public function create(array $data): Serial
     {
-        $serial = DB::transaction(function () use ($data){
+        $serial = DB::transaction(function () use (&$data){
             $this->saveElectronicFile($data);
 
             $item = Item::create(
@@ -95,7 +96,7 @@ class SerialService
                 ])
             );
 
-            return $item->serial()->create(
+            $serial = $item->serial()->create(
                 arr::only($data, [
                     'isbn_issn',
                     'volume',
@@ -104,6 +105,13 @@ class SerialService
                     'doi',
                 ])
             );
+
+            $item->authors()->sync($data['author_ids'] ?? []);
+
+            IndexCatalogItemJob::dispatch($item->id)
+                ->afterCommit();
+
+            return $serial;
             
         });
         CacheService::invalidate(CacheService::SERIALS);
@@ -146,6 +154,13 @@ class SerialService
                     'doi',
                 ])
             );
+
+            $serial->item->authors()->sync( $data['author_ids'] ?? []);
+            
+            // Queue indexing after the transaction commits.
+            IndexCatalogItemJob::dispatch($serial->item_id)
+                ->afterCommit();
+                
             return $serial->fresh(['item']);
         });
 
