@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Jobs\IndexCatalogItemJob;
+use App\Jobs\RemoveCatalogIndexJob;
 use App\Models\Item;
 use App\Models\Serial;
 use Illuminate\Http\UploadedFile;
@@ -156,7 +157,7 @@ class SerialService
             );
 
             $serial->item->authors()->sync( $data['author_ids'] ?? []);
-            
+
             // Queue indexing after the transaction commits.
             IndexCatalogItemJob::dispatch($serial->item_id)
                 ->afterCommit();
@@ -178,8 +179,13 @@ class SerialService
     Public function delete(Serial $serial): bool
     {
         $deleted = DB::transaction(function () use ($serial){
-            $serial->item->delete();
+            $item = $serial->item;
+
             $serial->delete();
+            $item->delete();
+
+            RemoveCatalogIndexJob::dispatch($item->id)
+                ->afterCommit();
 
             return true;
         });

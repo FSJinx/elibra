@@ -1,5 +1,7 @@
 export function useAuth() {
   const store = authStore()
+  // const swal = useSwal()
+  const pop = usePopup()
 
   // ========== ACTIONS ===========
   // ---------- FUNCTION TO GO HOME ----------
@@ -18,6 +20,7 @@ export function useAuth() {
   // --------- GETS USER  ---------
   async function getUser(): Promise<void> {
     store.setLoading(true)
+    pop.load('While we fetch your information...')
     try {
       const res = await api.get('auth')
 
@@ -26,6 +29,7 @@ export function useAuth() {
       console.error('Failed to fetch user', e)
       store.clearUser()
     } finally {
+      pop.unload()
       store.setLoading(false)
     }
   }
@@ -59,9 +63,40 @@ export function useAuth() {
     }
   }
 
+  // ================ LOGOUT FUNCTION =================
+  async function logout() {
+    const result = await pop.confirm({
+      title: 'Logout',
+      text: 'Are you sure you want to logout?',
+      showCancelButton: true,
+    })
+
+    if (result.isConfirmed) {
+      pop.load()
+      try {
+        await api
+          .post('auth/logout')
+          .then((res) => {
+            pop.fire({ title: 'Success', text: res.data.message, icon: 'success' })
+          })
+          .finally(() => {
+            store.clearUser()
+            nextTick(() => {
+              goHome()
+            })
+          })
+
+        console.log('Logged out successfully.')
+      } catch (e) {
+        throw e
+      }
+    }
+  }
+
   return {
     goHome,
     getUser,
     login,
+    logout,
   }
 }

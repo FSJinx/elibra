@@ -1,6 +1,6 @@
 <template>
   <button type="button" class="text-left px-4 py-2 hover:bg-primary hover:text-primary-foreground transition-all duration-100 flex items-center rounded disabled:bg-disabled disabled:text-muted disabled:cursor-not-allowed" :class="{ 'bg-primary text-primary-foreground': isSelected }" :disabled="disabled" @click="select.setSelected(value, labelText)">
-    <span v-if="labelText" class="flex-1 text-sm">
+    <span v-if="labelText" class="flex-1">
       {{ labelText }}
     </span>
 

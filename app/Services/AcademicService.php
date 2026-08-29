@@ -1,8 +1,11 @@
 <?php
+
 namespace App\Services;
 
 use App\Jobs\IndexCatalogItemJob;
+use App\Jobs\RemoveCatalogIndexJob;
 use App\Models\Academic;
+use App\Models\CatalogIndex;
 use App\Models\Item;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
@@ -11,7 +14,6 @@ use Illuminate\Support\Facades\Storage;
 
 class AcademicService
 {
-
     public function index(array $filters)
     {
         return CacheService::remember(
@@ -54,7 +56,7 @@ class AcademicService
 
                 $sort = $filters['sort'];
 
-                if (!in_array($sort, $allowedSorts)) {
+                if (! in_array($sort, $allowedSorts)) {
                     $sort = 'id';
                 }
 
@@ -76,23 +78,25 @@ class AcademicService
 
     public function create(array $data): Academic
     {
-        $academic = DB::transaction(function () use (&$data){
+        $academic = DB::transaction(function () use (&$data) {
 
-        $this->saveElectronicFile($data);
+            $this->saveElectronicFile($data);
 
             $item = Item::create(
                 Arr::only($data, [
-                    'title', 
-                    'subtitle', 
-                    'description', 
+                    'title',
+                    'subtitle',
+                    'description',
                     'call_number',
-                    'language',
                     'publication_year',
-                    'keywords',
                     'electronic_file',
+
                     'item_type_id',
                     'item_type_category_id',
-                    'branch_id'
+                    'language_id',
+                    'branch_id',
+
+                    'keywords',
                 ])
             );
 
@@ -100,7 +104,7 @@ class AcademicService
                 Arr::only($data, [
                     'subjects',
                     'doi',
-                    'department_id'
+                    'department_id',
                 ])
             );
 
@@ -114,25 +118,24 @@ class AcademicService
 
         CacheService::invalidate(CacheService::ACADEMICS);
 
-
         return $academic->load('item');
     }
 
-    public function update(Academic $academic, array $data): Academic   
+    public function update(Academic $academic, array $data): Academic
     {
         $oldFile = $academic->item->electronic_file;
 
-        $academic = DB::transaction(function () use (&$academic, &$data){
+        $academic = DB::transaction(function () use (&$academic, &$data) {
 
-            if (!$this->saveElectronicFile($data)) {
+            if (! $this->saveElectronicFile($data)) {
                 unset($data['electronic_file']);
             }
-                
+
             $academic->item->update(
                 Arr::only($data, [
-                    'title', 
-                    'subtitle', 
-                    'description', 
+                    'title',
+                    'subtitle',
+                    'description',
                     'call_number',
                     'language',
                     'publication_year',
@@ -140,7 +143,7 @@ class AcademicService
                     'electronic_file',
                     'item_type_id',
                     'item_type_category_id',
-                    'branch_id'
+                    'branch_id',
                 ])
             );
 
@@ -148,22 +151,22 @@ class AcademicService
                 Arr::only($data, [
                     'subjects',
                     'doi',
-                    'department_id'
+                    'department_id',
                 ])
             );
 
             // Update authors
-            $academic->item->authors()->sync( $data['author_ids'] ?? [] );
+            $academic->item->authors()->sync($data['author_ids'] ?? []);
 
             // Queue indexing after the transaction commits.
             IndexCatalogItemJob::dispatch($academic->item_id)
                 ->afterCommit();
-            
+
             // Refresh the academic model to get the latest data from the database
             return $academic->fresh(['item']);
         });
 
-         // Delete the old file only after the database update succeeds
+        // Delete the old file only after the database update succeeds
         if (
             isset($data['electronic_file']) &&
             $oldFile &&
@@ -173,18 +176,24 @@ class AcademicService
         }
 
         CacheService::invalidate(CacheService::ACADEMICS);
+
         return $academic;
     }
 
     public function delete(Academic $academic): bool
     {
         $deleted = DB::transaction(function () use ($academic){
-            $academic->item->delete();
+            $item = $academic->item;
+
             $academic->delete();
+            $item->delete();
+
+            RemoveCatalogIndexJob::dispatch($item->id)
+                ->afterCommit();
 
             return true;
         });
-        
+
         if ($deleted) {
             CacheService::invalidate(CacheService::ACADEMICS);
         }

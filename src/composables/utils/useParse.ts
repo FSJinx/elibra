@@ -8,9 +8,16 @@ export function useParser() {
       const stats: Record<string, Variants> = {
         // ====== SUCCESS =======
         active: 'success',
+        admin: 'success',
+
+        // ====== INFO =======
+        librarian: 'info',
 
         // ====== ERROR =======
         inactive: 'danger',
+
+        // ====== RESTORE =======
+        patron: 'restore',
       }
 
       return status ? stats[status] : undefined

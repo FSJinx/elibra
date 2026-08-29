@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
 
             $table->unsignedBigInteger('item_id')->nullable();
-                
+
             // semantic search -> content
-            $table-> longText('content');
+            $table->longText('content');
             $table->unsignedBigInteger('branch_id')->nullable();
             $table->unsignedBigInteger('item_type_id')->nullable();
             $table->unsignedBigInteger('item_type_category_id')->nullable();
@@ -31,6 +31,7 @@ return new class extends Migration
             $table->timestamp('indexed_at')->nullable();
 
             $table->timestamps();
+            $table->softDeletes();
 
             $table->index('branch_id');
             $table->index('item_type_id');
@@ -38,7 +39,8 @@ return new class extends Migration
             $table->index('department_id');
             $table->index('publication_year');
             $table->index('language');
-        });
+
+            });
     }
 
     /**
@@ -46,6 +48,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('catalog_indexes');
+        Schema::dropIfExists('catalog_indices');
     }
 };
