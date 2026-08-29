@@ -1,5 +1,5 @@
 <template>
-  <label :for="id" :id="id + 'Label'" class="max-w-max">
+  <label :for="id" :id="id + 'Label'" class="max-w-max font-medium">
     <slot></slot>
     <span v-if="required" class="text-danger">*</span>
   </label>

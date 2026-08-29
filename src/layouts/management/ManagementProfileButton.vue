@@ -32,7 +32,7 @@
           <h2 class="font-semibold uppercase tracking-wide text-foreground-secondary text-sm">Options</h2>
           <div class="flex flex-col">
             <Button variant="text" align="left" left-icon="person"> Profile</Button>
-            <Button variant="text" align="left" left-icon="door-open" class="text-danger-soft-foreground" @click="auth.logout">Logout</Button>
+            <Button variant="text" align="left" left-icon="door-open" class="text-danger-soft-foreground hover:bg-danger-soft" @click="auth.logout">Logout</Button>
           </div>
         </div>
       </div>

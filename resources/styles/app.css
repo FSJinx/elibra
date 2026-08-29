@@ -3,6 +3,7 @@
 /* File Imports */
 @import './theme/index.css';
 @import './z-index.css';
+@import './swal.css';
 @import './animations/index.css';
 @import './transitions/index.css';
 
@@ -45,12 +46,16 @@ body {
   /* ============ TABLE CELLS ============ */
   th,
   td {
-    @apply text-center px-4 py-4;
+    @apply text-center;
   }
   th {
-    @apply font-semibold;
+    @apply px-5 py-3 text-xs font-medium uppercase tracking-wide text-slate-500;
+  }
+
+  td {
+    @apply px-5 py-4 text-sm text-slate-600;
   }
   tbody tr {
-    @apply border-b border-border/75 cursor-pointer hover:bg-neutral-100 transition-all duration-300;
+    @apply border-b border-border/75 cursor-pointer hover:bg-slate-50 transition-all duration-300;
   }
 }

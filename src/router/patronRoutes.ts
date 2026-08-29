@@ -20,6 +20,12 @@ export const patronRoutes = [
         name: 'patron.profile',
         component: () => import('@/app/patron/profile/Profile.vue'),
       },
+      {
+        path: 'services',
+        name: 'patron.services',
+        meta: { title: 'Library Services' },
+        component: () => import('@/app/patron/services/Services.vue'),
+      },
     ],
   },
 ]

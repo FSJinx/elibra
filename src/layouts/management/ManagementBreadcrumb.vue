@@ -1,5 +1,5 @@
 <template>
-  <nav aria-label="Breadcrumb" class="flex items-center w-full bg-slate-50 px-4 py-2 text-sm border-b border-border">
+  <nav aria-label="Breadcrumb" class="flex items-center w-full bg-slate-100 px-4 py-2 text-sm border-b border-border">
     <ol class="inline-flex items-center gap-2 flex-wrap">
       <li v-for="(crumb, index) in breadcrumbs" :key="crumb.name || crumb.path || index" class="inline-flex items-center gap-2">
         <!-- Clickable Link (Parent Routes) -->

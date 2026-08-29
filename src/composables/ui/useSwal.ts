@@ -4,9 +4,13 @@ import 'sweetalert2/dist/sweetalert2.min.css'
 export const useSwal = () => {
   const swalWithDefaults = Swal.mixin({
     backdrop: 'var(--color-backdrop)',
-    background: 'var(--color-container)',
+    padding: '1.5rem 3rem',
+    customClass: {
+      popup: 'elpop-container',
+    },
 
     // Inside Container
+    background: 'var(--color-container)',
     color: 'var(--color-foreground)',
 
     // Confirm Button

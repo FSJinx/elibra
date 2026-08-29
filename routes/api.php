@@ -8,6 +8,7 @@ use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BranchSectionController;
 use App\Http\Controllers\CampusController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\ItemController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\ProgramsController;
 use App\Http\Controllers\SectionsController;
@@ -23,8 +24,9 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => '/auth'], function () {
     Route::post('/login', [LoginController::class, 'index'])->middleware('throttle:login');
     Route::post('/registration', [AuthController::class, 'registration']);
-
     Route::post('/refresh', [AuthController::class, 'refresh'])->middleware('jwt.refresh');
+    Route::post('/logout', [AuthController::class, 'logout'])->middleware('jwt.auth');
+
 
     Route::group(['middleware' => 'jwt.auth'], function () {
         Route::get('', [AuthController::class, 'index']); // /api/auth
@@ -74,10 +76,12 @@ Route::group(['prefix' => '/user-permission'], function () {
 
 });
 
-// Item Routes
+// ============== ITEM ROUTES ===============
 Route::group(['prefix' => '/item'], function () {
 
     Route::group(['prefix' => '/get'], function () {
+        Route::get('', [ItemController::class, 'index'])->middleware('jwt.auth');
+
         /* SUBSCRIPTION ROUTES */
         Route::get('subscriptions', [SubscriptionController::class, 'getResources'])->middleware('throttle:read');
         Route::get('subscription-credential/{subscriptionId}', [SubscriptionCredentialController::class, 'getCredential'])->middleware('throttle:read');

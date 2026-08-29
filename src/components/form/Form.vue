@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="$emit('submit')" class="flex flex-col">
-    <div class="flex mb-3" v-if="$slots.header">
+    <div class="flex mb-5" v-if="$slots.header">
       <slot name="header" />
     </div>
 
@@ -10,7 +10,7 @@
       <slot name="body" />
     </div>
 
-    <div class="mt-2" v-if="$slots.footer">
+    <div class="mt-5 flex items-center justify-end gap-2" v-if="$slots.footer">
       <slot name="footer" />
     </div>
   </form>

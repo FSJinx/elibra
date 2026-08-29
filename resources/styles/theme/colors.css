@@ -3,7 +3,7 @@
   *   Main Color Palette
   *   ========================== */
 
-  --primary: lab(50% -47.74 25.84);
+  --primary: var(--color-emerald-600);
   --primary-hover: color-mix(in oklab, var(--primary) 90%, var(--primary-foreground) 10%);
   --primary-foreground: var(--snow);
   --primary-soft: color-mix(in oklab, var(--primary) 10%, var(--color-background));
