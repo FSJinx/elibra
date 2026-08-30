@@ -25,7 +25,7 @@
         </Control>
 
         <Button as="link" :to="{ name: '' }" size="sm" variant="text" class="ml-auto text-primary">Forgot password?</Button>
-        <Button variant="primary" type="submit" :disabled="store.loading">Login</Button>
+        <Button variant="primary" type="submit" :loading="store.loading">Login</Button>
       </form>
       <span class="text-sm text-center mt-5">Don't have an account yet? <router-link :to="{ name: '' }" class="text-primary">Create an account.</router-link></span>
     </div>

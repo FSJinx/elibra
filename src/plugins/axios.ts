@@ -47,12 +47,15 @@ api.interceptors.response.use(
       try {
         const refreshResponse = await api.post('auth/refresh')
         const newToken = refreshResponse.data?.data?.token
+        const newUserData = refreshResponse.data?.data?.user
 
         if (!newToken) {
           throw error
         }
 
-        await my.setToken(newToken)
+        my.setToken(newToken)
+        my.setUser(newUserData)
+
         error.config.headers.Authorization = `Bearer ${newToken}`
 
         return api(error.config)

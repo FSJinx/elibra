@@ -93,8 +93,6 @@
                   <span class="hidden sm:inline">Search</span>
                 </Button>
               </Control>
-              <!-- <div class="flex h-12 sm:h-14 rounded-xl border border-border bg-background overflow-hidden transition-all duration-200 focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/10">
-              </div> -->
             </Form>
 
             <!-- Active Filters -->

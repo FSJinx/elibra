@@ -15,15 +15,15 @@
         </template>
 
         <template v-else>
-          <Button as="link" :to="{ name: 'home' }" variant="text" class="hover:bg-primary/10 transition-all duration-300" data-title="Home" v-if="$route.name !== 'home'">Home</Button>
-          <Button as="link" :to="{name: user.userHomeLink}" variant="text" class="hover:bg-primary/10 transition-all duration-300" data-title="Dashboard">Dashboard</Button>
+          <Button as="link" :to="{ name: user.userHomeLink }" variant="text" class="hover:bg-primary/10 transition-all duration-300" data-title="Dashboard">Dashboard</Button>
           <Button variant="text" class="hover:bg-primary/10 transition-all duration-300" :data-title="auth.getFullName">Profile</Button>
           <Button @click="user.logout" variant="text" class="hover:bg-primary/10 transition-all duration-300" data-title="Logout">Logout</Button>
         </template>
 
         <div class="h-5 border-l mx-3"></div>
 
-        <Button as="link" :to="{ name: 'opac' }" variant="text" class="hover:bg-primary/10 transition-all duration-300" data-title="Online Public Access Catalog" v-if="$route.name !== 'opac'">OPAC</Button>
+        <Button as="link" :to="{ name: 'home' }" variant="text" class="hover:bg-primary/10 transition-all duration-300" data-title="Home" v-if="$route.name !== 'home'">Home</Button>
+        <Button as="link" :to="{ name: 'opac' }" variant="text" class="hover:bg-primary/10 transition-all duration-300" data-title="Online Public Access Catalog" v-if="!$route.name?.toString().includes('opac')">OPAC</Button>
         <Button variant="text" class="hover:bg-primary/10 transition-all duration-300" data-title="Book Bag">
           <Icon icon="bag-fill" class="text-xl" />
         </Button>
@@ -44,7 +44,7 @@
         <!-- Side Navigation Body -->
         <div class="mt-5 flex flex-col">
           <Button as="link" :to="{ name: 'home' }" variant="text" class="hover:bg-primary/10 transition-all duration-300" data-title="Home" v-if="$route.name !== 'home'">Home</Button>
-          <Button as="link" :to="{name: user.userHomeLink}" variant="text" class="hover:bg-primary/10 transition-all duration-300" data-title="Dashboard">Dashboard</Button>
+          <Button as="link" :to="{ name: user.userHomeLink }" variant="text" class="hover:bg-primary/10 transition-all duration-300" data-title="Dashboard">Dashboard</Button>
           <Button variant="text" class="hover:bg-primary/10 transition-all duration-300" :data-title="auth.getFullName">Profile</Button>
           <Button @click="user.logout" variant="text" class="hover:bg-primary/10 transition-all duration-300" data-title="Logout">Logout</Button>
         </div>

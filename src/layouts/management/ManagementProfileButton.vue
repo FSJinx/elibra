@@ -30,9 +30,11 @@
         <!-- Profile Dropdown Menu -->
         <div class="flex-1 flex flex-col gap-2 overflow-y-auto scrollbar-thin p-5">
           <h2 class="font-semibold uppercase tracking-wide text-foreground-secondary text-sm">Options</h2>
-          <div class="flex flex-col">
-            <Button variant="text" align="left" left-icon="person"> Profile</Button>
-            <Button variant="text" align="left" left-icon="door-open" class="text-danger-soft-foreground hover:bg-danger-soft" @click="auth.logout">Logout</Button>
+          <div class="flex flex-col gap-1">
+            <Button as="link" variant="text" align="left" left-icon="house" class="optBtn" :to="{ name: 'home' }">Home</Button>
+            <Button as="link" variant="text" align="left" left-icon="journals" class="optBtn" :to="{ name: 'opac' }">OPAC</Button>
+            <Button variant="text" align="left" left-icon="person" class="optBtn">Profile</Button>
+            <Button variant="text" align="left" left-icon="door-open" class="optBtn bg-danger/5 border border-danger/10 text-danger-soft-foreground hover:bg-danger-soft hover:border-danger/50 focus:bg-danger focus:text-danger-foreground" @click="auth.logout">Logout</Button>
           </div>
         </div>
       </div>
@@ -58,4 +60,10 @@ const close = () => {
 useClickOutside(managementProfile, close)
 </script>
 
-<style scoped></style>
+<style scoped>
+.optBtn {
+  padding-inline: 1.25rem;
+}
+
+
+</style>
