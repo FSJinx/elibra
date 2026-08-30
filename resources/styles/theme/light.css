@@ -17,7 +17,7 @@
   *   ========================== */
   --foreground: var(--color-slate-900);
   --foreground-secondary: color-mix(in oklab, var(--color-foreground) 50%, var(--color-background) 50%);
-  --muted: color-mix(in oklab, var(--color-foreground) 25%, var(--color-background) 75%);
+  --muted: var(--color-slate-500);
   --link: var(--primary);
 
   /*  ========================== 

@@ -19,6 +19,9 @@ import '@fontsource/inter/800.css'
 // Font Baskervville
 import '@openfonts/baskervville_latin'
 
+// Font Playfair
+import '@fontsource/playfair-display'
+
 // Icons
 // import '@flaticon/flaticon-uicons/css/regular/all.css'
 import icons from '@/plugins/icons.js'

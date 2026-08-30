@@ -1,5 +1,5 @@
 <template>
-  <div class="relative w-full max-w-[100rem] p-10 my-10 space-y-5 mx-auto">
+  <div class="relative w-full max-w-[100rem] p-10 my-20 space-y-5 mx-auto">
     <!-- ISU Header -->
     <div class="flex flex-col items-center font-baskervville text-center sm:text-3xl">
       <div class="flex items-center justify-center gap-2 mb-5 sm:mb-7">
@@ -15,10 +15,8 @@
 
     <!-- Statement of the System -->
     <div class="max-w-5xl mx-auto text-center px-5">
-      <Chip class="px-2 rounded-md">e-Libra</Chip>
-      is the official Integrated Library Management System of the Isabela State University. Developed by FSJinx,
-      <Chip class="px-2 rounded-md">e-Libra</Chip>
-      acts a centralized database for library/academic materials for all Isabela State University Students.
+      <Chip class="px-3 rounded-md">e-Libra</Chip>
+      is the official Integrated Library Management System of the Isabela State University. Developed by FSJinx, e-Libra acts as a centralized database for library/academic materials for all Student across the Isabela State Universitys.
     </div>
 
     <!-- Search Box -->
@@ -36,7 +34,7 @@
         <p class="">You can try searching for:</p>
 
         <Transition name="search-helper" mode="out-in">
-          <span :key="quickSearch" @mouseenter="pauseSearchRotation" @mouseleave="resumeSearchRotation" class="inline-block bg-background border border-border rounded-lg shadow text-sm px-3 py-1 text-primary text-center capitalize cursor-pointer" :data-title="`Click to search ${quickSearch} in the OPAC.`">
+          <span @click="searchFromQuickSearch" :key="quickSearch" @mouseenter="pauseSearchRotation" @mouseleave="resumeSearchRotation" class="inline-block bg-background border border-border rounded-lg shadow text-sm px-3 py-1 text-primary text-center capitalize cursor-pointer" :data-title="`Click to search ${quickSearch} in the OPAC.`">
             {{ quickSearch }}
           </span>
         </Transition>
@@ -61,6 +59,13 @@ const possibleSearches = ['books about programming', 'researches about fish', 'b
 
 function search() {
   return router.push({ name: 'opac', query: opac })
+}
+
+function searchFromQuickSearch() {
+  Object.assign(opac, {
+    search: quickSearch,
+  })
+  search()
 }
 
 function nextSearchRecommendation() {

@@ -7,20 +7,30 @@ export function useParser() {
     status(status: string | null) {
       const stats: Record<string, Variants> = {
         // ====== SUCCESS =======
+        available: 'success',
         active: 'success',
         admin: 'success',
 
         // ====== INFO =======
         librarian: 'info',
+        reserved: 'info',
+        book: 'info',
+
+        // ====== WARNING =======
+        serial: 'warning',
 
         // ====== ERROR =======
         inactive: 'danger',
+        borrowed: 'danger',
 
         // ====== RESTORE =======
         patron: 'restore',
+        academic: 'restore',
+
+        default: 'default',
       }
 
-      return status ? stats[status] : undefined
+      return status ? stats[status ?? 'default'] : 'default'
     },
 
     formatDate(dateString: string | null) {
