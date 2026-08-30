@@ -19,7 +19,7 @@ class GenerateCatalogEmbeddingJob implements ShouldQueue
     ){}
 
     /**
-     * Execute the job.
+     * Execute the job.q
      */
     public function handle(EmbeddingService $embeddingService): void
     {

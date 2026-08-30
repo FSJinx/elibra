@@ -13,9 +13,9 @@ class EmbeddingService
 
         //Temporary for testing purpose
         $embedding = [
-            0.0123,
-            -0.0456,
-            0.0789,
+            0.089,
+            -0.0101,
+            0.0123, 
         ];
 
         return CatalogEmbedding::updateOrCreate(
@@ -24,7 +24,7 @@ class EmbeddingService
             ],
             [
                 'embedding' => $embedding,
-                'model' => 'test',
+                'model' => 'sample',
                 'dimensions' => count($embedding),
             ]
         );
