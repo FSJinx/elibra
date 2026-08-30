@@ -24,7 +24,7 @@ class LoginController extends Controller
 
         // Returns if user has logged on multiple times
         if ($user && $user->login_attempts == 5) {
-            return $this->response('error', 'Too many failed login attempts, please contact your administrator to resolve this issue.', statusCode: 423);
+            return $this->response('error', 'You reached that maximum failed login attempts. Please contact your administrator to resolve this issue.', statusCode: 423);
         }
 
         // Successfully logs in user

@@ -31,7 +31,7 @@ const parse = useParser()
 const subHeading = computed(() => {
   const branch = ref<string>('')
   if (auth.user?.role === 'librarian') {
-    branch.value = auth.user?.library?.branch.name
+    branch.value = auth.user?.branch.name
   }
   return `${branch.value ?? 'Unknown'}, ${parse.toCapital(auth.user?.role || 'Unknown')}`
 })
@@ -40,7 +40,7 @@ const heading = computed(() => {
   const campus = ref<string>('')
 
   if (auth.user?.role === 'librarian' || auth.user?.role === 'admin') {
-    campus.value = ' - ' + auth.user?.library?.campus.name
+    campus.value = ' - ' + auth.user?.campus.name
   } else if (auth.user?.role === 'super admin') {
     campus.value = ' - Global'
   }
