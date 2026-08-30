@@ -36,7 +36,7 @@ const publicRoute = [
       },
       {
         path: 'collections',
-        name: 'OPAC',
+        name: 'OPAC-old',
         component: () => import('@/app/public/components/library/OpacPage.vue'),
       },
       {
