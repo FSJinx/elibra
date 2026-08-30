@@ -12,9 +12,6 @@ class Item extends Model
 {
     /** @use HasFactory<ItemFactory> */
     use AutoFormatter, HasFactory, SoftDeletes;
-    // protected $hidden = [
-    //     'electronic_file',
-    // ];
 
     protected $fillable = [
         'title',
@@ -38,7 +35,6 @@ class Item extends Model
         'keywords' => 'array',
     ];
 
-    // NOT YET implemented
     public function book()
     {
         return $this->hasOne(Book::class);
@@ -83,4 +79,5 @@ class Item extends Model
     {
         return $this->belongsTo(Language::class);
     }
+
 }

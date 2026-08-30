@@ -10,6 +10,7 @@ use App\Http\Controllers\CampusController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\MediaController;
+use App\Http\Controllers\OpacSearchController;
 use App\Http\Controllers\ProgramsController;
 use App\Http\Controllers\SectionsController;
 use App\Http\Controllers\SerialController;
@@ -35,6 +36,7 @@ Route::group(['prefix' => '/auth'], function () {
 
 // Public Routes
 Route::get('/try', [TestController::class, 'index']);
+Route::get('opac/search', [OpacSearchController::class, 'search']);
 
 // Media Routes
 Route::group(['prefix' => '/media'], function () {
