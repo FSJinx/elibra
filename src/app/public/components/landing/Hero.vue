@@ -1,53 +1,123 @@
 <template>
-  <div class="flex items-center justify-center max-w-6xl h-screen mx-auto">
-    <div class="flex flex-col mb-20">
-      <!-- Hero Header -->
-      <div class="mb-1">
-        <div class="flex justify-center gap-3 mb-5">
-          <img :src="images.isu" alt="" class="h-20 w-20" />
-          <img :src="images.logo" alt="" class="h-20 w-20" />
-        </div>
-        <h1 class="mx-auto text-4xl font-bold text-primary text-center mb-3">Isabela State University - Library Services</h1>
-        <p class="text-center"><span class="text-primary font-bold">e-Libra</span> is the Library Management System of the whole Isabela State University System, offering centralized services for every ISU-1.</p>
+  <div class="relative w-full max-w-[100rem] p-10 my-20 space-y-5 mx-auto">
+    <!-- ISU Header -->
+    <div class="flex flex-col items-center font-baskervville text-center sm:text-3xl">
+      <div class="flex items-center justify-center gap-2 mb-5 sm:mb-7">
+        <img :src="isu" alt="" class="size-15 sm:size-25 z-2 rounded-full" />
+
+        <div class="absolute size-15 sm:size-25 z-1 rounded-full bg-primary/25 blur-md"></div>
       </div>
 
-      <!-- OPAC Form -->
-      <form @submit.prevent="search" class="relative flex items-center px-5 mx-auto mt-5 w-full border border-primary bg-white rounded-full overflow-hidden">
-        <input type="text" class="h-15 pl-2 pr-20 w-full outline-0 whitespace-nowrap text-ellipsis" placeholder="Try typing some keywords to search in our OPAC" v-model="query" />
-        <button type="submit" class="absolute right-0 flex items-center justify-center mr-2 text-center rounded-full h-[80%] w-auto aspect-square bg-primary text-white cursor-pointer"><i class="fi fi-br-search mt-1.5"></i></button>
-      </form>
+      <p class="font-medium text-[75%]">The Online Public Access Catalog (OPAC) of the</p>
 
-      <!-- Suggestion Section -->
-      <div class="flex items-center justify-center gap-2 text-sm mt-5">
-        <span class="font-medium">Try searching for:</span>
-        <template v-for="(i, index) in opacHighlights">
-          <span class="rounded-full bg-slate-50 border border-primary p-1 px-3 text-primary cursor-pointer" @click="searchTopic(i)">{{ i }}</span>
-        </template>
+      <div class="text-[160%] uppercase font-semibold text-green-700 tracking-tight"><span class="text-[125%]">I</span>sabela <span class="text-[125%]">S</span>tate <span class="text-[125%]">U</span>niversity</div>
+    </div>
+
+    <!-- Statement of the System -->
+    <div class="max-w-5xl mx-auto text-center px-5">
+      <Chip class="px-3 rounded-md">e-Libra</Chip>
+      is the official Integrated Library Management System of the Isabela State University. Developed by FSJinx, e-Libra acts as a centralized database for library/academic materials for all Student across the Isabela State Universitys.
+    </div>
+
+    <!-- Search Box -->
+    <div>
+      <Form @submit="search" class="flex h-10 sm:h-16 w-full max-w-4xl mx-auto rounded-xl border border-border focus-within:border-primary focus-within:ring-5 focus-within:ring-primary/20 overflow-hidden transition-all duration-300">
+        <Button class="rounded-none! bg-slate-50 h-full sm:text-lg hover:text-primary" variant="text" left-icon="sliders2"> Advanced </Button>
+
+        <input required id="opac-search" v-model="opac.search" type="text" class="flex-1 px-5 sm:text-lg bg-background leading-0 border-x border-border outline-none" placeholder="Search for title, author, or call number..." autocomplete="off" />
+
+        <Button type="submit" class="rounded-none! bg-slate-50 h-full sm:text-lg hover:text-primary" variant="text" left-icon="search"> Search </Button>
+      </Form>
+
+      <!-- Search Recommendations -->
+      <div class="flex gap-5 items-center max-w-max mx-auto px-5 my-5 text-foreground-secondary">
+        <p class="">You can try searching for:</p>
+
+        <Transition name="search-helper" mode="out-in">
+          <span @click="searchFromQuickSearch" :key="quickSearch" @mouseenter="pauseSearchRotation" @mouseleave="resumeSearchRotation" class="inline-block bg-background border border-border rounded-lg shadow text-sm px-3 py-1 text-primary text-center capitalize cursor-pointer" :data-title="`Click to search ${quickSearch} in the OPAC.`">
+            {{ quickSearch }}
+          </span>
+        </Transition>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import isu from '@/assets/images/isu.png'
 
-const query = ref('')
+let searchIndex = 0
+let searchInterval: ReturnType<typeof setInterval> | null = null
+const quickSearch = ref('')
+const opac = reactive({
+  search: '',
+  campus: '',
+  item_type: '',
+})
+
+const possibleSearches = ['books about programming', 'researches about fish', 'books about Philippine history', 'novels by Filipino authors', 'books about information technology']
 
 function search() {
-  if (!query.value) return
-  router.push({
-    name: 'OPAC',
-    query: {
-      q: query.value,
-      auth: 'user',
-    },
+  return router.push({ name: 'opac', query: opac })
+}
+
+function searchFromQuickSearch() {
+  Object.assign(opac, {
+    search: quickSearch,
   })
+  search()
 }
 
-function searchTopic(topic: string) {
-  query.value = topic
+function nextSearchRecommendation() {
+  quickSearch.value = possibleSearches[searchIndex]
+
+  searchIndex = (searchIndex + 1) % possibleSearches.length
 }
 
-const opacHighlights = ref(['Books for Programming', 'New Fiction Books', 'IT Capstone Projects', 'Research about Accounting'])
+function startSearchRotation() {
+  if (searchInterval) return
+
+  searchInterval = setInterval(() => {
+    nextSearchRecommendation()
+  }, 5000)
+}
+
+function pauseSearchRotation() {
+  if (searchInterval) {
+    clearInterval(searchInterval)
+    searchInterval = null
+  }
+}
+
+function resumeSearchRotation() {
+  startSearchRotation()
+}
+
+onMounted(() => {
+  nextSearchRecommendation()
+  startSearchRotation()
+})
+
+onUnmounted(() => {
+  pauseSearchRotation()
+})
 </script>
 
-<style scoped></style>
+<style scoped>
+.search-helper-enter-active,
+.search-helper-leave-active {
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+.search-helper-enter-from {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.search-helper-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+</style>

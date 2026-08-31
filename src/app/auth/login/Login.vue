@@ -9,7 +9,7 @@
         <h1 class="font-bold text-2xl">Welcome Back!</h1>
         <p class="text-muted text-sm">Login now and continue where we left off</p>
       </div>
-      <Alert v-if="error.message && error.message.length > 0" variant="danger" class="mb-5">{{ error.message }}</Alert>
+      <Alert v-if="error.message" variant="danger" class="mb-5">{{ error.message }}</Alert>
       <!-- Form -->
       <form @submit.prevent="handleSubmit" class="flex flex-col space-y-2">
         <!-- Username -->
@@ -25,7 +25,7 @@
         </Control>
 
         <Button as="link" :to="{ name: '' }" size="sm" variant="text" class="ml-auto text-primary">Forgot password?</Button>
-        <Button variant="primary" type="submit" :disabled="store.loading">Login</Button>
+        <Button variant="primary" type="submit" :loading="store.loading">Login</Button>
       </form>
       <span class="text-sm text-center mt-5">Don't have an account yet? <router-link :to="{ name: '' }" class="text-primary">Create an account.</router-link></span>
     </div>
@@ -36,38 +36,40 @@
 const store = authStore()
 const auth = useAuth()
 
-const error = ref({
-  status: '',
-  message: '',
-  username: '',
-  password: '',
+const error = reactive({
+  status: null,
+  message: null,
+  username: null,
+  password: null,
 })
 
-const credentials = ref({
+const credentials = reactive({
   username: '',
   password: '',
 })
 
 async function handleSubmit() {
-  error.value = {
-    status: '',
-    message: '',
-    username: '',
-    password: '',
-  }
+  Object.assign(error, {
+    status: null,
+    message: null,
+    username: null,
+    password: null,
+  })
 
-  const res = await auth.login({ username: credentials.value.username, password: credentials.value.password })
+  const res = await auth.login({ username: credentials.username, password: credentials.password })
 
   console.log(res)
 
   if (!res.success) {
-    error.value = {
+    Object.assign(error, {
       status: res.data?.status,
-      message: res.data?.message,
-      username: res.data?.data.username,
-      password: res.data?.data.password,
-    }
-    console.log(error.value)
+      message: res.data?.message ?? '',
+      username: res.data?.data?.username ?? null,
+      password: res.data?.data?.password ?? null,
+    })
+    console.log(error)
+  } else {
+    return router.push({ name: res.reroute })
   }
 }
 </script>

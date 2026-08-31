@@ -4,8 +4,8 @@ export function useAuth() {
   const pop = usePopup()
 
   // ========== ACTIONS ===========
-  // ---------- FUNCTION TO GO HOME ----------
-  function goHome() {
+  // ---------- COMPUTED ROUTER LINK THAT RETUNS THE PATH TO USER'S HOME ----------
+  const userHomeLink = computed(() => {
     const routes: Record<string, string> = {
       admin: 'admin',
       librarian: 'librarian',
@@ -13,9 +13,8 @@ export function useAuth() {
       default: 'home',
     }
 
-    const roleKey = (store.user?.role as string) || 'default'
-    return router.push({ name: routes[roleKey] })
-  }
+    return routes[(store.user?.role as string) || 'default']
+  })
 
   // --------- GETS USER  ---------
   async function getUser(): Promise<void> {
@@ -46,17 +45,19 @@ export function useAuth() {
 
       // I-extract ang token batay sa structure ng API mo
       const token = response.data?.data?.token
+      const data = response.data?.data.user
 
       if (!token) {
         throw new Error('Login succeeded but no token was returned.')
       }
 
-      await store.setToken(token)
-      await getUser()
-      await goHome()
+      store.setToken(token)
+      store.setUser(data)
 
-      return { success: true, data: response?.data }
+      return { success: true, data: response?.data, reroute: userHomeLink.value }
     } catch (error: any) {
+      console.log(error.response?.data);
+      
       return { success: false, data: error.response?.data ?? { message: error.message } }
     } finally {
       store.loading = false
@@ -82,7 +83,7 @@ export function useAuth() {
           .finally(() => {
             store.clearUser()
             nextTick(() => {
-              goHome()
+              return router.push({ name: 'home' })
             })
           })
 
@@ -94,7 +95,7 @@ export function useAuth() {
   }
 
   return {
-    goHome,
+    userHomeLink: userHomeLink.value,
     getUser,
     login,
     logout,

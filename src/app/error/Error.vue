@@ -16,15 +16,16 @@
           </div>
 
           <!-- Main Body -->
-          <div class="pt-5 p-5 space-y-3">
+          <div class="p-5 space-y-3">
             <!-- Error Title -->
             <h1 class="text-2xl font-semibold capitalize" v-if="state.title">{{ state.title }}</h1>
 
             <Badge variant="danger" v-if="state.path">Path: {{ state.path }}</Badge>
 
             <!-- Error Message -->
-            <p class="text-muted" v-if="state.message">{{ state.message }}</p>
+            <p class="text-muted-foreground" v-if="state.message">{{ state.message }}</p>
           </div>
+          <p class="text-sm text-foreground-secondary/50">Click outside to close this modal.</p>
         </div>
       </div>
     </Transition>

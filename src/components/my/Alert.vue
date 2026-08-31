@@ -1,6 +1,6 @@
 <template>
-  <div v-if="isVisible" class="flex items-start gap-3 border px-3.5 py-3 rounded-lg my-1 text-sm leading-5" :class="alertClass" role="alert" aria-live="polite">
-    <component :is="alertIcon" class="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+  <div v-if="isVisible" class="flex items-start gap-3 border px-3.5 py-3 rounded-lg my-1 text-sm leading-normal" :class="alertClass" role="alert" aria-live="polite">
+    <component :is="alertIcon" class="mt-0.5 size-5 shrink-0" aria-hidden="true" />
 
     <div class="min-w-0 flex-1">
       <p v-if="title" class="font-semibold leading-5">{{ title }}</p>

@@ -38,10 +38,63 @@
       </section>
     </div>
   </main>
-  +
 </template>
-+
+
 <script setup lang="ts">
-+const route = useRoute(); const key = String(route.name).split('.').pop(); const page = key === 'inventory' ? { title: 'Inventory', description: 'Locate items, verify conditions, and reconcile shelf counts.', action: 'Start stocktake', listTitle: 'Stocktake activity', stats: [{ label: 'Items counted', value: '4,982' }, { label: 'Missing items', value: '18' }, { label: 'Shelves remaining', value: '24' }], tools: ['Scan shelf barcode', 'View missing items', 'Print shelf list'], items: [{ icon: 'boxes', name: 'Main Library · A-01 to A-12', detail: '1,248 items checked today', status: 'Complete' }, { icon: 'search', name: 'Science Wing · B-01 to B-08', detail: 'Next scheduled area', status: 'Pending' }, { icon: 'alert-triangle', name: 'Items requiring review', detail: '18 records need attention', status: 'Review' }] } : key === 'classification' ? { title: 'Classification', description: 'Assign call numbers and maintain the library classification map.', action: 'New classification', listTitle: 'Classification changes', stats: [{ label: 'Active schemes', value: '3' }, { label: 'Pending records', value: '21' }, { label: 'Mapped subjects', value: '486' }], tools: ['Browse Dewey map', 'Review suggestions', 'Import mapping'], items: [{ icon: 'tags', name: 'QA76.73 · Programming', detail: '42 linked catalog records', status: 'Mapped' }, { icon: 'tags', name: 'LB1028 · Education', detail: '8 suggestions waiting', status: 'Review' }, { icon: 'book', name: 'New title batch · 2026-08', detail: '125 items awaiting call numbers', status: 'Pending' }] } : { title: 'Authority Control', description: 'Keep author, subject, and organization headings consistent.', action: 'New authority record', listTitle: 'Authority review queue', stats: [{ label: 'Verified headings', value: '2,418' }, { label: 'Duplicates found', value: '14' }, { label: 'Linked records', value: '5,902' }], tools: ['Find duplicates', 'Browse authors', 'Export headings'], items: [{ icon: 'person', name: 'Murakami, Haruki', detail: '42 linked records · Personal name', status: 'Verified' }, { icon: 'people', name: 'Isabela State University', detail: '9 linked records · Organization', status: 'Verified' }, { icon: 'tag', name: 'Education policy', detail: '18 linked records · Subject', status: 'Review' }] }
-+
+const route = useRoute()
+const key = String(route.name).split('.').pop()
+const page =
+  key === 'inventory'
+    ? {
+        title: 'Inventory',
+        description: 'Locate items, verify conditions, and reconcile shelf counts.',
+        action: 'Start stocktake',
+        listTitle: 'Stocktake activity',
+        stats: [
+          { label: 'Items counted', value: '4,982' },
+          { label: 'Missing items', value: '18' },
+          { label: 'Shelves remaining', value: '24' },
+        ],
+        tools: ['Scan shelf barcode', 'View missing items', 'Print shelf list'],
+        items: [
+          { icon: 'boxes', name: 'Main Library · A-01 to A-12', detail: '1,248 items checked today', status: 'Complete' },
+          { icon: 'search', name: 'Science Wing · B-01 to B-08', detail: 'Next scheduled area', status: 'Pending' },
+          { icon: 'alert-triangle', name: 'Items requiring review', detail: '18 records need attention', status: 'Review' },
+        ],
+      }
+    : key === 'classification'
+      ? {
+          title: 'Classification',
+          description: 'Assign call numbers and maintain the library classification map.',
+          action: 'New classification',
+          listTitle: 'Classification changes',
+          stats: [
+            { label: 'Active schemes', value: '3' },
+            { label: 'Pending records', value: '21' },
+            { label: 'Mapped subjects', value: '486' },
+          ],
+          tools: ['Browse Dewey map', 'Review suggestions', 'Import mapping'],
+          items: [
+            { icon: 'tags', name: 'QA76.73 · Programming', detail: '42 linked catalog records', status: 'Mapped' },
+            { icon: 'tags', name: 'LB1028 · Education', detail: '8 suggestions waiting', status: 'Review' },
+            { icon: 'book', name: 'New title batch · 2026-08', detail: '125 items awaiting call numbers', status: 'Pending' },
+          ],
+        }
+      : {
+          title: 'Authority Control',
+          description: 'Keep author, subject, and organization headings consistent.',
+          action: 'New authority record',
+          listTitle: 'Authority review queue',
+          stats: [
+            { label: 'Verified headings', value: '2,418' },
+            { label: 'Duplicates found', value: '14' },
+            { label: 'Linked records', value: '5,902' },
+          ],
+          tools: ['Find duplicates', 'Browse authors', 'Export headings'],
+          items: [
+            { icon: 'person', name: 'Murakami, Haruki', detail: '42 linked records · Personal name', status: 'Verified' },
+            { icon: 'people', name: 'Isabela State University', detail: '9 linked records · Organization', status: 'Verified' },
+            { icon: 'tag', name: 'Education policy', detail: '18 linked records · Subject', status: 'Review' },
+          ],
+        }
 </script>

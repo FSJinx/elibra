@@ -73,7 +73,7 @@ export const useError = () => {
         return
       }
     } else {
-      auth.goHome()
+      return router.push({ name: auth.userHomeLink })
     }
   }
 

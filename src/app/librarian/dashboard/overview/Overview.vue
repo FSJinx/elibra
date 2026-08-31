@@ -1,4 +1,26 @@
 <template>
+  <header v-if="$route.meta.title" class="shrink-0 p-5">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+      <!-- Page Information -->
+      <div class="min-w-0">
+        <p class="mb-1.5 text-xs font-semibold uppercase tracking-widest text-primary">{{ auth.user?.role }} Desk</p>
+
+        <h1 class="text-2xl font-bold capitalize tracking-tight text-foreground">Good day, {{ auth.user?.first_name }}!</h1>
+
+        <p class="mt-1 max-w-2xl text-sm leading-relaxed text-foreground-secondary">
+          {{ $route.meta.description ?? 'This is the default description for pages.' }}
+        </p>
+      </div>
+
+      <!-- Date -->
+      <div class="flex shrink-0 items-center gap-2 text-foreground-secondary">
+        <Icon icon="calendar" />
+        <time>
+          {{ clock.today }}
+        </time>
+      </div>
+    </div>
+  </header>
   <main class="min-h-full bg-slate-50 p-5 sm:p-7">
     <div class="mx-auto max-w-7xl space-y-6">
       <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label="Collection summary">
@@ -51,10 +73,15 @@
         </aside>
       </section>
     </div>
+
+    <div class="h-screen bg-primary"></div>
   </main>
 </template>
 
 <script setup lang="ts">
+const clock = useClock()
+const auth = authStore()
+
 const metrics = [
   { label: 'Total collection', value: '-', note: 'Awaiting collection data', icon: 'library', iconClass: 'bg-emerald-50 text-emerald-600' },
   { label: 'On loan', value: '-', note: 'Circulation data pending', icon: 'book', iconClass: 'bg-sky-50 text-sky-600' },

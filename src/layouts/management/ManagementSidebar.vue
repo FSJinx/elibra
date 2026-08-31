@@ -15,7 +15,7 @@
         </router-link>
 
         <!-- Navigation Menu -->
-        <nav class="flex-1 overflow-y-auto p-3 space-y-4 scrollbar-thin scrollbar-thumb-transparent hover:scrollbar-thumb-foreground/20 transition-all duration-200">
+        <nav class="flex-1 overflow-y-auto p-3 space-y-5 scrollbar-thin scrollbar-thumb-transparent hover:scrollbar-thumb-foreground/20 transition-all duration-200">
           <div v-for="menu in filteredMenus" :key="menu.name" class="space-y-1">
             <h2 class="px-3 text-xs font-semibold uppercase tracking-wider text-foreground-secondary/70">
               {{ menu.name }}

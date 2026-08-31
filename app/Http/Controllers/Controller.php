@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Services\AuthService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Tymon\JWTAuth\JWTGuard;
 
@@ -23,7 +24,7 @@ abstract class Controller
         return $this->auth()->user();
     }
 
-    protected function response(?string $status = 'success', ?string $message = null, ?array $data = null, int $statusCode = 200)
+    public function response(?string $status = 'success', ?string $message = null, ?array $data = null, int $statusCode = 200)
     {
         return response()->json([
             'status' => $status,
@@ -34,9 +35,12 @@ abstract class Controller
 
     protected function respondWithToken(?string $token)
     {
+        $authService = app(AuthService::class);
+
         return $this->response('success', data: [
             'token' => $token,
             'token_type' => 'bearer',
+            'user' => $authService->index(),
         ]);
     }
 
