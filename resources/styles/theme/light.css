@@ -4,8 +4,8 @@
   *   ========================== */
   /* --background: oklch(98.4% 0.003 247.858); */
   --background: #fff;
-  --secondary: color-mix(in oklab, var(--background) 97%, var(--foreground) 3%);
-  --tertiary: color-mix(in oklab, var(--background) 90%, var(--foreground) 10%);
+  --secondary: var(--color-slate-50);
+  --tertiary: var(--color-slate-100);;
   --inverse: var(--foreground);
 
   --container: var(--white);
@@ -17,7 +17,8 @@
   *   ========================== */
   --foreground: var(--color-slate-900);
   --foreground-secondary: color-mix(in oklab, var(--color-foreground) 50%, var(--color-background) 50%);
-  --muted: var(--color-slate-500);
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
   --link: var(--primary);
 
   /*  ========================== 

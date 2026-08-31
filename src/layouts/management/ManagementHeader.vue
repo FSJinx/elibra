@@ -30,22 +30,28 @@ const parse = useParser()
 
 const subHeading = computed(() => {
   const branch = ref<string>('')
-  if (auth.user?.role === 'librarian') {
+  if (auth.user?.branch) {
     branch.value = auth.user?.branch.name
+  } else {
+    branch.value = 'Not assigned to any branch'
   }
-  return `${branch.value ?? 'Unknown'}, ${parse.toCapital(auth.user?.role || 'Unknown')}`
+  return `${branch.value ?? 'Not assigned to a library branch'}, ${parse.toCapital(auth.user?.role || 'Unknown')}`
 })
 
 const heading = computed(() => {
   const campus = ref<string>('')
 
-  if (auth.user?.role === 'librarian' || auth.user?.role === 'admin') {
-    campus.value = ' - ' + auth.user?.campus.name
-  } else if (auth.user?.role === 'super admin') {
-    campus.value = ' - Global'
+  if (auth.user?.campus) {
+    if (auth.user?.role === 'librarian' || auth.user?.role === 'admin') {
+      campus.value = auth.user?.campus?.name
+    } else if (auth.user?.role === 'super admin') {
+      campus.value = 'Global'
+    }
+  } else {
+    campus.value = 'Not assigned to a campus'
   }
 
-  return 'Isabela State University' + campus.value
+  return 'Isabela State University - ' + campus.value
 })
 </script>
 

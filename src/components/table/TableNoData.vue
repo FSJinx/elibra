@@ -1,5 +1,5 @@
 <template>
-  <tr>
+  <tr class="empty">
     <td class="" :colspan="columns">
       <div class="flex flex-col items-center gap-2 p-10 text-slate-500 mt-50">
         <MessageCircleX class="mb-2" />

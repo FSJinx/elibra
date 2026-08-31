@@ -4,6 +4,7 @@
 @import './theme/index.css';
 @import './z-index.css';
 @import './swal.css';
+@import './table.css';
 @import './animations/index.css';
 @import './transitions/index.css';
 
@@ -41,21 +42,3 @@ body {
   background-color: var(--color-foreground);
   color: var(--color-background);
 } */
-
-@layer components {
-  /* ============ TABLE CELLS ============ */
-  th,
-  td {
-    @apply text-center;
-  }
-  th {
-    @apply px-5 py-3 text-xs font-medium uppercase tracking-wide text-slate-500;
-  }
-
-  td {
-    @apply px-5 py-4 text-sm text-slate-600;
-  }
-  tbody tr {
-    @apply border-b border-border/75 cursor-pointer hover:bg-slate-50 transition-all duration-300;
-  }
-}

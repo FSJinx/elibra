@@ -1,7 +1,7 @@
 <template>
   <div class="flex w-full flex-col gap-1.5">
     <!-- Input Container -->
-    <div class="group relative flex w-full items-center bg-background border transition-all duration-150 min-w-20 rounded-md overflow-hidden focus-within:ring-4" :class="[sizeConfig.container, error && error.length > 0 ? 'border-danger focus-within:border-danger focus-within:ring-danger/20' : 'border-border focus-within:ring-success/25 focus-within:border-primary/50', { 'opacity-60 cursor-not-allowed bg-slate-100': disabled }]">
+    <div class="group relative flex w-full items-center bg-secondary border transition-all duration-150 min-w-20 rounded-md overflow-hidden focus-within:ring-4" :class="[sizeConfig.container, error && error.length > 0 ? 'border-danger focus-within:border-danger focus-within:ring-danger/20' : 'border-border focus-within:ring-success/25 focus-within:border-primary/50', { 'opacity-60 cursor-not-allowed bg-slate-100': disabled }]">
       <!-- Prefix Icon -->
       <span v-if="leftIcon" class="flex items-center justify-center shrink-0 pl-3 text-slate-400">
         <Icon :icon="leftIcon" />

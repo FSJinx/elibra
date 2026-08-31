@@ -17,6 +17,7 @@
   --color-foreground: var(--foreground);
   --color-foreground-secondary: var(--foreground-secondary);
   --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
   --color-link: var(--link);
 
   --color-default: var(--default);

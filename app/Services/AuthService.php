@@ -13,6 +13,7 @@ class AuthService
     public function index()
     {
         $user = auth('api')->user();
+
         $campus = null;
         $branch = null;
 
@@ -20,7 +21,7 @@ class AuthService
             ...$user->toArray(),
         ];
 
-        switch ($user->role) {
+        switch ($user?->role) {
             case 'super admin':
                 break;
 
@@ -28,11 +29,13 @@ class AuthService
             case 'librarian':
                 $librarian = $user->librarian;
 
-                $branch = Branch::where('id', '=', $librarian->branch->id)->first();
-                $campus = Campus::where('id', '=', $librarian->branch->campus->id)->first();
+                if ($librarian) {
+                    $branch = Branch::where('id', '=', $librarian->branch->id)->first();
+                    $campus = Campus::where('id', '=', $librarian->branch->campus->id)->first();
 
-                // Remove nested relationships before converting user to array
-                $user->librarian->unsetRelation('branch');
+                    // Remove nested relationships before converting user to array
+                    $user->librarian->unsetRelation('branch');
+                }
                 break;
 
             case 'patron':

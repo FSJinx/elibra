@@ -1,0 +1,33 @@
+@import 'tailwindcss';
+
+@layer components {
+  /* ============ TABLE CELLS ============ */
+
+  th,
+  td {
+    @apply text-center px-5 py-4 text-sm;
+  }
+
+  th {
+    @apply font-medium uppercase tracking-wide text-slate-500;
+  }
+
+  td {
+    @apply text-slate-600;
+  }
+
+  tbody {
+    @apply divide-y divide-border;
+  }
+
+  tbody tr:not(.empty) {
+    @apply cursor-pointer hover:bg-slate-50;
+  }
+
+  /* tbody tr:not(tr .no-data)
+  {
+    @apply border-b border-border/75 cursor-pointer hover:bg-slate-50 transition-all duration-300;
+  }
+
+  tbody tr: */
+}

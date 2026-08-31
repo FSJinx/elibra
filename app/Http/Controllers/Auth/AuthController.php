@@ -22,9 +22,18 @@ class AuthController extends Controller
     public function refresh()
     {
         try {
+            // Get user data with the current valid token BEFORE refreshing
+            $authService = app(AuthService::class);
+            $userData = $authService->index();
+
+            // Now refresh the token
             $token = $this->auth()->refresh(true, true);
 
-            return $this->respondWithToken($token);
+            return $this->response('success', data: [
+                'token' => $token,
+                'token_type' => 'bearer',
+                'user' => $userData,
+            ]);
         } catch (JWTException $e) {
             return $this->response('error', 'Session expired, please login again.', statusCode: 401);
         }

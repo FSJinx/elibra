@@ -43,8 +43,8 @@ const sizes: Record<Sizes, string> = {
   xs: 'text-xs h-8',
   sm: 'text-sm h-10',
   md: 'text-base h-11',
-  lg: 'text-lg h-14',
-  xl: 'text-xl h-18',
+  lg: 'text-xl h-14 px-5',
+  xl: 'text-2xl h-18 px-6',
 }
 
 const sizeClass = computed(() => sizes[props.size])

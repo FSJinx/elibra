@@ -37,6 +37,7 @@ declare module 'vue' {
     IconButton: typeof import('./my/IconButton.vue')['default']
     Input: typeof import('./form/Input.vue')['default']
     IsuLogo: typeof import('./brand/IsuLogo.vue')['default']
+    Kbd: typeof import('./my/Kbd.vue')['default']
     Label: typeof import('./form/Label.vue')['default']
     Layout: typeof import('./../layouts/management/Layout.vue')['default']
     LinkButton: typeof import('./my/LinkButton.vue')['default']

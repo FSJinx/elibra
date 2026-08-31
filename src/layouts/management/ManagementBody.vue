@@ -1,26 +1,38 @@
 <template>
-  <main class="relative flex-1 flex flex-col overflow-hidden bg-slate-50 transition-all duration-200">
-    <!-- Main Body Content -->
-    <div class="flex-1 flex flex-col overflow-hidden">
-      <!-- Page Heading -->
-      <header class="flex flex-col gap-4 p-2 pb-0 sm:flex-row sm:items-center sm:justify-between" v-if="$route.meta.title">
-        <section class="flex items-end justify-between w-full rounded-xl bg-linear-to-r from-slate-950 to-slate-800 p-5 text-white">
-          <div>
-            <p class="text-xs font-semibold uppercase tracking-wide text-emerald-300 mb-2">{{ auth.user?.role }} Desk</p>
-            <h1 class="text-3xl capitalize font-bold">
+  <main class="relative flex min-h-0 flex-1 flex-col overflow-hidden bg-secondary">
+    <div class="flex min-h-0 flex-1 flex-col overflow-hidden">
+      <!-- Page Header -->
+      <!-- <header v-if="$route.meta.title" class="shrink-0 p-5 ">
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          Page Information
+          <div class="min-w-0">
+            <p class="mb-1.5 text-xs font-semibold uppercase tracking-widest text-primary">{{ auth.user?.role }} Desk</p>
+
+            <h1 class="text-2xl font-bold capitalize tracking-tight text-foreground">
               <template v-if="$route.name && $route.name.toString().includes('overview')"> Good day, {{ auth.user?.first_name }}! </template>
-              <template v-else>{{ $route.meta?.title }}</template>
+
+              <template v-else>
+                {{ $route.meta.title }}
+              </template>
             </h1>
-            <p class="mt-1 max-w-2xl text-sm text-slate-300">{{ $route.meta.description ?? 'This is the default description for pages.' }}</p>
+
+            <p class="mt-1 max-w-2xl text-sm leading-relaxed text-foreground-secondary">
+              {{ $route.meta.description ?? 'This is the default description for pages.' }}
+            </p>
           </div>
 
-          <div class="flex items-center gap-2 text-slate-300">
+          Date
+          <div class="flex shrink-0 items-center gap-2 text-sm text-foreground-secondary">
             <Icon icon="calendar" />
-            <span>{{ clock.today }}</span>
+            <time>
+              {{ clock.today }}
+            </time>
           </div>
-        </section>
-      </header>
-      <div class="flex-1 overflow-y-auto scrollbar-thumb-transparent hover:scrollbar-thumb-foreground/20 transition-all duration-200">
+        </div>
+      </header> -->
+
+      <!-- Page Content -->
+      <div class="min-h-0 flex-1 overflow-y-auto scrollbar-thumb-transparent hover:scrollbar-thumb-foreground/20 transition-all duration-200">
         <router-view />
       </div>
     </div>
@@ -30,8 +42,4 @@
 <script setup lang="ts">
 const auth = authStore()
 const clock = useClock()
-
-useClock()
 </script>
-
-<style scoped></style>
