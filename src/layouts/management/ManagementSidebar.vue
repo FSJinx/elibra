@@ -34,7 +34,7 @@
                 <!-- Active Indicator Bar -->
                 <div class="absolute left-0 bg-primary h-[50%] rounded-r-full transition-all duration-200" :class="[isActive(child.path) ? 'w-1.5' : 'w-0']" />
 
-                <Icon :icon="child.icon" class="text-lg shrink-0" />
+                <Icon :icon="child.icon" class="shrink-0" />
                 <span class="truncate">{{ child.name }}</span>
               </router-link>
             </div>
