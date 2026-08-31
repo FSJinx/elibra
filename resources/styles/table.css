@@ -20,7 +20,7 @@
     @apply divide-y divide-border;
   }
 
-  tbody tr:not(.empty) {
+  tbody tr.hover {
     @apply cursor-pointer hover:bg-slate-50;
   }
 

@@ -1,24 +1,32 @@
 <template>
-  <div class="flex flex-col size-full">
-    <div class="flex items-center justify-between p-5">
-      <div class="">
-        <h5 class="text-2xl font-bold">Item Catalog</h5>
-        <p>Browse the list of items in the library.</p>
+  <div class="flex flex-col size-full bg-background">
+    <!-- Title Page -->
+    <div class="flex items-start justify-between p-5">
+      <div class="space-y-px">
+        <h5 class="text-3xl font-semibold">
+          <Icon icon="journals" />
+          Item Catalog
+        </h5>
+        <div class="space-x-2 text-muted-foreground">
+          <span class="text-sm">Browse the list of items in the library.</span>
+        </div>
       </div>
-      <Button left-icon="plus-lg" variant="primary" as="link" :to="{ name: 'librarian.cataloging.add-new' }"> Add New Item </Button>
     </div>
 
-    <div class="p-5 pt-0">
-      <div class="flex items-center justify-between gap-5 bg-background p-5 rounded-2xl border border-border">
-        <div class="flex items-center gap-3">
-          <Control>
-            <Label id="catalog-query">Search</Label>
-            <Input id="catalog-query" v-model="search" placeholder="Search for an item in the catalog..." class="min-w-100" enable-clear />
-          </Control>
-          <CatalogFilter @filterApplied="filter" />
-        </div>
+    <!-- Statistical Cards -->
+    <CatalogCards />
 
-        <p class="text-sm text-foreground-secondary">{{ items.length }} records</p>
+    <!-- Data Manipulators -->
+    <div class="flex items-center justify-between gap-5 bg-background p-5">
+      <p class="text-sm text-muted-foreground px-3 py-1 bg-muted rounded-full border border-border">{{ items.length }} records</p>
+
+      <div class="flex items-center gap-2">
+        <Control class="gap-5">
+          <Label id="catalog-query">Search</Label>
+          <Input id="catalog-query" v-model="search" placeholder="Search for an item in the catalog..." class="min-w-100" enable-clear />
+        </Control>
+        <CatalogFilter @filterApplied="filter" />
+        <Button left-icon="plus-lg" variant="primary" as="link" :to="{ name: 'librarian.cataloging.add-new' }"> Add New Item </Button>
       </div>
     </div>
 
@@ -34,7 +42,7 @@
       </Thead>
 
       <Tbody :columns="4" :loading="loading" :data="items">
-        <tr v-for="(item, index) in items" :key="item.id">
+        <tr class="hover" v-for="(item, index) in items" :key="item.id" @click="view(item.id)">
           <Td :data="index + 1" />
 
           <Td class="text-left">
@@ -57,6 +65,7 @@
 </template>
 
 <script setup lang="ts">
+import CatalogCards from '@/app/librarian/cataloging/catalog/CatalogCards.vue'
 import CatalogFilter from '@/app/librarian/cataloging/catalog/CatalogFilter.vue'
 
 interface CatalogItem {
@@ -112,6 +121,10 @@ function filter(f: any) {
   })
 
   fetchCatalog()
+}
+
+function view(id: number) {
+  return router.push({ name: 'librarian.cataloging.catalog.view', params: { id: id } })
 }
 
 watchDebounced(search, fetchCatalog, {

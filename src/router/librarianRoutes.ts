@@ -45,11 +45,17 @@ const librarianRoutes = [
             path: 'catalog',
             meta: { breadcrumb: 'Catalog' },
             children: [
+              { path: '', meta: { title: 'Catalog' }, name: 'librarian.cataloging.catalog', component: () => import('@/app/librarian/cataloging/catalog/Catalog.vue') },
               {
-                path: '',
-                meta: { title: 'Catalog' },
-                name: 'librarian.cataloging.catalog',
-                component: () => import('@/app/librarian/cataloging/catalog/Catalog.vue'),
+                path: ':id',
+                name: 'librarian.cataloging.catalog.view',
+                component: () => import('@/app/librarian/cataloging/catalog/ViewCatalog.vue'),
+                children: [
+                  { path: '', meta: { breadcrumb: 'Overview' }, name: 'librarian.cataloging.catalog.view.overview', component: () => import('@/app/librarian/cataloging/catalog/view/Overview.vue') },
+                  { path: 'authors', meta: { breadcrumb: 'Authors' }, name: 'librarian.cataloging.catalog.view.authors', component: () => import('@/app/librarian/cataloging/catalog/view/Authors.vue') },
+                  { path: 'accession', meta: { breadcrumb: 'Accession' }, name: 'librarian.cataloging.catalog.view.accession', component: () => import('@/app/librarian/cataloging/catalog/view/Accession.vue') },
+                  { path: 'acquisition-history', meta: { breadcrumb: 'Acquisition' }, name: 'librarian.cataloging.catalog.view.acquisition', component: () => import('@/app/librarian/cataloging/catalog/view/Acquisition.vue') },
+                ],
               },
               {
                 path: 'add-new',
@@ -58,24 +64,9 @@ const librarianRoutes = [
                 redirect: { name: 'librarian.cataloging.add-new.book' },
                 component: () => import('@/app/librarian/cataloging/catalog/AddCatalog.vue'),
                 children: [
-                  {
-                    path: 'book',
-                    meta: { breadcrumb: 'Book' },
-                    name: 'librarian.cataloging.add-new.book',
-                    component: () => import('@/app/librarian/cataloging/catalog/catalog_forms/Book.vue'),
-                  },
-                  {
-                    path: 'academics',
-                    meta: { breadcrumb: 'Academics' },
-                    name: 'librarian.cataloging.add-new.academics',
-                    component: () => import('@/app/librarian/cataloging/catalog/catalog_forms/Academics.vue'),
-                  },
-                  {
-                    path: 'serials',
-                    meta: { breadcrumb: 'Serials' },
-                    name: 'librarian.cataloging.add-new.serials',
-                    component: () => import('@/app/librarian/cataloging/catalog/catalog_forms/Serials.vue'),
-                  },
+                  { path: 'book', meta: { breadcrumb: 'Book' }, name: 'librarian.cataloging.add-new.book', component: () => import('@/app/librarian/cataloging/catalog/forms/Book.vue') },
+                  { path: 'academics', meta: { breadcrumb: 'Academics' }, name: 'librarian.cataloging.add-new.academics', component: () => import('@/app/librarian/cataloging/catalog/forms/Academics.vue') },
+                  { path: 'serials', meta: { breadcrumb: 'Serials' }, name: 'librarian.cataloging.add-new.serials', component: () => import('@/app/librarian/cataloging/catalog/forms/Serials.vue') },
                 ],
               },
             ],

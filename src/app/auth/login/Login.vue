@@ -7,7 +7,7 @@
           <Logo class="text-4xl" />
         </Button>
         <h1 class="font-bold text-2xl">Welcome Back!</h1>
-        <p class="text-muted text-sm">Login now and continue where we left off</p>
+        <p class="text-muted-foreground text-sm">Login now and continue where we left off</p>
       </div>
       <Alert v-if="error.message" variant="danger" class="mb-5">{{ error.message }}</Alert>
       <!-- Form -->
