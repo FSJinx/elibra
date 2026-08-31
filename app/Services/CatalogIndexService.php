@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Jobs\GenerateCatalogEmbeddingJob;
 use App\Models\CatalogIndex;
 use App\Models\Item;
 
@@ -12,11 +11,13 @@ class CatalogIndexService
     {
         $item->load([
             'authors',
+            'book',
             'academic.department',
             'serial',
             'itemType',
             'itemTypeCategory',
             'branch',
+            'language'
         ]);
 
         if (!$item) {
@@ -38,15 +39,14 @@ class CatalogIndexService
                 'item_type_category_id' => $item->item_type_category_id,
                 'department_id' => $item->academic?->department_id,
                 'publication_year' => $item->publication_year,
-                'language' => $item->language,
+                'language' => $item->language->name,
 
                 'indexed_at' => now(),
             ]
         );
-            // Generate/update embedding after catalog index is created
-            GenerateCatalogEmbeddingJob::dispatch(
-                $catalogIndex->id
-            );
+
+        // Sync CatalogIndex with Meilisearch
+        $catalogIndex->searchable();
 
         return $catalogIndex;
 
@@ -56,12 +56,18 @@ class CatalogIndexService
     {
         $authors = $this->buildAuthors($item);
 
+        $keywords = $item->keywords;
+
+        if (is_array($keywords)) {
+            $keywords = implode(', ', $keywords);
+        }
+
         $content = [
             "Title: {$item->title}",
             "Subtitle: {$item->subtitle}",
             "Description: {$item->description}",
             "Authors: {$authors}",
-            "Keywords: {$item->keywords}",
+            "Keywords: {$keywords}",        
         ];
 
         // Academic
@@ -74,7 +80,7 @@ class CatalogIndexService
 
             $content[] = "Subjects: {$subjects}";
             $content[] = "DOI: {$item->academic->doi}";
-        }
+        }   
 
         // Serial
         if ($item->serial) {
@@ -82,6 +88,12 @@ class CatalogIndexService
             $content[] = "Volume: {$item->serial->volume}";
             $content[] = "Issue: {$item->serial->issue}";
             $content[] = "DOI: {$item->serial->doi}";
+        }
+
+        // Books
+        if ($item->book) {
+            $content[] = "ISSN/ISBN: {$item->book->isbn_issn}";
+            $content[] = "Edition: {$item->book->edition}";
         }
 
         return implode("\n", array_filter($content));
