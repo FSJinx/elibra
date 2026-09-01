@@ -192,6 +192,7 @@ class SerialService
 
         if($deleted){
             CacheService::invalidate(CacheService::SERIALS);
+            CacheService::invalidate(CacheService::ITEMS);
         }
 
         return $deleted;

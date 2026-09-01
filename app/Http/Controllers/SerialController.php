@@ -27,6 +27,15 @@ class SerialController extends Controller
 
         $serials = $this->serialService->index($filters);
 
+        if($serials->isEmpty()){
+            return $this->response(
+                'success',
+                'No serial record found.',
+                [],
+                200
+            );
+        }
+
         return $this->response(
             'success',
             'Serials retrieved successfully',
