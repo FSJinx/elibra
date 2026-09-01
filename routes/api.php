@@ -4,12 +4,16 @@ use App\Http\Controllers\AcademicController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BranchSectionController;
 use App\Http\Controllers\CampusController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\ItemTypeCategoryController;
+use App\Http\Controllers\ItemTypeController;
+use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\OpacSearchController;
 use App\Http\Controllers\ProgramsController;
@@ -35,9 +39,15 @@ Route::group(['prefix' => '/auth'], function () {
     });
 });
 
-// Public Routes
+// Public Routes 
 Route::get('/try', [TestController::class, 'index']);
 Route::get('opac/search', [OpacSearchController::class, 'search'])->middleware('throttle:read');
+
+// Public Routes for Item Types
+Route::get('item-types', [ItemTypeController::class, 'index'])->middleware('throttle:read');
+Route::get('item-type-categories', [ItemTypeCategoryController::class, 'index'])->middleware('throttle:read');
+Route::get('languages', [LanguageController::class, 'index'])->middleware('throttle:read');
+Route::get('authors', [AuthorController::class, 'index'])->middleware('throttle:read');
 
 // Media Routes
 Route::group(['prefix' => '/media'], function () {
