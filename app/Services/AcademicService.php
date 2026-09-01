@@ -196,6 +196,7 @@ class AcademicService
 
         if ($deleted) {
             CacheService::invalidate(CacheService::ACADEMICS);
+            CacheService::invalidate(CacheService::ITEMS);
         }
 
         return $deleted;

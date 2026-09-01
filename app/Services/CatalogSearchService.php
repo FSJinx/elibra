@@ -42,7 +42,7 @@ class CatalogSearchService
             'publication_year',
         ];
 
-        $conditions = [];
+        $conditions = [];   
 
         foreach ($allowedFilters as $field) {
             if (isset($filters[$field])) {

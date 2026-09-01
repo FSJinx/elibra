@@ -2,71 +2,78 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreItemRequest;
-use App\Http\Requests\UpdateItemRequest;
 use App\Models\Item;
+use App\Services\CacheService;
+use App\Services\QueryService;
+use Illuminate\Http\Request;
 
 class ItemController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $branchId = auth('api')->user()->librarian->branch_id;
+        $this->authorize('viewAny', Item::class);
 
-        $items = Item::query()
-            ->where('branch_id', $branchId)
-            ->get(['id', 'title', 'subtitle', 'call_number', 'publication_year']);
+        $user = $request->user();
 
-        return $this->response('success', data: $items->toArray());
-    }
+        $filters = QueryService::filters($request);
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+        $branchId = $user->isSuperAdmin()
+            ? null
+            : $user->librarian->branch_id;
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreItemRequest $request)
-    {
-        //
-    }
+        $parameters = array_merge(
+            $filters,
+            [
+                'branch_id' => $user->isSuperAdmin()
+                    ? 'all'
+                    : $branchId,
+            ]
+        );
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Item $item)
-    {
-        //
-    }
+        $items = CacheService::remember(
+            CacheService::ITEMS,
+            $parameters,
+            now()->addMinutes(10),
+            function () use ($user, $branchId, $filters) {
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Item $item)
-    {
-        //
-    }
+                $query = Item::query();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateItemRequest $request, Item $item)
-    {
-        //
-    }
+                if (!$user->isSuperAdmin()) {
+                    $query->where('branch_id', $branchId);
+                }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Item $item)
-    {
-        //
+                return $query->paginate(
+                    $filters['per_page'],
+                    [
+                        'id',
+                        'title',
+                        'subtitle',
+                        'call_number',
+                        'publication_year',
+                    ],
+                    'page',
+                    $filters['page']
+                );
+            }
+        );
+
+        if ($items->isEmpty()) {
+            return $this->response(
+                'success',
+                'No item can be found.',
+                [],
+                200
+            );
+        }
+
+        return $this->response(
+            'success',
+            'Items retrieved successfully.',
+            $items,
+            200
+        );
     }
 }

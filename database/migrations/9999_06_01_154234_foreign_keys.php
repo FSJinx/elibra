@@ -110,12 +110,12 @@ return new class extends Migration
                 ['name' => 'department_id', 'references' => 'id', 'on' => 'departments', 'onDelete' => 'cascade'],
             ],
         ],
-        [
-            'name' => 'catalog_embeddings',
-            'foreign_columns' => [
-                ['name' => 'catalog_index_id', 'references' => 'id', 'on' => 'catalog_indices', 'onDelete' => 'cascade'],
-            ],
-        ],
+        // [
+        //     'name' => 'catalog_embeddings',
+        //     'foreign_columns' => [
+        //         ['name' => 'catalog_index_id', 'references' => 'id', 'on' => 'catalog_indices', 'onDelete' => 'cascade'],
+        //     ],   
+        // ],
         [
             'name' => 'user_permissions',
             'foreign_columns' => [

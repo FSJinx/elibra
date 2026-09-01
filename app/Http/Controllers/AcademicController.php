@@ -31,6 +31,15 @@ class AcademicController extends Controller
 
         $academics = $this->academicService->index($filters);
 
+        if($academics->isEmpty()){
+            return $this->response(
+                'success',
+                'No Academic record found.',
+                [],
+                200
+            );
+        }
+
         return $this->response(
             'success',
             'Academics retrieved successfully',
@@ -112,7 +121,7 @@ class AcademicController extends Controller
                 null,
                 404
             );
-}
+        }
 
         $this->authorize('delete', $academic);
 

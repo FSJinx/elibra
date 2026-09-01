@@ -14,6 +14,7 @@ class Book extends Model
     protected $fillable = [
         'edition',
         'isbn_issn',
+        'copyright_year',
     ];
 
     public function item()

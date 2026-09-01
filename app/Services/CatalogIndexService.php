@@ -20,9 +20,9 @@ class CatalogIndexService
             'language'
         ]);
 
-        if (!$item) {
-            return null;
-        }
+        // if (!$item) {
+        //     return null;
+        // }
 
         $content = $this->buildContent($item);
 
@@ -39,7 +39,7 @@ class CatalogIndexService
                 'item_type_category_id' => $item->item_type_category_id,
                 'department_id' => $item->academic?->department_id,
                 'publication_year' => $item->publication_year,
-                'language' => $item->language->name,
+                'language' => $item->language?->name,
 
                 'indexed_at' => now(),
             ]

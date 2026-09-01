@@ -28,13 +28,14 @@ class CacheService
 
     public const MEDIA = 'medias';
 
+    public const ITEMS = 'items';
     public const ACADEMICS = 'academics';
-
     public const BOOKS = 'books';
-
     public const SERIALS = 'serials';
 
     public const AUTHORS = 'authors';
+
+    public const OPAC = 'opac';
 
     /**
      * Cache a query using a versioned cache key.

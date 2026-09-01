@@ -46,6 +46,16 @@ class UserService
             'academic.view',
             'academic.update',
             'academic.delete',
+
+            'serial.create',
+            'serial.view',
+            'serial.update',
+            'serial.delete',
+
+            'book.create',
+            'book.view',
+            'book.update',
+            'book.delete',
         ],
         'librarian' => [
             'book.create',

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Jobs\IndexCatalogItemJob;
+use App\Jobs\RemoveCatalogIndexJob;
 use App\Models\Book;
 use App\Models\Item;
 use App\Models\Language;
@@ -17,23 +18,21 @@ class BookService
     public function index(array $filters)
     {
         return CacheService::remember(
-            CacheService::ACADEMICS,
+            CacheService::BOOKS,
             $filters,
             now()->addMinutes(10),
             function () use ($filters) {
 
                 $query = Book::query()
-                    ->with([
-                        'item.language',
-                        'department',
-                    ]);
+                    ->with('item');
 
                 if ($filters['search'] !== '') {
                     $search = $filters['search'];
 
                     $query->where(function ($q) use ($search) {
-                        $q->where('doi', 'like', "%{$search}%")
-                            ->orWhere('subjects', 'like', "%{$search}%")
+                        $q->where('edition', 'like', "%{$search}%")
+                            ->orWhere('isbn_issn', 'like', "%{$search}%")
+                            ->orWhere('copyright_year', 'like', "%{$search}%")
                             ->orWhereHas('item', function ($itemQuery) use ($search) {
                                 $itemQuery
                                     ->where('title', 'like', "%{$search}%")
@@ -52,8 +51,9 @@ class BookService
 
                 $allowedSorts = [
                     'id',
-                    'doi',
-                    'department_id',
+                    'edition',
+                    'isbn_issn',
+                    'copyright_year',
                     'created_at',
                     'updated_at',
                 ];
@@ -144,7 +144,6 @@ class BookService
                     'subtitle',
                     'description',
                     'call_number',
-                    'language',
                     'publication_year',
                     'keywords',
                     'electronic_file',
@@ -157,9 +156,9 @@ class BookService
 
             $book->update(
                 Arr::only($data, [
-                    'subjects',
-                    'doi',
-                    'department_id',
+                    'edition',
+                    'isbn_issn',
+                    'copyright_year',
                 ])
             );
 
@@ -183,7 +182,7 @@ class BookService
             Storage::disk('public')->delete($oldFile);
         }
 
-        CacheService::invalidate(CacheService::ACADEMICS);
+        CacheService::invalidate(CacheService::BOOKS);
 
         return $book;
     }
@@ -191,14 +190,20 @@ class BookService
     public function delete(Book $book): bool
     {
         $deleted = DB::transaction(function () use ($book) {
-            $book->item->delete();
+            $item = $book->item;
+
             $book->delete();
+            $item->delete();
+
+            RemoveCatalogIndexJob::dispatch($item->id)
+                ->afterCommit();
 
             return true;
         });
 
         if ($deleted) {
-            CacheService::invalidate(CacheService::ACADEMICS);
+            CacheService::invalidate(CacheService::BOOKS);
+            CacheService::invalidate(CacheService::ITEMS);
         }
 
         return $deleted;
@@ -211,7 +216,7 @@ class BookService
             $data['electronic_file'] instanceof UploadedFile
         ) {
             $data['electronic_file'] = $data['electronic_file']
-                ->store('item/academics', 'public');
+                ->store('item/books', 'public');
 
             return true;
         }
