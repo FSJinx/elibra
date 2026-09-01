@@ -36,6 +36,8 @@ class CacheService
 
     public const AUTHORS = 'authors';
 
+    public const OPAC = 'opac';
+
     /**
      * Cache a query using a versioned cache key.
      *

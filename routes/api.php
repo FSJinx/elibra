@@ -36,7 +36,7 @@ Route::group(['prefix' => '/auth'], function () {
 
 // Public Routes
 Route::get('/try', [TestController::class, 'index']);
-Route::get('opac/search', [OpacSearchController::class, 'search']);
+Route::get('opac/search', [OpacSearchController::class, 'search'])->middleware('throttle:read');
 
 // Media Routes
 Route::group(['prefix' => '/media'], function () {

@@ -70,7 +70,7 @@ class SerialService
                         $filters['per_page'],
                         ['*'],
                         'page',
-                        $filters['page']
+                        $filters['page']    
                     );
             }
         );
@@ -87,7 +87,7 @@ class SerialService
                     'subtitle', 
                     'description', 
                     'call_number',
-                    'language',
+                    'language_id',
                     'publication_year',
                     'keywords',
                     'electronic_file',
@@ -136,7 +136,7 @@ class SerialService
                     'subtitle', 
                     'description', 
                     'call_number',
-                    'language',
+                    'language_id',
                     'publication_year',
                     'keywords',
                     'electronic_file',
