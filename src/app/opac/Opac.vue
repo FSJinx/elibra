@@ -89,6 +89,13 @@
               <Control>
                 <Input id="params-search" class="flex-1 border-0! rounded-none! shadow-none!" placeholder="Search title, author, subject, or call number..." v-model="params.search" enable-clear />
 
+                <Select id="opac-item-type" class="max-w-max" v-model="params.item_type">
+                  <Option value="">All Item Type</Option>
+                </Select>
+                <Select id="opac-item-type" class="max-w-max" v-model="params.category">
+                  <Option value="">All Categories</Option>
+                </Select>
+
                 <Button type="submit" icon="search" variant="primary">
                   <span class="hidden sm:inline">Search</span>
                 </Button>
@@ -289,6 +296,8 @@ const params = reactive({
   branch: (route.query.branch as string) ?? '',
   sort: (route.query.sort as string) ?? '',
   order: (route.query.order as string) ?? 'asc',
+  item_type: '',
+  category: '',
 })
 
 function search() {
