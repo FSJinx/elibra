@@ -16,6 +16,9 @@ declare global {
   const autoResetRef: typeof import('@vueuse/core').autoResetRef
   const axios: typeof import('./plugins/axios').default
   const backendRoute: typeof import('./plugins/axios').backendRoute
+  const branchStore: typeof import('./stores/branchStore').branchStore
+  const brancheStore: typeof import('./stores/branchStore').brancheStore
+  const branchesStore: typeof import('./stores/branchStore').branchesStore
   const campusStore: typeof import('./stores/campusStore').campusStore
   const computed: typeof import('vue').computed
   const computedAsync: typeof import('@vueuse/core').computedAsync
@@ -62,6 +65,8 @@ declare global {
   const isReadonly: typeof import('vue').isReadonly
   const isRef: typeof import('vue').isRef
   const isShallow: typeof import('vue').isShallow
+  const itemCategoriesStore: typeof import('./stores/itemCategoriesStore').itemCategoriesStore
+  const itemTypeStore: typeof import('./stores/itemTypeStore').itemTypeStore
   const librarianRoutes: typeof import('./router/librarianRoutes').default
   const makeDestructurable: typeof import('@vueuse/core').makeDestructurable
   const mapActions: typeof import('pinia').mapActions
@@ -163,6 +168,9 @@ declare global {
   const useBase64: typeof import('@vueuse/core').useBase64
   const useBattery: typeof import('@vueuse/core').useBattery
   const useBluetooth: typeof import('@vueuse/core').useBluetooth
+  const useBranch: typeof import('./composables/data/useBranch').useBranch
+  const useBranche: typeof import('./composables/data/useBranch').useBranche
+  const useBranches: typeof import('./composables/data/useBranch').useBranches
   const useBreadcrumb: typeof import('./composables/utils/useBreadcrumbs').useBreadcrumb
   const useBreakpoints: typeof import('@vueuse/core').useBreakpoints
   const useBroadcastChannel: typeof import('@vueuse/core').useBroadcastChannel
@@ -224,6 +232,8 @@ declare global {
   const useIntersectionObserver: typeof import('@vueuse/core').useIntersectionObserver
   const useInterval: typeof import('@vueuse/core').useInterval
   const useIntervalFn: typeof import('@vueuse/core').useIntervalFn
+  const useItemCategories: typeof import('./composables/data/useItemCategories').useItemCategories
+  const useItemTypes: typeof import('./composables/data/useItemTypes').useItemTypes
   const useKeyModifier: typeof import('@vueuse/core').useKeyModifier
   const useLastChanged: typeof import('@vueuse/core').useLastChanged
   const useLink: typeof import('vue-router').useLink
@@ -370,6 +380,7 @@ declare module 'vue' {
     readonly autoResetRef: UnwrapRef<typeof import('@vueuse/core')['autoResetRef']>
     readonly axios: UnwrapRef<typeof import('./plugins/axios')['default']>
     readonly backendRoute: UnwrapRef<typeof import('./plugins/axios')['backendRoute']>
+    readonly branchStore: UnwrapRef<typeof import('./stores/branchStore')['branchStore']>
     readonly campusStore: UnwrapRef<typeof import('./stores/campusStore')['campusStore']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
     readonly computedAsync: UnwrapRef<typeof import('@vueuse/core')['computedAsync']>
@@ -415,6 +426,8 @@ declare module 'vue' {
     readonly isReadonly: UnwrapRef<typeof import('vue')['isReadonly']>
     readonly isRef: UnwrapRef<typeof import('vue')['isRef']>
     readonly isShallow: UnwrapRef<typeof import('vue')['isShallow']>
+    readonly itemCategoriesStore: UnwrapRef<typeof import('./stores/itemCategoriesStore')['itemCategoriesStore']>
+    readonly itemTypeStore: UnwrapRef<typeof import('./stores/itemTypeStore')['itemTypeStore']>
     readonly librarianRoutes: UnwrapRef<typeof import('./router/librarianRoutes')['default']>
     readonly makeDestructurable: UnwrapRef<typeof import('@vueuse/core')['makeDestructurable']>
     readonly mapActions: UnwrapRef<typeof import('pinia')['mapActions']>
@@ -514,6 +527,7 @@ declare module 'vue' {
     readonly useBase64: UnwrapRef<typeof import('@vueuse/core')['useBase64']>
     readonly useBattery: UnwrapRef<typeof import('@vueuse/core')['useBattery']>
     readonly useBluetooth: UnwrapRef<typeof import('@vueuse/core')['useBluetooth']>
+    readonly useBranch: UnwrapRef<typeof import('./composables/data/useBranch')['useBranch']>
     readonly useBreadcrumb: UnwrapRef<typeof import('./composables/utils/useBreadcrumbs')['useBreadcrumb']>
     readonly useBreakpoints: UnwrapRef<typeof import('@vueuse/core')['useBreakpoints']>
     readonly useBroadcastChannel: UnwrapRef<typeof import('@vueuse/core')['useBroadcastChannel']>
@@ -575,6 +589,8 @@ declare module 'vue' {
     readonly useIntersectionObserver: UnwrapRef<typeof import('@vueuse/core')['useIntersectionObserver']>
     readonly useInterval: UnwrapRef<typeof import('@vueuse/core')['useInterval']>
     readonly useIntervalFn: UnwrapRef<typeof import('@vueuse/core')['useIntervalFn']>
+    readonly useItemCategories: UnwrapRef<typeof import('./composables/data/useItemCategories')['useItemCategories']>
+    readonly useItemTypes: UnwrapRef<typeof import('./composables/data/useItemTypes')['useItemTypes']>
     readonly useKeyModifier: UnwrapRef<typeof import('@vueuse/core')['useKeyModifier']>
     readonly useLastChanged: UnwrapRef<typeof import('@vueuse/core')['useLastChanged']>
     readonly useLink: UnwrapRef<typeof import('vue-router')['useLink']>

@@ -39,6 +39,12 @@
 
               <Select id="params-branch" title="Branch" v-model="params.branch">
                 <Option value="">All branches</Option>
+
+                <template v-for="item in campusBranches" :key="item.id">
+                  <Option :value="item.id">
+                    {{ item.name }}
+                  </Option>
+                </template>
               </Select>
             </Control>
 
@@ -91,9 +97,21 @@
 
                 <Select id="opac-item-type" class="max-w-max" v-model="params.item_type">
                   <Option value="">All Item Type</Option>
+
+                  <template v-for="item in itemType.itemTypes" :key="item.id">
+                    <Option :value="item.id">
+                      {{ item.name }}
+                    </Option>
+                  </template>
                 </Select>
                 <Select id="opac-item-type" class="max-w-max" v-model="params.category">
                   <Option value="">All Categories</Option>
+
+                  <template v-for="item in itemTypeCategories" :key="item.id">
+                    <Option :value="item.id">
+                      {{ item.name }}
+                    </Option>
+                  </template>
                 </Select>
 
                 <Button type="submit" icon="search" variant="primary">
@@ -285,10 +303,18 @@ import default_book from '@/assets/images/default_book.png'
 import { libraryData } from '@/app/opac/opac_dummy_data'
 
 const campus = campusStore()
+const branch = branchStore()
+const itemType = itemTypeStore()
+const itemCategory = itemCategoriesStore()
+
 const auth = authStore()
 const route = useRoute()
 const router = useRouter()
 const parse = useParser()
+
+const { getItemTypes } = useItemTypes()
+const { getItemCategories } = useItemCategories()
+const { getBranches } = useBranch()
 
 const params = reactive({
   search: (route.query.search as string) ?? '',
@@ -296,9 +322,35 @@ const params = reactive({
   branch: (route.query.branch as string) ?? '',
   sort: (route.query.sort as string) ?? '',
   order: (route.query.order as string) ?? 'asc',
-  item_type: '',
-  category: '',
+  item_type: (route.query.item_type as string) ?? '',
+  category: (route.query.category as string) ?? '',
 })
+
+const campusBranches = computed(() =>
+  branch.branches.filter(
+    item => String(item.campus_id) === String(params.campus)
+  )
+)
+
+const itemTypeCategories = computed(() =>
+  itemCategory.itemCategories.filter(
+    item => String(item.item_type_id) === String(params.item_type)
+  )
+) 
+
+watch(
+  () => params.campus,
+  () => {
+    params.branch = ''
+  }
+)
+
+onMounted(async () => {
+   await getItemTypes()
+   await getItemCategories()
+   await getBranches()
+})
+
 
 function search() {
   router.replace({
@@ -307,6 +359,8 @@ function search() {
       search: params.search || undefined,
       campus: params.campus || undefined,
       branch: params.branch || undefined,
+      item_type: params.item_type || undefined,
+      category: params.category || undefined,
       sort: params.sort || undefined,
       order: params.order || undefined,
     },
@@ -318,6 +372,8 @@ function resetFilters() {
     search: '',
     campus: '',
     branch: '',
+    item_type: '',
+    category: '',
     sort: '',
     order: 'asc',
   })
