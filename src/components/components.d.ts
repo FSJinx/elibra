@@ -33,6 +33,8 @@ declare module 'vue' {
     H6: typeof import('./my/H6.vue')['default']
     H8: typeof import('./my/H6.vue/index.js')['default']
     Header: typeof import('./layout/Header.vue')['default']
+    Hr: typeof import('./my/Hr.vue')['default']
+    HR: typeof import('./my/HR.vue')['default']
     Icon: typeof import('./my/Icon.vue')['default']
     IconButton: typeof import('./my/IconButton.vue')['default']
     Input: typeof import('./form/Input.vue')['default']

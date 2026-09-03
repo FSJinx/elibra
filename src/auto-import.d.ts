@@ -108,6 +108,7 @@ declare global {
   const onUnmounted: typeof import('vue').onUnmounted
   const onUpdated: typeof import('vue').onUpdated
   const onWatcherCleanup: typeof import('vue').onWatcherCleanup
+  const opacSearchStore: typeof import('./stores/opac/opacStore').opacSearchStore
   const patronRoutes: typeof import('./router/patronRoutes').patronRoutes
   const pausableWatch: typeof import('@vueuse/core').pausableWatch
   const provide: typeof import('vue').provide
@@ -471,6 +472,7 @@ declare module 'vue' {
     readonly onUnmounted: UnwrapRef<typeof import('vue')['onUnmounted']>
     readonly onUpdated: UnwrapRef<typeof import('vue')['onUpdated']>
     readonly onWatcherCleanup: UnwrapRef<typeof import('vue')['onWatcherCleanup']>
+    readonly opacSearchStore: UnwrapRef<typeof import('./stores/opac/opacStore')['opacSearchStore']>
     readonly patronRoutes: UnwrapRef<typeof import('./router/patronRoutes')['patronRoutes']>
     readonly pausableWatch: UnwrapRef<typeof import('@vueuse/core')['pausableWatch']>
     readonly provide: UnwrapRef<typeof import('vue')['provide']>
