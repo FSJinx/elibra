@@ -184,21 +184,35 @@
         <!-- Results -->
         <section v-else class="mt-5">
           <!-- Results Header -->
-          <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-4">
-            <div>
-              <p class="text-xs uppercase tracking-widest font-semibold text-foreground-secondary">Search results</p>
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-4">
+          <div>
+            <p class="text-xs uppercase tracking-widest font-semibold text-foreground-secondary">
+              {{ route.query.search ? 'Search results' : 'Library catalog' }}
+            </p>
 
-              <h2 class="mt-1 text-2xl font-semibold tracking-tight">
+            <h2 class="mt-1 text-2xl font-semibold tracking-tight">
+              <template v-if="route.query.search">
                 Results for
-                <span class="text-primary"> "{{ route.query.search }}" </span>
-              </h2>
+                <span class="text-primary">"{{ route.query.search }}"</span>
+              </template>
 
-              <p class="text-sm text-foreground-secondary mt-1">Showing materials matching your search.</p>
-            </div>
+              <template v-else>
+                Explore our library collection
+              </template>
+            </h2>
 
-            <!-- <span class="text-sm text-foreground-secondary"> {{ libraryData.length }} results </span> -->
-             <span class="text-sm text-foreground-secondary"> {{ total }} results </span>
+            <p class="text-sm text-foreground-secondary mt-1" v-if="route.query.search">
+              {{ route.query.search
+                  ? 'Showing materials matching your search.'
+                  : 'Browse books and other materials available in the library.'
+              }}
+            </p>
+            <p v-else>
+              <span>{{ typedText }}</span><span class="animate-pulse">|</span></p>
           </div>
+
+          <span class="text-sm text-foreground-secondary"> {{ total }} results </span>
+        </div>
 
           <!-- Result Cards -->
           <div class="space-y-3">
@@ -334,7 +348,9 @@
 
 <script setup lang="ts">
 import default_book from '@/assets/images/default_book.png'
-// import { libraryData } from '@/app/opac/opac_dummy_data'
+import { useSearchTyping } from '@/composables/data/useSearchTyping'
+
+const { typedText } = useSearchTyping()
 
 const campus = campusStore()
 const branch = branchStore()
