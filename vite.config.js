@@ -23,7 +23,7 @@ export default defineConfig(({ mode }) => {
 
         imports: ['vue', 'vue-router', 'pinia', '@vueuse/core'],
 
-        dirs: ['src/composables/**', 'src/stores/**', 'src/router/*', 'src/assets/images/*', 'src/plugins/*'],
+        dirs: ['src/composables/**', 'src/stores/**', 'src/router/**', 'src/assets/images/*', 'src/plugins/*'],
 
         vueTemplate: true,
       }),

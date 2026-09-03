@@ -38,7 +38,8 @@ body {
   cursor: not-allowed;
 }
 
-/* ::selection {
-  background-color: var(--color-foreground);
-  color: var(--color-background);
-} */
+@layer components {
+  .scroll {
+    @apply scrollbar-thumb-transparent hover:scrollbar-thumb-inverse/30 transition-all duration-200;
+  }
+}

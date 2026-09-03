@@ -1,5 +1,5 @@
 <template>
-  <Button class="max-w-max" left-icon="filter" @click="filterBtn?.open()">Filters</Button>
+  <Button class="max-w-max" left-icon="filter" variant="info" @click="filterBtn?.open()">Filters</Button>
 
   <Modal ref="filterBtn">
     <template #header>
