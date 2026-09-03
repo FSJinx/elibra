@@ -138,7 +138,7 @@
         <!-- ==================== RESULTS ==================== -->
 
         <!-- Empty State -->
-        <section v-if="!route.query.search" class="flex flex-col items-center justify-center min-h-100 mt-5 rounded-2xl border border-dashed border-border text-center px-5">
+        <!-- <section v-if="!route.query.search" class="flex flex-col items-center justify-center min-h-100 mt-5 rounded-2xl border border-dashed border-border text-center px-5">
           <div class="flex items-center justify-center size-16 rounded-2xl bg-primary/10 text-primary mb-5">
             <Icon icon="search" class="text-2xl" />
           </div>
@@ -146,6 +146,39 @@
           <h2 class="text-xl font-semibold">Start your search</h2>
 
           <p class="mt-2 max-w-md text-sm text-foreground-secondary">Search the catalog to discover books, research materials, references, and other resources available in the library.</p>
+        </section> -->
+        <section
+          v-if="loading && route.query.search"
+          class="flex flex-col items-center justify-center min-h-100 mt-5 rounded-2xl border border-dashed border-border text-center px-5"
+        >
+          <div class="flex items-center justify-center size-16 rounded-2xl bg-primary/10 text-primary mb-5">
+            <Icon icon="search" class="text-2xl" />
+          </div>
+
+          <h2 class="text-xl font-semibold">
+            Searching the catalog...
+          </h2>
+
+          <p class="mt-2 text-sm text-foreground-secondary">
+            Please wait while we find matching materials.
+          </p>
+        </section>
+        <section
+          v-else-if="route.query.search && libraryData.length === 0"
+          class="flex flex-col items-center justify-center min-h-100 mt-5 rounded-2xl border border-dashed border-border text-center px-5"
+        >
+          <div class="flex items-center justify-center size-16 rounded-2xl bg-primary/10 text-primary mb-5">
+            <Icon icon="search-x" class="text-2xl" />
+          </div>
+
+          <h2 class="text-xl font-semibold">
+            No results found
+          </h2>
+
+          <p class="mt-2 max-w-md text-sm text-foreground-secondary">
+            We couldn't find any catalog materials matching
+            "{{ route.query.search }}".
+          </p>
         </section>
 
         <!-- Results -->
@@ -163,7 +196,8 @@
               <p class="text-sm text-foreground-secondary mt-1">Showing materials matching your search.</p>
             </div>
 
-            <span class="text-sm text-foreground-secondary"> {{ libraryData.length }} results </span>
+            <!-- <span class="text-sm text-foreground-secondary"> {{ libraryData.length }} results </span> -->
+             <span class="text-sm text-foreground-secondary"> {{ total }} results </span>
           </div>
 
           <!-- Result Cards -->
@@ -173,7 +207,7 @@
               :key="item.id ?? index"
               :to="{
                 name: 'opac.view',
-                params: { id: item.id },
+                params: { id: item.item_id },
               }"
               class="block"
             >
@@ -198,8 +232,8 @@
                         {{ item.title }}
                       </h3>
 
-                      <p class="mt-1 text-sm text-foreground-secondary truncate">
-                        {{ item.title }}
+                      <p v-if="item.subtitle" class="mt-1 text-sm text-foreground-secondary truncate">
+                        {{ item.subtitle }}
                       </p>
                     </div>
 
@@ -210,17 +244,17 @@
                   <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mt-4 text-xs text-foreground-secondary">
                     <span class="inline-flex items-center gap-1.5">
                       <Icon icon="user" />
-                      Robert C. Martin
+                      {{ item.authors?.join(', ') || 'No Author' }}
                     </span>
 
                     <span class="inline-flex items-center gap-1.5">
                       <Icon icon="calendar" />
-                      2008
+                      {{ item.publication_year || 'Unknown Year' }}
                     </span>
 
                     <span class="inline-flex items-center gap-1.5">
                       <Icon icon="building-2" />
-                      Main Campus
+                      {{ item.branch || 'Unknown Branch' }}
                     </span>
                   </div>
                 </div>
@@ -228,7 +262,7 @@
                 <!-- Status -->
                 <div class="hidden sm:block shrink-0 pt-1">
                   <Status class="text-xs capitalize px-3 py-1.5 rounded-full border border-current/30" :variant="parse.status(item.itemType as string)">
-                    {{ item.itemType }}
+                    {{ item.item_type  }}
                   </Status>
                 </div>
               </Card>
@@ -300,7 +334,7 @@
 
 <script setup lang="ts">
 import default_book from '@/assets/images/default_book.png'
-import { libraryData } from '@/app/opac/opac_dummy_data'
+// import { libraryData } from '@/app/opac/opac_dummy_data'
 
 const campus = campusStore()
 const branch = branchStore()
@@ -315,6 +349,14 @@ const parse = useParser()
 const { getItemTypes } = useItemTypes()
 const { getItemCategories } = useItemCategories()
 const { getBranches } = useBranch()
+
+const {
+  results: libraryData,
+  total,
+  loading, 
+  error,
+  search:searchOpac
+} = useOpacSearch()
 
 const params = reactive({
   search: (route.query.search as string) ?? '',
@@ -335,7 +377,7 @@ const campusBranches = computed(() =>
 const itemTypeCategories = computed(() =>
   itemCategory.itemCategories.filter(
     item => String(item.item_type_id) === String(params.item_type)
-  )
+  )   
 ) 
 
 watch(
@@ -345,14 +387,30 @@ watch(
   }
 )
 
-onMounted(async () => {
-   await getItemTypes()
-   await getItemCategories()
-   await getBranches()
-})
+async function fetchResults() {
+  if (!params.search) {
+    libraryData.value = []
+    total.value = 0
+    return
+  }
 
+  try {
+    await searchOpac({
+      q: params.search,
+      campus_id: params.campus || undefined,
+      branch_id: params.branch || undefined,
+      item_type_id: params.item_type || undefined,
+      item_type_category_id: params.category || undefined,
+      sort: params.sort || undefined,
+      order: params.order || undefined,
+      per_page: 10,
+    })
+  } catch {
+    // console.error('Error fetching search results:', error)
+  }
+}
 
-function search() {
+async function search() {
   router.replace({
     name: 'opac',
     query: {
@@ -382,6 +440,39 @@ function resetFilters() {
     name: 'opac',
   })
 }
+
+watch(
+  () => route.query,
+  async query => {
+    params.search = (query.search as string) ?? ''
+
+    params.campus = (query.campus as string) ?? auth.user?.library?.campus?.id ??''
+
+    params.branch = (query.branch as string) ?? ''
+
+    params.item_type = (query.item_type as string) ?? ''
+
+    params.category = (query.category as string) ?? ''
+
+    params.sort = (query.sort as string) ?? ''
+
+    params.order = (query.order as string) ?? 'asc'
+
+    if (params.search.trim()) {
+      await fetchResults()
+    } else {
+      libraryData.value = []
+      total.value = 0
+    }
+  },
+  { immediate: true, deep: true, }
+)
+
+onMounted(async () => {
+   await getItemTypes()
+   await getItemCategories()
+   await getBranches()
+})
 </script>
 
 <style scoped></style>

@@ -20,6 +20,12 @@ class CatalogSearchRequest extends FormRequest
                 'max:255',
             ],
 
+            'campus_id' => [
+                'nullable',
+                'integer',
+                'exists:campuses,id',
+            ],
+
             'branch_id' => [
                 'nullable',
                 'integer',
@@ -50,6 +56,19 @@ class CatalogSearchRequest extends FormRequest
                 'min:1000',
                 'max:9999',
             ],
+
+            'order' => [
+                'nullable',
+                'string',
+                'in:asc,desc',
+            ],
+
+            'sort' => [
+                'nullable',
+                'string',
+                'in:title,author,publisher,publication_year',
+            ],
+            
             'per_page' => [
                 'nullable',
                 'integer',
