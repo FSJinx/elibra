@@ -42,10 +42,9 @@ export const menus = {
     collections: {
       name: 'Cataloging & Collections',
       children: {
-        catalog: { path: 'librarian.cataloging', name: 'Catalog', icon: 'journal-plus' },
-        inventory: { path: 'librarian.collections.inventory', name: 'Inventory', icon: 'boxes' },
-        classification: { path: 'librarian.collections.classification', name: 'Classification', icon: 'tags' },
-        author: { path: 'librarian.collections.author', name: 'Authority Control', icon: 'shield-check' },
+        catalog: { path: 'librarian.catalog', name: 'Catalog', icon: 'journal-plus' },
+        inventory: { path: 'librarian.inventory', name: 'Inventory', icon: 'boxes' },
+        author: { path: 'librarian.author', name: 'Authority Control', icon: 'shield-check' },
       },
     },
 

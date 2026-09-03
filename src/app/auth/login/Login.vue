@@ -35,6 +35,7 @@
 <script setup lang="ts">
 const store = authStore()
 const auth = useAuth()
+const router = useRouter()
 
 const error = reactive({
   status: null,

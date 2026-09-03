@@ -1,4 +1,4 @@
-const publicRoute = [
+export const publicRoute = [
   {
     path: '/',
     name: 'home',
@@ -53,5 +53,3 @@ const publicRoute = [
     ],
   },
 ]
-
-export default publicRoute

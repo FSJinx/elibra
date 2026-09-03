@@ -1,9 +1,8 @@
-```vue
 <template>
-  <div class="relative min-h-screen w-full bg-background">
+  <div class="relative min-h-screen w-full bg-secondary">
     <div class="flex items-start gap-5 mx-auto w-full p-4 lg:p-6">
       <!-- ==================== FILTER SIDEBAR ==================== -->
-      <aside class="hidden xl:block sticky top-22 w-100 shrink-0 p-5 bg-background border border-border rounded-2xl shadow-sm">
+      <aside class="hidden xl:block sticky top-22 w-100 shrink-0 p-5 bg-background border border-border rounded-2xl">
         <div class="flex items-start justify-between">
           <div>
             <p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-foreground-secondary">Filters</p>
@@ -77,7 +76,7 @@
       <!-- ==================== MAIN CONTENT ==================== -->
       <main class="min-w-0 flex-1">
         <!-- Search Header -->
-        <section class="relative overflow-hidden rounded-2xl border border-border bg-background shadow-sm">
+        <section class="relative overflow-hidden rounded-xl border border-border bg-background">
           <!-- Decorative background -->
           <div class="absolute -right-20 -top-20 size-60 rounded-full bg-primary/5 blur-3xl pointer-events-none"></div>
 
@@ -184,11 +183,9 @@
         <!-- Results -->
         <section v-else class="mt-5">
           <!-- Results Header -->
-        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-4">
-          <div>
-            <p class="text-xs uppercase tracking-widest font-semibold text-foreground-secondary">
-              {{ route.query.search ? 'Search results' : 'Library catalog' }}
-            </p>
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 p-6 border border-border rounded-xl bg-background">
+            <div>
+              <p class="text-xs uppercase tracking-widest font-semibold text-foreground-secondary">Search results</p>
 
             <h2 class="mt-1 text-2xl font-semibold tracking-tight">
               <template v-if="route.query.search">
@@ -286,62 +283,7 @@
       </main>
 
       <!-- ==================== SEARCH HISTORY ==================== -->
-      <aside class="hidden 2xl:block sticky top-22 w-100 shrink-0 p-5 bg-background border border-border rounded-2xl shadow-sm">
-        <div>
-          <p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-foreground-secondary">History</p>
-
-          <h2 class="mt-1 text-xl font-semibold tracking-tight">Recent searches</h2>
-        </div>
-
-        <div class="h-px bg-border my-5"></div>
-
-        <!-- History placeholder -->
-        <div class="space-y-1">
-          <button class="w-full flex items-center gap-3 p-3 rounded-lg text-left hover:bg-primary/5 transition-colors group">
-            <span class="flex items-center justify-center size-8 rounded-lg bg-background border border-border">
-              <Icon icon="history" class="text-sm text-foreground-secondary" />
-            </span>
-
-            <span class="flex-1 min-w-0">
-              <span class="block text-sm truncate"> programming </span>
-
-              <span class="block text-xs text-foreground-secondary mt-0.5"> 2 minutes ago </span>
-            </span>
-
-            <Icon icon="arrow-up-right" class="text-foreground-secondary opacity-0 group-hover:opacity-100 transition-opacity" />
-          </button>
-
-          <button class="w-full flex items-center gap-3 p-3 rounded-lg text-left hover:bg-primary/5 transition-colors group">
-            <span class="flex items-center justify-center size-8 rounded-lg bg-background border border-border">
-              <Icon icon="history" class="text-sm text-foreground-secondary" />
-            </span>
-
-            <span class="flex-1 min-w-0">
-              <span class="block text-sm truncate"> Philippine history </span>
-
-              <span class="block text-xs text-foreground-secondary mt-0.5"> Yesterday </span>
-            </span>
-
-            <Icon icon="arrow-up-right" class="text-foreground-secondary opacity-0 group-hover:opacity-100 transition-opacity" />
-          </button>
-
-          <button class="w-full flex items-center gap-3 p-3 rounded-lg text-left hover:bg-primary/5 transition-colors group">
-            <span class="flex items-center justify-center size-8 rounded-lg bg-background border border-border">
-              <Icon icon="history" class="text-sm text-foreground-secondary" />
-            </span>
-
-            <span class="flex-1 min-w-0">
-              <span class="block text-sm truncate"> software engineering </span>
-
-              <span class="block text-xs text-foreground-secondary mt-0.5"> Aug 28 </span>
-            </span>
-
-            <Icon icon="arrow-up-right" class="text-foreground-secondary opacity-0 group-hover:opacity-100 transition-opacity" />
-          </button>
-        </div>
-
-        <button class="w-full mt-4 py-2 text-xs text-foreground-secondary hover:text-danger transition-colors">Clear search history</button>
-      </aside>
+      <OpacHistory />
     </div>
   </div>
 </template>
@@ -351,6 +293,7 @@ import default_book from '@/assets/images/default_book.png'
 import { useSearchTyping } from '@/composables/data/useSearchTyping'
 
 const { typedText } = useSearchTyping()
+import OpacHistory from '@/app/opac/sections/OpacHistory.vue'
 
 const campus = campusStore()
 const branch = branchStore()
@@ -373,6 +316,7 @@ const {
   error,
   search:searchOpac
 } = useOpacSearch()
+const history = opacSearchStore()
 
 const params = reactive({
   search: (route.query.search as string) ?? '',
@@ -489,7 +433,15 @@ onMounted(async () => {
    await getItemCategories()
    await getBranches()
 })
+
+watch(
+  () => route.query.search,
+  (newQuery) => {
+    if (route.query.search !== '') {
+      history.addHistory(params.search)
+    }
+  },
+)
 </script>
 
 <style scoped></style>
-```
