@@ -21,13 +21,13 @@ export const publicRoute = [
       {
         path: '',
         name: 'opac.home',
-        component: () => import('@/app/opac/Opac.vue'),
+        component: () => import('@/app/opac/pages/main/Opac.vue'),
       },
       {
         path: ':id',
         name: 'opac.view',
         meta: { breadcrumb: '' },
-        component: () => import('@/app/opac/OpacView.vue'),
+        component: () => import('@/app/opac/pages/view/OpacView.vue'),
       },
     ],
   },

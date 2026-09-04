@@ -1,14 +1,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 
 export function useSearchTyping() {
-  const searchExamples = [
-    'You can search: books about programming',
-    'You can search: Philippine history',
-    'You can search: artificial intelligence',
-    'You can search: computer science textbooks',
-    'You can search: books about agriculture',
-    'You can search: books by José Rizal',
-  ]
+  const searchExamples = ['books about programming', 'Philippine history', 'artificial intelligence', 'computer science textbooks', 'books about agriculture', 'books by José Rizal']
 
   const typedText = ref('')
 
@@ -46,8 +39,7 @@ export function useSearchTyping() {
 
         deletingTimer = setTimeout(deleteText, 25)
       } else {
-        const nextSentence =
-          searchExamples[Math.floor(Math.random() * searchExamples.length)]
+        const nextSentence = searchExamples[Math.floor(Math.random() * searchExamples.length)]
 
         sentenceTimer = setTimeout(() => {
           typeSentence(nextSentence)
@@ -59,8 +51,7 @@ export function useSearchTyping() {
   }
 
   onMounted(() => {
-    const randomSentence =
-      searchExamples[Math.floor(Math.random() * searchExamples.length)]
+    const randomSentence = searchExamples[Math.floor(Math.random() * searchExamples.length)]
 
     typeSentence(randomSentence)
   })

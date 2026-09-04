@@ -4,7 +4,7 @@
       <slot />
     </span>
 
-    <span class="cursor-pointer" @click="$emit('remove')" v-if="enableRemove">
+    <span class="cursor-pointer" @click="$emit('remove')" v-if="removable">
       <Icon icon="x-circle" />
     </span>
   </span>
@@ -15,12 +15,12 @@ type Variants = 'primary' | 'default' | 'success' | 'danger' | 'warning' | 'info
 
 interface Props {
   variant?: Variants
-  enableRemove?: boolean
+  removable?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   variant: 'primary',
-  enableRemove: false
+  removable: false,
 })
 
 const emit = defineEmits(['remove'])
