@@ -14,7 +14,14 @@ class LanguageController extends Controller
      */
     public function index()
     {
-        //
+        $languages = Language::all();
+
+        return $this->response(
+            'success',
+            'Languages retrieved successfully',
+            $languages->toArray(),
+            200
+        );
     }
 
     /**

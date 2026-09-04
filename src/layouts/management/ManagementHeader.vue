@@ -6,7 +6,10 @@
       <Icon :icon="system.sidebar ? 'x-lg' : 'list'" class="hidden group-hover:block m-auto text-lg transition-all duration-300" />
     </span>
     <div class="inline-flex flex-col ml-3">
-      <h5 class="font-semibold text-lg leading-5">{{ heading }}</h5>
+      <h5 class="font-semibold text-lg leading-5">
+        {{ heading }}
+        <Version />
+      </h5>
       <p class="text-sm font-normal">{{ subHeading }}</p>
     </div>
 

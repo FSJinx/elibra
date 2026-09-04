@@ -22,7 +22,14 @@ class AuthorController extends Controller
      */
     public function index()
     {
-        //
+        $authors = Author::all();
+
+        return $this->response(
+            'success',
+            'Authors retrieved successfully',
+            $authors->toArray(),
+            200
+        );
     }
 
     /**

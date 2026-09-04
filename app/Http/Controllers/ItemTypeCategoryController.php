@@ -14,7 +14,14 @@ class ItemTypeCategoryController extends Controller
      */
     public function index()
     {
-        //
+        $itemTypeCategories = ItemTypeCategory::all();
+
+        return $this->response(
+            'success',
+            'Item Type Categories retrieved successfully',
+            $itemTypeCategories->toArray(),
+            200
+        );
     }
 
     /**

@@ -28,10 +28,10 @@
 const route = useRoute()
 
 const routes = [
-  { name: 'Overview', path: 'librarian.cataloging.catalog.view.overview' },
-  { name: 'Authors', path: 'librarian.cataloging.catalog.view.authors' },
-  { name: 'Accession', path: 'librarian.cataloging.catalog.view.accession' },
-  { name: 'Acquisition History', path: 'librarian.cataloging.catalog.view.acquisition' },
+  { name: 'Overview', path: 'librarian.catalog.view.overview' },
+  { name: 'Authors', path: 'librarian.catalog.view.authors' },
+  { name: 'Accession', path: 'librarian.catalog.view.accession' },
+  { name: 'Acquisition History', path: 'librarian.catalog.view.acquisition' },
 ]
 
 const active = (path: string) => {

@@ -38,5 +38,6 @@ export const campusStore = defineStore('campus', () => {
     setCampuses,
     setCurrentCampus,
     setLoading,
+
   }
 })

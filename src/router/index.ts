@@ -4,13 +4,19 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { authStore } from '@/stores/authStore'
 
 // Route imports
+import { publicRoute } from '@/router/publicRoutes'
+import { authRoute } from '@/router/authRoute'
+import { adminRoutes } from '@/router/adminRoutes'
+import librarianRoutes from '@/router/librarianRoutes'
+import { patronRoutes } from '@/router/patronRoutes'
+import { errorRoutes } from '@/router/errorRoutes'
 
 const router = createRouter({
   // cast import.meta to any to access env in environments where ImportMeta types aren't defined
   history: createWebHistory((import.meta as any).env.BASE_URL),
   routes: [
     // Public Route
-    ...publicRoutes,
+    ...publicRoute,
 
     // Auth
     ...authRoute,
@@ -34,12 +40,8 @@ const router = createRouter({
     // Patron Route
     ...patronRoutes,
 
-    // Error Routes
-    {
-      path: '/:pathMatch(.*)*',
-      name: 'error.404',
-      component: { render: () => null },
-    },
+    // Error Route
+    ...errorRoutes,
   ],
 
   scrollBehavior(to, from, savedPosition) {
@@ -66,8 +68,11 @@ router.beforeEach(async (to, from) => {
   const auth = useAuth()
   const error = useError()
   const preload = usePreloader()
+  const pop = usePopup()
 
   const accessRoles = String(role ?? '')
+
+  pop.load()
 
   // ======== AUTHENTICATED PRELOAD ===========
   if (store.token && !store.isAuthenticated) {
@@ -77,7 +82,7 @@ router.beforeEach(async (to, from) => {
   await preload
 
   if (to.name === 'login' && store.isAuthenticated) {
-    auth.goHome()
+    router.replace({ name: auth.userHomeLink })
   }
 
   if (maintenance) {
@@ -99,6 +104,8 @@ router.beforeEach(async (to, from) => {
   }
 
   document.title = typeof to.meta.title === 'string' ? 'e-Libra: ' + store.user?.role?.charAt(0).toUpperCase() + store.user?.role?.slice(1) + ' | ' + to.meta.title : 'e-Libra: The ISU-1 Library Management and Resource Monitoring System'
+
+  pop.unload()
 })
 
 export default router

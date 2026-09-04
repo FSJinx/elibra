@@ -21,17 +21,6 @@ class OpacSearchController extends Controller
             $request->integer('per_page', 10)
         );
 
-        if($results->isEmpty()) {
-            return response()->json([
-                'status' => 'success',
-                'message' => 'No catalog result found.',
-                'data' => [
-                    'query' => $request->input('q'),
-                    'results' => [],
-                ],
-            ]);
-        }
-
         return response()->json([
             'status' => 'success',
             'message' => 'Search Results Retrieved Successfully!',

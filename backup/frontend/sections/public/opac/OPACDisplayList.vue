@@ -27,7 +27,7 @@
 <script setup>
 import images from 'src/assets/images'
 import Card from '@/components/Card.vue'
-
+  
 defineProps({
   query: String,
 })

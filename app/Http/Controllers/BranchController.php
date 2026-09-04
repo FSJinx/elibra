@@ -32,7 +32,6 @@ class BranchController extends Controller
         $campusId = null;
         $isGuest = is_null($user);
 
-        $campusId = null;
         if ($user && !$user->isSuperAdmin()) {
             $campusId = $user->campus_id;
         } elseif ($user && $request->filled('campus_id')) {
@@ -67,6 +66,7 @@ class BranchController extends Controller
                 } elseif ($isGuest) {
                     
                         $query->select([
+                            'id',
                             'name',
                             'contact_info',
                             'email',
@@ -148,7 +148,7 @@ class BranchController extends Controller
         
     }
 
-    /**
+    /** 
      * Display the specified resource.
      */
     public function show(Branch $branch)

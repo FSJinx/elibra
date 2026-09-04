@@ -20,10 +20,6 @@ class CatalogIndexService
             'language'
         ]);
 
-        // if (!$item) {
-        //     return null;
-        // }
-
         $content = $this->buildContent($item);
 
         $catalogIndex = CatalogIndex::updateOrCreate(
