@@ -4,7 +4,7 @@
     <div class="flex items-center justify-between border-b border-border px-5 py-4" v-if="title">
       <div class="">
         <h2 class="text-lg font-semibold">{{ title }}</h2>
-        <p class="mt-0.5 text-sm text-foreground-secondary">{{ subtitle }}</p>
+        <p class="mt-0.5 text-sm text-foreground-secondary" v-if="subtitle">{{ subtitle }}</p>
       </div>
 
       <p class="text-sm bg-muted/50 text-muted-foreground px-3 py-1 rounded-lg border border-border" v-if="dataLength">{{ dataLength }} records</p>

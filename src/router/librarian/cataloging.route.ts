@@ -1,7 +1,7 @@
 export const librarianCataloging = [
   {
     path: 'catalog',
-    meta: { breadcrumb: 'Catalog' },
+    meta: { title: 'Cataloging & Collections', breadcrumb: 'Catalog' },
     redirect: { name: 'librarian.catalog' },
     children: [
       {
@@ -37,7 +37,8 @@ export const librarianCataloging = [
   {
     path: 'inventory',
     name: 'librarian.inventory',
-    meta: { breadcrumb: 'Inventory' },
+    meta: { title: 'Inventory', breadcrumb: 'Inventory' },
+    component: () => import('@/app/librarian/cataloging/inventory/Inventory.vue'),
   },
   {
     path: 'author',

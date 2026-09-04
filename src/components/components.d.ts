@@ -11,6 +11,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    Accordion: typeof import('./my/Accordion.vue')['default']
     Alert: typeof import('./my/Alert.vue')['default']
     AuthLayout: typeof import('./../layouts/AuthLayout.vue')['default']
     Badge: typeof import('./my/Badge.vue')['default']
