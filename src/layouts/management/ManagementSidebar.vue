@@ -15,14 +15,14 @@
         </router-link>
 
         <!-- Navigation Menu -->
-        <nav class="flex-1 overflow-y-auto px-2 py-5 space-y-5 divide-y divide-border scrollbar-thin scrollbar-thumb-transparent hover:scrollbar-thumb-foreground/20 transition-all duration-200">
-          <div v-for="menu in filteredMenus" :key="menu.name" class="space-y-2">
+        <nav class="flex-1 overflow-y-auto px-2 py-2 space-y-2 divide-y divide-border scrollbar-thin scrollbar-thumb-transparent hover:scrollbar-thumb-foreground/20 transition-all duration-200">
+          <div v-for="menu in filteredMenus" :key="menu.name" class="space-y-2 py-2">
             <h2 class="px-3 text-sm font-semibold uppercase tracking-wider text-foreground">
               {{ menu.name }}
             </h2>
 
             <!-- Menu Children -->
-            <div class="space-y-1 pt-1">
+            <div class="space-y-1">
               <router-link
                 v-for="child in childrenOf(menu.children)"
                 :key="child.path"

@@ -22,7 +22,7 @@ declare global {
   const branchesStore: typeof import('./stores/branchStore').branchesStore
   const campusRoutes: typeof import('./router/admin/campusRoutes').default
   const campusStore: typeof import('./stores/campusStore').campusStore
-  const cataloging: typeof import('./router/librarian/cataloging.route').cataloging
+  const cataloging: typeof import('./router/librarian/collection.route').cataloging
   const computed: typeof import('vue').computed
   const computedAsync: typeof import('@vueuse/core').computedAsync
   const computedEager: typeof import('@vueuse/core').computedEager
@@ -74,7 +74,7 @@ declare global {
   const librarian: typeof import('./router/librarian/acquisition.route').librarian
   const librarianAcquisition: typeof import('./router/librarian/acquisition.route').librarianAcquisition
   const librarianAdministration: typeof import('./router/librarian/administration.route').librarianAdministration
-  const librarianCataloging: typeof import('./router/librarian/cataloging.route').librarianCataloging
+  const librarianCataloging: typeof import('./router/librarian/collection.route').librarianCataloging
   const librarianCircu: typeof import('./router/librarian/circulation.route').librarianCircu
   const librarianCirculation: typeof import('./router/librarian/circulation.route').librarianCirculation
   const librarianDashboard: typeof import('./router/librarian/dashboard.route').librarianDashboard
@@ -450,7 +450,7 @@ declare module 'vue' {
     readonly itemTypeStore: UnwrapRef<typeof import('./stores/itemTypeStore')['itemTypeStore']>
     readonly librarianAcquisition: UnwrapRef<typeof import('./router/librarian/acquisition.route')['librarianAcquisition']>
     readonly librarianAdministration: UnwrapRef<typeof import('./router/librarian/administration.route')['librarianAdministration']>
-    readonly librarianCataloging: UnwrapRef<typeof import('./router/librarian/cataloging.route')['librarianCataloging']>
+    readonly librarianCataloging: UnwrapRef<typeof import('./router/librarian/collection.route')['librarianCataloging']>
     readonly librarianCirculation: UnwrapRef<typeof import('./router/librarian/circulation.route')['librarianCirculation']>
     readonly librarianDashboard: UnwrapRef<typeof import('./router/librarian/dashboard.route')['librarianDashboard']>
     readonly librarianPatron: UnwrapRef<typeof import('./router/librarian/patron.route')['librarianPatron']>

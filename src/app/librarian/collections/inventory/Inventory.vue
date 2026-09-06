@@ -41,7 +41,7 @@
         </Form>
       </div>
 
-      <Table title="Shelf Stocks" :data-length="filteredItems.length">
+      <Table title="Shelf Stocks" subtitle="Verify library materials that are available on-shelf." :data-length="filteredItems.length">
         <Thead>
           <Th>SKU</Th>
           <Th class="text-left">Item</Th>

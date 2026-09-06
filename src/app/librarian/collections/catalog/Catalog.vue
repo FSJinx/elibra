@@ -2,7 +2,7 @@
   <div class="flex flex-col size-full overflow-hidden">
     <SectionHeader title="Catalog" description="Browse all item found in your catalog" icon="journals" class="bg-background border-b border-border">
       <div class="flex items-end gap-2 ml-auto">
-        <Button left-icon="plus-lg" variant="primary" as="link" :to="{ name: 'librarian.catalog.add-new' }"> Add New Item </Button>
+        <Button left-icon="plus-lg" variant="primary" as="link" :to="{ name: 'librarian.collections.catalog.add-new' }"> Add New Item </Button>
       </div>
     </SectionHeader>
 
@@ -40,9 +40,9 @@
 </template>
 
 <script setup lang="ts">
-import CatalogFilter from '@/app/librarian/cataloging/catalog/modals/CatalogFilter.vue'
-import CatalogCards from '@/app/librarian/cataloging/catalog/sections/CatalogCards.vue'
-import CatalogTable from '@/app/librarian/cataloging/catalog/sections/CatalogTable.vue'
+import CatalogFilter from '@/app/librarian/collections/catalog/modals/CatalogFilter.vue'
+import CatalogCards from '@/app/librarian/collections/catalog/sections/CatalogCards.vue'
+import CatalogTable from '@/app/librarian/collections/catalog/sections/CatalogTable.vue'
 
 interface CatalogItem {
   id: number
@@ -78,7 +78,7 @@ async function fetchCatalog() {
       params: { search: search.value, ...catalog },
     })
 
-    items.value = res.data?.data ?? []
+    items.value = res.data?.data?.data ?? []
   } catch (error) {
     console.error('Failed to fetch catalog:', error)
     items.value = []

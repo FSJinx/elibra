@@ -10,7 +10,7 @@
       </tr>
     </Thead>
 
-    <Tbody :columns="4" :loading="loading" :data="data">
+    <Tbody :cols="4" :loading="loading" :data="data">
       <tr class="hover" v-for="(item, index) in data" :key="item.id" @click="view(item.id)">
         <Td :data="(index as number) + 1" />
 

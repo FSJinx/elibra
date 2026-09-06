@@ -1,36 +1,24 @@
 <template>
-  <div class="flex flex-col size-full overflow-hidden p-6 gap-6">
-    <!-- Title Page -->
-    <SectionHeader title="Notifications" description="This are all your notifications." class="p-0!">
-      <div class="flex items-center justify-end gap-2">
-        <Button>Mark all as read</Button>
+  <div class="size-full flex flex-col">
+    <SectionHeader title="Notifications" description="Manage system notices and alerts sent to patrons." icon="bell">
+      <div class="flex items-center justify-end gap-1">
+        <span class="flex items-center gap-3 text-sm mr-3">
+          <Badge variant="danger">25</Badge>
+          Unread Notifications
+        </span>
+        <Select id="filter-date" class="max-w-max">
+          <Option value="">All Notifications</Option>
+          <Option value="day">24 Hours</Option>
+          <Option value="week">Past Week</Option>
+          <Option value="month">Past Month</Option>
+          <Option value="year">Past Year</Option>
+        </Select>
+        <Button icon="envelope-check" data-title="Mark all as read"></Button>
       </div>
     </SectionHeader>
 
-    <Table>
-      <Tbody :data="data" :loading="false" :cols="3">
-        <tr v-for="(item, index) in data" :class="[item.is_Read ? '' : 'bg-primary-soft']">
-          <Td align="left">
-            <p class="font-medium text-lg">{{ item.title }}</p>
-            <p class="">{{ item.description }}</p>
-          </Td>
-          <Td align="right">
-            <span>{{ item.date }}</span>
-            <span class="size-2 bg-danger rounded-full ml-3"></span>
-          </Td>
-        </tr>
-      </Tbody>
-    </Table>
+    <div class="flex-1 flex flex-col p-5 -mt-5 gap-5">
+      <Table :data-length="25"> </Table>
+    </div>
   </div>
 </template>
-
-<script setup lang="ts">
-const data = [
-  { title: 'Added an item', description: 'You added "Spider-man: Brand New Day to the catalog."', date: 'Aug 31, 2026', is_Read: false },
-  { title: 'Added an item', description: 'You added "Spider-man: Brand New Day to the catalog."', date: 'Aug 31, 2026', is_Read: false },
-  { title: 'Added an item', description: 'You added "Spider-man: Brand New Day to the catalog."', date: 'Aug 31, 2026', is_Read: false },
-  { title: 'Added an item', description: 'You added "Spider-man: Brand New Day to the catalog."', date: 'Aug 31, 2026', is_Read: false },
-]
-</script>
-
-<style scoped></style>
