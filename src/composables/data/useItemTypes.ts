@@ -16,6 +16,7 @@ const defaultParams: Readonly<Params> = {
 const url = {
     get: 'item-types',
 }
+
 export function useItemTypes() {
      const store = itemTypeStore()
      const params = reactive<Params>({ ...defaultParams })

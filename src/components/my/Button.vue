@@ -1,5 +1,5 @@
 <template>
-  <component :is="buttonAs" :type="type" class="relative shrink-0 inline-flex items-center font-medium rounded-md gap-3 px-3.5 transition-all duration-100 outline-none tracking-tight leading-0" :class="[btnClass, sizeClass]" :disabled="disabled" @mouseup="($event.currentTarget as HTMLButtonElement).blur()" @click="$emit('click')">
+  <component :is="buttonAs" :type="type" class="relative shrink-0 inline-flex items-center font-medium rounded-md gap-3 transition-all duration-100 outline-none tracking-tight leading-0" :class="[btnClass, sizeClass]" :disabled="disabled" @mouseup="($event.currentTarget as HTMLButtonElement).blur()" @click="$emit('click')">
     <Spinner class="absolute" v-if="loading" />
 
     <Icon :icon="leftIcon" v-if="leftIcon && leftIcon.length > 0" :class="[loading && 'invisible']" />
@@ -41,8 +41,8 @@ const props = withDefaults(defineProps<Props>(), {
 
 const sizes: Record<Sizes, string> = {
   xs: 'text-xs h-8',
-  sm: 'text-sm h-10',
-  md: 'text-base h-11',
+  sm: 'text-sm h-9 px-3',
+  md: 'text-base h-11 px-3.5',
   lg: 'text-xl h-14 px-5',
   xl: 'text-2xl h-18 px-6',
 }

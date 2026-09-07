@@ -2,10 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Author;
+use Illuminate\Auth\Access\Response;
+use App\Models\Authorship;
 use App\Models\User;
 
-class AuthorPolicy
+class AuthorshipPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -18,9 +19,9 @@ class AuthorPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Author $author): bool
+    public function view(User $user, Authorship $authorship): bool
     {
-        return $user->hasPermission('author.view');
+        return false;
     }
 
     /**
@@ -28,29 +29,29 @@ class AuthorPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasPermission('author.create') || $user->isAdmin() || $user->isLibrarian();
+        return false;
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Author $author): bool
+    public function update(User $user, Authorship $authorship): bool
     {
-        return $user->hasPermission('author.update');
+        return false;
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Author $author): bool
+    public function delete(User $user, Authorship $authorship): bool
     {
-        return $user->hasPermission('author.delete');
+        return false;
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Author $author): bool
+    public function restore(User $user, Authorship $authorship): bool
     {
         return false;
     }
@@ -58,7 +59,7 @@ class AuthorPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Author $author): bool
+    public function forceDelete(User $user, Authorship $authorship): bool
     {
         return false;
     }

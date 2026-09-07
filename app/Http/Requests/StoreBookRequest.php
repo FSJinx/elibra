@@ -19,6 +19,7 @@ class StoreBookRequest extends BaseRequest
     public function authorize(): bool
     {
         return $this->user()->can('create', Book::class);
+        // return true;
     }
 
     /**
@@ -29,27 +30,27 @@ class StoreBookRequest extends BaseRequest
     public function rules(): array
     {
         $rules = [
-            //Item Fields
-            'title' => [ 'required', 'string', 'max:255' ],
-            'subtitle' => [ 'nullable', 'string', 'max:255' ],
-            'description' => [ 'nullable', 'string' ],
-            'call_number' => [ 'nullable', 'string', 'max:255', Rule::unique((new Item)->getTable(), 'call_number') ],
-            'language' => [ 'required', 'string', 'max:255' ],
-            'publication_year' => [ 'nullable', 'integer', 'min:1900', 'max:' . date('Y') ],
-            'keywords' => [ 'nullable', 'string' ],
-            'electronic_file' => [ 'nullable', 'file', 'mimes:pdf,doc,docx' ],
-            'item_type_id' => [ 'required', Rule::exists((new ItemType)->getTable(), 'id') ],
-            'item_type_category_id' => [ 'required', Rule::exists((new ItemTypeCategory)->getTable(), 'id') ],
-            'branch_id' => [ 'required', Rule::exists((new Branch())->getTable(), 'id') ],
+            // Item Fields
+            'title' => ['required', 'string', 'max:255'],
+            'subtitle' => ['nullable', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'call_number' => ['nullable', 'string', 'max:255', Rule::unique((new Item)->getTable(), 'call_number')],
+            'language' => ['required', 'string', 'max:255'],
+            'publication_year' => ['nullable', 'integer', 'min:1900', 'max:'.date('Y')],
+            'keywords' => ['nullable', 'string'],
+            'electronic_file' => ['nullable', 'file', 'mimes:pdf,doc,docx'],
+            'item_type_id' => ['required', Rule::exists((new ItemType)->getTable(), 'id')],
+            'item_type_category_id' => ['required', Rule::exists((new ItemTypeCategory)->getTable(), 'id')],
+            'branch_id' => ['required', Rule::exists((new Branch)->getTable(), 'id')],
 
-            //Book Fields
-            'edition' => [ 'required', 'string', 'max:255' ],
-            'isbn_issn' => [ 'required', 'string', 'max:255' ],
-            'copyright_year' => [ 'required', 'string', 'max:255' ],
+            // Book Fields
+            'edition' => ['required', 'string', 'max:255'],
+            'isbn_issn' => ['required', 'string', 'max:255'],
+            'copyright_year' => ['required', 'string', 'max:255'],
 
-            //Authors Field
-            'author_ids' => [ 'nullable', 'array', 'min:1' ],
-            'author_ids.*' => [ 'integer', Rule::exists((new Author)->getTable(), 'id')->whereNull('deleted_at') ],
+            // Authors Field
+            'author_ids' => ['nullable', 'array', 'min:1'],
+            'author_ids.*' => ['integer', Rule::exists((new Author)->getTable(), 'id')->whereNull('deleted_at')],
         ];
 
         return $rules;
@@ -115,5 +116,4 @@ class StoreBookRequest extends BaseRequest
             'author_ids.*.exists' => 'One or more selected authors are invalid or have been deleted.',
         ];
     }
-
 }

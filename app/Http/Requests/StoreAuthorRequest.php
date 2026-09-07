@@ -24,10 +24,10 @@ class StoreAuthorRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'first_name' => [ 'required', 'string', 'max:255' ],
-            'middle_name' => [ 'required', 'string', 'max:255' ],
-            'last_name' => [ 'required', 'string', 'max:255' ],
-            'suffix' => [ 'required', 'string', 'max:10' ],
+            'first_name' => ['required', 'string', 'max:255'],
+            'middle_name' => ['string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'suffix' => ['string', 'max:10'],
         ];
     }
 

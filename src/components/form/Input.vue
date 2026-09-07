@@ -20,6 +20,8 @@
         :readonly="readonly"
         :min="min"
         :max="max"
+        :minlength="min"
+        :maxlength="max"
         :pattern="pattern"
         :autocomplete="autocomplete"
         :spellcheck="spellcheck"
@@ -67,6 +69,11 @@
     <p v-if="error && error.length > 0" class="text-xs font-medium text-danger">
       {{ error }}
     </p>
+
+    <!-- Warning Message -->
+    <p v-if="warning && warning.length > 0" class="text-xs text-warning">
+      {{ warning }}
+    </p>
   </div>
 </template>
 
@@ -103,9 +110,10 @@ interface Props {
   // Display
   leftIcon?: string
   rightIcon?: string
-  error?: string
   size?: Sizes
+  error?: string
   helper?: string
+  warning?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {

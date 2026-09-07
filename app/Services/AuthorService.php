@@ -12,16 +12,15 @@ class AuthorService
     {
         $author = DB::transaction(function () use ($data) {
             return Author::create([
-                Arr::only($data, [
-                    'first_name',
-                    'middle_name',
-                    'last_name',
-                    'suffix',
-                ])
+                'first_name' => $data['first_name'],
+                'last_name' => $data['last_name'],
+                'middle_name' => $data['middle_name'] ?? null,
+                'suffix' => $data['suffix'] ?? null,
             ]);
         });
 
         CacheService::invalidate(CacheService::AUTHORS);
+
         return $author;
     }
 
@@ -34,21 +33,22 @@ class AuthorService
                     'middle_name',
                     'last_name',
                     'suffix',
-                ])
+                ]),
             ]);
-            
+
             CacheService::invalidate(CacheService::AUTHORS);
+
             return $author->fresh();
         });
     }
 
-    public function delete(Author $author): bool 
+    public function delete(Author $author): bool
     {
-        $deleted = DB::transaction(function () use ($author){
+        $deleted = DB::transaction(function () use ($author) {
             return $author->delete();
         });
 
-        if ($deleted){
+        if ($deleted) {
             CacheService::invalidate(CacheService::AUTHORS);
         }
 

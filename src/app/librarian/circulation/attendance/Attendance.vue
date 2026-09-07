@@ -46,7 +46,7 @@
         </Form>
       </Card>
 
-      <Table>
+      <Table title="Attendance Log" subtitle="This is today's recent attendance logs.">
         <Thead>
           <tr>
             <th class="text-left">Patron</th>

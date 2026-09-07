@@ -8,6 +8,12 @@ return new class extends Migration
 {
     private array $tables = [
         [
+            'name' => 'authorships',
+            'foreign_columns' => [
+                ['name' => 'item_type_id', 'references' => 'id', 'on' => 'item_types', 'onDelete' => 'cascade'],
+            ],
+        ],
+        [
             'name' => 'item_type_categories',
             'foreign_columns' => [
                 ['name' => 'item_type_id', 'references' => 'id', 'on' => 'item_types', 'onDelete' => 'cascade'],
@@ -114,7 +120,7 @@ return new class extends Migration
         //     'name' => 'catalog_embeddings',
         //     'foreign_columns' => [
         //         ['name' => 'catalog_index_id', 'references' => 'id', 'on' => 'catalog_indices', 'onDelete' => 'cascade'],
-        //     ],   
+        //     ],
         // ],
         [
             'name' => 'user_permissions',
@@ -135,6 +141,7 @@ return new class extends Migration
             'foreign_columns' => [
                 ['name' => 'author_id', 'references' => 'id', 'on' => 'authors', 'onDelete' => 'cascade'],
                 ['name' => 'item_id', 'references' => 'id', 'on' => 'items', 'onDelete' => 'cascade'],
+                ['name' => 'authorship_id', 'references' => 'id', 'on' => 'authorships', 'onDelete' => 'cascade'],
             ],
         ],
     ];

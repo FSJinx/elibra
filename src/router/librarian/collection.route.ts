@@ -17,6 +17,7 @@ export const librarianCataloging = [
           {
             path: ':id',
             name: 'librarian.collections.catalog.view',
+            redirect: { name: 'librarian.collections.catalog.view.overview' },
             component: () => import('@/app/librarian/collections/catalog/ViewCatalog.vue'),
             children: [
               { path: '', meta: { breadcrumb: 'Overview' }, name: 'librarian.collections.catalog.view.overview', component: () => import('@/app/librarian/collections/catalog/view/Overview.vue') },
@@ -32,7 +33,7 @@ export const librarianCataloging = [
             redirect: { name: 'librarian.collections.catalog.add-new.book' },
             component: () => import('@/app/librarian/collections/catalog/AddCatalog.vue'),
             children: [
-              { path: 'book', meta: { breadcrumb: 'Book' }, name: 'librarian.collections.catalog.add-new.book', component: () => import('@/app/librarian/collections/catalog/forms/Book.vue') },
+              { path: 'book', meta: { breadcrumb: 'Book' }, name: 'librarian.collections.catalog.add-new.book', component: () => import('@/app/librarian/collections/catalog/forms/BookForm.vue') },
               {
                 path: 'academics',
                 meta: { breadcrumb: 'Academics' },
@@ -56,13 +57,28 @@ export const librarianCataloging = [
       // ======== Acquisition ========
       {
         path: 'acquisition',
-        meta: { title: 'Acquisition', breadcrumb: 'Request' },
+        name: 'librarian.collections.acquisition',
+        meta: { title: 'Acquisition', breadcrumb: 'Acquisition' },
+        redirect: { name: 'librarian.collections.acquisition.requests' },
+        component: () => import('@/app/librarian/collections/acquisition/Acquisition.vue'),
         children: [
           {
-            path: 'acquisition',
-            name: 'librarian.collections.acquisition',
-            meta: { title: 'Inventory', breadcrumb: 'Inventory' },
-            component: () => import('@/app/librarian/collections/acquisition/Acquisition.vue'),
+            path: 'requests',
+            name: 'librarian.collections.acquisition.requests',
+            meta: { breadcrumb: 'Requests' },
+            component: () => import('@/app/librarian/collections/acquisition/pages/Requests.vue'),
+          },
+          {
+            path: 'purchases',
+            name: 'librarian.collections.acquisition.purchases',
+            meta: { breadcrumb: 'Purchases' },
+            component: () => import('@/app/librarian/collections/acquisition/pages/Purchases.vue'),
+          },
+          {
+            path: 'donations',
+            name: 'librarian.collections.acquisition.donations',
+            meta: { breadcrumb: 'Donations' },
+            component: () => import('@/app/librarian/collections/acquisition/pages/Donations.vue'),
           },
         ],
       },
