@@ -71,6 +71,7 @@ declare global {
   const isShallow: typeof import('vue').isShallow
   const itemCategoriesStore: typeof import('./stores/itemCategoriesStore').itemCategoriesStore
   const itemTypeStore: typeof import('./stores/itemTypeStore').itemTypeStore
+  const languagesStore: typeof import('./stores/languagesStore').languagesStore
   const librar: typeof import('./router/librarian/administration.route').librar
   const librarian: typeof import('./router/librarian/acquisition.route').librarian
   const librarianAcquisition: typeof import('./router/librarian/acquisition.route').librarianAcquisition
@@ -253,6 +254,7 @@ declare global {
   const useItemCategories: typeof import('./composables/data/useItemCategories').useItemCategories
   const useItemTypes: typeof import('./composables/data/useItemTypes').useItemTypes
   const useKeyModifier: typeof import('@vueuse/core').useKeyModifier
+  const useLanguages: typeof import('./composables/data/useLanguages').useLanguages
   const useLastChanged: typeof import('@vueuse/core').useLastChanged
   const useLink: typeof import('vue-router').useLink
   const useLocalStorage: typeof import('@vueuse/core').useLocalStorage
@@ -454,6 +456,7 @@ declare module 'vue' {
     readonly isShallow: UnwrapRef<typeof import('vue')['isShallow']>
     readonly itemCategoriesStore: UnwrapRef<typeof import('./stores/itemCategoriesStore')['itemCategoriesStore']>
     readonly itemTypeStore: UnwrapRef<typeof import('./stores/itemTypeStore')['itemTypeStore']>
+    readonly languagesStore: UnwrapRef<typeof import('./stores/languagesStore')['languagesStore']>
     readonly librarianAcquisition: UnwrapRef<typeof import('./router/librarian/acquisition.route')['librarianAcquisition']>
     readonly librarianAdministration: UnwrapRef<typeof import('./router/librarian/administration.route')['librarianAdministration']>
     readonly librarianCataloging: UnwrapRef<typeof import('./router/librarian/collection.route')['librarianCataloging']>
@@ -629,6 +632,7 @@ declare module 'vue' {
     readonly useItemCategories: UnwrapRef<typeof import('./composables/data/useItemCategories')['useItemCategories']>
     readonly useItemTypes: UnwrapRef<typeof import('./composables/data/useItemTypes')['useItemTypes']>
     readonly useKeyModifier: UnwrapRef<typeof import('@vueuse/core')['useKeyModifier']>
+    readonly useLanguages: UnwrapRef<typeof import('./composables/data/useLanguages')['useLanguages']>
     readonly useLastChanged: UnwrapRef<typeof import('@vueuse/core')['useLastChanged']>
     readonly useLink: UnwrapRef<typeof import('vue-router')['useLink']>
     readonly useLocalStorage: UnwrapRef<typeof import('@vueuse/core')['useLocalStorage']>

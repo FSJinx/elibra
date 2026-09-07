@@ -24,7 +24,7 @@
             <Label id="book-description">Description</Label>
             <p class="text-sm text-muted-foreground">Abstract or Description of the Book</p>
           </div>
-          <Textarea id="book-description" placeholder="Enter book's description..."></Textarea>
+          <Textarea id="book-description" placeholder="Enter book's description..." v-model="form.description"></Textarea>
         </Control>
         <Control class="control">
           <Label id="book-call_number">Call Number</Label>
@@ -40,16 +40,16 @@
         </Control>
 
         <Control class="control">
-          <Label id="book-edition">Edition</Label>
-          <Input id="book-edition" type="number" placeholder="e.g. 1st ed." />
+          <Label id="book-edition" required>Edition</Label>
+          <Input id="book-edition" type="text" placeholder="e.g. 1st ed." v-model="form.edition" required />
         </Control>
         <Control class="control">
-          <Label id="book-isbn_issn">ISBN_ISSN</Label>
-          <Input id="book-isbn_issn" placeholder="Enter ISBN or ISSN" />
+          <Label id="book-isbn_issn" required>ISBN_ISSN</Label>
+          <Input id="book-isbn_issn" placeholder="Enter ISBN or ISSN" v-model="form.isbn_issn" required />
         </Control>
         <Control class="control">
           <Label id="book-copyright_year">Copyright Year</Label>
-          <Input id="book-copyright_year" placeholder="Enter book's copyright year..." />
+          <Input id="book-copyright_year" placeholder="Enter book's copyright year..." v-model="form.copyright_year" required />
         </Control>
         <Control class="control">
           <Label id="book-doi">DOI</Label>
@@ -57,13 +57,13 @@
         </Control>
 
         <Control class="control">
-          <Label id="book-title" :class="[{ 'mb-auto': form.subjects.length !== 0 }]">Keywords</Label>
-          <div class="flex justify-between gap-2" :class="[form.subjects.length === 0 ? 'items-center' : 'items-start']">
+          <Label id="book-title" :class="[{ 'mb-auto': form.keywords.length !== 0 }]">Keywords</Label>
+          <div class="flex justify-between gap-2" :class="[form.keywords.length === 0 ? 'items-center' : 'items-start']">
             <div class="flex flex-wrap gap-2">
-              <p class="text-muted-foreground" v-if="form.subjects.length === 0">No topical subjects yet.</p>
-              <Chip v-for="keyword in form.subjects" removable @remove="removeSubject(keyword)" v-else>{{ keyword }}</Chip>
+              <p class="text-muted-foreground" v-if="form.keywords.length === 0">No topical keywords yet.</p>
+              <Chip v-for="keyword in form.keywords" removable @remove="removeSubject(keyword)" v-else>{{ keyword }}</Chip>
             </div>
-            <SubjectModal v-model="form.subjects" />
+            <SubjectModal v-model="form.keywords" />
           </div>
         </Control>
       </div>
@@ -79,17 +79,17 @@
 
       <div class="divide-y divide-border">
         <Control class="control">
-          <Label id="book-item_type_category_id">Category</Label>
-          <Select id="book-item_type_category_id" class="capitalize" required>
+          <Label id="book-item_type_category_id" required>Category</Label>
+          <Select id="book-item_type_category_id" class="capitalize" v-model="form.item_type_category_id" required>
             <Option value="" disabled>Select a category</Option>
             <Option class="capitalize" :value="category.id" v-for="category in categories">{{ category.name }}</Option>
           </Select>
         </Control>
         <Control class="control">
           <Label id="book-language">Language</Label>
-          <Select id="book-language" class="capitalize">
+          <Select id="book-language" class="capitalize" v-model="form.language_id">
             <Option value="" disabled>Select a language</Option>
-            <Option class="capitalize" :value="category.id" v-for="category in categories">{{ category.name }}</Option>
+            <Option class="capitalize" :value="language.id" v-for="language in languages">{{ language.name }}</Option>
           </Select>
         </Control>
       </div>
@@ -139,15 +139,15 @@ interface Form {
   title: string
   subtitle: string | null
   description: string | null
-  call_number: string 
+  call_number: string
   publication_year: string
   electronic_file: string | null
-  subjects: string[]
+  keywords: string[]
 
   // Classification
-  item_type_category_id: number | null
+  item_type_category_id: string
   branch_id: number | null
-  language_id: number | null
+  language_id: string
 
   edition: string
   isbn_issn: string
@@ -157,21 +157,21 @@ interface Form {
 }
 
 const emptyForm = (): Form => ({
-  title: '',
+  title: 'Noli Me Tangere',
   subtitle: null,
-  description: null,
-  call_number: '',
-  publication_year: '',
+  description: 'This is it pancit',
+  call_number: 'Riz.192a',
+  publication_year: '1992',
   electronic_file: null,
-  subjects: [],
-  
-  item_type_category_id: null,
+  keywords: [],
+
+  item_type_category_id: '',
   branch_id: null,
-  language_id: null,
-  
-  edition: '',
-  isbn_issn: '',
-  copyright_year: '',
+  language_id: '',
+
+  edition: '1st ed.',
+  isbn_issn: '1283hdkdaf02',
+  copyright_year: '1992',
   doi: '',
   authors: [],
 })
@@ -179,6 +179,8 @@ const emptyForm = (): Form => ({
 const { itemCategories } = itemCategoriesStore()
 const { itemTypes } = itemTypeStore()
 const { authorships } = authorshipStore()
+const { languages } = languagesStore()
+
 const pop = usePopup()
 const auth = authStore()
 
@@ -206,21 +208,23 @@ const bookId = computed(() => {
 })
 
 async function removeSubject(key: string) {
-  const res = await pop.confirm({ text: `Are you sure you want to remove "${key}" from subjects?` })
+  const res = await pop.confirm({ text: `Are you sure you want to remove "${key}" from keywords?` })
   if (res.isConfirmed) {
-    form.subjects = form.subjects.filter((i) => i !== key)
+    form.keywords = form.keywords.filter((i) => i !== key)
   }
 }
 
 async function submitForm() {
-  const res = await pop.confirm({text: 'Are you sure you have confirmed the inputs before submitting?'})
+  const res = await pop.confirm({ text: 'Are you sure you have confirmed the inputs before submitting?' })
 
   if (res.isConfirmed) {
-    // pop.load()
-    console.log({...form, branch_id: auth.user?.id, item_type_id: bookId.value});
-    
+    pop.load()
+    console.log({ ...form, branch_id: auth.user?.id, item_type_id: bookId.value })
 
-    // await api.post('item/create/book', {params: {...form, branch_id: auth.user?.id, item_type_id: bookId.value}})
+    try {
+      await api.post('item/create/book', { ...form, branch_id: auth.user?.id, item_type_id: bookId.value })
+      pop.success('Book added successfully!')
+    } catch {}
   }
 }
 

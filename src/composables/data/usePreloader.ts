@@ -5,6 +5,7 @@ export async function usePreloader() {
   const item_type = useItemTypes()
   const category = useItemCategories()
   const authorship = useAuthorship()
+  const language = useLanguages()
 
   try {
     // ======== PUBLIC PRELOAD ===========
@@ -13,6 +14,7 @@ export async function usePreloader() {
     item_type.getItemTypes()
     category.getItemCategories()
     authorship.getAuthorships()
+    language.getLanguages()
   } catch (err) {
     throw err
   }

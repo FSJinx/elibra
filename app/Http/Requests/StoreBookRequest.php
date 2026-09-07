@@ -8,6 +8,7 @@ use App\Models\Branch;
 use App\Models\Item;
 use App\Models\ItemType;
 use App\Models\ItemTypeCategory;
+use App\Models\Language;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Validation\Rule;
 
@@ -18,8 +19,11 @@ class StoreBookRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('create', Book::class);
-        // return true;
+        $user = $this->user();
+
+        // return $this->user()->can('create', Book::class);
+        // return $user->isLibrarian();
+        return $user->hasPermission('book.create') && $user->isLibrarian();
     }
 
     /**
@@ -35,9 +39,9 @@ class StoreBookRequest extends BaseRequest
             'subtitle' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'call_number' => ['nullable', 'string', 'max:255', Rule::unique((new Item)->getTable(), 'call_number')],
-            'language' => ['required', 'string', 'max:255'],
+            'language_id' => ['required', Rule::exists((new Language)->getTable(), 'id')],
             'publication_year' => ['nullable', 'integer', 'min:1900', 'max:'.date('Y')],
-            'keywords' => ['nullable', 'string'],
+            'keywords' => ['nullable', 'array'],
             'electronic_file' => ['nullable', 'file', 'mimes:pdf,doc,docx'],
             'item_type_id' => ['required', Rule::exists((new ItemType)->getTable(), 'id')],
             'item_type_category_id' => ['required', Rule::exists((new ItemTypeCategory)->getTable(), 'id')],
@@ -73,15 +77,15 @@ class StoreBookRequest extends BaseRequest
             'call_number.max' => 'The call number may not be greater than 255 characters.',
             'call_number.unique' => 'The call number has already been taken.',
 
-            'language.required' => 'The language is required.',
-            'language.string' => 'The language must be a string.',
-            'language.max' => 'The language may not be greater than 255 characters.',
+            // 'language_id.required' => 'The language is required.',
+            // 'language_id.string' => 'The language must be a string.',
+            // 'language_id.max' => 'The language may not be greater than 255 characters.',
 
             'publication_year.integer' => 'The publication year must be a valid year.',
             'publication_year.min' => 'The publication year must not be earlier than 1900.',
             'publication_year.max' => 'The publication year cannot be greater than the current year.',
 
-            'keywords.string' => 'The keywords must be a string.',
+            'keywords.array' => 'The keywords must be an array.',
 
             'electronic_file.file' => 'The electronic file must be a valid file.',
             'electronic_file.mimes' => 'The electronic file must be a PDF, DOC, or DOCX file.',

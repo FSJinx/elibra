@@ -3,7 +3,7 @@
     <!-- Back Navigation -->
     <div class="px-5 py-3">
       <Button :to="{ name: 'librarian.collections.catalog' }" as="link" variant="text" class="gap-3" icon="arrow-left">
-        <span>Back to catalog</span>
+        <span>Back to Catalog</span>
       </Button>
     </div>
 
