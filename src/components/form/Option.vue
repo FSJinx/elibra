@@ -34,9 +34,21 @@ const isSelected = computed(() => {
   return select.model?.value === props.value || select.selectedOption?.value === props.value || props.selected
 })
 
-onMounted(() => {
-  if (select.selectedOption.value === props.value) {
-    select.setSelected(props.value, labelText.value)
+const isValueMatch = (left: any, right: any) => {
+  if (left == null || right == null) {
+    return left === right
   }
-})
+
+  return String(left) === String(right)
+}
+
+watch(
+  [() => select?.model?.value, labelText],
+  ([modelValue, label]) => {
+    if (isValueMatch(modelValue, props.value) && label) {
+      select.setSelected(props.value, label)
+    }
+  },
+  { immediate: true },
+)
 </script>

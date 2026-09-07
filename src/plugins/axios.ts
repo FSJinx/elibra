@@ -36,8 +36,6 @@ api.interceptors.response.use(
     const status = error.response?.status
     const response = error.response?.data
 
-    console.log(response)
-
     if (status === 401) {
       if (refreshed) {
         my.clearUser()
@@ -76,10 +74,15 @@ api.interceptors.response.use(
     //   pop.error(response?.message)
     // }
 
-    // if (status === 422) {
-    //   pop.unload()
-    //   pop.error(response?.message)
-    // }
+    if (status === 422) {
+      pop.unload()
+
+      const errors = response.errors
+      const firstErrorMessage = Object.values(errors as object)[0][0]
+      console.log(firstErrorMessage)
+
+      pop.error(firstErrorMessage ?? response?.message)
+    }
 
     if (status === 500) {
       pop.error('Server error, please try again later.')

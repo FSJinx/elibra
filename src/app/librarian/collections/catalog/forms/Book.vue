@@ -45,8 +45,9 @@ const emptyForm = (): Form => ({
   electronic_file: null,
   keywords: [],
 
-  item_type_category_id: '',
-  branch_id: auth.user?.role === 'librarian' ? auth.user?.branch?.id : '',
+  item_type_category_id: '10',
+  branch_id: '',
+  // branch_id: auth.user?.role === 'librarian' ? auth.user?.branch?.id : '',
   language_id: '',
 
   edition: '1st',
@@ -110,7 +111,7 @@ async function submitForm() {
     } catch (e: any) {
       const res = e.response.data
       console.log(res.errors)
-      await pop.error(res.message)
+      // await pop.error(res.errors?.[0])
       errors.value = res.errors
     }
   }
