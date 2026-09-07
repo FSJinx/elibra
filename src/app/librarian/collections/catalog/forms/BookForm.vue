@@ -28,15 +28,15 @@
         </Control>
         <Control class="control">
           <Label id="book-call_number">Call Number</Label>
-          <Input id="book-call_number" placeholder="Enter book's call number..." />
+          <Input id="book-call_number" placeholder="Enter book's call number..." v-model="form.call_number" />
         </Control>
         <Control class="control">
           <Label id="book-publication_year">Publication Year</Label>
-          <Input id="book-publication_year" type="number" placeholder="Enter book's publication year..." />
+          <Input id="book-publication_year" type="number" placeholder="Enter book's publication year..." v-model="form.publication_year" />
         </Control>
         <Control class="control">
           <Label id="book-electronic_file">Electronic File</Label>
-          <InputFile id="book-electronic_file" />
+          <InputFile id="book-electronic_file" v-model="form.electronic_file" />
         </Control>
 
         <Control class="control">
@@ -53,7 +53,7 @@
         </Control>
         <Control class="control">
           <Label id="book-doi">DOI</Label>
-          <Input id="book-doi" placeholder="Enter book's DOI" />
+          <Input id="book-doi" placeholder="Enter book's DOI" v-model="form.doi" />
         </Control>
 
         <Control class="control">
@@ -141,7 +141,7 @@ interface Form {
   description: string | null
   call_number: string
   publication_year: string
-  electronic_file: string | null
+  electronic_file: File[] | null
   keywords: string[]
 
   // Classification
