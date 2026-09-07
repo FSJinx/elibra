@@ -42,4 +42,10 @@ export interface AcademicField {
   department_id?: any
 }
 
-export interface SerialField {}
+export interface SerialField {
+  isbn_issn: string
+  volume: string
+  issue: string
+  pages: string
+  doi: string
+}

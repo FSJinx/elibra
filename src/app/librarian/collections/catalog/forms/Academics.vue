@@ -6,6 +6,7 @@
     <BaseForm v-model="form" :errors="errors" />
 
     <!-- ACADEMIC INFORMATION -->
+    <AcademicForm v-model="form" :errors="errors" />
 
     <!-- CLASSIFICATION -->
     <ClassificationForm v-model="form" :errors="errors" :item_type_id="bookId" />
@@ -26,6 +27,7 @@ import AuthorForm from '@/app/librarian/collections/catalog/forms/sections/Autho
 import BaseForm from '@/app/librarian/collections/catalog/forms/sections/BaseForm.vue'
 import ClassificationForm from '@/app/librarian/collections/catalog/forms/sections/ClassificationForm.vue'
 import type { AcademicField, AuthorField, BaseField, ClassficationField } from '@/app/librarian/collections/catalog/forms/form'
+import AcademicForm from '@/app/librarian/collections/catalog/forms/sections/AcademicForm.vue'
 
 interface Form extends BaseField, AcademicField, ClassficationField, AuthorField {}
 
@@ -106,7 +108,7 @@ async function submitForm() {
 
     try {
       await api.post('item/create/academic', { ...form, item_type_id: bookId.value })
-      pop.success('Book added successfully!')
+      pop.success('Academic added successfully!')
       router.replace({ name: 'librarian.collections.catalog' })
     } catch (e: any) {
       const res = e.response.data

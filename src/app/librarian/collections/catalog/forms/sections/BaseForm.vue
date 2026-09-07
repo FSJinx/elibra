@@ -13,14 +13,14 @@
       </Control>
       <Control class="control">
         <Label id="book-subtitle" class="mb-auto">Subtitle</Label>
-        <Textarea id="book-subtitle" placeholder="Enter book's subtitle..." v-model="form.subtitle" :error="errors.subtitle" />
+        <Textarea id="book-subtitle" placeholder="Enter book's subtitle..." v-model="form.subtitle" :error="errors.subtitle?.[0]" />
       </Control>
       <Control class="control">
         <div class="w-75 mb-auto p-2 pl-0">
           <Label id="book-description">Description</Label>
           <p class="text-sm text-muted-foreground">Abstract or Description of the Book</p>
         </div>
-        <Textarea id="book-description" placeholder="Enter book's description..." v-model="form.description" :error="errors.description"></Textarea>
+        <Textarea id="book-description" placeholder="Enter book's description..." v-model="form.description" :error="errors.description?.[0]"></Textarea>
       </Control>
       <Control class="control">
         <Label id="book-call_number">Call Number</Label>
@@ -28,12 +28,11 @@
       </Control>
       <Control class="control">
         <Label id="book-publication_year">Publication Year</Label>
-        <Input id="book-publication_year" type="number" placeholder="Enter book's publication year..." v-model="form.publication_year" :error="errors.publication_year" />
+        <Input id="book-publication_year" type="number" placeholder="Enter book's publication year..." v-model="form.publication_year" :error="errors.publication_year?.[0]" />
       </Control>
       <Control class="control">
         <Label id="book-electronic_file" >Electronic File</Label>
-        <InputFile id="book-electronic_file" v-model="form.electronic_file" />
-        <p class="text-sm text-danger">{{ errors.electronic_file }}</p>
+        <InputFile id="book-electronic_file" v-model="form.electronic_file" :error="errors.electronic_file?.[0]"/>
       </Control>
 
       <Control class="control">
@@ -45,7 +44,7 @@
           </div>
           <SubjectModal v-model="form.keywords" />
         </div>
-        <p class="text-danger text-sm" v-if="errors.keywords"></p>
+        <p class="text-danger text-sm" v-if="errors.keywords?.[0]"></p>
       </Control>
     </div>
   </section>
