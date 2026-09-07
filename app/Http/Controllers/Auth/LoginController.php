@@ -15,7 +15,13 @@ class LoginController extends Controller
             'password' => 'required',
         ]);
 
-        $user = User::query()->where('username', '=', $credentials['username'])->orWhere('email', $credentials['username'])->first();
+        // $user = User::query()->where('username', '=', $credentials['username'])->orWhere('email', $credentials['username'])->first();
+
+        // Case-sensitive username and email check
+        $user = User::query()
+            ->whereRaw('BINARY username = ?', [$credentials['username']])
+            ->orWhereRaw('BINARY email = ?', [$credentials['username']])
+            ->first();
 
         // Returns if username is not found in the system
         if (! $user) {
