@@ -85,7 +85,7 @@ interface Props {
   // Display
   leftIcon?: string
   size?: Sizes
-  error?: string
+  error?: string | null
   helper?: string
   warning?: string
 }

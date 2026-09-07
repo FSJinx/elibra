@@ -20,9 +20,11 @@ class StoreBookRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-            $user = $this->user();
+        $user = $this->user();
 
-            return $user->hasPermission('book.create') && $user->isLibrarian() || $user->isAdmin();
+        return
+            $user->hasPermission('book.create') && ($user->isLibrarian() && $user->librarian->branch) ||
+            $user->isAdmin();
 
     }
 
@@ -38,7 +40,7 @@ class StoreBookRequest extends BaseRequest
             'title' => ['required', 'string', 'max:255'],
             'subtitle' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'call_number' => ['nullable', 'string', 'max:255', Rule::unique((new Item)->getTable(), 'call_number')],
+            'call_number' => ['nullable', 'string', 'max:255'],
             'language_id' => ['required', Rule::exists((new Language)->getTable(), 'id')],
             'publication_year' => ['nullable', 'integer', 'min:1900', 'max:'.date('Y')],
             'keywords' => ['nullable', 'array'],
@@ -53,8 +55,8 @@ class StoreBookRequest extends BaseRequest
             'copyright_year' => ['required', 'string', 'max:255'],
 
             // Authors Field
-            'authors' => ['nullable', 'array', 'min:1'],
-            'authors.*.id' => ['required', 'integer', Rule::exists((new Author)->getTable(), 'id')->whereNull('deleted_at')],
+            'authors' => ['nullable', 'array'],
+            'authors.*.id' => ['nullable', 'integer', Rule::exists((new Author)->getTable(), 'id')->whereNull('deleted_at')],
             'authors.*.authorship_id' => ['nullable', 'integer', Rule::exists((new Authorship)->getTable(), 'id')],
         ];
 

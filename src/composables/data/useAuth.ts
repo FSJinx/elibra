@@ -7,7 +7,8 @@ export function useAuth() {
   // ---------- COMPUTED ROUTER LINK THAT RETUNS THE PATH TO USER'S HOME ----------
   const userHomeLink = computed(() => {
     const routes: Record<string, string> = {
-      admin: 'admin',
+      "super_admin": 'admin',
+      admin: 'librarian',
       librarian: 'librarian',
       patron: 'patron',
       default: 'home',

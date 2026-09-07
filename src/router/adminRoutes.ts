@@ -7,7 +7,7 @@ export const adminRoutes = [
     meta: {
       breadcrumb: 'Admin',
       requiresAuth: true,
-      role: 'admin',
+      role: 'super_admin',
     },
     redirect: { name: 'admin.dashboard' },
     component: () => import('@/layouts/management/ManagementLayout.vue'),

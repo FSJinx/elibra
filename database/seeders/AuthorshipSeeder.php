@@ -13,6 +13,7 @@ class AuthorshipSeeder extends Seeder
         [
             'itemType' => 'book',
             'authorship' => [
+                
                 'Author',
                 'Co-author',
                 'Editor',

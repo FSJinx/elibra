@@ -207,6 +207,7 @@ Route::group(['prefix' => '/branch'], function () {
 
     Route::group(['prefix' => '/get'], function () {
         Route::get('', [BranchController::class, 'index'])->middleware('throttle:read');
+        Route::get('show', [BranchController::class, 'index'])->middleware('throttle:read');
     });
 
     Route::group(['prefix' => '/create'], function () {

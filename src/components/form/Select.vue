@@ -4,6 +4,9 @@
       <span class="line-clamp-1 mr-5">{{ selectedOption.label }}</span>
       <Icon icon="chevron-down" class="ml-auto transition-all duration-300 pointer-events-none" :class="{ '-rotate-180': open }" />
     </div>
+    <p v-if="error && error.length > 0" class="text-xs font-medium text-danger">
+      {{ error }}
+    </p>
 
     <Input :id="`${id}-value`" class="absolute opacity-0 -z-1 pointer-events-none h-full w-full" :required="required" v-model="model" />
 
@@ -31,6 +34,7 @@ interface Props {
   required?: boolean
   disabled?: boolean
   enableTooltip?: boolean
+  error?: string | null
 }
 
 const dropdownRef = ref<HTMLElement | null>(null)
@@ -41,6 +45,7 @@ const parse = useParser()
 
 const props = withDefaults(defineProps<Props>(), {
   enableTooltip: false,
+  error: ''
 })
 
 const selectedOption = reactive<SelectedOption>({

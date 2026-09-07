@@ -72,17 +72,17 @@ api.interceptors.response.use(
       }
     }
 
-    if (status === 403) {
-      pop.error(response?.message)
-    }
+    // if (status === 403) {
+    //   pop.error(response?.message)
+    // }
 
-    if (status === 422) {
-      pop.unload()
-      pop.error(response?.message)
-    }
+    // if (status === 422) {
+    //   pop.unload()
+    //   pop.error(response?.message)
+    // }
 
     if (status === 500) {
-      // pop.error('Server error, please try again later.')
+      pop.error('Server error, please try again later.')
     }
 
     return Promise.reject(error)

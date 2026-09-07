@@ -25,7 +25,7 @@ const history = opacSearchStore()
 
 const params = reactive({
   search: (route.query.search as string) ?? '',
-  campus: (route.query.campus as string) ?? auth.user?.campus.id ?? '',
+  campus: (route.query.campus as string) ?? auth.user?.campus?.id ?? '',
   branch: (route.query.branch as string) ?? '',
   sort: (route.query.sort as string) ?? '',
   order: (route.query.order as string) ?? 'asc',
