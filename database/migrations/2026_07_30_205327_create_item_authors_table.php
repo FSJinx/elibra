@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('author_id');
             $table->unsignedBigInteger('item_id');
+            $table->unsignedBigInteger('authorship_id');
 
             $table->unique(['item_id', 'author_id']);
             $table->timestamps();

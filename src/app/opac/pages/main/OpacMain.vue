@@ -4,7 +4,7 @@
     <section class="sticky top-20 overflow-hidden rounded-xl border border-border bg-background">
       <!-- <div class="absolute -right-20 -top-20 size-60 rounded-full bg-primary/5 blur-3xl pointer-events-none"></div> -->
 
-      <div class="relative p-6 sm:p-8">
+      <div class="relative p-6 sm:p-8 z-999">
         <div class="max-w-2xl">
           <p class="text-[11px] font-semibold uppercase tracking-widest text-primary">Online Public Access Catalog</p>
           <h1 class="mt-1 text-3xl sm:text-4xl font-bold tracking-tight">Look for something</h1>
@@ -59,22 +59,17 @@
         <div>
           <p class="text-xs uppercase tracking-widest font-semibold text-foreground-secondary">Search results</p>
 
-          <h2 class="mt-1 text-2xl font-semibold tracking-tight">
-            <template v-if="route.query.search">
-              Showing results for <span class="text-primary">"{{ route.query.search }}"</span>
-            </template>
-            <template v-else>Explore our library collection</template>
-          </h2>
+          <h2 class="mt-1 text-2xl font-semibold tracking-tight">Showing results for</h2>
 
-          <p class="text-sm text-foreground-secondary mt-1">Showing results for {{ route.params.search }}.</p>
+          <p class="text-sm font-medium mt-1 text-primary">"{{ route.query.search }}"</p>
         </div>
 
         <span class="text-sm text-foreground-secondary">{{ total }} results</span>
       </div>
 
-      <div class="space-y-3">
-        <router-link v-for="(item, index) in libraryData" :key="item.id ?? index" :to="{ name: 'opac.view', params: { id: item.item_id } }" class="block">
-          <Card class="group relative flex-row items-start w-full gap-4 p-4! rounded-xl! border border-border hover:border-primary/40 hover:shadow-md transition-all duration-200 cursor-pointer">
+      <div class="flex flex-col space-y-3 z-1">
+        <router-link v-for="(item, index) in libraryData" :key="item.id ?? index" :to="{ name: 'opac.view', params: { id: item.item_id } }">
+          <Card class="group relative flex-row items-start w-full gap-4 p-4! rounded-xl! border border-border hover:border-primary/40 hover:shadow-md transition-all duration-200 cursor-pointer z-1!">
             <div class="hidden sm:flex w-7 shrink-0 justify-center pt-2">
               <span class="text-xs font-medium text-foreground-secondary">
                 {{ String(index + 1).padStart(2, '0') }}

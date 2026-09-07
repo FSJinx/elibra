@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             ItemTypeSeeder::class,
             ItemTypeCategorySeeder::class,
             LanguageSeeder::class,
+            AuthorshipSeeder::class,
 
             // Dev Seeds
             CampusSeeder::class,

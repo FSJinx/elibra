@@ -9,7 +9,7 @@
 
     <!-- Teleported dropdown: using hidden / v-show instead of v-if keeps child slots mounted -->
     <Teleport to="body">
-      <div role="listbox" :class="[open ? 'grid animate-dropdown-in' : 'hidden']" class="options gap-0.5 fixed bg-background rounded-md shadow-lg border border-border p-2 z-9999 max-h-60 overflow-y-auto scrollbar-thin" :style="dropdownStyle">
+      <div ref="dropdownMenuRef" role="listbox" :class="[open ? 'grid animate-dropdown-in' : 'hidden']" class="options gap-0.5 fixed bg-background min-w-75 rounded-md shadow-lg border border-border p-2 z-9999 max-h-60 overflow-y-auto scrollbar-thin" :style="dropdownStyle">
         <p v-if="props.title" class="text-xs font-semibold uppercase text-foreground-secondary p-1 mb-1">{{ props.title }}</p>
         <slot />
       </div>
@@ -34,6 +34,7 @@ interface Props {
 }
 
 const dropdownRef = ref<HTMLElement | null>(null)
+const dropdownMenuRef = ref<HTMLElement | null>(null)
 const open = ref<boolean>(false)
 const model = defineModel<any>({ default: '' })
 const parse = useParser()
@@ -51,15 +52,24 @@ const dropdownStyle = ref({
   top: '0px',
   left: '0px',
   width: '0px',
+  maxHeight: '240px',
 })
 
 const updatePosition = () => {
   if (dropdownRef.value) {
     const rect = dropdownRef.value.getBoundingClientRect()
+    const spacing = 8
+    const gap = 6
+    const spaceBelow = window.innerHeight - rect.bottom - gap - spacing
+    const spaceAbove = rect.top - gap - spacing
+    const openUpward = spaceBelow < 240 && spaceAbove > spaceBelow
+    const availableHeight = Math.max(0, Math.min(240, openUpward ? spaceAbove : spaceBelow))
+
     dropdownStyle.value = {
-      top: `${rect.bottom + 6}px`,
+      top: `${openUpward ? rect.top - gap - availableHeight : rect.bottom + gap}px`,
       left: `${rect.left}px`,
       width: `${rect.width}px`,
+      maxHeight: `${availableHeight}px`,
     }
   }
 }

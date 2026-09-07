@@ -3,7 +3,6 @@
 namespace App\Policies;
 
 use App\Models\Book;
-use Illuminate\Auth\Access\Response;
 use App\Models\User;
 
 class BooksPolicy
@@ -12,6 +11,7 @@ class BooksPolicy
     {
         return in_array($user->role, [$user->isAdmin(), $user->isLibrarian()]);
     }
+
     /**
      * Determine whether the user can view any models.
      */
@@ -33,7 +33,9 @@ class BooksPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasPermission('book.create');
+        return $user->isLibrarian();
+        // return $user->hasPermission('book.create') || $user->isAdmin() || $user->isLibrarian();
+        // return true;
     }
 
     /**

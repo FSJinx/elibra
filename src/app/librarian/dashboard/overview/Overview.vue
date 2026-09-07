@@ -21,19 +21,11 @@
       </div>
     </div>
   </header>
+
   <main class="min-h-full bg-slate-50 p-5 sm:p-7">
-    <div class="mx-auto max-w-7xl space-y-6">
+    <div class="mx-auto space-y-6">
       <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label="Collection summary">
-        <article v-for="metric in metrics" :key="metric.label" class="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
-          <div class="flex items-start justify-between">
-            <p class="text-sm font-medium text-slate-500">{{ metric.label }}</p>
-            <span class="flex size-9 items-center justify-center rounded-md" :class="metric.iconClass">
-              <Icon :icon="metric.icon" />
-            </span>
-          </div>
-          <p class="mt-5 text-3xl font-semibold text-slate-900">{{ metric.value }}</p>
-          <p class="mt-1 text-xs text-slate-400">{{ metric.note }}</p>
-        </article>
+        <StatCard v-for="metric in metrics" :label="metric.label" :value="metric.value" :icon="metric.icon"></StatCard>
       </section>
 
       <section class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">

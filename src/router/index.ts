@@ -72,8 +72,6 @@ router.beforeEach(async (to, from) => {
 
   const accessRoles = String(role ?? '')
 
-  pop.load()
-
   // ======== AUTHENTICATED PRELOAD ===========
   if (store.token && !store.isAuthenticated) {
     await auth.getUser()
@@ -104,8 +102,6 @@ router.beforeEach(async (to, from) => {
   }
 
   document.title = typeof to.meta.title === 'string' ? 'e-Libra: ' + store.user?.role?.charAt(0).toUpperCase() + store.user?.role?.slice(1) + ' | ' + to.meta.title : 'e-Libra: The ISU-1 Library Management and Resource Monitoring System'
-
-  pop.unload()
 })
 
 export default router

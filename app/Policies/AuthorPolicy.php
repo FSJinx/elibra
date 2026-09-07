@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use Illuminate\Auth\Access\Response;
 use App\Models\Author;
 use App\Models\User;
 
@@ -29,7 +28,7 @@ class AuthorPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasPermission('author.create');
+        return $user->hasPermission('author.create') || $user->isAdmin() || $user->isLibrarian();
     }
 
     /**

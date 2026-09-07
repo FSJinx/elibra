@@ -32,13 +32,16 @@ api.interceptors.response.use(
   (res) => res,
   async (error) => {
     const my = authStore()
+    const pop = usePopup()
     const status = error.response?.status
     const response = error.response?.data
+
+    console.log(response)
 
     if (status === 401) {
       if (refreshed) {
         my.clearUser()
-        // elpop.error('Session expired, please re-login to continue.')
+        pop.error('Session expired, please re-login to continue.')
         router.push({ name: 'home' })
         return Promise.reject(error)
       }
@@ -61,7 +64,7 @@ api.interceptors.response.use(
         return api(error.config)
       } catch (refreshError) {
         my.clearUser()
-        // elpop.error('Session expired, please re-login to continue.')
+        pop.error('Session expired, please re-login to continue.')
         router.push({ name: 'home' })
         return Promise.reject(refreshError)
       } finally {
@@ -70,11 +73,16 @@ api.interceptors.response.use(
     }
 
     if (status === 403) {
-      //   elpop.error(response?.message || 'Access denied.')
+      pop.error(response?.message)
+    }
+
+    if (status === 422) {
+      pop.unload()
+      pop.error(response?.message)
     }
 
     if (status === 500) {
-      //   elpop.error('Server error, please try again later.')
+      // pop.error('Server error, please try again later.')
     }
 
     return Promise.reject(error)

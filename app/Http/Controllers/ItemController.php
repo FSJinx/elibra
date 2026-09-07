@@ -41,7 +41,7 @@ class ItemController extends Controller
 
                 $query = Item::query();
 
-                if (!$user->isSuperAdmin()) {
+                if (! $user->isSuperAdmin()) {
                     $query->where('branch_id', $branchId);
                 }
 
@@ -72,7 +72,7 @@ class ItemController extends Controller
         return $this->response(
             'success',
             'Items retrieved successfully.',
-            $items,
+            $items->toArray(),
             200
         );
     }

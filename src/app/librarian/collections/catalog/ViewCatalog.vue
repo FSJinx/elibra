@@ -1,9 +1,8 @@
-```vue
 <template>
   <div class="sticky top-0 z-20 border-b border-border/70 bg-background shadow-sm">
     <!-- Back Navigation -->
     <div class="px-5 pt-3">
-      <Button :to="{ name: 'librarian.cataloging.catalog' }" as="link" variant="text" class="gap-3" icon="arrow-left">
+      <Button :to="{ name: 'librarian.collections.catalog' }" as="link" variant="text" class="gap-3" icon="arrow-left">
         <span>Back to catalog</span>
       </Button>
     </div>
@@ -28,10 +27,10 @@
 const route = useRoute()
 
 const routes = [
-  { name: 'Overview', path: 'librarian.catalog.view.overview' },
-  { name: 'Authors', path: 'librarian.catalog.view.authors' },
-  { name: 'Accession', path: 'librarian.catalog.view.accession' },
-  { name: 'Acquisition History', path: 'librarian.catalog.view.acquisition' },
+  { name: 'Overview', path: 'librarian.collections.catalog.view.overview' },
+  { name: 'Authors', path: 'librarian.collections.catalog.view.authors' },
+  { name: 'Accession', path: 'librarian.collections.catalog.view.accession' },
+  { name: 'Acquisition History', path: 'librarian.collections.catalog.view.acquisition' },
 ]
 
 const active = (path: string) => {
