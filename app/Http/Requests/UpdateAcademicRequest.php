@@ -20,7 +20,9 @@ class UpdateAcademicRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('update', $this->route('academic'));
+            $user = $this->user();
+
+            return $this->user->hasPermission('academic.update') && $user->isLibrarian() || $user->isAdmin();
     }
 
     /**

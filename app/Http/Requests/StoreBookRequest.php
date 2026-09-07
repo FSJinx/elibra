@@ -18,7 +18,10 @@ class StoreBookRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('create', Book::class);
+            $user = $this->user();
+
+            return $this->user->hasPermission('book.create') && $user->isLibrarian() || $user->isAdmin();
+
     }
 
     /**

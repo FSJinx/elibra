@@ -138,6 +138,14 @@ return new class extends Migration
                 ['name' => 'item_id', 'references' => 'id', 'on' => 'items', 'onDelete' => 'cascade'],
             ],
         ],
+        [
+            'name' => 'accessions',
+            'foreign_columns' => [
+                ['name' => 'item_id', 'references' => 'id', 'on' => 'items', 'onDelete' => 'cascade'],
+                ['name' => 'section_id', 'references' => 'id', 'on' => 'sections', 'onDelete' => 'cascade'],
+                ['name' => 'acquisition_id', 'references' => 'id', 'on' => 'acquisitions', 'onDelete' => 'cascade'],
+            ],
+        ],
     ];
 
     // ============= LINKS RELATIONSHIPS ===============

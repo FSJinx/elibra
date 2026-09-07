@@ -19,7 +19,9 @@ class StoreAcademicRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('create', Academic::class);
+            $user = $this->user();
+
+            return $this->user->hasPermission('academic.create') && $user->isLibrarian() || $user->isAdmin();
     }
 
     /**

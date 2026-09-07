@@ -19,7 +19,9 @@ class StoreSerialRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('create', Serial::class);
+            $user = $this->user();
+
+            return $this->user->hasPermission('serial.create') && $user->isLibrarian() || $user->isAdmin();
     }
 
     /**

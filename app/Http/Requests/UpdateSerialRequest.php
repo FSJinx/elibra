@@ -18,7 +18,9 @@ class UpdateSerialRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('update', $this->route('serial'));
+            $user = $this->user();
+
+            return $this->user->hasPermission('serial.update') && $user->isLibrarian() || $user->isAdmin();
     }
 
     /**

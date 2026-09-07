@@ -17,7 +17,9 @@ class UpdateBookRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('update', $this->route('book'));
+            $user = $this->user();
+
+            return $this->user->hasPermission('book.update') && $user->isLibrarian() || $user->isAdmin();
     }
 
     /**
