@@ -10,6 +10,7 @@ use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BranchSectionController;
 use App\Http\Controllers\CampusController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\HolidaysController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ItemTypeCategoryController;
 use App\Http\Controllers\ItemTypeController;
@@ -47,6 +48,7 @@ Route::get('item-types', [ItemTypeController::class, 'index'])->middleware('thro
 Route::get('item-type-categories', [ItemTypeCategoryController::class, 'index'])->middleware('throttle:read');
 Route::get('languages', [LanguageController::class, 'index'])->middleware('throttle:read');
 Route::get('authorship', [AuthorshipController::class, 'index'])->middleware('throttle:read');
+Route::get(['holidays', HolidaysController::class, 'index']);
 
 // Media Routes
 Route::group(['prefix' => '/media'], function () {
