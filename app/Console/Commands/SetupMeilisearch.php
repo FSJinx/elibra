@@ -85,7 +85,7 @@ class SetupMeilisearch extends Command
 // STEP BY STEP GUIDE TO SETUP MEILISEARCH
 // 1. Install Meilisearch on your local machine or server.
 // 2. Start the Meilisearch server.
-// 3. Configure the Meilisearch host and key in your Laravel .env file.
+// 3. Configure the Meilisearch host and key in your Laravel .env file. 
 // 4. Run the command: php artisan meilisearch:setup
 // 5. Verify that the setup was successful by checking the console output for success messages.
 
