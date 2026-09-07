@@ -38,7 +38,7 @@ class BookController extends Controller
         return $this->response(
             'success',
             'Books retrieved successfully',
-            $books,
+            $books->toArray(),
             200
         );
     }
@@ -61,7 +61,7 @@ class BookController extends Controller
         return $this->response(
             'success',
             'Book created successfully',
-            $book->load('item')->toArray(),
+            $book->toArray(),
             201
         );
     }
@@ -95,7 +95,7 @@ class BookController extends Controller
         return $this->response(
             'success',
             'Book updated successfully',
-            $book->load('item')->toArray(),
+            $book->toArray(),
             200
         );
     }

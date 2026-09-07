@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\Academic;
 use App\Models\Author;
+use App\Models\Authorship;
 use App\Models\Branch;
 use App\Models\Department;
 use App\Models\Item;
@@ -52,8 +53,9 @@ class StoreAcademicRequest extends BaseRequest
             'department_id' => [ 'required', Rule::exists((new Department)->getTable(), 'id') ],
 
             //Authors Field
-            'author_ids' => [ 'nullable', 'array', 'min:1' ],
-            'author_ids.*' => [ 'integer', Rule::exists((new Author)->getTable(), 'id')->whereNull('deleted_at') ],
+            'authors' => [ 'nullable', 'array', 'min:1' ],
+            'authors.*.id' => [ 'required', 'integer', Rule::exists((new Author)->getTable(), 'id')->whereNull('deleted_at') ],
+            'authors.*.authorship_id' => [ 'nullable', 'integer', Rule::exists((new Authorship)->getTable(), 'id') ],
         ];
         return $rules;
     }

@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\Academic;
 use App\Models\Author;
+use App\Models\Authorship;
 use App\Models\Branch;
 use App\Models\Item;
 use App\Models\ItemType;
@@ -53,8 +54,9 @@ class StoreSerialRequest extends BaseRequest
             'doi' => [ 'nullable', 'string', 'max:255' ],
 
             //Authors Field
-            'author_ids' => [ 'nullable', 'array', 'min:1' ],
+            'authors' => [ 'nullable', 'array', 'min:1' ],
             'author_ids.*' => [ 'integer', Rule::exists((new Author)->getTable(), 'id')->whereNull('deleted_at'), ],
+            'authors.*.authorship_id' => [ 'nullable', 'integer', Rule::exists((new Authorship)->getTable(), 'id') ],
         ];  
 
         return $rules;

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Author;
+use App\Models\Authorship;
 use App\Models\Book;
 use App\Models\Branch;
 use App\Models\Item;
@@ -21,7 +22,7 @@ class StoreBookRequest extends BaseRequest
     {
             $user = $this->user();
 
-            return $this->user->hasPermission('book.create') && $user->isLibrarian() || $user->isAdmin();
+            return $user->hasPermission('book.create') && $user->isLibrarian() || $user->isAdmin();
 
     }
 
@@ -52,8 +53,9 @@ class StoreBookRequest extends BaseRequest
             'copyright_year' => ['required', 'string', 'max:255'],
 
             // Authors Field
-            'author_ids' => ['nullable', 'array', 'min:1'],
-            'author_ids.*' => ['integer', Rule::exists((new Author)->getTable(), 'id')->whereNull('deleted_at')],
+            'authors' => ['nullable', 'array', 'min:1'],
+            'authors.*.id' => ['required', 'integer', Rule::exists((new Author)->getTable(), 'id')->whereNull('deleted_at')],
+            'authors.*.authorship_id' => ['nullable', 'integer', Rule::exists((new Authorship)->getTable(), 'id')],
         ];
 
         return $rules;
@@ -112,11 +114,11 @@ class StoreBookRequest extends BaseRequest
             'copyright_year.max' => 'The copyright year may not be greater than 255 characters.',
 
             // Authors
-            'author_ids.array' => 'The authors must be provided as an array.',
-            'author_ids.min' => 'If authors are provided, at least one author must be selected.',
+            // 'author_ids.array' => 'The authors must be provided as an array.',
+            // 'author_ids.min' => 'If authors are provided, at least one author must be selected.',
 
-            'author_ids.*.integer' => 'Each author ID must be a valid integer.',
-            'author_ids.*.exists' => 'One or more selected authors are invalid or have been deleted.',
+            // 'author_ids.*.integer' => 'Each author ID must be a valid integer.',
+            // 'author_ids.*.exists' => 'One or more selected authors are invalid or have been deleted.',
         ];
     }
 }

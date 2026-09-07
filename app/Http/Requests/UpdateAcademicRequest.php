@@ -6,6 +6,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\Academic;
 use App\Models\Author;
+use App\Models\Authorship;
 use App\Models\Branch;
 use App\Models\Department;
 use App\Models\Item;
@@ -54,8 +55,9 @@ class UpdateAcademicRequest extends BaseRequest
             'department_id' => [ 'sometimes', 'required', Rule::exists((new Department)->getTable(), 'id') ],
 
             //Authors Field
-            'author_ids' => [ 'nullable', 'array', 'min:1' ],
+            'authors' => [ 'nullable', 'array', 'min:1' ],
             'author_ids.*' => [ 'integer', Rule::exists((new Author)->getTable(), 'id')->whereNull('deleted_at') ],
+            'authors.*.authorship_id' => [ 'nullable', 'integer', Rule::exists((new Authorship)->getTable(), 'id') ],
         ];
         return $rules;
     }
