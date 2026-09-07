@@ -1,5 +1,5 @@
 <template>
-  <div ref="dropdownRef" class="relative inline-flex items-center min-w-40 w-full">
+  <div ref="dropdownRef" class="relative inline-flex flex-col gap-2 min-w-40 w-full">
     <div type="button" @click="toggle" class="flex items-center h-11 text-left px-4 text-foreground w-full rounded-md border border-border cursor-pointer disabled:cursor-not-allowed transition-all duration-200" :class="[open ? 'bg-tertiary' : 'bg-background']" :disabled="disabled" :aria-expanded="open" aria-haspopup="listbox" :data-title="enableTooltip ? `${parse.toCapital(title as string)}: ${selectedOption.label}` : ''">
       <span class="line-clamp-1 mr-5">{{ selectedOption.label }}</span>
       <Icon icon="chevron-down" class="ml-auto transition-all duration-300 pointer-events-none" :class="{ '-rotate-180': open }" />

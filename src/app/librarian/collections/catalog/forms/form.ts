@@ -37,6 +37,9 @@ export interface BookField {
   doi: string
 }
 
-export interface AcademicField {}
+export interface AcademicField {
+  doi: string
+  department_id?: any
+}
 
 export interface SerialField {}

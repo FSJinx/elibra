@@ -9,7 +9,7 @@
 
     <!-- Detail Navigation -->
     <nav aria-label="Catalog item navigation" class="flex items-center px-5">
-      <router-link v-for="item in links" :key="item.path" :to="{ name: item.path }" class="group relative flex justify-center px-3 py-3 transition-colors" :class="[active(item.path) ? 'text-primary' : 'font-medium text-muted-foreground hover:text-primary']">
+      <router-link v-for="item in links" :key="item.path" :to="{ replace: true, name: item.path }" class="group relative flex justify-center px-3 py-3 transition-colors" :class="[active(item.path) ? 'text-primary' : 'font-medium text-muted-foreground hover:text-primary']">
         {{ item.name }}
 
         <!-- Active Indicator -->

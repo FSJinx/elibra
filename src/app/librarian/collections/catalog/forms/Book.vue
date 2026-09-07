@@ -46,8 +46,7 @@ const emptyForm = (): Form => ({
   keywords: [],
 
   item_type_category_id: '10',
-  branch_id: '',
-  // branch_id: auth.user?.role === 'librarian' ? auth.user?.branch?.id : '',
+  branch_id: auth.user?.role === 'librarian' ? auth.user?.branch?.id : '',
   language_id: '',
 
   edition: '1st',
@@ -92,12 +91,19 @@ const clearForm = async () => {
   }
 }
 
+const clearErrors = () => {
+  Object.keys(errors.value).forEach((field) => {
+    ;(errors.value as Record<string, unknown>)[field] = ''
+  })
+}
+
 const bookId = computed(() => {
   const book = itemTypes?.find((i) => i.name === 'book')
   return book?.id
 })
 
 async function submitForm() {
+  clearErrors()
   const res = await pop.confirm({ text: 'Are you sure you have confirmed the inputs before submitting?' })
 
   if (res.isConfirmed) {

@@ -28,7 +28,7 @@ export const librarianCataloging = [
           },
           {
             path: 'add-new',
-            meta: { breadcrumb: 'Add New' },
+            meta: { title: 'Cataloging', breadcrumb: 'Add New' },
             name: 'librarian.collections.catalog.add-new',
             redirect: { name: 'librarian.collections.catalog.add-new.book' },
             component: () => import('@/app/librarian/collections/catalog/AddCatalog.vue'),

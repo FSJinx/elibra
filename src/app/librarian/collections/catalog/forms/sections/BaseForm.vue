@@ -12,8 +12,8 @@
         <Input id="book-title" placeholder="Enter book's title..." v-model="form.title" :error="errors.title?.[0]" />
       </Control>
       <Control class="control">
-        <Label id="book-subtitle">Subtitle</Label>
-        <Input id="book-subtitle" placeholder="Enter book's subtitle..." v-model="form.subtitle" :error="errors.subtitle" />
+        <Label id="book-subtitle" class="mb-auto">Subtitle</Label>
+        <Textarea id="book-subtitle" placeholder="Enter book's subtitle..." v-model="form.subtitle" :error="errors.subtitle" />
       </Control>
       <Control class="control">
         <div class="w-75 mb-auto p-2 pl-0">
@@ -31,7 +31,7 @@
         <Input id="book-publication_year" type="number" placeholder="Enter book's publication year..." v-model="form.publication_year" :error="errors.publication_year" />
       </Control>
       <Control class="control">
-        <Label id="book-electronic_file">Electronic File</Label>
+        <Label id="book-electronic_file" >Electronic File</Label>
         <InputFile id="book-electronic_file" v-model="form.electronic_file" />
         <p class="text-sm text-danger">{{ errors.electronic_file }}</p>
       </Control>
