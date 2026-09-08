@@ -5,8 +5,8 @@
     <!-- BASIC INFORMATION -->
     <BaseForm v-model="form" :errors="errors" />
 
-    <!-- ACADEMIC INFORMATION -->
-    <AcademicForm v-model="form" :errors="errors" />
+    <!-- BOOK INFORMATION -->
+    <BookForm v-model="form" :errors="errors" />
 
     <!-- CLASSIFICATION -->
     <ClassificationForm v-model="form" :errors="errors" :item_type_id="bookId" />
@@ -26,10 +26,10 @@
 import AuthorForm from '@/app/librarian/collections/catalog/forms/sections/AuthorForm.vue'
 import BaseForm from '@/app/librarian/collections/catalog/forms/sections/BaseForm.vue'
 import ClassificationForm from '@/app/librarian/collections/catalog/forms/sections/ClassificationForm.vue'
-import type { AcademicField, AuthorField, BaseField, ClassficationField } from '@/app/librarian/collections/catalog/forms/form'
-import AcademicForm from '@/app/librarian/collections/catalog/forms/sections/AcademicForm.vue'
+import type { AuthorField, BaseField, BookField, ClassficationField } from '@/app/librarian/collections/catalog/forms/form'
+import BookForm from '@/app/librarian/collections/catalog/forms/sections/BookForm.vue'
 
-interface Form extends BaseField, AcademicField, ClassficationField, AuthorField {}
+interface Form extends BaseField, BookField, ClassficationField, AuthorField {}
 
 const { itemTypes } = itemTypeStore()
 
@@ -37,20 +37,22 @@ const pop = usePopup()
 const auth = authStore()
 
 const emptyForm = (): Form => ({
-  title: 'e-Libra',
-  subtitle: 'A Centralized Web-Based Integrated Library Management System and Resource Monitoring for Isabela State University',
+  title: 'Doctor Strange',
+  subtitle: 'Multiverse of Madness',
   description: 'Si Wanda naging Scarlet Witch na talaga.',
   call_number: 'Mom.12DS',
   publication_year: '1998',
   electronic_file: null,
   keywords: [],
 
-  item_type_category_id: '1',
+  item_type_category_id: '10',
   branch_id: auth.user?.role === 'librarian' ? auth.user?.branch?.id : '',
   language_id: '',
 
+  edition: '1st',
+  isbn_issn: 'ISSN1239371',
+  copyright_year: '2000',
   doi: '',
-  department_id: null,
   authors: [],
 })
 
@@ -68,17 +70,14 @@ const errors = ref<Form>({
   branch_id: '',
   language_id: '',
 
+  edition: '',
+  isbn_issn: '',
+  copyright_year: '',
   doi: '',
   authors: [],
 })
 
 const hasInputs = computed(() => Object.values(form).some((field) => (Array.isArray(field) ? field.length > 0 : field != null && String(field).trim().length > 0)))
-
-const clearErrors = () => {
-  Object.keys(errors.value).forEach((field) => {
-    ;(errors.value as Record<string, unknown>)[field] = ''
-  })
-}
 
 const clearForm = async () => {
   const result = await usePopup().confirm({
@@ -92,14 +91,19 @@ const clearForm = async () => {
   }
 }
 
+const clearErrors = () => {
+  Object.keys(errors.value).forEach((field) => {
+    ;(errors.value as Record<string, unknown>)[field] = ''
+  })
+}
+
 const bookId = computed(() => {
-  const book = itemTypes?.find((i) => i.name === 'academic')
+  const book = itemTypes?.find((i) => i.name === 'book')
   return book?.id
 })
 
 async function submitForm() {
   clearErrors()
-
   const res = await pop.confirm({ text: 'Are you sure you have confirmed the inputs before submitting?' })
 
   if (res.isConfirmed) {
@@ -107,12 +111,13 @@ async function submitForm() {
     console.log({ ...form, branch_id: auth.user?.id, item_type_id: bookId.value })
 
     try {
-      await api.post('item/create/academic', { ...form, item_type_id: bookId.value })
-      pop.success('Academic added successfully!')
+      await api.post('item/create/book', { ...form, item_type_id: bookId.value })
+      pop.success('Book added successfully!')
       router.replace({ name: 'librarian.collections.catalog' })
     } catch (e: any) {
       const res = e.response.data
       console.log(res.errors)
+      // await pop.error(res.errors?.[0])
       errors.value = res.errors
     }
   }

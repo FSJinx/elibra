@@ -28,12 +28,12 @@ export const librarianCataloging = [
           },
           {
             path: 'add-new',
-            meta: { breadcrumb: 'Add New' },
+            meta: { title: 'Cataloging', breadcrumb: 'Add New' },
             name: 'librarian.collections.catalog.add-new',
             redirect: { name: 'librarian.collections.catalog.add-new.book' },
             component: () => import('@/app/librarian/collections/catalog/AddCatalog.vue'),
             children: [
-              { path: 'book', meta: { breadcrumb: 'Book' }, name: 'librarian.collections.catalog.add-new.book', component: () => import('@/app/librarian/collections/catalog/forms/BookForm.vue') },
+              { path: 'book', meta: { breadcrumb: 'Book' }, name: 'librarian.collections.catalog.add-new.book', component: () => import('@/app/librarian/collections/catalog/forms/Book.vue') },
               {
                 path: 'academics',
                 meta: { breadcrumb: 'Academics' },

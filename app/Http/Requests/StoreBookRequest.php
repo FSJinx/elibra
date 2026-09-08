@@ -20,9 +20,11 @@ class StoreBookRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-            $user = $this->user();
+        $user = $this->user();
 
-            return $user->hasPermission('book.create') && $user->isLibrarian() || $user->isAdmin();
+        return
+            $user->hasPermission('book.create') && ($user->isLibrarian() && $user->librarian->branch) ||
+            $user->isAdmin();
 
     }
 
@@ -38,10 +40,10 @@ class StoreBookRequest extends BaseRequest
             'title' => ['required', 'string', 'max:255'],
             'subtitle' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'call_number' => ['nullable', 'string', 'max:255', Rule::unique((new Item)->getTable(), 'call_number')],
-            'language_id' => ['required', Rule::exists((new Language)->getTable(), 'id')],
+            'call_number' => ['nullable', 'string', 'max:255'],
             'publication_year' => ['nullable', 'integer', 'min:1900', 'max:'.date('Y')],
             'keywords' => ['nullable', 'array'],
+            'language_id' => ['required', Rule::exists((new Language)->getTable(), 'id')],
             'electronic_file' => ['nullable', 'file', 'mimes:pdf,doc,docx'],
             'item_type_id' => ['required', Rule::exists((new ItemType)->getTable(), 'id')],
             'item_type_category_id' => ['required', Rule::exists((new ItemTypeCategory)->getTable(), 'id')],
@@ -53,8 +55,8 @@ class StoreBookRequest extends BaseRequest
             'copyright_year' => ['required', 'string', 'max:255'],
 
             // Authors Field
-            'authors' => ['nullable', 'array', 'min:1'],
-            'authors.*.id' => ['required', 'integer', Rule::exists((new Author)->getTable(), 'id')->whereNull('deleted_at')],
+            'authors' => ['nullable', 'array'],
+            'authors.*.id' => ['nullable', 'integer', Rule::exists((new Author)->getTable(), 'id')->whereNull('deleted_at')],
             'authors.*.authorship_id' => ['nullable', 'integer', Rule::exists((new Authorship)->getTable(), 'id')],
         ];
 
@@ -78,10 +80,9 @@ class StoreBookRequest extends BaseRequest
             'call_number.max' => 'The call number may not be greater than 255 characters.',
             'call_number.unique' => 'The call number has already been taken.',
 
-            // 'language_id.required' => 'The language is required.',
-            // 'language_id.string' => 'The language must be a string.',
-            // 'language_id.max' => 'The language may not be greater than 255 characters.',
-
+            'language_id.required' => 'Language is required.',
+            'language_id.exists' => 'Language doesn\'t exist.',
+            
             'publication_year.integer' => 'The publication year must be a valid year.',
             'publication_year.min' => 'The publication year must not be earlier than 1900.',
             'publication_year.max' => 'The publication year cannot be greater than the current year.',

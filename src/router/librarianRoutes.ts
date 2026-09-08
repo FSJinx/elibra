@@ -1,7 +1,7 @@
 const librarianRoutes = [
   {
     path: '/librarian',
-    meta: { breadcrumb: 'Librarian', requiresAuth: true, role: 'librarian' },
+    meta: { breadcrumb: 'Librarian', requiresAuth: true, role: 'librarian,admin' },
     name: 'librarian',
     redirect: { name: 'librarian.dashboard' },
     component: () => import('@/layouts/management/ManagementLayout.vue'),

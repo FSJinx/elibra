@@ -111,7 +111,7 @@ interface Props {
   leftIcon?: string
   rightIcon?: string
   size?: Sizes
-  error?: string
+  error?: string | null
   helper?: string
   warning?: string
 }

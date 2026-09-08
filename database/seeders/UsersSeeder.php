@@ -14,6 +14,10 @@ class UsersSeeder extends Seeder
      */
     public function run(): void
     {
-        
+        $this->call([
+            AdminSeeder::class,
+            LibrarianSeeder::class,
+            PatronSeeder::class
+        ]);
     }
 }
