@@ -26,7 +26,7 @@ export function useParser() {
         // ====== RESTORE =======
         patron: 'restore',
         academic: 'restore',
-        "super_admin": 'restore',
+        super_admin: 'restore',
 
         default: 'default',
       }
@@ -57,6 +57,15 @@ export function useParser() {
       if (Math.abs(diffMin) < 60) return rtf.format(diffMin, 'minute')
       if (Math.abs(diffHour) < 24) return rtf.format(diffHour, 'hour')
       return rtf.format(diffDay, 'day')
+    },
+
+    toMoney(value: number | string | null | undefined) {
+      const val = Number(value)
+
+      return new Intl.NumberFormat('en-PH', {
+        style: 'currency',
+        currency: 'PHP',
+      }).format(Number.isFinite(val) ? val : 0)
     },
   }
 }
