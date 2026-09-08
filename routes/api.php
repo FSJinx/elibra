@@ -100,17 +100,17 @@ Route::group(['prefix' => 'acquisition'], function () {
 
     Route::group(['prefix' => '/create'], function () {
         Route::post('', [AcquisitionController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
-        Route::post('lines', [AcquisitionLinesController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
+        Route::post('line', [AcquisitionLinesController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
     });
 
     Route::group(['prefix' => '/update'], function () {
         Route::put('/{acquisition}', [AcquisitionController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
-        Route::put('lines/{acquisitionLine}', [AcquisitionLinesController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
+        Route::put('line/{acquisitionLine}', [AcquisitionLinesController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
     });
 
     Route::group(['prefix' => '/delete'], function () {
         Route::delete('/{acquisition}', [AcquisitionController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:delete');
-        Route::delete('lines/{acquisitionLine}', [AcquisitionLinesController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:delete');
+        Route::delete('line/{acquisitionLine}', [AcquisitionLinesController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:delete');
     });
 });
 
@@ -317,6 +317,10 @@ Route::group(['prefix' => '/librarian'], function () {
     
     Route::group(['prefix' => 'acquisition'], function () {
         Route::get('', [AcquisitionController::class, 'index']);
+    });
+
+    Route::group(['prefix' => 'acquisition_line'], function () {
+        Route::get('', [AcquisitionLinesController::class, 'index']);
     });
 
 })->middleware('jwt.auth', 'role:admin,librarian');

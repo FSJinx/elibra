@@ -85,7 +85,7 @@ class AcquisitionService
 
         $date = $acquisition->acquisition_date->format('Y-m-d');
 
-        $acquisition->purchase_id = "{$campusCode}{$date}{$acquisition->id}";
+        $acquisition->purchase_id = "{$campusCode}-{$date}{$acquisition->id}";
 
         $acquisition->save();
 
