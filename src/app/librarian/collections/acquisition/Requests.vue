@@ -19,7 +19,7 @@
         </Thead>
 
         <Tbody :data="data" :loading="false" :cols="9">
-          <tr v-for="item in data" :key="item.id">
+          <tr class="hover" v-for="item in data" :key="item.id">
             <Td> #{{ item.id.toString().padStart(5, '0') }} </Td>
 
             <Td>
