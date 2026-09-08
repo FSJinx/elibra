@@ -9,13 +9,30 @@ export interface Campus {
   updated_at: string | null
 }
 
-export const campusStore = defineStore('campus', () => {
-  // ============= STATES ===============
+export interface CampusParams {
+  query: string
+  sort: string
+  order: 'asc' | 'desc'
+  status: string
+  page: number
+  per_page: number
+}
+
+const defaultParams: Readonly<CampusParams> = {
+  query: '',
+  sort: '',
+  order: 'asc',
+  status: '',
+  page: 1,
+  per_page: 10,
+}
+
+export const useCampusStore = defineStore('campus', () => {
   const campuses = ref<Campus[] | null>(null)
   const currentCampus = ref<Campus | null>(null)
-  const loading = ref<boolean>(false)
+  const loading = ref(false)
+  const params = reactive<CampusParams>({ ...defaultParams })
 
-  // ============= SETTERS ===============
   function setCampuses(data: Campus[] | null) {
     campuses.value = data
   }
@@ -28,16 +45,55 @@ export const campusStore = defineStore('campus', () => {
     loading.value = status
   }
 
+  async function fetch(forced = false) {
+    if (!forced && campuses.value?.length) {
+      return campuses.value
+    }
+
+    setLoading(true)
+
+    try {
+      const response = await api.get('campus/get', {
+        params: { ...params },
+      })
+      const data = response.data.data
+
+      setCampuses(data)
+      return data
+    } catch (error) {
+      console.error('Failed to fetch campuses:', error)
+      return []
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  async function refresh() {
+    Object.assign(params, defaultParams)
+    return fetch(true)
+  }
+
+  async function deleteCampus(campus: Campus) {
+    await api.delete(`campus/delete/${campus.id}`)
+    return fetch(true)
+  }
+
+  watchDebounced(
+    () => ({ ...params }),
+    () => fetch(true),
+    { debounce: 300 },
+  )
+
   return {
-    // ============= STATES ===============
     campuses,
     currentCampus,
     loading,
-
-    // ============= SETTERS ===============
+    params,
     setCampuses,
     setCurrentCampus,
     setLoading,
-
+    fetch,
+    refresh,
+    deleteCampus,
   }
 })

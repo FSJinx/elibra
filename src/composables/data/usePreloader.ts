@@ -1,20 +1,20 @@
 export async function usePreloader() {
   const auth = useAuth()
-  const campus = useCampus()
-  const branch = useBranch()
-  const item_type = useItemTypes()
-  const category = useItemCategories()
-  const authorship = useAuthorship()
-  const language = useLanguages()
+  const campus = useCampusStore()
+  const branch = useBranchStore()
+  const item_type = useItemTypeStore()
+  const category = useItemCategoriesStore()
+  const authorship = authorshipStore()
+  const language = useLanguagesStore()
 
   try {
     // ======== PUBLIC PRELOAD ===========
-    campus.getCampuses()
-    branch.getBranches()
-    item_type.getItemTypes()
-    category.getItemCategories()
-    authorship.getAuthorships()
-    language.getLanguages()
+    campus.fetch()
+    branch.fetch()
+    item_type.fetch()
+    category.fetch()
+    authorship.fetch()
+    language.fetch()
   } catch (err) {
     throw err
   }

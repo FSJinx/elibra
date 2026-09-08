@@ -307,3 +307,12 @@ Route::group(['prefix' => '/authors'], function () {
     Route::post('', [AuthorController::class, 'store'])->middleware('throttle:write');
     Route::post('show', [AuthorController::class, 'show'])->middleware('throttle:write');
 });
+
+Route::group(['prefix' => '/librarian'], function () {
+    Route::group(['prefix' => 'dashboard'], function () {});
+    
+    Route::group(['prefix' => 'acquisition'], function () {
+        Route::get('', [AcquisitionController::class, 'index']);
+    });
+
+})->middleware('jwt.auth', 'role:admin,librarian');

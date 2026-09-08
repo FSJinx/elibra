@@ -121,16 +121,6 @@ watch(
     }
   },
 )
-
-onMounted(async () => {
-  const { getItemTypes } = useItemTypes()
-  const { getItemCategories } = useItemCategories()
-  const { getBranches } = useBranch()
-
-  await getItemTypes()
-  await getItemCategories()
-  await getBranches()
-})
 </script>
 
 <style scoped></style>
