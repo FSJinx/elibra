@@ -11,7 +11,7 @@ class Acquisition extends Model
     use HasFactory;
 
     protected $fillable = [
-        'purchasedId',
+        'acquisition_id',
         'dealer',
         'acquisition_mode',
         'acquisition_date',

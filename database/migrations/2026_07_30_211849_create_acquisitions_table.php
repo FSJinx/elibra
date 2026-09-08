@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('acquisitions', function (Blueprint $table) {
             $table->id();
-            $table->string('purchase_id')->unique()->nullable(); // ISU-E-2025-MM-DD-ID
+            $table->string('acquisition_id')->unique()->nullable(); // ISU-E-2025-MM-DD-ID
             $table->string('dealer');
             $table->enum('acquisition_mode', ['purchased', 'donated', 'gift', 'exchange']);
             $table->date('acquisition_date');

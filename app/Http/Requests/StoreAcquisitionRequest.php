@@ -29,7 +29,7 @@ class StoreAcquisitionRequest extends BaseRequest
     public function rules(): array
     {
         $rules = [
-            'purchase_id' => [ 'nullable', 'string', 'max:255', 'unique:acquisitions,purchase_id'],
+            'acquisition_id' => [ 'nullable', 'string', 'max:255', 'unique:acquisitions,acquisition_id'],
             'dealer' => [ 'required', 'string', 'max:255', ], 
             'acquisition_mode' => [ 'required', Rule::in([ 'purchased', 'donated', 'gift', 'exchange', ]), ], 
             'acquisition_date' => [ 'required', 'date', ], 
@@ -45,9 +45,9 @@ class StoreAcquisitionRequest extends BaseRequest
     public function messages(): array
     {
         return [
-            'purchase_id.string' => 'The purchase ID must be a valid text value.',
-            'purchase_id.max' => 'The purchase ID may not exceed 255 characters.',
-            'purchase_id.unique' => 'This purchase ID has already been used.',
+            'acquisition_id.string' => 'The acquisition ID must be a valid text value.',
+            'acquisition_id.max' => 'The acquisition ID may not exceed 255 characters.',
+            'acquisition_id.unique' => 'This acquisition ID has already been used.',
 
             'dealer.required' => 'The dealer is required.',
             'dealer.string' => 'The dealer must be a valid text value.',
