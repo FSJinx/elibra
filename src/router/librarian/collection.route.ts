@@ -53,33 +53,6 @@ export const librarianCataloging = [
         meta: { title: 'Inventory', breadcrumb: 'Inventory' },
         component: () => import('@/app/librarian/collections/inventory/Inventory.vue'),
       },
-
-      // ======== Acquisition ========
-      {
-        path: 'acquisition',
-        meta: { title: 'Acquisition', breadcrumb: 'Acquisition' },
-        redirect: { name: 'librarian.collections.acquisition' },
-        children: [
-          {
-            path: '',
-            name: 'librarian.collections.acquisition',
-            component: () => import('@/app/librarian/collections/acquisition/Acquisition.vue'),
-          },
-          {
-            path: 'view',
-            name: 'librarian.collections.acquisition.view',
-            meta: { breadcrumb: 'Viewing:' },
-            component: () => import('@/app/librarian/collections/acquisition/ViewAcquisitions.vue'),
-          },
-        ],
-      },
-
-      // ======== Acquisition Requests ========
-      {
-        path: 'acquisition-requests',
-        name: 'librarian.collections.acquisition-requests',
-        component: () => import('@/app/librarian/collections/acquisition/Requests.vue'),
-      },
     ],
   },
 ]

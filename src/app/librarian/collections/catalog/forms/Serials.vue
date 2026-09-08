@@ -50,7 +50,7 @@ import type { AuthorField, BaseField, ClassficationField, SerialField } from '@/
 
 interface Form extends BaseField, ClassficationField, SerialField, AuthorField {}
 
-const { itemTypes } = itemTypeStore()
+const { itemTypes } = useItemTypeStore()
 const auth = authStore()
 const pop = usePopup()
 

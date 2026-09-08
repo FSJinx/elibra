@@ -1,11 +1,13 @@
 <template>
-  <div class="logo-loader-wrapper text-primary size-full">
-    <Logo class="logo-loader text-[3em]" />
+  <div class="logo-loader-wrapper size-full">
+    <!-- <Logo class="logo-loader text-[3em]" /> -->
+    <img :src="loading" alt="" class="size-25" />
     <p>{{ message }}</p>
   </div>
 </template>
 
 <script setup lang="ts">
+import loading from '@/assets/icon/loading.gif'
 interface Props {
   message?: string
 }

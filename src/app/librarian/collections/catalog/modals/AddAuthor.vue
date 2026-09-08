@@ -87,7 +87,6 @@
 
 <script setup lang="ts">
 import Modal from '@/components/my/Modal.vue'
-import type { Author } from '@/composables/data/useAuthor'
 
 const pop = usePopup()
 

@@ -31,7 +31,7 @@ import BookForm from '@/app/librarian/collections/catalog/forms/sections/BookFor
 
 interface Form extends BaseField, BookField, ClassficationField, AuthorField {}
 
-const { itemTypes } = itemTypeStore()
+const { itemTypes } = useItemTypeStore()
 
 const pop = usePopup()
 const auth = authStore()

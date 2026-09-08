@@ -13,6 +13,9 @@
 
           <!-- Modal Body -->
           <div class="max-h-[76dvh] flex flex-col overflow-y-auto">
+            <Transition name="fade">
+              <p class="text-danger p-3 px-5" v-if="errorMessage?.length > 0"><Icon class="mr-2" icon="exclamation-circle" /> {{ errorMessage }}</p>
+            </Transition>
             <div class="flex-1 place-content-center min-h-100" v-if="loading">
               <LogoLoader message="Loading content, please wait..." />
             </div>
@@ -38,6 +41,7 @@ interface Props {
   size?: ModalSize
   enableCloseBtn?: boolean
   loading?: boolean
+  error?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -47,11 +51,12 @@ const props = withDefaults(defineProps<Props>(), {
   enableCloseBtn: false,
 })
 
-const emit = defineEmits(['show'])
+const emit = defineEmits(['show', 'closing'])
 
 const isOpen = ref(false)
 const modalRef = ref<HTMLElement | null>(null)
 const timer = ref<ReturnType<typeof setTimeout> | null>(null)
+const errorMessage = ref(props.error ?? '')
 
 const positionClasses = computed(() => {
   const positions: Record<ModalPosition, string> = {
@@ -84,6 +89,8 @@ function close() {
   if (props.hasInputs) {
     const el = modalRef.value
 
+    errorMessage.value = "You can't close this modal yet because it has inputs. Please clear inputs before closing."
+
     if (el) {
       if (timer.value) {
         clearTimeout(timer.value)
@@ -111,6 +118,13 @@ watch(isOpen, (opened) => {
 
   emit('show', isOpen.value)
 })
+
+watch(
+  () => props.hasInputs,
+  () => {
+    errorMessage.value = ''
+  },
+)
 
 defineExpose({
   open,

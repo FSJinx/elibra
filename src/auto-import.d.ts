@@ -379,14 +379,17 @@ declare global {
   export type { Component, Slot, Slots, ComponentPublicInstance, ComputedRef, DirectiveBinding, ExtractDefaultPropTypes, ExtractPropTypes, ExtractPublicPropTypes, InjectionKey, PropType, Ref, ShallowRef, MaybeRef, MaybeRefOrGetter, VNode, WritableComputedRef } from 'vue'
   import('vue')
   // @ts-ignore
-  export type { Author } from './composables/data/useAuthor'
-  import('./composables/data/useAuthor')
-  // @ts-ignore
   export type { Variants, Sizes } from './composables/useType'
   import('./composables/useType')
   // @ts-ignore
+  export type { Acquisition } from './stores/acquisitionStore'
+  import('./stores/acquisitionStore')
+  // @ts-ignore
   export type { User } from './stores/authStore'
   import('./stores/authStore')
+  // @ts-ignore
+  export type { Author } from './stores/authorStore'
+  import('./stores/authorStore')
   // @ts-ignore
   export type { Campus, CampusParams } from './stores/campusStore'
   import('./stores/campusStore')

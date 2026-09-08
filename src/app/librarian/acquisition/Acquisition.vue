@@ -1,71 +1,116 @@
 <template>
-  <main class="min-h-full bg-slate-50 p-5 sm:p-7">
-    <div class="mx-auto max-w-7xl space-y-6">
-      <section class="rounded-2xl bg-indigo-950 p-6 text-white">
-        <p class="text-xs font-bold uppercase tracking-[0.18em] text-indigo-300">Acquisitions</p>
-        <h1 class="mt-2 text-2xl font-bold sm:text-3xl">{{ page.title }}</h1>
-        <p class="mt-2 text-sm text-indigo-100">{{ page.description }}</p>
-      </section>
-      <section class="grid gap-4 sm:grid-cols-3">
-        <article v-for="stat in page.stats" :key="stat.label" class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p class="text-sm text-slate-500">{{ stat.label }}</p>
-          <p class="mt-2 text-2xl font-bold text-slate-950">{{ stat.value }}</p>
-        </article>
-      </section>
-      <section class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-        <div class="flex items-center justify-between">
-          <h2 class="font-semibold text-slate-950">{{ page.section }}</h2>
-          <button type="button" class="rounded-lg bg-indigo-700 px-3 py-2 text-sm font-semibold text-white">{{ page.action }}</button>
-        </div>
-        <div class="mt-4 grid gap-3 md:grid-cols-2">
-          <article v-for="item in page.items" :key="item.name" class="rounded-xl bg-indigo-50/60 p-4">
-            <div class="flex justify-between gap-3">
-              <h3 class="font-semibold text-slate-800">{{ item.name }}</h3>
-              <span class="text-xs font-bold text-indigo-700">{{ item.status }}</span>
-            </div>
-            <p class="mt-2 text-sm text-slate-500">{{ item.detail }}</p>
-            <div class="mt-3 h-1.5 rounded-full bg-indigo-100"><div class="h-full rounded-full bg-indigo-600" :style="{ width: item.progress + '%' }"></div></div>
-          </article>
-        </div>
-      </section>
+  <div class="size-full flex flex-col">
+    <SectionHeader class="border-b border-border" title="Acquisitions" description="Manage your library's acquisition record" icon="receipt">
+      <div class="flex items-end justify-end">
+        <AddNewAcquisitionButton />
+      </div>
+    </SectionHeader>
+
+    <div class="flex-1 flex flex-col p-5 gap-3">
+      <Card>
+        <Form class="flex items-center justify-end gap-2">
+          <Label id="search" class="mr-3">Search</Label>
+          <Input id="search" type="text" class="max-w-100" placeholder="Search donations by ID, donor name, or cause..." enable-clear />
+
+          <Select id="type-filter" title="Type" class="max-w-75">
+            <Option value="">All Acquisition Modes</Option>
+            <Option value="purchase">Purchase</Option>
+            <Option value="donation">Donation</Option>
+            <Option value="gift">Gift</Option>
+          </Select>
+
+          <Select id="status-filter" title="Status" class="max-w-50">
+            <Option value="">All Statuses</Option>
+            <Option value="completed">Completed</Option>
+            <Option value="pending">Pending Receipt</Option>
+            <Option value="pledged">Pledged</Option>
+            <Option value="refunded">Refunded</Option>
+          </Select>
+          <Button type="submit" variant="info">Search</Button>
+        </Form>
+      </Card>
+      <Table class="" title="Recent Acquisitions" subtitle="These are your library's recent acquisitions.">
+        <Thead>
+          <tr>
+            <Th>Purchase ID</Th>
+            <Th>Dealer</Th>
+            <Th>Mode of Acquisition</Th>
+            <Th>Date</Th>
+            <Th>Remarks</Th>
+            <Th>Date Added</Th>
+            <Th>Date Updated</Th>
+          </tr>
+        </Thead>
+        <Tbody :data="data" :loading="false" cols="7">
+          <router-link v-for="a in data" :to="{ name: 'librarian.acquisition.view' }" custom v-slot="{ navigate }">
+            <tr class="hover cursor-pointer" @click="navigate" role="button">
+              <Td :data="a.purchaseId"></Td>
+              <Td :data="a.dealer"></Td>
+              <Td :data="a.modeOfAcquisition"></Td>
+              <Td :data="a.date"></Td>
+              <Td :data="a.remarks"></Td>
+              <Td> {{ parse.timeAgo(a.dateAdded) }}</Td>
+              <Td> {{ parse.timeAgo(a.dateUpdated) }}</Td>
+            </tr>
+          </router-link>
+        </Tbody>
+      </Table>
     </div>
-  </main>
+  </div>
 </template>
-+
+
 <script setup lang="ts">
-const key = String(useRoute().name).split('.').pop()
-const page =
-  key === 'vendors'
-    ? {
-        title: 'Vendors',
-        description: 'Manage suppliers, terms, and renewal contacts.',
-        section: 'Supplier directory',
-        action: 'Add vendor',
-        stats: [
-          { label: 'Active vendors', value: '18' },
-          { label: 'Contracts renewing', value: '3' },
-          { label: 'Preferred suppliers', value: '7' },
-        ],
-        items: [
-          { name: 'EBSCO Information Services', detail: 'Digital resources · Net 30 terms', status: 'Active', progress: 82 },
-          { name: 'University Press', detail: 'Books · Preferred supplier', status: 'Active', progress: 64 },
-          { name: 'Archive Systems PH', detail: 'Equipment · Contract review', status: 'Review', progress: 38 },
-        ],
-      }
-    : {
-        title: key === 'requests' ? 'Requests' : key === 'purchase-orders' ? 'Purchase Orders' : key === 'budget-funds' ? 'Budget & Funds' : 'Donations & Gifts',
-        description: 'Move library resources from request to availability with clear ownership.',
-        section: key === 'budget-funds' ? 'Fund utilization' : 'Acquisition pipeline',
-        action: key === 'requests' ? 'New request' : 'Export',
-        stats: [
-          { label: 'Open requests', value: '24' },
-          { label: 'Committed funds', value: 'PHP 486K' },
-          { label: 'Received this month', value: '86' },
-        ],
-        items: [
-          { name: 'Engineering reference titles', detail: 'Requested by Engineering Department · PHP 12,800', status: 'Pending', progress: 38 },
-          { name: 'PO-3021 · National Book Store', detail: '48 titles · Expected September 04', status: 'Approved', progress: 72 },
-          { name: 'ISU Alumni donation', detail: '35 items · Received August 28', status: 'Complete', progress: 100 },
-        ],
-      }
+import AddNewAcquisitionButton from '@/app/librarian/acquisition/modals/AddNewAcquisitionButton.vue';
+import SectionHeader from '@/components/my/SectionHeader.vue'
+
+const parse = useParser()
+const data = ref([
+  {
+    purchaseId: 'ISU-E-2026070101',
+    dealer: 'National Book Store',
+    modeOfAcquisition: 'Purchased',
+    date: 'July 1, 2026',
+    remarks: null,
+    dateAdded: '2026-07-01 08:30:00',
+    dateUpdated: '2026-07-01 08:34:00',
+  },
+  {
+    purchaseId: 'ISU-E-2026070102',
+    dealer: 'Silicon Valley',
+    modeOfAcquisition: 'Donated',
+    date: 'July 2, 2026',
+    remarks: 'Complete set with accessories',
+    dateAdded: '2026-07-02 10:15:00',
+    dateUpdated: '2026-07-02 10:22:00',
+  },
+  {
+    purchaseId: 'ISU-E-2026070103',
+    dealer: 'Toyota Isabela',
+    modeOfAcquisition: 'Purchased',
+    date: 'July 5, 2026',
+    remarks: null,
+    dateAdded: '2026-07-05 13:45:00',
+    dateUpdated: '2026-07-05 14:15:00',
+  },
+  {
+    purchaseId: 'ISU-E-2026070104',
+    dealer: 'Wilcon Depot',
+    modeOfAcquisition: 'Procured',
+    date: 'July 10, 2026',
+    remarks: 'Awaiting delivery',
+    dateAdded: '2026-07-10 09:00:00',
+    dateUpdated: '2026-07-10 09:00:00',
+  },
+  {
+    purchaseId: 'ISU-E-2026070105',
+    dealer: 'Abenson Appliances',
+    modeOfAcquisition: 'Purchased',
+    date: 'July 12, 2026',
+    remarks: null,
+    dateAdded: '2026-07-12 16:20:00',
+    dateUpdated: '2026-07-12 17:05:00',
+  },
+])
 </script>
+
+<style scoped></style>

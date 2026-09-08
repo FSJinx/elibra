@@ -25,8 +25,6 @@ const librarianMenu = {
     children: {
       catalog: { path: 'librarian.collections.catalog', name: 'Catalog', icon: 'journal-plus' },
       inventory: { path: 'librarian.collections.inventory', name: 'Inventory', icon: 'boxes' },
-      acquisition: { path: 'librarian.collections.acquisition', name: 'Acquisition', icon: 'receipt' },
-      acquisition_request: { path: 'librarian.collections.acquisition-requests', name: 'Acquisition Request', icon: 'box-arrow-in-down' },
     },
   },
 
@@ -40,16 +38,13 @@ const librarianMenu = {
   //   },
   // },
 
-  // acquisition: {
-  //   name: 'Acquisitions',
-  //   children: {
-  //     requests: { path: 'librarian.acquisition.requests', name: 'Requests', icon: 'inbox' },
-  //     purchase_orders: { path: 'librarian.acquisition.purchase-orders', name: 'Purchase Orders', icon: 'receipt' },
-  //     vendors: { path: 'librarian.acquisition.vendors', name: 'Vendors', icon: 'building' },
-  //     budget_funds: { path: 'librarian.acquisition.budget-funds', name: 'Budget & Funds', icon: 'wallet2' },
-  //     donations: { path: 'librarian.acquisition.donations', name: 'Donations & Gifts', icon: 'gift' },
-  //   },
-  // },
+  acquisition: {
+    name: 'Acquisitions',
+    children: {
+      acquisition: { path: 'librarian.acquisition', name: 'Acquisition', icon: 'receipt' },
+      acquisition_request: { path: 'librarian.acquisition-requests', name: 'Acquisition Request', icon: 'box-arrow-in-down' },
+    },
+  },
 
   // serials: {
   //   name: 'Serials',

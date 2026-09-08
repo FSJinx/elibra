@@ -40,10 +40,3 @@ const form = defineModel<AuthorField>({ default: {} })
 const authorshipsOption = computed(() => authorships?.filter((i) => i.item_type_id === props.item_type_id))
 </script>
 
-<style scoped>
-.control {
-  display: grid !important;
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  padding: 1.25rem;
-}
-</style>
