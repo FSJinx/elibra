@@ -21,7 +21,7 @@ return new class extends Migration
 
             $table->unsignedBigInteger('item_id');
             $table->unsignedBigInteger('section_id');
-            $table->unsignedBigInteger('acquisition_id');
+            $table->unsignedBigInteger('acquisition_line_id');
         });
     }
 
