@@ -22,7 +22,7 @@
             </h2>
 
             <!-- Menu Children -->
-            <div class="space-y-1">
+            <div class="space-y-1 px-2">
               <router-link
                 v-for="child in childrenOf(menu.children)"
                 :key="child.path"

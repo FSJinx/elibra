@@ -8,7 +8,7 @@ class QueryService
 {
     public static function filters(
         Request $request,
-        int $defaultPerPage = 15,
+        int $defaultPerPage = 25,
         int $maxPerPage = 100
     ): array {
         $perPage = $request->integer('per_page', $defaultPerPage);

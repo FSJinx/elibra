@@ -41,7 +41,7 @@ interface Props {
 const props = defineProps<Props>()
 
 function view(id: number) {
-  return router.push({ name: 'librarian.catalog.view', params: { id: id } })
+  return router.push({ name: 'librarian.collections.catalog.view', params: { id: id } })
 }
 </script>
 

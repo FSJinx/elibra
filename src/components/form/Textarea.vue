@@ -54,7 +54,7 @@ interface Props {
   enableClear?: boolean
 
   // Display
-  error?: string
+  error?: string | null
   size?: Sizes
   helper?: string
 }

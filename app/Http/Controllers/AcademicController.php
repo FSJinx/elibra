@@ -43,7 +43,7 @@ class AcademicController extends Controller
         return $this->response(
             'success',
             'Academics retrieved successfully',
-            $academics,
+            $academics->toArray(),
             200
         );
         
@@ -67,7 +67,7 @@ class AcademicController extends Controller
         return $this->response( 
             'success', 
             'Academic created successfully', 
-            $academic->load('item')->toArray(),            
+            $academic->toArray(),            
             201
         );
     }
@@ -102,7 +102,7 @@ class AcademicController extends Controller
         return $this->response(
             'success', 
             'Academic updated successfully', 
-            $academic->load('item')->toArray(), 
+            $academic->toArray(), 
             200
         );
     }

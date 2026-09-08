@@ -1,15 +1,18 @@
 <template>
-  <div ref="dropdownRef" class="relative inline-flex items-center min-w-40 w-full">
+  <div ref="dropdownRef" class="relative inline-flex flex-col gap-2 min-w-40 w-full">
     <div type="button" @click="toggle" class="flex items-center h-11 text-left px-4 text-foreground w-full rounded-md border border-border cursor-pointer disabled:cursor-not-allowed transition-all duration-200" :class="[open ? 'bg-tertiary' : 'bg-background']" :disabled="disabled" :aria-expanded="open" aria-haspopup="listbox" :data-title="enableTooltip ? `${parse.toCapital(title as string)}: ${selectedOption.label}` : ''">
       <span class="line-clamp-1 mr-5">{{ selectedOption.label }}</span>
       <Icon icon="chevron-down" class="ml-auto transition-all duration-300 pointer-events-none" :class="{ '-rotate-180': open }" />
     </div>
+    <p v-if="error && error.length > 0" class="text-xs font-medium text-danger">
+      {{ error }}
+    </p>
 
     <Input :id="`${id}-value`" class="absolute opacity-0 -z-1 pointer-events-none h-full w-full" :required="required" v-model="model" />
 
     <!-- Teleported dropdown: using hidden / v-show instead of v-if keeps child slots mounted -->
     <Teleport to="body">
-      <div role="listbox" :class="[open ? 'grid animate-dropdown-in' : 'hidden']" class="options gap-0.5 fixed bg-background min-w-75 rounded-md shadow-lg border border-border p-2 z-9999 max-h-60 overflow-y-auto scrollbar-thin" :style="dropdownStyle">
+      <div ref="dropdownMenuRef" role="listbox" :class="[open ? 'grid animate-dropdown-in' : 'hidden']" class="options gap-0.5 fixed bg-background min-w-75 rounded-md shadow-lg border border-border p-2 z-9999 max-h-60 overflow-y-auto scrollbar-thin" :style="dropdownStyle">
         <p v-if="props.title" class="text-xs font-semibold uppercase text-foreground-secondary p-1 mb-1">{{ props.title }}</p>
         <slot />
       </div>
@@ -31,15 +34,18 @@ interface Props {
   required?: boolean
   disabled?: boolean
   enableTooltip?: boolean
+  error?: string | null
 }
 
 const dropdownRef = ref<HTMLElement | null>(null)
+const dropdownMenuRef = ref<HTMLElement | null>(null)
 const open = ref<boolean>(false)
 const model = defineModel<any>({ default: '' })
 const parse = useParser()
 
 const props = withDefaults(defineProps<Props>(), {
   enableTooltip: false,
+  error: ''
 })
 
 const selectedOption = reactive<SelectedOption>({
@@ -51,15 +57,24 @@ const dropdownStyle = ref({
   top: '0px',
   left: '0px',
   width: '0px',
+  maxHeight: '240px',
 })
 
 const updatePosition = () => {
   if (dropdownRef.value) {
     const rect = dropdownRef.value.getBoundingClientRect()
+    const spacing = 8
+    const gap = 6
+    const spaceBelow = window.innerHeight - rect.bottom - gap - spacing
+    const spaceAbove = rect.top - gap - spacing
+    const openUpward = spaceBelow < 240 && spaceAbove > spaceBelow
+    const availableHeight = Math.max(0, Math.min(240, openUpward ? spaceAbove : spaceBelow))
+
     dropdownStyle.value = {
-      top: `${rect.bottom + 6}px`,
+      top: `${openUpward ? rect.top - gap - availableHeight : rect.bottom + gap}px`,
       left: `${rect.left}px`,
       width: `${rect.width}px`,
+      maxHeight: `${availableHeight}px`,
     }
   }
 }

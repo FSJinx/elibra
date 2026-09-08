@@ -14,6 +14,7 @@ class CatalogIndex extends Model
     protected $fillable = [
         'item_id',
         'content',
+        'campus_id',
         'branch_id',
         'item_type_id',
         'item_type_category_id',
@@ -39,7 +40,7 @@ class CatalogIndex extends Model
             'authors',
             'itemType',
             'itemTypeCategory',
-            'branch',
+            'branch.campus',
             'language',
         ])->first();
 
@@ -69,12 +70,14 @@ class CatalogIndex extends Model
             'item_type' => $item?->itemType?->name,
             'item_type_category' => $item?->itemTypeCategory?->name,
             'branch' => $item?->branch?->name,
+            'campus' => $item?->branch?->campus?->name,
             'language' => $item?->language?->name,
 
             // Complete text
             'content' => $this->content,
 
             // Filters
+            'campus_id' => $this->campus_id,
             'branch_id' => $this->branch_id,
             'item_type_id' => $this->item_type_id,
             'item_type_category_id' => $this->item_type_category_id,

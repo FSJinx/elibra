@@ -57,7 +57,26 @@ class Item extends Model
             'item_authors',
             'item_id',
             'author_id',
-        );
+        )->withPivot('authorship_id');
+    }
+
+    public function syncAuthors(array $authors): void
+    {
+        $pivotData = [];
+
+        foreach ($authors as $author) {
+            $authorId = is_array($author) ? ($author['id'] ?? null) : $author;
+
+            if ($authorId === null) {
+                continue;
+            }
+
+            $pivotData[$authorId] = [
+                'authorship_id' => is_array($author) ? ($author['authorship_id'] ?? null) : null,
+            ];
+        }
+
+        $this->authors()->sync($pivotData);
     }
 
     public function itemType()

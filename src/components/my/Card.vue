@@ -1,5 +1,5 @@
 <template>
-  <div class="inline-flex flex-col bg-background p-5 border border-border rounded-xl">
+  <div class="inline-flex flex-col bg-container p-5 border border-border rounded-xl">
     <slot />
   </div>
 </template>

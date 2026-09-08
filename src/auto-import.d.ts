@@ -14,6 +14,7 @@ declare global {
   const asyncComputed: typeof import('@vueuse/core').asyncComputed
   const authRoute: typeof import('./router/authRoute').authRoute
   const authStore: typeof import('./stores/authStore').authStore
+  const authorshipStore: typeof import('./stores/authorshipStore').authorshipStore
   const autoResetRef: typeof import('@vueuse/core').autoResetRef
   const axios: typeof import('./plugins/axios').default
   const backendRoute: typeof import('./plugins/axios').backendRoute
@@ -70,6 +71,7 @@ declare global {
   const isShallow: typeof import('vue').isShallow
   const itemCategoriesStore: typeof import('./stores/itemCategoriesStore').itemCategoriesStore
   const itemTypeStore: typeof import('./stores/itemTypeStore').itemTypeStore
+  const languagesStore: typeof import('./stores/languagesStore').languagesStore
   const librar: typeof import('./router/librarian/administration.route').librar
   const librarian: typeof import('./router/librarian/acquisition.route').librarian
   const librarianAcquisition: typeof import('./router/librarian/acquisition.route').librarianAcquisition
@@ -181,6 +183,7 @@ declare global {
   const useAsyncState: typeof import('@vueuse/core').useAsyncState
   const useAttrs: typeof import('vue').useAttrs
   const useAuth: typeof import('./composables/data/useAuth').useAuth
+  const useAuthorship: typeof import('./composables/data/useAuthorship').useAuthorship
   const useBase64: typeof import('@vueuse/core').useBase64
   const useBattery: typeof import('@vueuse/core').useBattery
   const useBluetooth: typeof import('@vueuse/core').useBluetooth
@@ -251,6 +254,7 @@ declare global {
   const useItemCategories: typeof import('./composables/data/useItemCategories').useItemCategories
   const useItemTypes: typeof import('./composables/data/useItemTypes').useItemTypes
   const useKeyModifier: typeof import('@vueuse/core').useKeyModifier
+  const useLanguages: typeof import('./composables/data/useLanguages').useLanguages
   const useLastChanged: typeof import('@vueuse/core').useLastChanged
   const useLink: typeof import('vue-router').useLink
   const useLocalStorage: typeof import('@vueuse/core').useLocalStorage
@@ -373,6 +377,9 @@ declare global {
   export type { Component, Slot, Slots, ComponentPublicInstance, ComputedRef, DirectiveBinding, ExtractDefaultPropTypes, ExtractPropTypes, ExtractPublicPropTypes, InjectionKey, PropType, Ref, ShallowRef, MaybeRef, MaybeRefOrGetter, VNode, WritableComputedRef } from 'vue'
   import('vue')
   // @ts-ignore
+  export type { Author } from './composables/data/useAuthor'
+  import('./composables/data/useAuthor')
+  // @ts-ignore
   export type { Variants, Sizes } from './composables/useType'
   import('./composables/useType')
   // @ts-ignore
@@ -396,6 +403,7 @@ declare module 'vue' {
     readonly asyncComputed: UnwrapRef<typeof import('@vueuse/core')['asyncComputed']>
     readonly authRoute: UnwrapRef<typeof import('./router/authRoute')['authRoute']>
     readonly authStore: UnwrapRef<typeof import('./stores/authStore')['authStore']>
+    readonly authorshipStore: UnwrapRef<typeof import('./stores/authorshipStore')['authorshipStore']>
     readonly autoResetRef: UnwrapRef<typeof import('@vueuse/core')['autoResetRef']>
     readonly axios: UnwrapRef<typeof import('./plugins/axios')['default']>
     readonly backendRoute: UnwrapRef<typeof import('./plugins/axios')['backendRoute']>
@@ -448,6 +456,7 @@ declare module 'vue' {
     readonly isShallow: UnwrapRef<typeof import('vue')['isShallow']>
     readonly itemCategoriesStore: UnwrapRef<typeof import('./stores/itemCategoriesStore')['itemCategoriesStore']>
     readonly itemTypeStore: UnwrapRef<typeof import('./stores/itemTypeStore')['itemTypeStore']>
+    readonly languagesStore: UnwrapRef<typeof import('./stores/languagesStore')['languagesStore']>
     readonly librarianAcquisition: UnwrapRef<typeof import('./router/librarian/acquisition.route')['librarianAcquisition']>
     readonly librarianAdministration: UnwrapRef<typeof import('./router/librarian/administration.route')['librarianAdministration']>
     readonly librarianCataloging: UnwrapRef<typeof import('./router/librarian/collection.route')['librarianCataloging']>
@@ -554,6 +563,7 @@ declare module 'vue' {
     readonly useAsyncState: UnwrapRef<typeof import('@vueuse/core')['useAsyncState']>
     readonly useAttrs: UnwrapRef<typeof import('vue')['useAttrs']>
     readonly useAuth: UnwrapRef<typeof import('./composables/data/useAuth')['useAuth']>
+    readonly useAuthorship: UnwrapRef<typeof import('./composables/data/useAuthorship')['useAuthorship']>
     readonly useBase64: UnwrapRef<typeof import('@vueuse/core')['useBase64']>
     readonly useBattery: UnwrapRef<typeof import('@vueuse/core')['useBattery']>
     readonly useBluetooth: UnwrapRef<typeof import('@vueuse/core')['useBluetooth']>
@@ -622,6 +632,7 @@ declare module 'vue' {
     readonly useItemCategories: UnwrapRef<typeof import('./composables/data/useItemCategories')['useItemCategories']>
     readonly useItemTypes: UnwrapRef<typeof import('./composables/data/useItemTypes')['useItemTypes']>
     readonly useKeyModifier: UnwrapRef<typeof import('@vueuse/core')['useKeyModifier']>
+    readonly useLanguages: UnwrapRef<typeof import('./composables/data/useLanguages')['useLanguages']>
     readonly useLastChanged: UnwrapRef<typeof import('@vueuse/core')['useLastChanged']>
     readonly useLink: UnwrapRef<typeof import('vue-router')['useLink']>
     readonly useLocalStorage: UnwrapRef<typeof import('@vueuse/core')['useLocalStorage']>

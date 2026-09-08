@@ -13,7 +13,7 @@ class CampusSeeder extends Seeder
     public function run(): void
     {
         $campuses = [
-            ['name' => 'Main Campus',    'code' => 'ISU-E',    'address' => 'San Fabian, Echague, Isabela'],
+            ['name' => 'Echague Campus (Main)',    'code' => 'ISU-E',    'address' => 'San Fabian, Echague, Isabela'],
             ['name' => 'Cabagan Campus',    'code' => 'ISU-C',    'address' => 'Garita, Cabagan, Isabela'],
             ['name' => 'Cauayan Campus',    'code' => 'ISU-CC',    'address' => 'Dacanay St., Cauayan City, Isabela'],
             ['name' => 'Ilagan Campus',    'code' => 'ISU-I',    'address' => 'Calamagui 2nd, Ilagan City, Isabela'],

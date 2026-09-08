@@ -1,10 +1,10 @@
 <?php
 
 use App\Http\Controllers\AcademicController;
-use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\AuthorController;
+use App\Http\Controllers\AuthorshipController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BranchSectionController;
@@ -33,13 +33,12 @@ Route::group(['prefix' => '/auth'], function () {
     Route::post('/refresh', [AuthController::class, 'refresh'])->middleware('jwt.refresh');
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('jwt.auth');
 
-
     Route::group(['middleware' => 'jwt.auth'], function () {
         Route::get('', [AuthController::class, 'index']); // /api/auth
     });
 });
 
-// Public Routes 
+// Public Routes
 Route::get('/try', [TestController::class, 'index']);
 Route::get('opac/search', [OpacSearchController::class, 'search'])->middleware('throttle:read');
 
@@ -47,7 +46,7 @@ Route::get('opac/search', [OpacSearchController::class, 'search'])->middleware('
 Route::get('item-types', [ItemTypeController::class, 'index'])->middleware('throttle:read');
 Route::get('item-type-categories', [ItemTypeCategoryController::class, 'index'])->middleware('throttle:read');
 Route::get('languages', [LanguageController::class, 'index'])->middleware('throttle:read');
-Route::get('authors', [AuthorController::class, 'index'])->middleware('throttle:read');
+Route::get('authorship', [AuthorshipController::class, 'index'])->middleware('throttle:read');
 
 // Media Routes
 Route::group(['prefix' => '/media'], function () {
@@ -208,6 +207,7 @@ Route::group(['prefix' => '/branch'], function () {
 
     Route::group(['prefix' => '/get'], function () {
         Route::get('', [BranchController::class, 'index'])->middleware('throttle:read');
+        Route::get('show', [BranchController::class, 'index'])->middleware('throttle:read');
     });
 
     Route::group(['prefix' => '/create'], function () {
@@ -279,18 +279,9 @@ Route::group(['prefix' => '/user'], function () {
 
 });
 
-// Admin Routes
-// Route::group(['prefix' => '/admin'], function () {
+Route::group(['prefix' => '/authors'], function () {
 
-//     Route::group(['prefix' => '/create'], function () {
-//         Route::post('', [AdminController::class, 'store'])->middleware('jwt.auth', 'role:super_admin');
-//     });
-
-//     Route::group(['prefix' => '/update'], function () {
-//         Route::put('{admin}', [AdminController::class, 'update'])->middleware('jwt.auth', 'role:super_admin');
-//     });
-
-//     Route::group(['prefix' => '/delete'], function () {
-//         Route::delete('{admin}', [AdminController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin');
-//     });
-// });
+    Route::get('', [AuthorController::class, 'index'])->middleware('throttle:read');
+    Route::post('', [AuthorController::class, 'store'])->middleware('throttle:write');
+    Route::post('show', [AuthorController::class, 'show'])->middleware('throttle:write');
+});

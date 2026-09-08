@@ -1,78 +1,83 @@
 <template>
-  <Form id="book-form" cols="2" @submit="submitForm">
-    <div class="flex items-center justify-end gap-2">
-      <Button type="button" left-icon="archive" :disabled="!hasInputs">Drafts</Button>
-      <Button type="button" left-icon="x-lg" :disabled="!hasInputs" @click="clearForm">Clear Form</Button>
-    </div>
-    <template #body>
-      <Control direction="col">
-        <Label required id="book-title">Title</Label>
-        <Input id="book-title" v-model="form.title" placeholder="Enter the title of the book..." required />
-      </Control>
-      <Control direction="col">
-        <Label id="book-subtitle">Subtitle</Label>
-        <Input id="book-subtitle" v-model="form.subtitle" placeholder="Enter the subtitle..." />
-      </Control>
-      <Control direction="col" class="col-span-2">
-        <Label required id="book-description">Description</Label>
-        <Input id="book-description" v-model="form.description" placeholder="Enter a description..." required />
-      </Control>
-      <Control direction="col">
-        <Label id="book-call-number">Call Number</Label>
-        <Input id="book-call-number" v-model="form.call_number" placeholder="Enter the call number..." />
-      </Control>
-      <Control direction="col">
-        <Label required id="book-language">Language</Label>
-        <Input id="book-language" v-model="form.language" placeholder="Enter the language..." required />
-      </Control>
-      <Control direction="col">
-        <Label required id="book-publication-year">Publication Year</Label>
-        <Input id="book-publication-year" v-model="form.publication_year" type="number" min="1900" placeholder="e.g. 2026" required />
-      </Control>
-      <Control direction="col">
-        <Label required id="book-keywords">Keywords</Label>
-        <Input id="book-keywords" v-model="form.keywords" placeholder="Enter keywords..." required />
-      </Control>
-      <Control direction="col">
-        <Label required id="book-item-type">Item Type ID</Label>
-        <Input id="book-item-type" v-model="form.item_type_id" type="number" min="1" placeholder="Enter item type ID..." required />
-      </Control>
-      <Control direction="col">
-        <Label required id="book-item-category">Item Type Category ID</Label>
-        <Input id="book-item-category" v-model="form.item_type_category_id" type="number" min="1" placeholder="Enter category ID..." required />
-      </Control>
-      <Control direction="col">
-        <Label required id="book-branch">Branch ID</Label>
-        <Input id="book-branch" v-model="form.branch_id" type="number" min="1" placeholder="Enter branch ID..." required />
-      </Control>
-      <Control direction="col">
-        <Label id="book-electronic-file">Electronic File</Label>
-        <Input id="book-electronic-file" v-model="form.electronic_file" placeholder="Enter the file path..." />
-      </Control>
-    </template>
-    <template #footer>
-      <Button left-icon="folder2-open" form="book-form">Save as Draft</Button>
-      <Button type="submit" variant="primary" left-icon="send" form="book-form">Submit</Button>
-    </template>
+  <Form class="flex flex-col gap-3 p-5" @submit="submitForm">
+    <SectionHeader class="bg-background border border-border rounded-t-xl rounded-b-lg" :title="`New ${$route.meta.breadcrumb}`" description="Please fill all required fields and re-check your inputs before submitting." />
+
+    <!-- BASIC INFORMATION -->
+    <BaseForm v-model="form" :errors="errors" />
+
+    <!-- BOOK INFORMATION -->
+    <BookForm v-model="form" :errors="errors" />
+
+    <!-- CLASSIFICATION -->
+    <ClassificationForm v-model="form" :errors="errors" :item_type_id="bookId" />
+
+    <!-- AUTHOR -->
+    <AuthorForm v-model="form" :errors="errors" :item_type_id="bookId" />
+
+    <section class="sticky bottom-0 flex items-center justify-end gap-2 p-5 overflow-hidden border border-border rounded-b-xl bg-background z-2">
+      <Button left-icon="x-lg" variant="danger" :disabled="!hasInputs" @click="clearForm">Clear Form</Button>
+      <Button left-icon="archive" :disabled="!hasInputs" v-if="hasInputs">Save as Draft</Button>
+      <Button type="submit" variant="primary" left-icon="send" :disabled="!hasInputs" v-if="hasInputs">Submit</Button>
+    </section>
   </Form>
 </template>
 
 <script setup lang="ts">
-const form = reactive({
+import AuthorForm from '@/app/librarian/collections/catalog/forms/sections/AuthorForm.vue'
+import BaseForm from '@/app/librarian/collections/catalog/forms/sections/BaseForm.vue'
+import ClassificationForm from '@/app/librarian/collections/catalog/forms/sections/ClassificationForm.vue'
+import type { AuthorField, BaseField, BookField, ClassficationField } from '@/app/librarian/collections/catalog/forms/form'
+import BookForm from '@/app/librarian/collections/catalog/forms/sections/BookForm.vue'
+
+interface Form extends BaseField, BookField, ClassficationField, AuthorField {}
+
+const { itemTypes } = itemTypeStore()
+
+const pop = usePopup()
+const auth = authStore()
+
+const emptyForm = (): Form => ({
+  title: 'Doctor Strange',
+  subtitle: 'Multiverse of Madness',
+  description: 'Si Wanda naging Scarlet Witch na talaga.',
+  call_number: 'Mom.12DS',
+  publication_year: '1998',
+  electronic_file: null,
+  keywords: [],
+
+  item_type_category_id: '10',
+  branch_id: auth.user?.role === 'librarian' ? auth.user?.branch?.id : '',
+  language_id: '',
+
+  edition: '1st',
+  isbn_issn: 'ISSN1239371',
+  copyright_year: '2000',
+  doi: '',
+  authors: [],
+})
+
+const form = reactive<Form>(emptyForm())
+const errors = ref<Form>({
   title: '',
   subtitle: '',
   description: '',
   call_number: '',
-  language: '',
   publication_year: '',
-  keywords: '',
-  electronic_file: '',
-  item_type_id: '',
+  electronic_file: null,
+  keywords: [],
+
   item_type_category_id: '',
   branch_id: '',
+  language_id: '',
+
+  edition: '',
+  isbn_issn: '',
+  copyright_year: '',
+  doi: '',
+  authors: [],
 })
 
-const hasInputs = computed(() => Object.values(form).some((value) => String(value).trim().length > 0))
+const hasInputs = computed(() => Object.values(form).some((field) => (Array.isArray(field) ? field.length > 0 : field != null && String(field).trim().length > 0)))
 
 const clearForm = async () => {
   const result = await usePopup().confirm({
@@ -82,35 +87,47 @@ const clearForm = async () => {
   })
 
   if (result.isConfirmed) {
-    Object.assign(form, {
-      title: '',
-      subtitle: '',
-      description: '',
-      call_number: '',
-      language: '',
-      publication_year: '',
-      keywords: '',
-      electronic_file: '',
-      item_type_id: '',
-      item_type_category_id: '',
-      branch_id: '',
-    })
+    Object.assign(form, emptyForm())
   }
 }
 
-const submitForm = () => console.log('Book form submitted:', { ...form })
-
-onBeforeRouteLeave(async () => {
-  if (!hasInputs.value) return true
-
-  const result = await usePopup().confirm({
-    title: 'Leave Form?',
-    text: 'You have unsaved inputs. Are you sure you want to continue? You will lose your progress.',
-    confirmButtonText: 'Leave',
+const clearErrors = () => {
+  Object.keys(errors.value).forEach((field) => {
+    ;(errors.value as Record<string, unknown>)[field] = ''
   })
+}
 
-  return result.isConfirmed
+const bookId = computed(() => {
+  const book = itemTypes?.find((i) => i.name === 'book')
+  return book?.id
 })
+
+async function submitForm() {
+  clearErrors()
+  const res = await pop.confirm({ text: 'Are you sure you have confirmed the inputs before submitting?' })
+
+  if (res.isConfirmed) {
+    pop.load()
+    console.log({ ...form, branch_id: auth.user?.id, item_type_id: bookId.value })
+
+    try {
+      await api.post('item/create/book', { ...form, item_type_id: bookId.value })
+      pop.success('Book added successfully!')
+      router.replace({ name: 'librarian.collections.catalog' })
+    } catch (e: any) {
+      const res = e.response.data
+      console.log(res.errors)
+      // await pop.error(res.errors?.[0])
+      errors.value = res.errors
+    }
+  }
+}
 </script>
 
-<style scoped></style>
+<style scoped>
+.control {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  padding: 1.25rem;
+}
+</style>

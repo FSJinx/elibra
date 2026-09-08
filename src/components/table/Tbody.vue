@@ -1,5 +1,5 @@
 <template>
-  <tbody>
+  <tbody class="z-1">
     <Tload v-if="loading" :columns="cols" />
 
     <tr class="h-150" v-else-if="!data || data.length === 0">

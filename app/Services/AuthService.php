@@ -22,7 +22,7 @@ class AuthService
         ];
 
         switch ($user?->role) {
-            case 'super admin':
+            case 'super_admin':
                 break;
 
             case 'admin':
@@ -35,6 +35,8 @@ class AuthService
 
                     // Remove nested relationships before converting user to array
                     $user->librarian->unsetRelation('branch');
+                } else {
+                    $campus = Campus::where('id', '=', $user->campus_id)->first();
                 }
                 break;
 

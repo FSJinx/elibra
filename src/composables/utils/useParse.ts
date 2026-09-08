@@ -26,6 +26,7 @@ export function useParser() {
         // ====== RESTORE =======
         patron: 'restore',
         academic: 'restore',
+        "super_admin": 'restore',
 
         default: 'default',
       }

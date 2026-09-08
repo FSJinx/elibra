@@ -1,5 +1,5 @@
 <template>
-  <button type="button" class="text-left px-4 py-2 hover:bg-primary hover:text-primary-foreground transition-all duration-100 flex items-center rounded disabled:bg-disabled disabled:text-muted disabled:cursor-not-allowed" :class="{ 'bg-primary text-primary-foreground': isSelected }" :disabled="disabled" @click="select.setSelected(value, labelText)">
+  <button type="button" class="text-left px-4 py-2 hover:bg-primary hover:text-primary-foreground transition-all duration-100 flex items-center rounded disabled:bg-disabled disabled:text-muted-foreground disabled:cursor-not-allowed" :class="{ 'bg-primary text-primary-foreground': isSelected }" :disabled="disabled" @click="select.setSelected(value, labelText)">
     <span v-if="labelText" class="flex-1">
       {{ labelText }}
     </span>
@@ -34,9 +34,21 @@ const isSelected = computed(() => {
   return select.model?.value === props.value || select.selectedOption?.value === props.value || props.selected
 })
 
-onMounted(() => {
-  if (select.selectedOption.value === props.value) {
-    select.setSelected(props.value, labelText.value)
+const isValueMatch = (left: any, right: any) => {
+  if (left == null || right == null) {
+    return left === right
   }
-})
+
+  return String(left) === String(right)
+}
+
+watch(
+  [() => select?.model?.value, labelText],
+  ([modelValue, label]) => {
+    if (isValueMatch(modelValue, props.value) && label) {
+      select.setSelected(props.value, label)
+    }
+  },
+  { immediate: true },
+)
 </script>

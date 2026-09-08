@@ -8,6 +8,34 @@ return new class extends Migration
 {
     private array $tables = [
         [
+            'name' => 'accessions',
+            'foreign_columns' => [
+                ['name' => 'item_id', 'references' => 'id', 'on' => 'items', 'onDelete' => 'cascade'],
+                ['name' => 'section_id', 'references' => 'id', 'on' => 'sections', 'onDelete' => 'cascade'],
+                ['name' => 'acquisition_line_id', 'references' => 'id', 'on' => 'acquisition_lines', 'onDelete' => 'cascade'],
+            ],
+        ],
+        [
+            'name' => 'acquisition_lines',
+            'foreign_columns' => [
+                ['name' => 'item_id', 'references' => 'id', 'on' => 'items', 'onDelete' => 'cascade'],
+                ['name' => 'acquisition_id', 'references' => 'id', 'on' => 'acquisitions', 'onDelete' => 'cascade'],
+            ],
+        ],
+        [
+            'name' => 'acquisitions',
+            'foreign_columns' => [
+                ['name' => 'receiver_user_id', 'references' => 'id', 'on' => 'users', 'onDelete' => 'cascade'],
+                ['name' => 'acquisition_request_id', 'references' => 'id', 'on' => 'acquisition_requests', 'onDelete' => 'cascade'],
+            ],
+        ],
+        [
+            'name' => 'authorships',
+            'foreign_columns' => [
+                ['name' => 'item_type_id', 'references' => 'id', 'on' => 'item_types', 'onDelete' => 'cascade'],
+            ],
+        ],
+        [
             'name' => 'item_type_categories',
             'foreign_columns' => [
                 ['name' => 'item_type_id', 'references' => 'id', 'on' => 'item_types', 'onDelete' => 'cascade'],
@@ -104,6 +132,7 @@ return new class extends Migration
             'name' => 'catalog_indices',
             'foreign_columns' => [
                 ['name' => 'item_id', 'references' => 'id', 'on' => 'items', 'onDelete' => 'cascade'],
+                ['name' => 'campus_id', 'references' => 'id', 'on' => 'campuses', 'onDelete' => 'cascade'],
                 ['name' => 'branch_id', 'references' => 'id', 'on' => 'branches', 'onDelete' => 'cascade'],
                 ['name' => 'item_type_id', 'references' => 'id', 'on' => 'item_types', 'onDelete' => 'cascade'],
                 ['name' => 'item_type_category_id', 'references' => 'id', 'on' => 'item_type_categories', 'onDelete' => 'cascade'],
@@ -114,7 +143,7 @@ return new class extends Migration
         //     'name' => 'catalog_embeddings',
         //     'foreign_columns' => [
         //         ['name' => 'catalog_index_id', 'references' => 'id', 'on' => 'catalog_indices', 'onDelete' => 'cascade'],
-        //     ],   
+        //     ],
         // ],
         [
             'name' => 'user_permissions',
@@ -135,6 +164,7 @@ return new class extends Migration
             'foreign_columns' => [
                 ['name' => 'author_id', 'references' => 'id', 'on' => 'authors', 'onDelete' => 'cascade'],
                 ['name' => 'item_id', 'references' => 'id', 'on' => 'items', 'onDelete' => 'cascade'],
+                ['name' => 'authorship_id', 'references' => 'id', 'on' => 'authorships', 'onDelete' => 'cascade'],
             ],
         ],
     ];

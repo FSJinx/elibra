@@ -6,7 +6,7 @@
           <!-- Modal Header -->
           <div class="flex items-start p-5 pb-4 gap-3 border-b border-gray-300 text-xl font-semibold" v-if="$slots.header || enableCloseBtn">
             <slot name="header" v-if="$slots.header" />
-            <span class="ml-auto text-muted hover:text-foreground/50 cursor-pointer transition duration-100">
+            <span class="ml-auto text-foreground/25 hover:text-foreground cursor-pointer transition-all duration-200">
               <Icon icon="x-lg" @click="close" v-if="enableCloseBtn" style="-webkit-text-stroke: 1px" />
             </span>
           </div>

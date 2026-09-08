@@ -16,11 +16,11 @@ return new class extends Migration
 
             $table->string('title');
             $table->string('subtitle')->nullable();
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->string('call_number')->nullable();
             $table->year('publication_year')->nullable();
             $table->string('electronic_file')->nullable();
-            $table->json('keywords');
+            $table->json('keywords')->nullable();
             
             $table->unsignedBigInteger('item_type_id');
             $table->unsignedBigInteger('item_type_category_id');
