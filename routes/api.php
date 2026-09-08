@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AcademicController;
 use App\Http\Controllers\AcquisitionController;
+use App\Http\Controllers\AcquisitionLinesController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\AuthorController;
@@ -99,14 +100,17 @@ Route::group(['prefix' => 'acquisition'], function () {
 
     Route::group(['prefix' => '/create'], function () {
         Route::post('', [AcquisitionController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
+        Route::post('lines', [AcquisitionLinesController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
     });
 
     Route::group(['prefix' => '/update'], function () {
         Route::put('/{acquisition}', [AcquisitionController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
+        Route::put('lines/{acquisitionLine}', [AcquisitionLinesController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
     });
 
     Route::group(['prefix' => '/delete'], function () {
         Route::delete('/{acquisition}', [AcquisitionController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:delete');
+        Route::delete('lines/{acquisitionLine}', [AcquisitionLinesController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:delete');
     });
 });
 

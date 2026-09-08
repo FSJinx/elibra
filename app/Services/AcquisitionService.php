@@ -26,7 +26,7 @@ class AcquisitionService
                     $search = $filters['search'];
 
                     $query->where(function ($q) use ($search) {
-                        $q->where('purchaseId', 'like', "%{$search}%")
+                        $q->where('purchase_id', 'like', "%{$search}%")
                             ->orWhere('dealer', 'like', "%{$search}%")
                             ->orWhere('acquisition_mode', 'like', "%{$search}%")
                             ->orWhere('remarks', 'like', "%{$search}%");
@@ -35,7 +35,7 @@ class AcquisitionService
 
                 $allowedSorts = [
                     'id',
-                    'purchaseId',
+                    'purchase_id',
                     'dealer',
                     'acquisition_mode',
                     'acquisition_date',
@@ -85,7 +85,7 @@ class AcquisitionService
 
         $date = $acquisition->acquisition_date->format('Y-m-d');
 
-        $acquisition->purchaseId = "{$campusCode}-{$date}-{$acquisition->id}";
+        $acquisition->purchase_id = "{$campusCode}{$date}{$acquisition->id}";
 
         $acquisition->save();
 
@@ -105,7 +105,7 @@ class AcquisitionService
         $acquisition = DB::transaction(function () use (&$acquisition, &$data) {
             $acquisition->update(
                 Arr::only($data, [
-                    'purchaseId',
+                    'purchase_id',
                     'dealer',
                     'acquisition_mode',
                     'acquisition_date',

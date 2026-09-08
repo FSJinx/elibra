@@ -44,7 +44,7 @@
         <Tbody :data="data" :loading="false" cols="7">
           <router-link v-for="a in data" :to="{ name: 'librarian.acquisition.view' }" custom v-slot="{ navigate }">
             <tr class="hover cursor-pointer" @click="navigate" role="button">
-              <Td :data="a.purchaseId"></Td>
+              <Td :data="a.purchase_id"></Td>
               <Td :data="a.dealer"></Td>
               <Td :data="a.modeOfAcquisition"></Td>
               <Td :data="a.date"></Td>
@@ -66,7 +66,7 @@ import SectionHeader from '@/components/my/SectionHeader.vue'
 const parse = useParser()
 const data = ref([
   {
-    purchaseId: 'ISU-E-2026070101',
+    purchase_id: 'ISU-E-2026070101',
     dealer: 'National Book Store',
     modeOfAcquisition: 'Purchased',
     date: 'July 1, 2026',
@@ -75,7 +75,7 @@ const data = ref([
     dateUpdated: '2026-07-01 08:34:00',
   },
   {
-    purchaseId: 'ISU-E-2026070102',
+    purchase_id: 'ISU-E-2026070102',
     dealer: 'Silicon Valley',
     modeOfAcquisition: 'Donated',
     date: 'July 2, 2026',
@@ -84,7 +84,7 @@ const data = ref([
     dateUpdated: '2026-07-02 10:22:00',
   },
   {
-    purchaseId: 'ISU-E-2026070103',
+    purchase_id: 'ISU-E-2026070103',
     dealer: 'Toyota Isabela',
     modeOfAcquisition: 'Purchased',
     date: 'July 5, 2026',
@@ -93,7 +93,7 @@ const data = ref([
     dateUpdated: '2026-07-05 14:15:00',
   },
   {
-    purchaseId: 'ISU-E-2026070104',
+    purchase_id: 'ISU-E-2026070104',
     dealer: 'Wilcon Depot',
     modeOfAcquisition: 'Procured',
     date: 'July 10, 2026',
@@ -102,7 +102,7 @@ const data = ref([
     dateUpdated: '2026-07-10 09:00:00',
   },
   {
-    purchaseId: 'ISU-E-2026070105',
+    purchase_id: 'ISU-E-2026070105',
     dealer: 'Abenson Appliances',
     modeOfAcquisition: 'Purchased',
     date: 'July 12, 2026',

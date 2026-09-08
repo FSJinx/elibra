@@ -19,7 +19,7 @@ return new class extends Migration
             $table->float('net_price');
             $table->timestamps();
             
-            $table->unsignedBigInteger('item_id');
+            $table->unsignedBigInteger('item_id'); 
             $table->unsignedBigInteger('acquisition_id');
         });
     }

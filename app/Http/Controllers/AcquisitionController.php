@@ -94,7 +94,7 @@ class AcquisitionController extends Controller
 
         return $this->response(
             'success', 
-            'Academic updated successfully', 
+            'Acquisition updated successfully', 
             $acquisition->toArray(), 
             200
         );
