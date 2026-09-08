@@ -90,6 +90,17 @@ const campusBranches = computed(() => {
     }
   })
 })
+
+watch(
+  () => campus.campuses,
+  () => console.log(campus.campuses),
+  { deep: true, immediate: true },
+)
+watch(
+  () => branch.branches,
+  () => console.log(branch.branches),
+  { deep: true, immediate: true },
+)
 </script>
 
 <style scoped></style>

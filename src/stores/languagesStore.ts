@@ -45,7 +45,7 @@ export const useLanguagesStore = defineStore('languages', () => {
 
     try {
       const response = await get('languages', { params: { ...params } })
-      const data = response.data?.data ?? []
+      const data = response.data ?? []
 
       setLanguages(data)
       return data

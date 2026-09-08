@@ -56,7 +56,7 @@ export const useCampusStore = defineStore('campus', () => {
       const response = await get('campus', {
         params: { ...params },
       })
-      const data = response.data.data
+      const data = response.data
 
       setCampuses(data)
       return data

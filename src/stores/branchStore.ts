@@ -52,7 +52,7 @@ export const useBranchStore = defineStore('branches', () => {
 
     try {
       const response = await get('branch', { ...params })
-      const data = response.data.data.data
+      const data = response.data.data
 
       setBranches(data)
       return data

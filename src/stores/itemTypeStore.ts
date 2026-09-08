@@ -44,7 +44,7 @@ export const useItemTypeStore = defineStore('item_type', () => {
 
     try {
       const response = await get('item_types', { params: { ...params } })
-      const data = response.data.data
+      const data = response.data
 
       setItemTypes(data)
       return data

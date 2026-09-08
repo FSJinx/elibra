@@ -45,7 +45,7 @@ export const useItemCategoriesStore = defineStore('item_categories', () => {
 
     try {
       const response = await get('item_type_category', { params: { ...params } })
-      const data = response.data.data
+      const data = response.data
 
       setItemCategories(data)
       return data
