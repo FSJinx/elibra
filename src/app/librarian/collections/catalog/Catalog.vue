@@ -6,7 +6,7 @@
       </div>
     </SectionHeader>
 
-    <div class="flex-1 space-y-4 p-4 overflow-y-auto scroll">
+    <div class="flex-1 space-y-4 p-5 overflow-y-auto scroll">
       <!-- Statistical Cards -->
       <CatalogCards />
 

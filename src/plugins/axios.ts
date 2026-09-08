@@ -1,7 +1,6 @@
 // src/plugins/axios.ts
 import axios from 'axios'
 
-// import elpop from './elpop'
 import router from '@/router'
 import { authStore } from '@/stores/authStore'
 

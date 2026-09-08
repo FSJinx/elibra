@@ -1,6 +1,6 @@
 <template>
   <tbody class="z-1">
-    <Tload v-if="loading" :columns="cols" />
+    <Tload v-if="loading" :columns="Number(cols)" />
 
     <tr class="h-150" v-else-if="!data || data.length === 0">
       <td class="" :colspan="cols">
@@ -18,5 +18,5 @@
 <script setup lang="ts">
 import { MessageCircleX } from '@lucide/vue'
 
-defineProps<{ loading: boolean; cols: number; data: any }>()
+defineProps<{ loading: boolean; cols: any; data: any }>()
 </script>
