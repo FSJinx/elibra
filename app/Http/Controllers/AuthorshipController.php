@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Authorship;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAuthorshipRequest;
 use App\Http\Requests\UpdateAuthorshipRequest;
+use App\Models\Authorship;
 
 class AuthorshipController extends Controller
 {
@@ -18,7 +17,7 @@ class AuthorshipController extends Controller
 
         return $this->response(
             'success',
-            'Item Type Categories retrieved successfully',
+            'Authorship retrieved successfully',
             $authorships->toArray(),
             200
         );
