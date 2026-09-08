@@ -42,11 +42,11 @@ watch(
 )
 
 async function fetchResults() {
-  if (!params.search) {
-    libraryData.value = []
-    total.value = 0
-    return
-  }
+  // if (!params.search) {
+  //   libraryData.value = []
+  //   total.value = 0
+  //   return
+  // }
 
   try {
     await searchOpac({
@@ -122,6 +122,10 @@ watch(
     }
   },
 )
+
+onMounted(async () => {
+  await fetchResults()
+})
 </script>
 
 <style scoped></style>

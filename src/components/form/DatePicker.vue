@@ -1,46 +1,14 @@
 <template>
   <div class="flex w-full flex-col gap-1.5">
-    <div
-      class="group relative flex w-full items-center border transition-all duration-150 min-w-20 rounded-md overflow-hidden focus-within:ring-4"
-      :class="[
-        sizeConfig.container,
-        error && error.length > 0
-          ? 'border-danger focus-within:border-danger focus-within:ring-danger/20'
-          : 'border-border focus-within:ring-success/25 focus-within:border-primary/50',
-        { 'opacity-60 cursor-not-allowed bg-slate-100': disabled },
-      ]"
-    >
+    <div class="group relative flex w-full items-center border transition-all duration-150 min-w-20 rounded-md overflow-hidden focus-within:ring-4" :class="[sizeConfig.container, error && error.length > 0 ? 'border-danger focus-within:border-danger focus-within:ring-danger/20' : 'border-border focus-within:ring-success/25 focus-within:border-primary/50', { 'opacity-60 cursor-not-allowed bg-slate-100': disabled }]">
       <span class="flex items-center justify-center shrink-0 pl-3 text-slate-400">
         <Icon :icon="leftIcon" />
       </span>
 
-      <input
-        ref="input"
-        :id="id"
-        :name="id"
-        v-model="model"
-        :type="type"
-        :placeholder="placeholder"
-        :required="required"
-        :disabled="disabled"
-        :readonly="readonly"
-        :min="min"
-        :max="max"
-        :step="step"
-        :autocomplete="autocomplete"
-        class="h-full w-full flex-1 bg-transparent text-slate-900 transition-all duration-150 focus:outline-none disabled:cursor-not-allowed"
-        :class="[sizeConfig.input, 'pl-2', hasSuffixActions ? 'pr-2' : 'pr-4']"
-        @keydown="handleKeydown"
-      />
+      <input ref="input" :id="id" :name="id" v-model="model" :type="type" :placeholder="placeholder" :required="required" :disabled="disabled" :readonly="readonly" :min="min" :max="max" :step="step" :autocomplete="autocomplete" class="h-full w-full flex-1 bg-transparent text-slate-900 transition-all duration-150 focus:outline-none disabled:cursor-not-allowed" :class="[sizeConfig.input, 'pl-2', hasSuffixActions ? 'pr-2' : 'pr-4']" @keydown="handleKeydown" />
 
       <div v-if="hasSuffixActions" class="flex items-center h-full shrink-0">
-        <button
-          v-if="enableClear && hasValue && !disabled && !readonly"
-          type="button"
-          class="flex h-full items-center justify-center px-3 text-slate-500 hover:text-slate-800 focus:outline-none border-l border-border transition-colors"
-          aria-label="Clear date"
-          @click="clear"
-        >
+        <button v-if="enableClear && hasValue && !disabled && !readonly" type="button" class="flex h-full items-center justify-center px-3 text-slate-500 hover:text-slate-800 focus:outline-none border-l border-border transition-colors" aria-label="Clear date" @click="clear">
           <Icon icon="x" name="Clear Date" />
         </button>
       </div>

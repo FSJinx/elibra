@@ -19,7 +19,7 @@ const defaultParams: Readonly<ItemTypeParams> = {
   order: 'asc',
 }
 
-export const useItemTypeStore = defineStore('itemType', () => {
+export const useItemTypeStore = defineStore('item_type', () => {
   const itemTypes = ref<ItemType[] | null>(null)
   const currentItemType = ref<ItemType | null>(null)
   const loading = ref<boolean>(false)
@@ -43,8 +43,8 @@ export const useItemTypeStore = defineStore('itemType', () => {
     setLoading(true)
 
     try {
-      const response = await api.get('item-types', { params: { ...params } })
-      const data = response.data.data
+      const response = await get('item_types', { params: { ...params } })
+      const data = response.data
 
       setItemTypes(data)
       return data

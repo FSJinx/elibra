@@ -103,7 +103,7 @@ interface AttendanceRecord {
   time_out: string | null
 }
 
-const branch = branchStore()
+const branch = useBranchStore()
 
 // TODO: replace with real fetch (e.g. useAttendance() composable)
 const visits = reactive<AttendanceRecord[]>([

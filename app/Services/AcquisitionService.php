@@ -65,9 +65,10 @@ class AcquisitionService
         );
     }
 
+
     public function create(array $data): Acquisition
     {
-        $acquisition = DB::transaction( function () use (&$data){
+        $acquisition = DB::transaction(function () use ($data) {
 
             $acquisition = Acquisition::create(
                 Arr::only($data, [
@@ -81,22 +82,27 @@ class AcquisitionService
                 ])
             );
 
-        $campusCode = $acquisition->receiver->campus->code;
+            $campusCode = $acquisition->receiver->campus->code;
+            $date = $acquisition->acquisition_date->format('Y-m-d');
 
-        $date = $acquisition->acquisition_date->format('Y-m-d');
+            // Get the number of acquisitions for this campus on this date
+            $sequence = Acquisition::whereHas('receiver.campus', function ($query) use ($campusCode) {
+                    $query->where('code', $campusCode);
+                })
+                ->whereDate('acquisition_date', $acquisition->acquisition_date)
+                ->count();
 
-        $acquisition->purchase_id = "{$campusCode}-{$date}{$acquisition->id}";
+            $acquisition->purchase_id = "{$campusCode}-{$date}{$sequence}";
 
-        $acquisition->save();
+            $acquisition->save();
 
-        return $acquisition->fresh();
-
+            return $acquisition->fresh();
         });
 
         CacheService::invalidate(CacheService::ACQUISITIONS);
 
         return $acquisition->load([
-            'receiver'
+            'receiver',
         ]);
     }
 

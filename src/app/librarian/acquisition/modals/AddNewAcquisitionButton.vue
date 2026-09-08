@@ -28,7 +28,7 @@
         </Control>
         <Control>
           <Label id="acquisition-date" required>Date of Acquisition</Label>
-          <DatePicker id="acquisition-date" v-model="form.acquisition_date" />
+          <DatePicker id="acquisition-date" v-model="form.acquisition_date" :max="today" />
         </Control>
         <Control>
           <Label id="acquisition-remarks" class="mb-auto" required>Remarks</Label>
@@ -61,6 +61,7 @@ const emptyForm = (): Acquisition => ({
 })
 
 const form = reactive<Acquisition>(emptyForm())
+const today = new Date().toLocaleDateString('en-CA')
 const hasInputs = computed(() => [form.dealer, form.acquisition_date, form.acquisition_mode, form.remarks].some((value) => String(value ?? '').trim().length > 0))
 
 const clearForm = async () => {
