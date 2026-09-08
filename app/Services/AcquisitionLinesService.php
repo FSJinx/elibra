@@ -214,7 +214,6 @@ class AcquisitionLinesService
                 }
             }
 
-
             return $acquisitionLine->fresh([
                 'item',
                 'acquisition',

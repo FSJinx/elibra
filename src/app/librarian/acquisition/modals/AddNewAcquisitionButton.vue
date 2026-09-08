@@ -3,7 +3,7 @@
 
   <Modal ref="modal" size="large" :has-inputs="hasInputs" enable-close-btn>
     <template #header> New Acquisition Transaction </template>
-    <Form class="flex flex-col p-5">
+    <Form class="flex flex-col p-5" @submit="submitForm">
       <div class="flex items-end justify-between gap-3">
         <div class="">
           <h1 class="font-semibold text-lg">Acquisition Form</h1>
@@ -37,7 +37,7 @@
       </div>
 
       <div class="flex items-center justify-end">
-        <Button variant="primary" :disabled="!hasInputs">Submit</Button>
+        <Button type="submit" variant="primary" :disabled="!hasInputs">Submit</Button>
       </div>
     </Form>
   </Modal>
@@ -46,11 +46,11 @@
 <script setup lang="ts">
 import Modal from '@/components/my/Modal.vue'
 import { Acquisition } from '@/stores/acquisitionStore'
-import { popScopeId } from 'vue'
 
 const modal = ref<typeof Modal | null>()
 const loading = ref<boolean>(false)
 const pop = usePopup()
+const auth = authStore()
 
 const emptyForm = (): Acquisition => ({
   id: null,
@@ -80,13 +80,38 @@ const clearForm = async () => {
   }
 }
 
-watch(
-  form,
-  () => {
-    console.log(form)
-  },
-  { deep: true, immediate: true },
-)
+async function submitForm() {
+  if (!auth.user?.id) {
+    pop.error('You must be logged in to create an acquisition.')
+    return
+  }
+
+  const confirmed = await pop.confirm({ text: 'Are you sure you want to add this acquisition transaction?' })
+
+  if (!confirmed.isConfirmed) {
+    return
+  }
+
+  loading.value = true
+
+  try {
+    await api.post('librarian/acquisition', {
+      ...form,
+      receiver_user_id: auth.user.id,
+    })
+
+    pop.success('Acquisition created successfully!')
+    Object.assign(form, emptyForm())
+    modal.value?.close()
+  } catch (error: any) {
+    const res = error.response?.data
+    const message = res?.message || 'Failed to create acquisition.'
+    pop.error(message)
+    console.error(error)
+  } finally {
+    loading.value = false
+  }
+}
 </script>
 
 <style scoped>
