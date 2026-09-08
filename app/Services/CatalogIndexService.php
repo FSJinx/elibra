@@ -16,8 +16,8 @@ class CatalogIndexService
             'serial',
             'itemType',
             'itemTypeCategory',
-            'branch',
-            'language'
+            'branch.campus',
+            'language',
         ]);
 
         $content = $this->buildContent($item);
@@ -30,6 +30,7 @@ class CatalogIndexService
                 'content' => $content,
 
                 // Filter metadata
+                'campus_id' => $item->branch?->campus_id,
                 'branch_id' => $item->branch_id,
                 'item_type_id' => $item->item_type_id,
                 'item_type_category_id' => $item->item_type_category_id,
@@ -45,7 +46,6 @@ class CatalogIndexService
         $catalogIndex->searchable();
 
         return $catalogIndex;
-
     }
 
     private function buildContent(Item $item): string
@@ -63,7 +63,7 @@ class CatalogIndexService
             "Subtitle: {$item->subtitle}",
             "Description: {$item->description}",
             "Authors: {$authors}",
-            "Keywords: {$keywords}",        
+            "Keywords: {$keywords}",
         ];
 
         // Academic
@@ -76,7 +76,7 @@ class CatalogIndexService
 
             $content[] = "Subjects: {$subjects}";
             $content[] = "DOI: {$item->academic->doi}";
-        }   
+        }
 
         // Serial
         if ($item->serial) {
@@ -106,6 +106,6 @@ class CatalogIndexService
                     $author->suffix,
                 ])));
             })
-            ->implode(', ');
+        ->implode(', ');
     }
 }

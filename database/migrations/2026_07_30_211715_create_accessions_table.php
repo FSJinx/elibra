@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('accessions', function (Blueprint $table) {
             $table->id();
-            $table->string('accession_number')->nullable();
+            $table->string('accession_number')->nullable(); //itemtypecategories-
             $table->enum('status', ['available', 'reserved', 'on_load', 'lost', 'missing', 'archived', 'condemned'])->default('available');
             $table->string('remarks')->nullable();
             $table->timestamps();

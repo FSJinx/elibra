@@ -213,6 +213,9 @@ class CatalogSearchService
                     |--------------------------------------------------------------------------
                     */
 
+                    'campus_id' =>
+                        $catalog->campus_id,
+
                     'branch_id' =>
                         $catalog->branch_id,
 
@@ -252,6 +255,7 @@ class CatalogSearchService
     protected function buildFilters(array $filters): ?string
     {
         $allowedFilters = [
+            'campus_id',
             'branch_id',
             'item_type_id',
             'item_type_category_id',
@@ -259,7 +263,7 @@ class CatalogSearchService
             'publication_year',
         ];
 
-        $conditions = [];
+    $conditions = [];
 
         foreach ($allowedFilters as $field) {
             if (

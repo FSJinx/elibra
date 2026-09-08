@@ -21,6 +21,7 @@ const router = useRouter()
 
 const { results: libraryData, total, loading, search: searchOpac } = useOpacSearch()
 
+
 const history = opacSearchStore()
 
 const params = reactive({
