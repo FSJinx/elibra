@@ -34,8 +34,13 @@ class CacheService
     public const SERIALS = 'serials';
 
     public const AUTHORS = 'authors';
+    public const AUTHORSHIPS = 'authorships';
 
     public const OPAC = 'opac';
+
+    public const ACQUISITIONS = 'acquisitions';
+    public const ACQUISITION_REQUESTS = 'acquisition_requests';
+    public const ACQUISITION_LINES = 'acquisition_lines';
 
     /**
      * Cache a query using a versioned cache key.

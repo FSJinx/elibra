@@ -45,7 +45,7 @@ class AcquisitionPolicy
      */
     public function delete(User $user, Acquisition $acquisition): bool
     {
-        return false;
+        return $user->hasPermission('acquisition.delete');
     }
 
     /**

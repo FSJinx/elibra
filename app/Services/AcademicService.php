@@ -143,7 +143,7 @@ class AcademicService
                     'language',
                     'publication_year',
                     'keywords',
-                    'electronic_file',
+                'electronic_file',
                     'item_type_id',
                     'item_type_category_id',
                     'branch_id',

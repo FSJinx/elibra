@@ -99,7 +99,7 @@ class AcademicController extends Controller
                 $request->validated()
         );
 
-        return $this->response(
+    return $this->response(
             'success', 
             'Academic updated successfully', 
             $academic->toArray(), 

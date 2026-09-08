@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AcademicController;
+use App\Http\Controllers\AcquisitionController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\AuthorController;
@@ -48,7 +49,7 @@ Route::get('item-types', [ItemTypeController::class, 'index'])->middleware('thro
 Route::get('item-type-categories', [ItemTypeCategoryController::class, 'index'])->middleware('throttle:read');
 Route::get('languages', [LanguageController::class, 'index'])->middleware('throttle:read');
 Route::get('authorship', [AuthorshipController::class, 'index'])->middleware('throttle:read');
-Route::get(['holidays', HolidaysController::class, 'index']);
+Route::get('holidays', [HolidaysController::class, 'index']);
 
 // Media Routes
 Route::group(['prefix' => '/media'], function () {
@@ -88,6 +89,25 @@ Route::group(['prefix' => '/user-permission'], function () {
         Route::delete('/{user_permission}', [UserPermissionController::class, 'destroy'])->middleware('jwt.auth', 'throttle:delete');
     });
 
+});
+// ============== ACQUISITION ROUTES ===============
+Route::group(['prefix' => 'acquisition'], function () {
+
+    Route::group(['prefix' => '/get'], function () {
+        Route::get('', [AcquisitionController::class, 'index'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
+    });
+
+    Route::group(['prefix' => '/create'], function () {
+        Route::post('', [AcquisitionController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
+    });
+
+    Route::group(['prefix' => '/update'], function () {
+        Route::put('/{acquisition}', [AcquisitionController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
+    });
+
+    Route::group(['prefix' => '/delete'], function () {
+        Route::delete('/{acquisition}', [AcquisitionController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:delete');
+    });
 });
 
 // ============== ITEM ROUTES ===============
