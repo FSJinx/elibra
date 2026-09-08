@@ -83,7 +83,7 @@ class AcquisitionService
             );
 
             $campusCode = $acquisition->receiver->campus->code;
-            $date = $acquisition->acquisition_date->format('Y-m-d');
+            $date = $acquisition->acquisition_date->format('Ymd');
 
             // Get the number of acquisitions for this campus on this date
             $sequence = Acquisition::whereHas('receiver.campus', function ($query) use ($campusCode) {

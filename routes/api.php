@@ -247,7 +247,7 @@ Route::group(['prefix' => '/librarian'], function () {
     });
 
     // ============== COLLECTIONS ROUTE ==================
-    Route::group(['prefix' => 'collections'], function () {
+    Route::group(['prefix' => '/collections'], function () {
         // Get
         Route::get('', [AcquisitionController::class, 'index']);
 
@@ -259,12 +259,13 @@ Route::group(['prefix' => '/librarian'], function () {
     });
 
     // ============== ACQUISITION ROUTE ==================
-    Route::group(['prefix' => 'acquisition'], function () {
+    Route::group(['prefix' => '/acquisition'], function () {
         // Get
         Route::get('', [AcquisitionController::class, 'index']);
 
         // Post
         Route::post('', [AcquisitionController::class, 'store'])->middleware('throttle:write');
+        Route::post('line', [AcquisitionLinesController::class, 'store'])->middleware('throttle:write');
 
         // Update
         Route::put('/{acquisition}', [AcquisitionController::class, 'update'])->middleware('throttle:write');

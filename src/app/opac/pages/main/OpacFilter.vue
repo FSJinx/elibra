@@ -1,5 +1,5 @@
 <template>
-  <aside class="hidden xl:block sticky top-20 w-100 shrink-0 p-5 bg-background border border-border rounded-xl">
+  <aside class="hidden xl:block w-100 p-5 bg-background border border-border rounded-xl overflow-y-auto">
     <div class="flex items-start justify-between">
       <div>
         <p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-foreground-secondary">Filters</p>

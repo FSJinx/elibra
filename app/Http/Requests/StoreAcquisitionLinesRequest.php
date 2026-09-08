@@ -29,13 +29,15 @@ class StoreAcquisitionLinesRequest extends BaseRequest
     public function rules(): array
     {
         $rules = [
-            'quantity' => [ 'required', 'integer', 'min:1', ],
-            'unit_price' => [ 'required', 'integer', 'min:0', ],
-            'discount' => [ 'required', 'integer', 'min:0', ],
-            'net_price' => [ 'required', 'integer', 'min:0', ],
+            'quantity' => [ 'required', 'numeric', 'min:1', ],
+            'unit_price' => [ 'required', 'numeric', 'min:0', ],
+            'discount' => [ 'required', 'numeric', 'min:0', ],
+            'net_price' => [ 'required', 'numeric', 'min:0', ],
 
             'item_id' => [ 'required', Rule::exists((new Item)->getTable(), 'id')],
             'acquisition_id' => [ 'required', Rule::exists((new Acquisition)->getTable(), 'id')],
+            'section_id' => [ 'nullable', Rule::exists((new Acquisition)->getTable(), 'id')],
+
         ];
 
         return $rules;
@@ -67,6 +69,10 @@ class StoreAcquisitionLinesRequest extends BaseRequest
             'acquisition_id.required' => 'Acquisition is required.',
             'acquisition_id.integer' => 'Acquisition ID must be a valid number.',
             'acquisition_id.exists' => 'The selected acquisition does not exist.',
+
+            // 'section_id.required' => 'Section is required.',
+            'section_id.integer' => 'Section ID must be a valid number.',
+            'section_id.exists' => 'The selected section does not exist.',
         ];
     }
 }
