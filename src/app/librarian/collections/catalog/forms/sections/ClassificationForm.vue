@@ -41,9 +41,9 @@ interface Props {
   item_type_id: any
 }
 
-const { languages } = languagesStore()
-const { itemCategories } = itemCategoriesStore()
-const { branches } = branchStore()
+const { languages } = useLanguagesStore()
+const { itemCategories } = useItemCategoriesStore()
+const { branches } = useBranchStore()
 const auth = authStore()
 
 const props = defineProps<Props>()
@@ -54,11 +54,3 @@ const branchOptions = computed(() => branches.filter((i) => i.campus_id === auth
 
 const form = defineModel<ClassficationField>({ default: {} })
 </script>
-
-<style scoped>
-.control {
-  display: grid !important;
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  padding: 1.25rem;
-}
-</style>

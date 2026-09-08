@@ -4,30 +4,78 @@ interface ItemType {
   created_at: string
   updated_at: string
 }
-export const itemTypeStore = defineStore('itemType', () => {
-    const itemTypes = ref<ItemType[] | null>(null)
-    const currentItemType = ref<ItemType | null>(null)
-    const loading = ref<boolean>(false)
 
+interface ItemTypeParams {
+  sort: string
+  page: number
+  per_page: number
+  order: 'asc' | 'desc'
+}
 
-    function setItemTypes(data: ItemType[] | null) {
-        itemTypes.value = data
-    }
-    
-    function setCurrentItemType(data: ItemType | null) {
-        currentItemType.value = data
-    }
-    
-    function setLoading(status: boolean) {
-        loading.value = status
-    } 
-    return {
-        itemTypes,
-        currentItemType,
-        loading,
+const defaultParams: Readonly<ItemTypeParams> = {
+  sort: '',
+  page: 1,
+  per_page: 10,
+  order: 'asc',
+}
 
-        setItemTypes,
-        setCurrentItemType,
-        setLoading,
+export const useItemTypeStore = defineStore('itemType', () => {
+  const itemTypes = ref<ItemType[] | null>(null)
+  const currentItemType = ref<ItemType | null>(null)
+  const loading = ref<boolean>(false)
+  const params = reactive<ItemTypeParams>({ ...defaultParams })
+
+  function setItemTypes(data: ItemType[] | null) {
+    itemTypes.value = data
+  }
+
+  function setCurrentItemType(data: ItemType | null) {
+    currentItemType.value = data
+  }
+
+  function setLoading(status: boolean) {
+    loading.value = status
+  }
+
+  async function fetch(forced = false) {
+    if (!forced && itemTypes.value?.length) return itemTypes.value
+
+    setLoading(true)
+
+    try {
+      const response = await api.get('item-types', { params: { ...params } })
+      const data = response.data.data
+
+      setItemTypes(data)
+      return data
+    } catch (error) {
+      console.error('Error fetching item types:', error)
+      return []
+    } finally {
+      setLoading(false)
     }
+  }
+
+  async function refresh() {
+    Object.assign(params, defaultParams)
+    return fetch(true)
+  }
+
+  watchDebounced(
+    () => ({ ...params }),
+    () => fetch(true),
+  )
+
+  return {
+    itemTypes,
+    currentItemType,
+    loading,
+    params,
+
+    setItemTypes,
+    setCurrentItemType,
+    setLoading,
+    fetch,
+    refresh,
+  }
 })

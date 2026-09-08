@@ -126,7 +126,6 @@
 
 <script setup lang="ts">
 import default_book from '@/assets/images/default_book.png'
-import { useSearchTyping } from '@/composables/data/useSearchTyping'
 
 interface Params {
   search: string
@@ -166,9 +165,9 @@ const { typedText } = useSearchTyping()
 const route = useRoute()
 const parse = useParser()
 
-const itemType = itemTypeStore()
-const itemCategory = itemCategoriesStore()
-const { campuses } = campusStore()
+const itemType = useItemTypeStore()
+const itemCategory = useItemCategoriesStore()
+const { campuses } = useCampusStore()
 
 const selectedCampus = computed(() => campuses?.find((i) => String(i.id) === params.value.campus)?.name)
 const itemTypeCategories = computed(() => itemCategory.itemCategories.filter((item) => String(item.item_type_id) === String(params.value.item_type)))

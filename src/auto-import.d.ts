@@ -8,6 +8,8 @@ export {}
 declare global {
   const EffectScope: typeof import('vue').EffectScope
   const acceptHMRUpdate: typeof import('pinia').acceptHMRUpdate
+  const acqusitionStor: typeof import('./stores/librarian/acquisitionStore').acqusitionStor
+  const acqusitionStore: typeof import('./stores/librarian/acquisitionStore').acqusitionStore
   const adminCampusRoutes: typeof import('./router/admin/campusRoutes').adminCampusRoutes
   const adminRoutes: typeof import('./router/adminRoutes').adminRoutes
   const api: typeof import('./plugins/axios').api
@@ -22,7 +24,6 @@ declare global {
   const brancheStore: typeof import('./stores/branchStore').brancheStore
   const branchesStore: typeof import('./stores/branchStore').branchesStore
   const campusRoutes: typeof import('./router/admin/campusRoutes').default
-  const campusStore: typeof import('./stores/campusStore').campusStore
   const cataloging: typeof import('./router/librarian/collection.route').cataloging
   const computed: typeof import('vue').computed
   const computedAsync: typeof import('@vueuse/core').computedAsync
@@ -183,19 +184,16 @@ declare global {
   const useAsyncState: typeof import('@vueuse/core').useAsyncState
   const useAttrs: typeof import('vue').useAttrs
   const useAuth: typeof import('./composables/data/useAuth').useAuth
-  const useAuthorship: typeof import('./composables/data/useAuthorship').useAuthorship
   const useBase64: typeof import('@vueuse/core').useBase64
   const useBattery: typeof import('@vueuse/core').useBattery
   const useBluetooth: typeof import('@vueuse/core').useBluetooth
-  const useBranch: typeof import('./composables/data/useBranch').useBranch
-  const useBranche: typeof import('./composables/data/useBranch').useBranche
-  const useBranches: typeof import('./composables/data/useBranch').useBranches
+  const useBranchStore: typeof import('./stores/branchStore').useBranchStore
   const useBreadcrumb: typeof import('./composables/utils/useBreadcrumbs').useBreadcrumb
   const useBreakpoints: typeof import('@vueuse/core').useBreakpoints
   const useBroadcastChannel: typeof import('@vueuse/core').useBroadcastChannel
   const useBrowserLocation: typeof import('@vueuse/core').useBrowserLocation
   const useCached: typeof import('@vueuse/core').useCached
-  const useCampus: typeof import('./composables/data/useCampus').useCampus
+  const useCampusStore: typeof import('./stores/campusStore').useCampusStore
   const useClickOutside: typeof import('./composables/utils/useClickOutside').useClickOutside
   const useClipboard: typeof import('@vueuse/core').useClipboard
   const useClipboardItems: typeof import('@vueuse/core').useClipboardItems
@@ -251,10 +249,10 @@ declare global {
   const useIntersectionObserver: typeof import('@vueuse/core').useIntersectionObserver
   const useInterval: typeof import('@vueuse/core').useInterval
   const useIntervalFn: typeof import('@vueuse/core').useIntervalFn
-  const useItemCategories: typeof import('./composables/data/useItemCategories').useItemCategories
-  const useItemTypes: typeof import('./composables/data/useItemTypes').useItemTypes
+  const useItemCategoriesStore: typeof import('./stores/itemCategoriesStore').useItemCategoriesStore
+  const useItemTypeStore: typeof import('./stores/itemTypeStore').useItemTypeStore
   const useKeyModifier: typeof import('@vueuse/core').useKeyModifier
-  const useLanguages: typeof import('./composables/data/useLanguages').useLanguages
+  const useLanguagesStore: typeof import('./stores/languagesStore').useLanguagesStore
   const useLastChanged: typeof import('@vueuse/core').useLastChanged
   const useLink: typeof import('vue-router').useLink
   const useLocalStorage: typeof import('@vueuse/core').useLocalStorage
@@ -354,6 +352,10 @@ declare global {
   const useWindowFocus: typeof import('@vueuse/core').useWindowFocus
   const useWindowScroll: typeof import('@vueuse/core').useWindowScroll
   const useWindowSize: typeof import('@vueuse/core').useWindowSize
+  const usebranchStore: typeof import('./stores/branchStore').usebranchStore
+  const useitemCategoriesStore: typeof import('./stores/itemCategoriesStore').useitemCategoriesStore
+  const useitemTypeStore: typeof import('./stores/itemTypeStore').useitemTypeStore
+  const uselanguagesStore: typeof import('./stores/languagesStore').uselanguagesStore
   const watch: typeof import('vue').watch
   const watchArray: typeof import('@vueuse/core').watchArray
   const watchAtMost: typeof import('@vueuse/core').watchAtMost
@@ -377,16 +379,19 @@ declare global {
   export type { Component, Slot, Slots, ComponentPublicInstance, ComputedRef, DirectiveBinding, ExtractDefaultPropTypes, ExtractPropTypes, ExtractPublicPropTypes, InjectionKey, PropType, Ref, ShallowRef, MaybeRef, MaybeRefOrGetter, VNode, WritableComputedRef } from 'vue'
   import('vue')
   // @ts-ignore
-  export type { Author } from './composables/data/useAuthor'
-  import('./composables/data/useAuthor')
-  // @ts-ignore
   export type { Variants, Sizes } from './composables/useType'
   import('./composables/useType')
+  // @ts-ignore
+  export type { Acquisition } from './stores/acquisitionStore'
+  import('./stores/acquisitionStore')
   // @ts-ignore
   export type { User } from './stores/authStore'
   import('./stores/authStore')
   // @ts-ignore
-  export type { Campus } from './stores/campusStore'
+  export type { Author } from './stores/authorStore'
+  import('./stores/authorStore')
+  // @ts-ignore
+  export type { Campus, CampusParams } from './stores/campusStore'
   import('./stores/campusStore')
 }
 
@@ -397,6 +402,7 @@ declare module 'vue' {
   interface ComponentCustomProperties {
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
     readonly acceptHMRUpdate: UnwrapRef<typeof import('pinia')['acceptHMRUpdate']>
+    readonly acqusitionStore: UnwrapRef<typeof import('./stores/librarian/acquisitionStore')['acqusitionStore']>
     readonly adminCampusRoutes: UnwrapRef<typeof import('./router/admin/campusRoutes')['adminCampusRoutes']>
     readonly adminRoutes: UnwrapRef<typeof import('./router/adminRoutes')['adminRoutes']>
     readonly api: UnwrapRef<typeof import('./plugins/axios')['api']>
@@ -407,9 +413,7 @@ declare module 'vue' {
     readonly autoResetRef: UnwrapRef<typeof import('@vueuse/core')['autoResetRef']>
     readonly axios: UnwrapRef<typeof import('./plugins/axios')['default']>
     readonly backendRoute: UnwrapRef<typeof import('./plugins/axios')['backendRoute']>
-    readonly branchStore: UnwrapRef<typeof import('./stores/branchStore')['branchStore']>
     readonly campusRoutes: UnwrapRef<typeof import('./router/admin/campusRoutes')['default']>
-    readonly campusStore: UnwrapRef<typeof import('./stores/campusStore')['campusStore']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
     readonly computedAsync: UnwrapRef<typeof import('@vueuse/core')['computedAsync']>
     readonly computedEager: UnwrapRef<typeof import('@vueuse/core')['computedEager']>
@@ -454,9 +458,6 @@ declare module 'vue' {
     readonly isReadonly: UnwrapRef<typeof import('vue')['isReadonly']>
     readonly isRef: UnwrapRef<typeof import('vue')['isRef']>
     readonly isShallow: UnwrapRef<typeof import('vue')['isShallow']>
-    readonly itemCategoriesStore: UnwrapRef<typeof import('./stores/itemCategoriesStore')['itemCategoriesStore']>
-    readonly itemTypeStore: UnwrapRef<typeof import('./stores/itemTypeStore')['itemTypeStore']>
-    readonly languagesStore: UnwrapRef<typeof import('./stores/languagesStore')['languagesStore']>
     readonly librarianAcquisition: UnwrapRef<typeof import('./router/librarian/acquisition.route')['librarianAcquisition']>
     readonly librarianAdministration: UnwrapRef<typeof import('./router/librarian/administration.route')['librarianAdministration']>
     readonly librarianCataloging: UnwrapRef<typeof import('./router/librarian/collection.route')['librarianCataloging']>
@@ -563,17 +564,16 @@ declare module 'vue' {
     readonly useAsyncState: UnwrapRef<typeof import('@vueuse/core')['useAsyncState']>
     readonly useAttrs: UnwrapRef<typeof import('vue')['useAttrs']>
     readonly useAuth: UnwrapRef<typeof import('./composables/data/useAuth')['useAuth']>
-    readonly useAuthorship: UnwrapRef<typeof import('./composables/data/useAuthorship')['useAuthorship']>
     readonly useBase64: UnwrapRef<typeof import('@vueuse/core')['useBase64']>
     readonly useBattery: UnwrapRef<typeof import('@vueuse/core')['useBattery']>
     readonly useBluetooth: UnwrapRef<typeof import('@vueuse/core')['useBluetooth']>
-    readonly useBranch: UnwrapRef<typeof import('./composables/data/useBranch')['useBranch']>
+    readonly useBranchStore: UnwrapRef<typeof import('./stores/branchStore')['useBranchStore']>
     readonly useBreadcrumb: UnwrapRef<typeof import('./composables/utils/useBreadcrumbs')['useBreadcrumb']>
     readonly useBreakpoints: UnwrapRef<typeof import('@vueuse/core')['useBreakpoints']>
     readonly useBroadcastChannel: UnwrapRef<typeof import('@vueuse/core')['useBroadcastChannel']>
     readonly useBrowserLocation: UnwrapRef<typeof import('@vueuse/core')['useBrowserLocation']>
     readonly useCached: UnwrapRef<typeof import('@vueuse/core')['useCached']>
-    readonly useCampus: UnwrapRef<typeof import('./composables/data/useCampus')['useCampus']>
+    readonly useCampusStore: UnwrapRef<typeof import('./stores/campusStore')['useCampusStore']>
     readonly useClickOutside: UnwrapRef<typeof import('./composables/utils/useClickOutside')['useClickOutside']>
     readonly useClipboard: UnwrapRef<typeof import('@vueuse/core')['useClipboard']>
     readonly useClipboardItems: UnwrapRef<typeof import('@vueuse/core')['useClipboardItems']>
@@ -629,10 +629,10 @@ declare module 'vue' {
     readonly useIntersectionObserver: UnwrapRef<typeof import('@vueuse/core')['useIntersectionObserver']>
     readonly useInterval: UnwrapRef<typeof import('@vueuse/core')['useInterval']>
     readonly useIntervalFn: UnwrapRef<typeof import('@vueuse/core')['useIntervalFn']>
-    readonly useItemCategories: UnwrapRef<typeof import('./composables/data/useItemCategories')['useItemCategories']>
-    readonly useItemTypes: UnwrapRef<typeof import('./composables/data/useItemTypes')['useItemTypes']>
+    readonly useItemCategoriesStore: UnwrapRef<typeof import('./stores/itemCategoriesStore')['useItemCategoriesStore']>
+    readonly useItemTypeStore: UnwrapRef<typeof import('./stores/itemTypeStore')['useItemTypeStore']>
     readonly useKeyModifier: UnwrapRef<typeof import('@vueuse/core')['useKeyModifier']>
-    readonly useLanguages: UnwrapRef<typeof import('./composables/data/useLanguages')['useLanguages']>
+    readonly useLanguagesStore: UnwrapRef<typeof import('./stores/languagesStore')['useLanguagesStore']>
     readonly useLastChanged: UnwrapRef<typeof import('@vueuse/core')['useLastChanged']>
     readonly useLink: UnwrapRef<typeof import('vue-router')['useLink']>
     readonly useLocalStorage: UnwrapRef<typeof import('@vueuse/core')['useLocalStorage']>

@@ -31,7 +31,7 @@ import AcademicForm from '@/app/librarian/collections/catalog/forms/sections/Aca
 
 interface Form extends BaseField, AcademicField, ClassficationField, AuthorField {}
 
-const { itemTypes } = itemTypeStore()
+const { itemTypes } = useItemTypeStore()
 
 const pop = usePopup()
 const auth = authStore()

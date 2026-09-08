@@ -13,10 +13,25 @@ interface Branch {
   updated_at: string
 }
 
-export const branchStore = defineStore('branches', () => {
+interface BranchParams {
+  sort: string
+  page: number
+  per_page: number
+  order: 'asc' | 'desc'
+}
+
+const defaultParams: Readonly<BranchParams> = {
+  sort: '',
+  page: 1,
+  per_page: 10,
+  order: 'asc',
+}
+
+export const useBranchStore = defineStore('branches', () => {
   const branches = ref<Branch[]>([])
   const currentBranch = ref<Branch | null>(null)
   const loading = ref<boolean>(false)
+  const params = reactive<BranchParams>({ ...defaultParams })
 
   function setBranches(data: Branch[]) {
     branches.value = data
@@ -30,13 +45,40 @@ export const branchStore = defineStore('branches', () => {
     loading.value = status
   }
 
+  async function fetch(forced = false) {
+    if (!forced && branches.value.length) return branches.value
+
+    setLoading(true)
+
+    try {
+      const response = await api.get('branch/get', { params: { ...params } })
+      const data = response.data.data.data
+
+      setBranches(data)
+      return data
+    } catch (error) {
+      console.error('Error fetching branches:', error)
+      return []
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  async function refresh() {
+    Object.assign(params, defaultParams)
+    return fetch(true)
+  }
+
   return {
     branches,
     currentBranch,
     loading,
+    params,
 
     setBranches,
     setCurrentBranch,
     setLoading,
+    fetch,
+    refresh,
   }
 })

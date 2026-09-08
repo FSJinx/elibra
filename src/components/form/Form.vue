@@ -6,7 +6,7 @@
 
     <slot />
 
-    <div class="grid gap-5" :class="[`grid-cols-${cols}`]">
+    <div class="grid gap-5" :class="[`grid-cols-${cols}`]" v-if="$slots.body">
       <slot name="body" />
     </div>
 

@@ -21,6 +21,7 @@ declare module 'vue' {
     Chip: typeof import('./my/Chip.vue')['default']
     CloseButton: typeof import('./my/CloseButton.vue')['default']
     Control: typeof import('./form/Control.vue')['default']
+    DatePicker: typeof import('./form/DatePicker.vue')['default']
     ErrorLayout: typeof import('./../layouts/ErrorLayout.vue')['default']
     FeatureBelt: typeof import('./layout/FeatureBelt.vue')['default']
     Footer: typeof import('./layout/Footer.vue')['default']

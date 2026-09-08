@@ -74,8 +74,8 @@ defineEmits<{
   reset: []
 }>()
 
-const campus = campusStore()
-const branch = branchStore()
+const campus = useCampusStore()
+const branch = useBranchStore()
 
 const campusBranches = computed(() => {
   if (params.value.campus) {

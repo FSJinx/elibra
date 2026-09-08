@@ -67,21 +67,13 @@
 import CreateNewCampusModal from '@/app/admin/campus/CreateNewCampusModal.vue'
 
 const auth = authStore()
-const store = campusStore()
+const store = useCampusStore()
 const parse = useParser()
+const { campuses, loading } = storeToRefs(store)
 
 const createCampus = ref<InstanceType<typeof CreateNewCampusModal> | null>(null)
 
-const campuses = ref<Campus[] | null>(null)
-const loading = ref(false)
-
-const filters = reactive({
-  query: '',
-  sort: '',
-  order: '',
-  status: '',
-  page: '',
-})
+const filters = store.params
 
 /*
 |--------------------------------------------------------------------------
@@ -90,20 +82,7 @@ const filters = reactive({
 */
 
 const fetchCampuses = async () => {
-  loading.value = true
-
-  try {
-    const res = await api.get('campus/get', {
-      params: filters,
-    })
-
-    campuses.value = res.data.data
-    store.setCampuses(campuses.value)
-  } catch (error) {
-    console.error('Failed to fetch campuses:', error)
-  } finally {
-    loading.value = false
-  }
+  return store.fetch(true)
 }
 
 /*
@@ -117,8 +96,7 @@ const hasFilters = computed(() => {
 })
 
 const resetFilters = () => {
-  filters.query = ''
-  filters.status = ''
+  store.refresh()
 }
 
 /*
@@ -128,16 +106,8 @@ const resetFilters = () => {
 */
 
 const refresh = async () => {
-  await fetchCampuses()
+  await store.refresh()
 }
-
-watchDebounced(
-  filters,
-  (val) => {
-    fetchCampuses()
-  },
-  { deep: true, debounce: 300 },
-)
 
 /*
 |--------------------------------------------------------------------------
@@ -160,8 +130,7 @@ const deleteCampus = async (campus: Campus) => {
   if (!window.confirm(`Delete ${campus.name}? This may affect its departments and branches.`)) return
 
   try {
-    await api.delete(`campus/delete/${campus.id}`)
-    await fetchCampuses()
+    await store.deleteCampus(campus)
   } catch (error) {
     console.error('Failed to delete campus:', error)
   }

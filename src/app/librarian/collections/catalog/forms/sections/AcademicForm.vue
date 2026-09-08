@@ -27,11 +27,3 @@ const props = defineProps<Props>()
 
 const form = defineModel<AcademicField>({ default: {} })
 </script>
-
-<style scoped>
-.control {
-  display: grid !important;
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  padding: 1.25rem;
-}
-</style>
