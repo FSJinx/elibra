@@ -161,7 +161,7 @@
           </tr>
         </Thead>
 
-        <Tbody :columns="5" :loading="loading" :data="transactions">
+        <Tbody :cols="5" :loading="loading" :data="transactions">
           <tr v-for="transaction in transactions" :key="transaction.id">
             <Td class="text-left">
               <div>

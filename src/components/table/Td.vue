@@ -1,5 +1,5 @@
 <template>
-  <td v-if="hasData" :class="{ 'text-muted': data === null || data.length === 0 }">
+  <td v-if="hasData" :class="{ 'text-muted-foreground/50': data === null || data.length === 0 }">
     {{ data ?? nullMessage }}
   </td>
 

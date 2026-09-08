@@ -26,6 +26,7 @@ const librarianMenu = {
       catalog: { path: 'librarian.collections.catalog', name: 'Catalog', icon: 'journal-plus' },
       inventory: { path: 'librarian.collections.inventory', name: 'Inventory', icon: 'boxes' },
       acquisition: { path: 'librarian.collections.acquisition', name: 'Acquisition', icon: 'receipt' },
+      acquisition_request: { path: 'librarian.collections.acquisition-requests', name: 'Acquisition Request', icon: 'box-arrow-in-down' },
     },
   },
 

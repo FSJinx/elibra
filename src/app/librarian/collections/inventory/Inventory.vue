@@ -8,7 +8,7 @@
       </div>
     </SectionHeader>
 
-    <div class="flex-1 flex flex-col gap-4 p-4 -mt-4 overflow-y-auto scroll">
+    <div class="flex-1 flex flex-col gap-4 p-5 overflow-y-auto scroll">
       <!-- Stats -->
       <section class="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard label="Total items" :value="stats.total" icon="package" variant="default" />
