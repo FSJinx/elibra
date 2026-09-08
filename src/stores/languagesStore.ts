@@ -44,7 +44,7 @@ export const useLanguagesStore = defineStore('languages', () => {
     setLoading(true)
 
     try {
-      const response = await api.get('languages', { params: { ...params } })
+      const response = await get('languages', { params: { ...params } })
       const data = response.data?.data ?? []
 
       setLanguages(data)

@@ -51,7 +51,7 @@ export const useBranchStore = defineStore('branches', () => {
     setLoading(true)
 
     try {
-      const response = await api.get('branch/get', { params: { ...params } })
+      const response = await get('branch', { ...params })
       const data = response.data.data.data
 
       setBranches(data)

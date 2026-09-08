@@ -53,7 +53,7 @@ export const useCampusStore = defineStore('campus', () => {
     setLoading(true)
 
     try {
-      const response = await api.get('campus/get', {
+      const response = await get('campus', {
         params: { ...params },
       })
       const data = response.data.data

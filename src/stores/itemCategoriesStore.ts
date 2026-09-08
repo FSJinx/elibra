@@ -20,7 +20,7 @@ const defaultParams: Readonly<ItemCategoryParams> = {
   order: 'asc',
 }
 
-export const useItemCategoriesStore = defineStore('itemCategories', () => {
+export const useItemCategoriesStore = defineStore('item_categories', () => {
   const itemCategories = ref<ItemCategory[]>([])
   const currentItemCategory = ref<ItemCategory | null>(null)
   const loading = ref<boolean>(false)
@@ -44,7 +44,7 @@ export const useItemCategoriesStore = defineStore('itemCategories', () => {
     setLoading(true)
 
     try {
-      const response = await api.get('item-type-categories', { params: { ...params } })
+      const response = await get('item_type_category', { params: { ...params } })
       const data = response.data.data
 
       setItemCategories(data)

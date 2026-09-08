@@ -166,7 +166,7 @@ Route::group(['prefix' => '/item_types'], function () {
 });
 
 // ============== ITEM TYPE CATEGORIES ROUTE ==================
-Route::group(['prefix' => '/item_type_cateogry'], function () {
+Route::group(['prefix' => '/item_type_category'], function () {
     // Get
     Route::get('', [ItemTypeCategoryController::class, 'index'])->middleware('throttle:read');
 

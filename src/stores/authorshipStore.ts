@@ -46,7 +46,7 @@ export const authorshipStore = defineStore('authorship', () => {
     setError(null)
 
     try {
-      const response = await api.get('authorship', { params: { ...params } })
+      const response = await get('authorship', { params: { ...params } })
       const data = response.data?.data ?? []
 
       setAuthorships(data)
