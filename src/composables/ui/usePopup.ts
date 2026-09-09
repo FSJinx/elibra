@@ -20,6 +20,7 @@ export function usePopup() {
       showCancelButton: true,
       focusCancel: true,
       confirmButtonText: options.confirmButtonText ?? 'Confirm',
+      focusConfirm: true,
     })
   }
 

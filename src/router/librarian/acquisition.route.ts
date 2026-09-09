@@ -8,13 +8,13 @@ export const librarianAcquisition = [
       {
         path: '',
         name: 'librarian.acquisition',
-        component: () => import('@/app/librarian/acquisition/Acquisition.vue'),
+        component: () => import('@/app/librarian/acquisition/acquisition/Acquisition.vue'),
       },
       {
         path: 'view',
         name: 'librarian.acquisition.view',
         meta: { breadcrumb: 'Viewing:' },
-        component: () => import('@/app/librarian/acquisition/pages/ViewAcquisitions.vue'),
+        component: () => import('@/app/librarian/acquisition/acquisition/ViewAcquisitions.vue'),
       },
     ],
   },
@@ -23,6 +23,6 @@ export const librarianAcquisition = [
   {
     path: 'acquisition-requests',
     name: 'librarian.acquisition-requests',
-    component: () => import('@/app/librarian/acquisition/Requests.vue'),
+    component: () => import('@/app/librarian/acquisition/request/Requests.vue'),
   },
 ]

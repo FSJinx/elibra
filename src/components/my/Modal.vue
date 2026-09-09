@@ -14,7 +14,7 @@
           <!-- Modal Body -->
           <div class="max-h-[76dvh] flex flex-col overflow-y-auto">
             <Transition name="fade">
-              <p class="text-danger p-3 px-5" v-if="errorMessage?.length > 0"><Icon class="mr-2" icon="exclamation-circle" /> {{ errorMessage }}</p>
+              <p class="text-danger p-3 px-5" v-if="errorMessage?.length > 0 && !loading"><Icon class="mr-2" icon="exclamation-circle" /> {{ errorMessage }}</p>
             </Transition>
             <div class="flex-1 place-content-center min-h-100" v-if="loading">
               <LogoLoader message="Loading content, please wait..." />

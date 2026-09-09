@@ -18,6 +18,7 @@
         :required="required"
         :disabled="disabled"
         :readonly="readonly"
+        :tabindex="tabindex"
         :min="min"
         :max="max"
         :minlength="min"
@@ -101,6 +102,7 @@ interface Props {
   readonly?: boolean
   autocomplete?: Autocomplete
   autoFocus?: boolean
+  tabindex?: number
   spellcheck?: boolean
 
   // Actions

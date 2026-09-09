@@ -1,7 +1,7 @@
 <template>
   <Button variant="primary" data-title="Add new acquisition record" @click="modal?.open()">Add New</Button>
 
-  <Modal ref="modal" size="large" :has-inputs="hasInputs" enable-close-btn>
+  <Modal ref="modal" size="xlarge" :has-inputs="hasInputs" enable-close-btn :loading="loading">
     <template #header> New Acquisition Transaction </template>
     <Form class="flex flex-col p-5" @submit="submitForm">
       <div class="flex items-end justify-between gap-3">
@@ -15,11 +15,11 @@
       <div class="flex flex-col divide-y divide-border">
         <Control>
           <Label id="acquisition-dealer" required>Dealer</Label>
-          <Input id="acquisition-dealer" type="text" placeholder="Enter dealer's name" required v-model="form.dealer" />
+          <Input id="acquisition-dealer" type="text" placeholder="Enter dealer's name" required v-model="form.dealer" auto-focus />
         </Control>
         <Control>
           <Label id="acquisition-dealer" required>Mode of Acquisition</Label>
-          <Select id="acquisition-dealer" v-model="form.acquisition_mode">
+          <Select id="acquisition-dealer" v-model="form.acquisition_mode" :error="errors.acquisition_mode?.[0]">
             <Option value="">Select Acquisition Mode</Option>
             <Option value="gift">Gift</Option>
             <Option value="purchased">Purchased</Option>
@@ -28,11 +28,11 @@
         </Control>
         <Control>
           <Label id="acquisition-date" required>Date of Acquisition</Label>
-          <DatePicker id="acquisition-date" v-model="form.acquisition_date" :max="today" />
+          <DatePicker id="acquisition-date" v-model="form.acquisition_date" :max="today" required :error="errors.acquisition_date?.[0]" />
         </Control>
         <Control>
-          <Label id="acquisition-remarks" class="mb-auto" required>Remarks</Label>
-          <Textarea id="acquisition-remarks" type="text" placeholder="" required v-model="form.remarks" />
+          <Label id="acquisition-remarks" class="mb-auto">Remarks</Label>
+          <Textarea id="acquisition-remarks" type="text" placeholder="" v-model="form.remarks" />
         </Control>
       </div>
 
@@ -47,10 +47,11 @@
 import Modal from '@/components/my/Modal.vue'
 import { Acquisition } from '@/stores/acquisitionStore'
 
-const modal = ref<typeof Modal | null>()
-const loading = ref<boolean>(false)
 const pop = usePopup()
 const auth = authStore()
+
+const modal = ref<typeof Modal | null>()
+const loading = ref<boolean>(false)
 
 const emptyForm = (): Acquisition => ({
   id: null,
@@ -60,6 +61,7 @@ const emptyForm = (): Acquisition => ({
   remarks: '',
 })
 
+const errors = reactive<Acquisition>(emptyForm())
 const form = reactive<Acquisition>(emptyForm())
 const today = new Date().toLocaleDateString('en-CA')
 const hasInputs = computed(() => [form.dealer, form.acquisition_date, form.acquisition_mode, form.remarks].some((value) => String(value ?? '').trim().length > 0))
@@ -86,6 +88,8 @@ async function submitForm() {
     return
   }
 
+  Object.assign(errors, emptyForm())
+
   const confirmed = await pop.confirm({ text: 'Are you sure you want to add this acquisition transaction?' })
 
   if (!confirmed.isConfirmed) {
@@ -95,6 +99,7 @@ async function submitForm() {
   loading.value = true
 
   try {
+    pop.load()
     await api.post('librarian/acquisition', {
       ...form,
       receiver_user_id: auth.user.id,
@@ -102,11 +107,13 @@ async function submitForm() {
 
     pop.success('Acquisition created successfully!')
     Object.assign(form, emptyForm())
-    modal.value?.close()
+    nextTick(() => {
+      modal.value?.close()
+    })
   } catch (error: any) {
     const res = error.response?.data
     const message = res?.message || 'Failed to create acquisition.'
-    pop.error(message)
+    Object.assign(errors, res.errors)
     console.error(error)
   } finally {
     loading.value = false
