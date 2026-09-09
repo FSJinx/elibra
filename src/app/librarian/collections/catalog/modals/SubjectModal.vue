@@ -5,10 +5,10 @@
     <template #header>Add subjects</template>
 
     <Form class="p-5" @submit="addSubject">
-      <Control class="items-start">
+      <div class="flex items-center gap-2">
         <Input id="subject" v-model="subject" placeholder="Enter subject name" :warning="error" />
         <Button type="submit" icon="plus" variant="primary" :disabled="!subject.trim()"></Button>
-      </Control>
+      </div>
 
       <div class="">
         <h1 class="font-medium my-3">Subjects</h1>

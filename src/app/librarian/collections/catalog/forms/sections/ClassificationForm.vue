@@ -7,7 +7,7 @@
     </div>
 
     <div class="divide-y divide-border">
-      <Control class="control" v-if="auth.user?.role === 'admin'">
+      <Control v-if="auth.user?.role === 'admin'">
         <Label id="book-branch_id" required>Branch</Label>
         <Select id="book-branch_id" class="capitalize" v-model="form.branch_id" required :error="errors.branch_id?.[0]">
           <Option value="" disabled>Select a branch</Option>
@@ -15,7 +15,7 @@
         </Select>
       </Control>
 
-      <Control class="control">
+      <Control>
         <Label id="book-item_type_category_id" required>Category</Label>
         <Select id="book-item_type_category_id" class="capitalize" v-model="form.item_type_category_id" :error="errors.item_type_category_id?.[0]" required>
           <Option value="" disabled>Select a category</Option>
@@ -23,7 +23,7 @@
         </Select>
       </Control>
 
-      <Control class="control">
+      <Control>
         <Label id="book-language">Language</Label>
         <Select id="book-language" class="capitalize" v-model="form.language_id" :error="errors.language_id?.[0]">
           <Option value="" disabled>Select a language</Option>
@@ -42,15 +42,24 @@ interface Props {
 }
 
 const { languages } = useLanguagesStore()
-const { itemCategories } = useItemCategoriesStore()
+const { item_categories } = useItemCategoriesStore()
 const { branches } = useBranchStore()
 const auth = authStore()
 
 const props = defineProps<Props>()
 
 // Computed
-const categories = computed(() => itemCategories.filter((i) => i.item_type_id === props.item_type_id))
 const branchOptions = computed(() => branches.filter((i) => i.campus_id === auth.user?.campus_id))
+const categories = computed(() =>
+  item_categories.filter((i) => i.item_type_id === props.item_type_id),
+)
 
 const form = defineModel<ClassficationField>({ default: {} })
+
 </script>
+
+<style scoped>
+.control {
+  padding: 1.25rem;
+}
+</style>

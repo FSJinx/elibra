@@ -20,7 +20,10 @@ class ItemTypeSeeder extends Seeder
         ];
 
         foreach ($item_types as $item_type) {
-            ItemType::create($item_type);
+            ItemType::create([
+                'slug' => $item_type['name'],
+                'name' => $item_type['name'],
+            ]);
         }
     }
 }

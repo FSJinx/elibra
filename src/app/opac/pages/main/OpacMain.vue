@@ -13,7 +13,7 @@
 
           <Select id="opac-item-type" v-model="params.item_type" class="max-w-max">
             <Option value="">All Item Type</Option>
-            <template v-for="item in itemType.itemTypes" :key="item.id">
+            <template v-for="item in item_types" :key="item.id">
               <Option :value="item.id">{{ item.name }}</Option>
             </template>
           </Select>
@@ -139,12 +139,12 @@ const { typedText } = useSearchTyping()
 const route = useRoute()
 const parse = useParser()
 
-const itemType = useItemTypeStore()
-const itemCategory = useItemCategoriesStore()
+const {item_types} = useItemTypeStore()
+const { item_categories } = useItemCategoriesStore()
 const { campuses } = useCampusStore()
 
 const selectedCampus = computed(() => campuses?.find((i) => String(i.id) === params.value.campus)?.name)
-const itemTypeCategories = computed(() => itemCategory.itemCategories.filter((item) => String(item.item_type_id) === String(params.value.item_type)))
+const itemTypeCategories = computed(() => item_categories.filter((item) => String(item.item_type_id) === String(params.value.item_type)))
 </script>
 
 <style scoped>

@@ -31,7 +31,7 @@ import AcademicForm from '@/app/librarian/collections/catalog/forms/sections/Aca
 
 interface Form extends BaseField, AcademicField, ClassficationField, AuthorField {}
 
-const { itemTypes } = useItemTypeStore()
+const { item_types } = useItemTypeStore()
 
 const pop = usePopup()
 const auth = authStore()
@@ -93,7 +93,7 @@ const clearForm = async () => {
 }
 
 const bookId = computed(() => {
-  const book = itemTypes?.find((i) => i.name === 'academic')
+  const book = item_types?.find((i) => i.slug === 'academic')
   return book?.id
 })
 

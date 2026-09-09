@@ -6,11 +6,11 @@
       <p class="mt-0.5 text-sm text-foreground-secondary">Bibliographic information for this catalog record</p>
     </div>
 
-    <Control class="control">
+    <Control>
       <Label id="book-doi">Department</Label>
       <Input id="book-doi" placeholder="Enter book's DOI" v-model="form.department_id" :error="errors.department_id" />
     </Control>
-    <Control class="control">
+    <Control>
       <Label id="book-doi">DOI</Label>
       <Input id="book-doi" placeholder="Enter book's DOI" v-model="form.doi" :error="errors.doi" />
     </Control>
@@ -27,3 +27,9 @@ const props = defineProps<Props>()
 
 const form = defineModel<AcademicField>({ default: {} })
 </script>
+
+<style scoped>
+.control {
+  padding: 1.25rem;
+}
+</style>

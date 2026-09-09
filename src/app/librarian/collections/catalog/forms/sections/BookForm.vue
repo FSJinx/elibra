@@ -6,19 +6,19 @@
       <p class="mt-0.5 text-sm text-foreground-secondary">Bibliographic information for this catalog record</p>
     </div>
 
-    <Control class="control">
+    <Control>
       <Label id="book-edition" required>Edition</Label>
       <Input id="book-edition" type="text" placeholder="e.g. 1st ed." v-model="form.edition" required :error="errors.edition" />
     </Control>
-    <Control class="control">
+    <Control>
       <Label id="book-isbn_issn" required>ISBN_ISSN</Label>
       <Input id="book-isbn_issn" placeholder="Enter ISBN or ISSN" v-model="form.isbn_issn" required :error="errors.isbn_issn" />
     </Control>
-    <Control class="control">
+    <Control>
       <Label id="book-copyright_year">Copyright Year</Label>
       <Input id="book-copyright_year" placeholder="Enter book's copyright year..." v-model="form.copyright_year" required :error="errors.copyright_year" />
     </Control>
-    <Control class="control">
+    <Control>
       <Label id="book-doi">DOI</Label>
       <Input id="book-doi" placeholder="Enter book's DOI" v-model="form.doi" :error="errors.doi" />
     </Control>
@@ -35,3 +35,9 @@ const props = defineProps<Props>()
 
 const form = defineModel<BookField>({ default: {} })
 </script>
+
+<style scoped>
+.control {
+  padding: 1.25rem;
+}
+</style>

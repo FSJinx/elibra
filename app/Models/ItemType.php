@@ -10,13 +10,14 @@ use Illuminate\Database\Eloquent\Model;
 class ItemType extends Model
 {
     /** @use HasFactory<ItemTypeFactory> */
-    use HasFactory, AutoFormatter;
+    use AutoFormatter, HasFactory;
 
     protected $fillable = [
+        'slug',
         'name',
     ];
-    
-    protected $formatter =[
-        'name' => 'capitalize'
+
+    protected $formatter = [
+        'name' => 'capitalize',
     ];
 }

@@ -1,5 +1,6 @@
 interface ItemType {
   id: number
+  slug:string
   name: string
   created_at: string
   updated_at: string
@@ -20,13 +21,14 @@ const defaultParams: Readonly<ItemTypeParams> = {
 }
 
 export const useItemTypeStore = defineStore('item_type', () => {
-  const itemTypes = ref<ItemType[] | null>(null)
+  const item_types = ref<ItemType[] | null>(null)
   const currentItemType = ref<ItemType | null>(null)
   const loading = ref<boolean>(false)
   const params = reactive<ItemTypeParams>({ ...defaultParams })
 
   function setItemTypes(data: ItemType[] | null) {
-    itemTypes.value = data
+    item_types.value = data
+    console.log(item_types.value)
   }
 
   function setCurrentItemType(data: ItemType | null) {
@@ -38,7 +40,7 @@ export const useItemTypeStore = defineStore('item_type', () => {
   }
 
   async function fetch(forced = false) {
-    if (!forced && itemTypes.value?.length) return itemTypes.value
+    if (!forced && item_types.value?.length) return item_types.value
 
     setLoading(true)
 
@@ -67,7 +69,7 @@ export const useItemTypeStore = defineStore('item_type', () => {
   )
 
   return {
-    itemTypes,
+    item_types,
     currentItemType,
     loading,
     params,

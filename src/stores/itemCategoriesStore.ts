@@ -21,13 +21,13 @@ const defaultParams: Readonly<ItemCategoryParams> = {
 }
 
 export const useItemCategoriesStore = defineStore('item_categories', () => {
-  const itemCategories = ref<ItemCategory[]>([])
+  const item_categories = ref<ItemCategory[]>([])
   const currentItemCategory = ref<ItemCategory | null>(null)
   const loading = ref<boolean>(false)
   const params = reactive<ItemCategoryParams>({ ...defaultParams })
 
   function setItemCategories(data: ItemCategory[]) {
-    itemCategories.value = data
+    item_categories.value = data
   }
 
   function setCurrentItemCategory(data: ItemCategory | null) {
@@ -39,7 +39,7 @@ export const useItemCategoriesStore = defineStore('item_categories', () => {
   }
 
   async function fetch(forced = false) {
-    if (!forced && itemCategories.value.length) return itemCategories.value
+    if (!forced && item_categories.value.length) return item_categories.value
 
     setLoading(true)
 
@@ -68,7 +68,7 @@ export const useItemCategoriesStore = defineStore('item_categories', () => {
   )
 
   return {
-    itemCategories,
+    item_categories,
     currentItemCategory,
     loading,
     params,

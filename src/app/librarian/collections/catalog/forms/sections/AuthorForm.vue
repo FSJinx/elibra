@@ -40,3 +40,8 @@ const form = defineModel<AuthorField>({ default: {} })
 const authorshipsOption = computed(() => authorships?.filter((i) => i.item_type_id === props.item_type_id))
 </script>
 
+<style scoped>
+.control {
+  padding-block: '1.25rem';
+}
+</style>

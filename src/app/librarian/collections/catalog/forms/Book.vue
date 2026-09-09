@@ -31,7 +31,7 @@ import BookForm from '@/app/librarian/collections/catalog/forms/sections/BookFor
 
 interface Form extends BaseField, BookField, ClassficationField, AuthorField {}
 
-const { itemTypes } = useItemTypeStore()
+const { item_types } = useItemTypeStore()
 
 const pop = usePopup()
 const auth = authStore()
@@ -98,7 +98,9 @@ const clearErrors = () => {
 }
 
 const bookId = computed(() => {
-  const book = itemTypes?.find((i) => i.name === 'book')
+  const book = item_types?.find((i) => i.slug === 'book')
+  console.log('Book', book)
+
   return book?.id
 })
 
@@ -122,6 +124,10 @@ async function submitForm() {
     }
   }
 }
+
+onMounted(() => {
+  console.log(item_types)
+})
 </script>
 
 <style scoped>
