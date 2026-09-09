@@ -16,7 +16,7 @@ class Accession extends Model
         'remarks',
         'item_id',
         'section_id',
-        'acquisition_id',
+        'acquisition_line_id',
     ];
 
     public function item()
@@ -29,8 +29,11 @@ class Accession extends Model
         return $this->belongsTo(Sections::class);
     }
 
-    public function acquisition()
+    public function acquisitionLine()
     {
-        return $this->belongsTo(Acquisition::class);
+        return $this->belongsTo(
+            AcquisitionLines::class,
+            'acquisition_line_id'
+        );
     }
 }

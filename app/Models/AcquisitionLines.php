@@ -35,4 +35,12 @@ class AcquisitionLines extends Model
     {
         return $this->belongsTo(Acquisition::class, 'acquisition_id');
     }
+
+    public function accessions()
+    {
+        return $this->hasMany(
+            Accession::class,
+            'acquisition_line_id'
+        );
+    }
 }

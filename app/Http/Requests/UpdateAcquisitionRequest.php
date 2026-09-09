@@ -29,7 +29,7 @@ class UpdateAcquisitionRequest extends BaseRequest
     public function rules(): array
     {
         $rules = [
-            'purchase_id' => [ 'sometimes', 'nullable', 'string', 'max:255', 'unique:acquisitions,purchase_id'],
+            'acquisition_id' => [ 'sometimes', 'nullable', 'string', 'max:255', 'unique:acquisitions,acquisition_id'],
             'dealer' => [ 'sometimes', 'required', 'string', 'max:255', ], 
             'acquisition_mode' => [ 'sometimes', 'required', Rule::in([ 'purchased', 'donated', 'gift', 'exchange', ]), ], 
             'acquisition_date' => [ 'sometimes', 'required', 'date', ], 

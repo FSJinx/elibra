@@ -45,7 +45,8 @@ class AcquisitionRequestPolicy
      */
     public function delete(User $user, AcquisitionRequest $acquisitionRequest): bool
     {
-        return false;
+        // return $user->hasPermission('acquisition.request.delete');
+        return $user->isAdmin() || $user->isLibrarian();
     }
 
     /**
@@ -64,3 +65,4 @@ class AcquisitionRequestPolicy
         return false;
     }
 }
+        

@@ -3,6 +3,7 @@
 use App\Http\Controllers\AcademicController;
 use App\Http\Controllers\AcquisitionController;
 use App\Http\Controllers\AcquisitionLinesController;
+use App\Http\Controllers\AcquisitionRequestController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\AuthorController;
@@ -247,7 +248,7 @@ Route::group(['prefix' => '/librarian'], function () {
     });
 
     // ============== COLLECTIONS ROUTE ==================
-    Route::group(['prefix' => 'collections'], function () {
+    Route::group(['prefix' => '/collections'], function () {
         // Get
         Route::get('', [AcquisitionController::class, 'index']);
 
@@ -259,15 +260,19 @@ Route::group(['prefix' => '/librarian'], function () {
     });
 
     // ============== ACQUISITION ROUTE ==================
-    Route::group(['prefix' => 'acquisition'], function () {
+    Route::group(['prefix' => '/acquisition'], function () {
         // Get
         Route::get('', [AcquisitionController::class, 'index']);
 
         // Post
         Route::post('', [AcquisitionController::class, 'store'])->middleware('throttle:write');
+        Route::post('line', [AcquisitionLinesController::class, 'store'])->middleware('throttle:write');
+        Route::post('request', [AcquisitionRequestController::class, 'store'])->middleware('throttle:write');
 
         // Update
         Route::put('/{acquisition}', [AcquisitionController::class, 'update'])->middleware('throttle:write');
+        Route::put('/line/{acquisitionLie}', [AcquisitionLinesController::class, 'update'])->middleware('throttle:write');
+        Route::put('/request/{acquisitionRequest}', [AcquisitionRequestController::class, 'update'])->middleware('throttle:write');
 
         // Delete
         Route::delete('/{acquisition}', [AcquisitionController::class, 'destroy'])->middleware('throttle:delete');

@@ -1,6 +1,6 @@
 interface Acquisition {
     id: number
-    purchase_id: string
+    acquisition_id: string
     dealer: string
     acquisition_mode: string
     acquisition_date: string
