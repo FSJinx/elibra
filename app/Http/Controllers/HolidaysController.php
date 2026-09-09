@@ -14,7 +14,14 @@ class HolidaysController extends Controller
      */
     public function index()
     {
-        //
+        $holidays = Holidays::all();
+
+        return $this->response(
+            'success',
+            'Holidays retrieved successfully',
+            $holidays->toArray(),
+            200
+        );
     }
 
     /**

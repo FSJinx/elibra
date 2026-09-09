@@ -2,7 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Acquisition;
+use App\Models\Item;
+use App\Models\Sections;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Validation\Rule;
 
 class UpdateAcquisitionLinesRequest extends BaseRequest
 {
@@ -11,7 +15,11 @@ class UpdateAcquisitionLinesRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return false;
+        $user = $this->user();
+
+        return 
+            $user->hasPermission('acquisition.line.create') && ($user->isLibrarian() && $user->librarian->branch)
+            || $user->isAdmin();
     }
 
     /**
@@ -21,8 +29,17 @@ class UpdateAcquisitionLinesRequest extends BaseRequest
      */
     public function rules(): array
     {
-        return [
-            //
+        $rules = [
+            'quantity' => [ 'sometimes', 'required', 'numeric', 'min:1', ],
+            'unit_price' => [ 'sometimes', 'required', 'numeric', 'min:0', ],
+            'discount' => [ 'sometimes', 'required', 'numeric', 'min:0', ],
+            'net_price' => [ 'sometimes', 'required', 'numeric', 'min:0', ],
+
+            'item_id' => [ 'sometimes', 'required', Rule::exists((new Item)->getTable(), 'id')],
+            'acquisition_id' => [ 'sometimes', 'required', Rule::exists((new Acquisition)->getTable(), 'id')],
+            'section_id' => [ 'sometimes', 'nullable', Rule::exists((new Sections)->getTable(), 'id')],
         ];
+
+        return $rules;
     }
 }

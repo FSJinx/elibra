@@ -108,7 +108,7 @@ class AcademicService
                 ])
             );
 
-            $item->authors()->sync($data['author_ids'] ?? []);
+            $item->syncAuthors($data['authors'] ?? $data['author_ids'] ?? []);
 
             IndexCatalogItemJob::dispatch($item->id)
                 ->afterCommit();
@@ -118,7 +118,10 @@ class AcademicService
 
         CacheService::invalidate(CacheService::ACADEMICS);
 
-        return $academic->load('item');
+        return $academic->load([
+            'item',
+            'item.authors'
+        ]);
     }
 
     public function update(Academic $academic, array $data): Academic
@@ -140,7 +143,7 @@ class AcademicService
                     'language',
                     'publication_year',
                     'keywords',
-                    'electronic_file',
+                'electronic_file',
                     'item_type_id',
                     'item_type_category_id',
                     'branch_id',
@@ -156,14 +159,17 @@ class AcademicService
             );
 
             // Update authors
-            $academic->item->authors()->sync($data['author_ids'] ?? []);
+            $academic->item->syncAuthors($data['authors'] ?? $data['author_ids'] ?? []);
 
             // Queue indexing after the transaction commits.
             IndexCatalogItemJob::dispatch($academic->item_id)
                 ->afterCommit();
 
             // Refresh the academic model to get the latest data from the database
-            return $academic->fresh(['item']);
+            return $academic->fresh([
+                'item',
+                'item.authors',
+            ]);
         });
 
         // Delete the old file only after the database update succeeds

@@ -76,8 +76,8 @@ const open = ref(false)
 const managementProfile = ref<HTMLElement | null>(null)
 
 const routes = [
-  { name: 'Home', path: '', icon: 'house' },
-  { name: 'OPAC', path: '', icon: 'journals' },
+  { name: 'Home', path: 'home', icon: 'house' },
+  { name: 'OPAC', path: 'opac', icon: 'journals' },
   { name: 'Profile', path: '', icon: 'person' },
 ]
 

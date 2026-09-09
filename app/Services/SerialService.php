@@ -107,7 +107,7 @@ class SerialService
                 ])
             );
 
-            $item->authors()->sync($data['author_ids'] ?? []);
+            $item->syncAuthors($data['authors'] ?? $data['author_ids'] ?? []);
 
             IndexCatalogItemJob::dispatch($item->id)
                 ->afterCommit();
@@ -117,7 +117,10 @@ class SerialService
         });
         CacheService::invalidate(CacheService::SERIALS);
 
-        return $serial->load('item');
+        return $serial->load([
+            'item',
+            'item.authors'
+        ]);
     }
 
     public function update(Serial $serial, array $data): Serial
@@ -156,13 +159,16 @@ class SerialService
                 ])
             );
 
-            $serial->item->authors()->sync( $data['author_ids'] ?? []);
+            $serial->item->syncAuthors($data['authors'] ?? $data['author_ids'] ?? []);
 
             // Queue indexing after the transaction commits.
             IndexCatalogItemJob::dispatch($serial->item_id)
                 ->afterCommit();
                 
-            return $serial->fresh(['item']);
+            return $serial->fresh([
+                'item',
+                'item.authors',
+            ]);
         });
 
         if (

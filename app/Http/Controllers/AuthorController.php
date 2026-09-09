@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Author;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAuthorRequest;
 use App\Http\Requests\UpdateAuthorRequest;
+use App\Models\Author;
 use App\Services\AuthorService;
+use Illuminate\Http\Request;
 
 class AuthorController extends Controller
 {
     protected AuthorService $authorService;
 
-    public function __construct(AuthorService $authorService )
+    public function __construct(AuthorService $authorService)
     {
         $this->authorService = $authorService;
     }
@@ -35,10 +35,7 @@ class AuthorController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        
-    }
+    public function create() {}
 
     /**
      * Store a newly created resource in storage.
@@ -58,9 +55,35 @@ class AuthorController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Author $author)
+    public function show(Request $request)
     {
-        //
+        $query = trim((string) $request->input('query'));
+
+        if ($query === '') {
+            return $this->response('error', 'Please enter an author name.', [], 422);
+        }
+
+        $authors = Author::query()
+            ->where(function ($authorQuery) use ($query) {
+                $search = "%{$query}%";
+
+                $authorQuery
+                    ->where('first_name', 'LIKE', $search)
+                    ->orWhere('last_name', 'LIKE', $search);
+            })
+            ->get();
+
+        if ($authors->isEmpty()) {
+            return $this->response('error', 'No matching authors. Try adding one.', [], 404);
+        }
+
+        return $this->response(
+            'success',
+            'Authors retrieved successfully',
+            $authors->toArray(),
+            200
+        );
+
     }
 
     /**
@@ -82,9 +105,9 @@ class AuthorController extends Controller
         );
 
         return $this->response(
-            'success', 
-            'Author updated successfully', 
-            $author->toArray(), 
+            'success',
+            'Author updated successfully',
+            $author->toArray(),
             200
         );
     }

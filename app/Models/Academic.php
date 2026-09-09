@@ -12,7 +12,7 @@ class Academic extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-            'category',
+            // 'category',
             // 'subjects',
             'doi',
             'item_id',

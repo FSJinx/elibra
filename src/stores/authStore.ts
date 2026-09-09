@@ -5,6 +5,7 @@ export interface User {
   middle_initial?: string | null
   role: 'super admin' | 'admin' | 'librarian' | 'patron' | null
   email?: string
+  campus?: any
   [key: string]: any
   tools: ['gendash', 'collacademic']
 }

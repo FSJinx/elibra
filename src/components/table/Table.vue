@@ -1,13 +1,15 @@
 <template>
   <section class="relative flex-1 flex flex-col bg-background pb-5 min-h-100 border border-border rounded-xl overflow-hidden scrollbar-none">
     <!-- Table Header -->
-    <div class="flex items-center justify-between border-b border-border px-5 py-4" v-if="title">
-      <div class="">
-        <h2 class="text-lg font-semibold">{{ title }}</h2>
-        <p class="mt-0.5 text-sm text-foreground-secondary">{{ subtitle }}</p>
+    <div class="grid grid-cols-2 items-center gap-2 border-b border-border/70 px-5 py-4" v-if="title || dataLength">
+      <div>
+        <h2 class="text-xl font-semibold">{{ title }}</h2>
+
+        <p class="mt-1 text-sm text-foreground-secondary" v-if="subtitle">{{ subtitle }}</p>
       </div>
 
-      <p class="text-sm bg-muted/50 text-muted-foreground px-3 py-1 rounded-lg border border-border" v-if="dataLength">{{ dataLength }} records</p>
+      <slot name="header" v-if="$slots.header" />
+      <span class="text-sm text-foreground-secondary ml-auto" v-else-if="dataLength"> {{ dataLength }} items </span>
     </div>
 
     <!-- Table Body -->

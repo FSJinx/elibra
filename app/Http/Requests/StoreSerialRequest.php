@@ -2,13 +2,12 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Academic;
 use App\Models\Author;
+use App\Models\Authorship;
 use App\Models\Branch;
-use App\Models\Item;
 use App\Models\ItemType;
 use App\Models\ItemTypeCategory;
-use App\Models\Serial;
+use App\Models\Language;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Validation\Rule;
 
@@ -19,7 +18,11 @@ class StoreSerialRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('create', Serial::class);
+        $user = $this->user();
+
+        return
+            $user->hasPermission('serial.create') && ($user->isLibrarian() && $user->librarian->branch) ||
+            $user->isAdmin();
     }
 
     /**
@@ -30,38 +33,37 @@ class StoreSerialRequest extends BaseRequest
     public function rules(): array
     {
         $rules = [
-            //Item Fields
-            'title' => [ 'required', 'string', 'max:255' ],
-            'subtitle' => [ 'nullable', 'string', 'max:255' ],
-            'description' => [ 'nullable', 'string' ],
-            'call_number' => [ 'nullable', 'string', 'max:255', Rule::unique((new Item)->getTable(), 'call_number') ],
-            'language' => [ 'required', 'string', 'max:255' ],
-            'publication_year' => [ 'nullable', 'integer', 'min:1900', 'max:' . date('Y') ],
-            'keywords' => [ 'nullable', 'string' ],
-            'electronic_file' => [ 'nullable', 'file', 'mimes:pdf,doc,docx' ],
-            'item_type_id' => [ 'required', Rule::exists((new ItemType)->getTable(), 'id') ],
-            'item_type_category_id' => [ 'required', Rule::exists((new ItemTypeCategory)->getTable(), 'id') ],
-            'branch_id' => [ 'required', Rule::exists((new Branch)->getTable(), 'id') ],
+            // Item Fields
+            'title' => ['required', 'string', 'max:255'],
+            'subtitle' => ['nullable', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'call_number' => ['nullable', 'string', 'max:255'],
+            'language_id' => ['required', Rule::exists((new Language)->getTable(), 'id')],
+            'publication_year' => ['nullable', 'integer', 'min:1900', 'max:'.date('Y')],
+            'keywords' => ['nullable', 'array'],
+            'electronic_file' => ['nullable', 'file', 'mimes:pdf,doc,docx'],
+            'item_type_id' => ['required', Rule::exists((new ItemType)->getTable(), 'id')],
+            'item_type_category_id' => ['required', Rule::exists((new ItemTypeCategory)->getTable(), 'id')],
+            'branch_id' => ['required', Rule::exists((new Branch)->getTable(), 'id')],
 
-            //Serial Fields
-            'isbn_issn' => [ 'nullable', 'string', 'max:255' ],
-            'volume' => [ 'nullable', 'string', 'max:255' ],
-            'issue' => [ 'nullable', 'string', 'max:255' ],
-            'pages' => [ 'nullable', 'string', 'max:255' ],
-            'doi' => [ 'nullable', 'string', 'max:255' ],
+            // Serial Fields
+            'isbn_issn' => ['nullable', 'string', 'max:255'],
+            'volume' => ['nullable', 'string', 'max:255'],
+            'issue' => ['nullable', 'string', 'max:255'],
+            'pages' => ['nullable', 'string', 'max:255'],
+            'doi' => ['nullable', 'string', 'max:255'],
 
-            //Authors Field
-            'author_ids' => [ 'nullable', 'array', 'min:1' ],
-            'author_ids.*' => [ 'integer', Rule::exists((new Author)->getTable(), 'id')->whereNull('deleted_at'), ],
-        ];  
+            // Authors Field
+            'authors' => ['nullable', 'array'],
+            'authors.*.id' => ['nullable', 'integer', Rule::exists((new Author)->getTable(), 'id')->whereNull('deleted_at')],
+            'authors.*.authorship_id' => ['nullable', 'integer', Rule::exists((new Authorship)->getTable(), 'id')],
+        ];
 
         return $rules;
     }
 
     /**
      * Get custom messages for validator errors.
-     *
-     * @return array
      */
     public function messages(): array
     {
@@ -78,17 +80,14 @@ class StoreSerialRequest extends BaseRequest
 
             'call_number.string' => 'Call number must be a valid string.',
             'call_number.max' => 'Call number may not be greater than 255 characters.',
-            'call_number.unique' => 'Call number already exists.',
-
-            'language.required' => 'Language is required.',
-            'language.string' => 'Language must be a valid string.',
-            'language.max' => 'Language may not be greater than 255 characters.',
+            'language_id.required' => 'Language is required.',
+            'language_id.exists' => 'Language doesn\'t exist.',
 
             'publication_year.integer' => 'Publication year must be a valid year.',
             'publication_year.min' => 'Publication year must be 1900 or later.',
             'publication_year.max' => 'Publication year cannot be greater than the current year.',
 
-            'keywords.string' => 'Keywords must be a valid string.',
+            'keywords.array' => 'The keywords must be an array.',
 
             'electronic_file.file' => 'Electronic file must be a valid file.',
             'electronic_file.mimes' => 'Electronic file must be a PDF, DOC, or DOCX file.',

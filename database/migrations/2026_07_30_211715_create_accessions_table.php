@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('accessions', function (Blueprint $table) {
             $table->id();
-            $table->string('accession_number')->nullable();
+            $table->string('accession_number')->unique()->nullable(); //itemtypecategories-
             $table->enum('status', ['available', 'reserved', 'on_load', 'lost', 'missing', 'archived', 'condemned'])->default('available');
             $table->string('remarks')->nullable();
             $table->timestamps();
@@ -21,7 +21,7 @@ return new class extends Migration
 
             $table->unsignedBigInteger('item_id');
             $table->unsignedBigInteger('section_id');
-            $table->unsignedBigInteger('acquisition_id');
+            $table->unsignedBigInteger('acquisition_line_id');
         });
     }
 

@@ -48,7 +48,7 @@ class ItemTypeCategorySeeder extends Seeder
                     ['name' => 'yearbook', 'code' => 'rc'],
 
                     // Filipiniana Collections
-                    ['name' => 'filipiniana', 'code' => 'fc'],
+                    // ['name' => 'filipiniana', 'code' => 'fc'],
                     ['name' => 'reserved', 'code' => 'rc'],
                 ],
             ],

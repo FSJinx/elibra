@@ -22,14 +22,14 @@ class ItemController extends Controller
 
         $branchId = $user->isSuperAdmin()
             ? null
-            : $user->librarian->branch_id;
+            : $user->librarian?->branch_id;
+        $campusId = $user->isAdmin() ? $user->campus_id : null;
 
         $parameters = array_merge(
             $filters,
             [
-                'branch_id' => $user->isSuperAdmin()
-                    ? 'all'
-                    : $branchId,
+                'branch_id' => $branchId,
+                'campus_id' => $campusId,
             ]
         );
 
@@ -37,11 +37,15 @@ class ItemController extends Controller
             CacheService::ITEMS,
             $parameters,
             now()->addMinutes(10),
-            function () use ($user, $branchId, $filters) {
+            function () use ($user, $branchId, $campusId, $filters) {
 
                 $query = Item::query();
 
-                if (!$user->isSuperAdmin()) {
+                if ($user->isAdmin()) {
+                    $query->whereHas('branch', function ($query) use ($campusId) {
+                        $query->where('campus_id', $campusId);
+                    });
+                } elseif (! $user->isSuperAdmin()) {
                     $query->where('branch_id', $branchId);
                 }
 
@@ -72,7 +76,7 @@ class ItemController extends Controller
         return $this->response(
             'success',
             'Items retrieved successfully.',
-            $items,
+            $items->toArray(),
             200
         );
     }

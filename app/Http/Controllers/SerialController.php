@@ -39,7 +39,7 @@ class SerialController extends Controller
         return $this->response(
             'success',
             'Serials retrieved successfully',
-            $serials,
+            $serials->toArray(),
             200
         );
     }
@@ -62,7 +62,7 @@ class SerialController extends Controller
         return $this->response(
             'success', 
             'Serial created successfully', 
-            $serial->load('item')->toArray(),            
+            $serial->toArray(),            
             201
         );
     }
@@ -96,7 +96,7 @@ class SerialController extends Controller
         return $this->response(
             'success',
             'Serial updated successfully',
-            $serial->load('item')->toArray(),
+            $serial->toArray(),
             200
         );
     }

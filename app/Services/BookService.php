@@ -113,7 +113,7 @@ class BookService
                 ])
             );
 
-            $item->authors()->sync($data['author_ids'] ?? []);
+            $book->item->syncAuthors($data['authors'] ?? $data['author_ids'] ?? []);
 
             IndexCatalogItemJob::dispatch($item->id)
                 ->afterCommit();
@@ -123,7 +123,10 @@ class BookService
 
         CacheService::invalidate(CacheService::BOOKS);
 
-        return $book->load('item');
+        return $book->load([
+            'item',
+            'item.authors',
+        ]);
     }
 
     public function update(Book $book, array $data): Book
@@ -163,14 +166,17 @@ class BookService
             );
 
             // Update authors
-            $book->item->authors()->sync($data['author_ids'] ?? []);
+            $book->item->syncAuthors($data['authors'] ?? $data['author_ids'] ?? []);
 
             // Queue indexing after the transaction commits.
             IndexCatalogItemJob::dispatch($book->item_id)
                 ->afterCommit();
 
             // Refresh the book model to get the latest data from the database
-            return $book->fresh(['item']);
+            return $book->fresh([
+                'item',
+                'item.authors',
+            ]);
         });
 
         // Delete the old file only after the database update succeeds
@@ -217,8 +223,6 @@ class BookService
         ) {
             $data['electronic_file'] = $data['electronic_file']
                 ->store('item/books', 'public');
-
-            return true;
         }
 
         return false;

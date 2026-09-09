@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Author;
+use App\Models\Authorship;
 use App\Models\Branch;
 use App\Models\Item;
 use App\Models\ItemType;
@@ -17,7 +18,9 @@ class UpdateBookRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('update', $this->route('book'));
+        $user = $this->user();
+
+        return $this->user->hasPermission('book.update') && $user->isLibrarian() || $user->isAdmin();
     }
 
     /**
@@ -41,15 +44,15 @@ class UpdateBookRequest extends BaseRequest
             'item_type_category_id' => [ 'sometimes', 'required', Rule::exists((new ItemTypeCategory)->getTable(), 'id') ],
             'branch_id' => [ 'sometimes', 'required', Rule::exists((new Branch)->getTable(), 'id') ],
 
-            //Academic Fields
             //Book Fields
             'edition' => [ 'sometimes', 'required', 'string', 'max:255' ],
             'isbn_issn' => [ 'sometimes', 'required', 'string', 'max:255' ],
             'copyright_year' => [ 'sometimes', 'required', 'string', 'max:255' ],
 
             //Authors Field
-            'author_ids' => [ 'nullable', 'array', 'min:1' ],
+            'authors' => [ 'nullable', 'array', 'min:1' ],
             'author_ids.*' => [ 'integer', Rule::exists((new Author)->getTable(), 'id')->whereNull('deleted_at') ],
+            'authors.*.authorship_id' => [ 'nullable', 'integer', Rule::exists((new Authorship)->getTable(), 'id') ],
         ];
         return $rules;
     }

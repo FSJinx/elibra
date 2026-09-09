@@ -7,6 +7,7 @@ export const useSwal = () => {
     padding: '1.5rem 3rem',
     customClass: {
       popup: 'elpop-container',
+      container: 'popup-wrapper',
     },
 
     // Inside Container

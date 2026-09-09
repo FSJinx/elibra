@@ -13,7 +13,7 @@ class ItemPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->isAdmin() || $user->isLibrarian();
+        return $user->isSuperAdmin() || $user->isAdmin() || $user->isLibrarian();
     }
 
     /**

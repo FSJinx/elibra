@@ -4,7 +4,7 @@
       <!-- Inner Fixed-Width Container -->
       <div class="w-85 flex flex-col h-full shrink-0 whitespace-nowrap">
         <!-- Header Logo -->
-        <router-link :to="{ name: 'home' }" class="flex items-center gap-3 p-5 shrink-0 border-b border-border/50 hover:bg-default/30 transition-colors">
+        <router-link :to="{ name: 'home' }" class="flex items-center gap-3 px-5 py-6 shrink-0 border-b border-border hover:bg-default/30 transition-colors">
           <div class="size-10 rounded-lg bg-primary flex items-center justify-center text-primary-foreground shrink-0 shadow-sm">
             <Logo class="text-sm mb-0.5" />
           </div>
@@ -15,20 +15,20 @@
         </router-link>
 
         <!-- Navigation Menu -->
-        <nav class="flex-1 overflow-y-auto p-3 space-y-5 scrollbar-thin scrollbar-thumb-transparent hover:scrollbar-thumb-foreground/20 transition-all duration-200">
-          <div v-for="menu in filteredMenus" :key="menu.name" class="space-y-1">
-            <h2 class="px-3 text-xs font-semibold uppercase tracking-wider text-foreground-secondary/70">
+        <nav class="flex-1 overflow-y-auto px-2 py-2 space-y-2 divide-y divide-border scrollbar-thin scrollbar-thumb-transparent hover:scrollbar-thumb-foreground/20 transition-all duration-200">
+          <div v-for="menu in filteredMenus" :key="menu.name" class="space-y-2 py-2">
+            <h2 class="px-3 text-sm font-semibold uppercase tracking-wider text-foreground">
               {{ menu.name }}
             </h2>
 
             <!-- Menu Children -->
-            <div class="space-y-1 pt-1">
+            <div class="space-y-1 px-2">
               <router-link
                 v-for="child in childrenOf(menu.children)"
                 :key="child.path"
                 :to="{ name: child.path }"
-                class="relative flex items-center gap-3.5 px-4 py-3 rounded-xl border font-medium cursor-pointer transition-all duration-200"
-                :class="[isActive(child.path) ? 'text-primary bg-primary-soft/25 hover:bg-primary-soft border-primary/25 shadow-sm' : 'border-transparent hover:bg-slate-50 text-foreground-secondary hover:text-foreground']"
+                class="relative flex items-center gap-3.5 py-3.5 px-5 rounded-xl border font-medium text-[13px] cursor-pointer transition-all duration-200"
+                :class="[isActive(child.path) ? 'text-primary bg-primary-soft/25 hover:bg-primary-soft border-primary/50' : 'border-transparent hover:bg-slate-50 text-foreground-secondary hover:text-foreground']"
                 :aria-current="isActive(child.path) ? 'page' : undefined"
               >
                 <!-- Active Indicator Bar -->
@@ -69,6 +69,7 @@
 
 <script setup lang="ts">
 import { menus } from '@/layouts/management/sidebar'
+import { LayoutDashboard } from '@lucide/vue'
 
 const route = useRoute()
 const auth = authStore()

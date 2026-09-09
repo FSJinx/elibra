@@ -1,5 +1,5 @@
 <template>
-  <div class="flex min-h-22 flex-col gap-2 rounded-xl border border-border bg-white p-5 transition-colors duration-150" :class="variantClasses" :data-title="`${label}: ${value ? value.toLocaleString() : 'No data'}`">
+  <article class="flex min-h-22 flex-col gap-2 rounded-xl border border-border bg-white p-5 transition-colors duration-150" :data-title="`${label}: ${value ? value.toLocaleString() : 'No data'}`">
     <div v-if="isLoading" class="flex flex-col gap-3">
       <div class="h-3 w-2/5 animate-shimmer rounded bg-linear-to-r from-gray-200 via-gray-100 to-gray-200 bg-size-[200%_100%]" />
       <div class="h-6 w-3/5 animate-shimmer rounded bg-linear-to-r from-gray-200 via-gray-100 to-gray-200 bg-size-[200%_100%]" />
@@ -7,7 +7,7 @@
 
     <template v-else>
       <div class="flex items-start justify-between gap-2 mb-3">
-        <p class="m-0 text-muted-foreground">{{ label }}</p>
+        <p class="m-0 text-[13px] font-medium text-muted-foreground">{{ label }}</p>
         <div v-if="icon" class="flex shrink-0 items-center justify-center size-13 rounded-full" :class="[iconDesign]">
           <component :is="icon" v-if="typeof icon === 'object'" />
           <span :class="`text-${variant}`" v-else>
@@ -27,7 +27,7 @@
         </h3>
       </div>
     </template>
-  </div>
+  </article>
 </template>
 
 <script setup lang="ts">
@@ -52,12 +52,12 @@ const props = withDefaults(defineProps<Props>(), {
 
 const iconDesign = computed(() => {
   const variants: Record<Variants, string> = {
-    danger: 'bg-danger-soft/20 text-danger-soft-foreground',
-    success: 'bg-success-soft/20 text-success-soft-foreground',
-    warning: 'bg-warning-soft/20 text-warning-soft-foreground',
-    primary: 'bg-primary-soft/20 text-primary-soft-foreground',
-    info: 'bg-info-soft/20 text-info-soft-foreground',
-    restore: 'bg-restore-soft/20 text-restore-soft-foreground',
+    danger: 'bg-danger-soft/50 text-danger-soft-foreground',
+    success: 'bg-success-soft/50 text-success-soft-foreground',
+    warning: 'bg-warning-soft/50 text-warning-soft-foreground',
+    primary: 'bg-primary-soft/50 text-primary-soft-foreground',
+    info: 'bg-info-soft/50 text-info-soft-foreground',
+    restore: 'bg-restore-soft/50 text-restore-soft-foreground',
     default: 'bg-muted text-foreground',
     text: '',
   }
@@ -92,16 +92,6 @@ const trendDirection = computed(() => {
   if (props.trend > 0) return 'up'
   if (props.trend < 0) return 'down'
   return 'neutral'
-})
-
-// left-border accent lang, hindi buong background
-const variantClasses = computed(() => {
-  const map: Record<string, string> = {
-    success: 'border-l-[3px] border-l-emerald-600',
-    warning: 'border-l-[3px] border-l-amber-600',
-    danger: 'border-l-[3px] border-l-red-600',
-  }
-  return map[props.variant ?? 'default'] ?? ''
 })
 
 const trendClasses = computed(() => {
