@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedInteger('requested_by');
             $table->unsignedInteger('item_type_id')->nullable();
             $table->unsignedInteger('reviewed_by')->nullable();
+            $table->unsignedInteger('closed_remarks')->nullable();
 
             // Bibliographic information
             $table->string('title');
@@ -40,7 +41,9 @@ return new class extends Migration
             $table->string('preferred_supplier')->nullable();
 
             // Workflow
-            $table->enum('status', ['pending', 'approved', 'rejected', 'ordered', 'received', 'cancelled'])->default('pending');
+            $table->enum('request_status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->enum('procurement_status', ['pending', 'ordered', 'received'])->nullable();
+            $table->boolean('is_closed')->default(false);
 
             // Review
             $table->timestamp('reviewed_at')->nullable();

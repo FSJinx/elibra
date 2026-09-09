@@ -83,9 +83,9 @@ api.interceptors.response.use(
       pop.error(firstErrorMessage ?? response?.message)
     }
 
-    if (status === 500) {
-      pop.error('Server error, please try again later.')
-    }
+    // if (status === 500) {
+    //   pop.error('Server error, please try again later.')
+    // }
 
     return Promise.reject(error)
   },
