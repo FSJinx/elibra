@@ -40,8 +40,14 @@ class StoreAcquisitionRequestRequest extends BaseRequest
 
             'request_status' => [ 'nullable', Rule::in(['pending', 'approved', 'rejected']) ],
             'procurement_status' => [ 'nullable', Rule::in(['pending', 'ordered', 'received']) ],
-            'is_closed' => [ 'nullable', 'boolean' ],
+            'is_closed' => [
+                'nullable',
+                'boolean',
+                Rule::prohibitedIf(in_array($this->input('procurement_status'), ['ordered', 'received'], true)),
+            ],
             'closed_remarks' => [ 'nullable', 'string' ],
+            'closed_descriptions' => [ 'nullable', 'string' ],
+            'closed_description' => [ 'nullable', 'string' ],
             'reviewed_at' => [ 'nullable', 'date' ],
             'remarks' => [ 'nullable', 'string' ],
         ];
@@ -115,7 +121,10 @@ class StoreAcquisitionRequestRequest extends BaseRequest
             'request_status.in' => 'The request status must be pending, approved, or rejected.',
             'procurement_status.in' => 'The procurement status must be pending, ordered, or received.',
             'is_closed.boolean' => 'The closed flag must be true or false.',
+            'is_closed.prohibited' => 'The closed flag is not editable when procurement status is already ordered or received.',
             'closed_remarks.string' => 'The closed remarks must be a string.',
+            'closed_descriptions.string' => 'The system generated closure description must be a string.',
+            'closed_description.string' => 'The closure description must be a string.',
             'reviewed_at.date' => 'The reviewed date must be a valid date.',
             'remarks.string' => 'The remarks must be a string.',
         ];

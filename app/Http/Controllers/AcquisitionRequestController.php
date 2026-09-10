@@ -71,9 +71,27 @@ class AcquisitionRequestController extends Controller
      */
     public function update(UpdateAcquisitionRequestRequest $request, AcquisitionRequest $acquisitionRequest)
     {
+        $requestedProcurementStatus = $request->input('procurement_status');
+        $isClosingAttempt = $request->boolean('is_closed') || $acquisitionRequest->is_closed;
+
+        if (
+            in_array($acquisitionRequest->procurement_status, ['ordered', 'received'], true)
+            || in_array($requestedProcurementStatus, ['ordered', 'received'], true)
+        ) {
+            if ($isClosingAttempt) {
+                return $this->response(
+                    'error',
+                    'This acquisition request cannot be closed because it is already ordered or received.',
+                    null,
+                    422
+                );
+            }
+        }
+
         $acquisitionRequest = $this->acquisitionRequestService->update(
             $acquisitionRequest,
-            $request->validated()
+            $request->validated(),
+            $request->user()?->id
         );
 
         return $this->response(

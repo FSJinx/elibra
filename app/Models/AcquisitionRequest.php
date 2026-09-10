@@ -45,6 +45,8 @@ class AcquisitionRequest extends Model
         // Review
         'reviewed_at',
         'closed_remarks',
+        'closed_descriptions',
+        // 'closed_description',
         'remarks',
     ];
 
