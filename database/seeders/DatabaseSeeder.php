@@ -27,13 +27,13 @@ class DatabaseSeeder extends Seeder
             CampusSeeder::class,
             BranchSeeder::class,
             DepartmentSeeder::class,
+            BranchSectionSeeder::class,
             ProgramsSeeder::class,
-            // AdminSeeder::class,
-            // LibrarianSeeder::class,
-            // PatronSeeder::class,
             UsersSeeder::class,
             AuthorSeeder::class,
+            AcquisitionSeeder::class,
             ItemSeeder::class,
+            AcquisitionLinesSeeder::class,
         ]);
     }
 }

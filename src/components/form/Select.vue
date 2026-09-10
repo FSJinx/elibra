@@ -2,14 +2,9 @@
   <div ref="dropdownRef" class="relative inline-flex flex-col gap-2 min-w-40 w-full">
     <div
       type="button"
-      tabindex="0"
-      @mousedown="handleMouseDown"
-      @click="handleClick"
-      @focus="handleFocus"
-      @blur="handleTriggerBlur"
-      @keydown="handleTriggerKeydown"
-      class="flex items-center h-11 text-left px-4 text-foreground w-full rounded-md border border-border outline-none focus-visible:ring-4 ring-primary/20 focus-visible:border-success! cursor-pointer disabled:cursor-not-allowed transition-all duration-200"
-      :class="[open ? 'bg-tertiary ring-4 ring-primary/20 border-success!' : 'bg-background']"
+      @click="toggle"
+      class="flex items-center h-11 text-left px-4 text-foreground w-full bg-background rounded-md border outline-none focus-visible:ring-4 ring-primary/20 focus-visible:border-success cursor-pointer disabled:cursor-not-allowed transition-all duration-200"
+      :class="[open ? 'ring-4 border-success' : 'border-border']"
       :disabled="disabled"
       :aria-expanded="open"
       aria-haspopup="listbox"
@@ -22,11 +17,11 @@
       {{ error }}
     </p>
 
-    <Input :id="`${id}-value`" :tabindex="-1" class="absolute opacity-0 -z-1 pointer-events-none h-full w-full" :required="required" v-model="model" />
+    <Input :id="`${id}-value`" class="absolute opacity-0 -z-1 pointer-events-none h-full w-full" :required="required" v-model="model" />
 
     <!-- Teleported dropdown: using hidden / v-show instead of v-if keeps child slots mounted -->
     <Teleport to="body">
-      <div ref="dropdownMenuRef" role="listbox" @keydown="handleMenuKeydown" @focusout="handleMenuFocusout" :class="[open ? 'grid animate-dropdown-in' : 'hidden']" class="options gap-0.5 fixed bg-background min-w-75 rounded-md shadow-lg border border-border p-2 z-9999 max-h-60 overflow-y-auto scrollbar-thin" :style="dropdownStyle">
+      <div ref="dropdownMenuRef" role="listbox" :class="[open ? 'grid animate-dropdown-in' : 'hidden']" class="options gap-0.5 fixed bg-background min-w-75 rounded-md shadow-lg border border-border p-2 z-9999 max-h-60 overflow-y-auto scrollbar-thin" :style="dropdownStyle">
         <p v-if="props.title" class="text-xs font-semibold uppercase text-foreground-secondary p-1 mb-1">{{ props.title }}</p>
         <slot />
       </div>
@@ -54,7 +49,6 @@ interface Props {
 const dropdownRef = ref<HTMLElement | null>(null)
 const dropdownMenuRef = ref<HTMLElement | null>(null)
 const open = ref<boolean>(false)
-const pointerInteracting = ref(false)
 const model = defineModel<any>({ default: '' })
 const parse = useParser()
 
@@ -109,88 +103,6 @@ const toggle = () => {
       nextTick(updatePosition)
     }
   }
-}
-
-const handleMouseDown = () => {
-  pointerInteracting.value = true
-}
-
-const handleFocus = () => {
-  if (!pointerInteracting.value) {
-    open.value = true
-    nextTick(updatePosition)
-  }
-}
-
-const getOptionButtons = () => {
-  return Array.from(dropdownMenuRef.value?.querySelectorAll<HTMLButtonElement>('button:not(:disabled)') ?? [])
-}
-
-const focusOption = (index: number) => {
-  const options = getOptionButtons()
-  if (options.length === 0) return
-
-  const nextIndex = (index + options.length) % options.length
-  options[nextIndex].focus()
-  options[nextIndex].scrollIntoView({ block: 'nearest' })
-}
-
-const handleTriggerKeydown = (event: KeyboardEvent) => {
-  if (props.disabled) return
-
-  if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-    event.preventDefault()
-    if (!open.value) {
-      open.value = true
-      nextTick(() => {
-        const options = getOptionButtons()
-        focusOption(event.key === 'ArrowDown' ? 0 : options.length - 1)
-        updatePosition()
-      })
-      return
-    }
-
-    const options = getOptionButtons()
-    focusOption(event.key === 'ArrowDown' ? 0 : options.length - 1)
-  }
-}
-
-const handleMenuKeydown = (event: KeyboardEvent) => {
-  const options = getOptionButtons()
-  const currentIndex = options.indexOf(document.activeElement as HTMLButtonElement)
-
-  if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-    event.preventDefault()
-    focusOption(currentIndex + (event.key === 'ArrowDown' ? 1 : -1))
-  } else if (event.key === 'Enter' && currentIndex >= 0) {
-    event.preventDefault()
-    options[currentIndex].click()
-  } else if (event.key === 'Escape') {
-    event.preventDefault()
-    close()
-    dropdownRef.value?.querySelector<HTMLElement>('[tabindex="0"]')?.focus()
-  }
-}
-
-const handleTriggerBlur = () => {
-  nextTick(() => {
-    if (!dropdownMenuRef.value?.contains(document.activeElement)) {
-      close()
-    }
-  })
-}
-
-const handleMenuFocusout = () => {
-  nextTick(() => {
-    if (!dropdownRef.value?.contains(document.activeElement) && !dropdownMenuRef.value?.contains(document.activeElement)) {
-      close()
-    }
-  })
-}
-
-const handleClick = () => {
-  toggle()
-  pointerInteracting.value = false
 }
 
 const close = () => {

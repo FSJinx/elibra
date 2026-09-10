@@ -1,5 +1,5 @@
 <template>
-  <section class="relative flex-1 flex flex-col bg-background pb-5 min-h-100 border border-border rounded-xl overflow-hidden scrollbar-none">
+  <section class="relative flex-1 flex flex-col bg-background min-h-100 border border-border rounded-xl overflow-hidden scrollbar-none">
     <!-- Table Header -->
     <div class="grid grid-cols-2 items-center gap-2 border-b border-border/70 px-5 py-4" v-if="title || dataLength">
       <div>

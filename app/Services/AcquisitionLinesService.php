@@ -65,7 +65,7 @@ class AcquisitionLinesService
                     'accession_number' => $accessionNumber,
                     'status' => 'available',
                     'item_id' => $acquisitionLine->item_id,
-                    'section_id' => $data['section_id'],
+                    'branch_section_id' => $data['branch_section_id'],
                     'acquisition_line_id' => $acquisitionLine->id,
                 ]);
             }
@@ -83,7 +83,6 @@ class AcquisitionLinesService
 
         return $acquisitionLine;
     }
-
 
     /**
      * Update acquisition line and synchronize its accessions.
@@ -135,7 +134,6 @@ class AcquisitionLinesService
                 'section_id' => $data['section_id'],
             ]);
 
-
             /*
              * ==========================================
              * QUANTITY INCREASED
@@ -174,7 +172,6 @@ class AcquisitionLinesService
                     ]);
                 }
             }
-
 
             /*
              * ==========================================
@@ -228,7 +225,6 @@ class AcquisitionLinesService
 
         return $acquisitionLine;
     }
-
 
     /**
      * Delete acquisition line and its accessions.
@@ -284,7 +280,6 @@ class AcquisitionLinesService
         return $deleted;
     }
 
-
     /**
      * Get accession prefix.
      *
@@ -297,7 +292,7 @@ class AcquisitionLinesService
      */
     private function getAccessionPrefix(Item $item): string
     {
-        if (!$item->itemTypeCategory) {
+        if (! $item->itemTypeCategory) {
 
             throw new RuntimeException(
                 'The selected item does not have an item type category.'
@@ -322,9 +317,8 @@ class AcquisitionLinesService
             STR_PAD_LEFT
         );
 
-        return $categoryCode . $branchCode;
+        return $categoryCode.$branchCode;
     }
-
 
     /**
      * Generate accession numbers.
@@ -389,20 +383,20 @@ class AcquisitionLinesService
         $lastAccession = Accession::where(
             'accession_number',
             'like',
-            $prefix . '%'
+            $prefix.'%'
         )
             ->whereRaw(
                 'accession_number REGEXP ?',
                 [
-                    '^' .
-                    preg_quote($prefix, '/') .
-                    '[0-9]+$'
+                    '^'.
+                    preg_quote($prefix, '/').
+                    '[0-9]+$',
                 ]
             )
             ->orderByRaw(
                 'CAST(SUBSTRING(accession_number, ?) AS UNSIGNED) DESC',
                 [
-                    strlen($prefix) + 1
+                    strlen($prefix) + 1,
                 ]
             )
             ->first();
@@ -451,7 +445,7 @@ class AcquisitionLinesService
             );
 
             $accessionNumbers[] =
-                $prefix . $sequenceString;
+                $prefix.$sequenceString;
         }
 
         return $accessionNumbers;

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->softDeletes();
 
             $table->unsignedBigInteger('item_id');
-            $table->unsignedBigInteger('section_id');
+            $table->unsignedBigInteger('branch_section_id');
             $table->unsignedBigInteger('acquisition_line_id');
         });
     }

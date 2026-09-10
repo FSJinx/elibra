@@ -11,7 +11,7 @@ return new class extends Migration
             'name' => 'accessions',
             'foreign_columns' => [
                 ['name' => 'item_id', 'references' => 'id', 'on' => 'items', 'onDelete' => 'cascade'],
-                ['name' => 'section_id', 'references' => 'id', 'on' => 'sections', 'onDelete' => 'cascade'],
+                ['name' => 'branch_section_id', 'references' => 'id', 'on' => 'branch_sections', 'onDelete' => 'cascade'],
                 ['name' => 'acquisition_line_id', 'references' => 'id', 'on' => 'acquisition_lines', 'onDelete' => 'cascade'],
             ],
         ],

@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Database\Factories\AcquisitionLinesFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class AcquisitionLines extends Model
 {
-    /** @use HasFactory<\Database\Factories\AcquisitionLinesFactory> */
+    /** @use HasFactory<AcquisitionLinesFactory> */
     use HasFactory;
 
     protected $fillable = [
@@ -26,9 +27,9 @@ class AcquisitionLines extends Model
         'net_price' => 'float',
     ];
 
-    public function item()
+    public function items()
     {
-        return $this->belongsTo(Item::class, 'item_id');
+        return $this->belongsTo(Item::class, 'item_id', 'id');
     }
 
     public function acquisition()

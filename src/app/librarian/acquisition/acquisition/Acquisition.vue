@@ -6,7 +6,7 @@
       </div>
     </SectionHeader>
 
-    <div class="flex-1 flex flex-col p-5 gap-3">
+    <div class="flex-1 flex flex-col p-5 gap-3 overflow-hidden">
       <Card>
         <Form class="flex items-center justify-end gap-2">
           <Label id="search" class="mr-3">Search</Label>
@@ -33,24 +33,24 @@
         <Thead>
           <tr>
             <Th>Acquisition ID</Th>
-            <Th>Dealer</Th>
+            <Th class="text-left">Dealer</Th>
             <Th>Mode of Acquisition</Th>
-            <Th>Date</Th>
+            <Th>Date Acquired</Th>
             <Th>Remarks</Th>
             <Th>Date Added</Th>
-            <Th>Date Updated</Th>
+            <Th>Last Updated</Th>
           </tr>
         </Thead>
-        <Tbody :data="data" :loading="false" cols="7">
-          <router-link v-for="a in data" :to="{ name: 'librarian.acquisition.view' }" custom v-slot="{ navigate }">
+        <Tbody :data="acquisition.data" :loading="acquisition.loading" cols="7">
+          <router-link v-for="a in acquisition.data" :to="{ name: 'librarian.acquisition.lines', params: { id: a.id } }" custom v-slot="{ navigate }">
             <tr class="hover cursor-pointer" @click="navigate" role="button">
               <Td :data="a.acquisition_id"></Td>
-              <Td :data="a.dealer"></Td>
-              <Td :data="a.modeOfAcquisition"></Td>
-              <Td :data="a.date"></Td>
+              <Td class="text-left" :data="a.dealer"></Td>
+              <Td :data="a.acquisition_mode"></Td>
+              <Td :data="parse.formatDate(a.acquisition_date)"></Td>
               <Td :data="a.remarks"></Td>
-              <Td> {{ parse.timeAgo(a.dateAdded) }}</Td>
-              <Td> {{ parse.timeAgo(a.dateUpdated) }}</Td>
+              <Td :data="parse.formatTimeAgo(a.created_at ?? null)" :data-title="parse.formatDate(a.created_at ?? null)" />
+              <Td :data="parse.formatTimeAgo(a.updated_at ?? null)" :data-title="parse.formatDate(a.updated_at ?? null)" />
             </tr>
           </router-link>
         </Tbody>
@@ -60,57 +60,11 @@
 </template>
 
 <script setup lang="ts">
-import AddNewAcquisitionButton from '@/app/librarian/acquisition/acquisition/AddNewAcquisitionButton.vue';
+import AddNewAcquisitionButton from '@/app/librarian/acquisition/acquisition/AddNewAcquisitionButton.vue'
 import SectionHeader from '@/components/my/SectionHeader.vue'
 
 const parse = useParser()
-const data = ref([
-  {
-    acquisition_id: 'ISU-E-2026070101',
-    dealer: 'National Book Store',
-    modeOfAcquisition: 'Purchased',
-    date: 'July 1, 2026',
-    remarks: null,
-    dateAdded: '2026-07-01 08:30:00',
-    dateUpdated: '2026-07-01 08:34:00',
-  },
-  {
-    acquisition_id: 'ISU-E-2026070102',
-    dealer: 'Silicon Valley',
-    modeOfAcquisition: 'Donated',
-    date: 'July 2, 2026',
-    remarks: 'Complete set with accessories',
-    dateAdded: '2026-07-02 10:15:00',
-    dateUpdated: '2026-07-02 10:22:00',
-  },
-  {
-    acquisition_id: 'ISU-E-2026070103',
-    dealer: 'Toyota Isabela',
-    modeOfAcquisition: 'Purchased',
-    date: 'July 5, 2026',
-    remarks: null,
-    dateAdded: '2026-07-05 13:45:00',
-    dateUpdated: '2026-07-05 14:15:00',
-  },
-  {
-    acquisition_id: 'ISU-E-2026070104',
-    dealer: 'Wilcon Depot',
-    modeOfAcquisition: 'Procured',
-    date: 'July 10, 2026',
-    remarks: 'Awaiting delivery',
-    dateAdded: '2026-07-10 09:00:00',
-    dateUpdated: '2026-07-10 09:00:00',
-  },
-  {
-    acquisition_id: 'ISU-E-2026070105',
-    dealer: 'Abenson Appliances',
-    modeOfAcquisition: 'Purchased',
-    date: 'July 12, 2026',
-    remarks: null,
-    dateAdded: '2026-07-12 16:20:00',
-    dateUpdated: '2026-07-12 17:05:00',
-  },
-])
+const acquisition = useAcquisitionStore()
 </script>
 
 <style scoped></style>

@@ -13,6 +13,15 @@ class BranchSectionSeeder extends Seeder
      */
     public function run(): void
     {
-        BranchSection::create();
+        collect([
+            [
+                'branch_id' => 1,
+                'section_id' => 5,
+            ],
+            [
+                'branch_id' => 1,
+                'section_id' => 2,
+            ],
+        ])->each(fn ($data) => BranchSection::create($data));
     }
 }

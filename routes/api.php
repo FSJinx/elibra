@@ -263,19 +263,45 @@ Route::group(['prefix' => '/librarian'], function () {
     Route::group(['prefix' => '/acquisition'], function () {
         // Get
         Route::get('', [AcquisitionController::class, 'index']);
+        Route::get('/{id}', [AcquisitionController::class, 'show']);
 
         // Post
         Route::post('', [AcquisitionController::class, 'store'])->middleware('throttle:write');
-        Route::post('line', [AcquisitionLinesController::class, 'store'])->middleware('throttle:write');
-        Route::post('request', [AcquisitionRequestController::class, 'store'])->middleware('throttle:write');
 
         // Update
         Route::put('/{acquisition}', [AcquisitionController::class, 'update'])->middleware('throttle:write');
-        Route::put('/line/{acquisitionLie}', [AcquisitionLinesController::class, 'update'])->middleware('throttle:write');
-        Route::put('/request/{acquisitionRequest}', [AcquisitionRequestController::class, 'update'])->middleware('throttle:write');
 
         // Delete
         Route::delete('/{acquisition}', [AcquisitionController::class, 'destroy'])->middleware('throttle:delete');
+    });
+
+    // ============== ACQUISITION LINES ROUTE ==================
+    Route::group(['prefix' => '/acquisition-lines'], function () {
+        // Get
+        Route::get('/', [AcquisitionLinesController::class, 'index']);
+        Route::get('/{id}', [AcquisitionLinesController::class, 'show']);
+
+        // Post
+        Route::post('', [AcquisitionLinesController::class, 'store'])->middleware('throttle:write');
+
+        // Update
+        Route::put('/{acquisitionLie}', [AcquisitionLinesController::class, 'update'])->middleware('throttle:write');
+
+        // Delete
+    });
+
+    // ============== ACQUISITION REQUEST ROUTE ==================
+    Route::group(['prefix' => '/acquisition-lines'], function () {
+        // Get
+        Route::get('/', [AcquisitionRequestController::class, 'show']);
+
+        // Post
+        Route::post('request', [AcquisitionRequestController::class, 'store'])->middleware('throttle:write');
+
+        // Update
+        Route::put('/request/{acquisitionRequest}', [AcquisitionRequestController::class, 'update'])->middleware('throttle:write');
+
+        // Delete
     });
 
 })->middleware('jwt.auth', 'role:admin,librarian');

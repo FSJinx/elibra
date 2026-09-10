@@ -1,7 +1,7 @@
 <template>
   <Button variant="primary" data-title="Add new acquisition record" @click="modal?.open()">Add New</Button>
 
-  <Modal ref="modal" size="xlarge" :has-inputs="hasInputs" enable-close-btn :loading="loading">
+  <Modal ref="modal" size="xlarge" :has-inputs="hasInputs" enable-close-btn>
     <template #header> New Acquisition Transaction </template>
     <Form class="flex flex-col p-5" @submit="submitForm">
       <div class="flex items-end justify-between gap-3">
@@ -45,13 +45,6 @@
 
 <script setup lang="ts">
 import Modal from '@/components/my/Modal.vue'
-import { Acquisition } from '@/stores/acquisitionStore'
-
-const pop = usePopup()
-const auth = authStore()
-
-const modal = ref<typeof Modal | null>()
-const loading = ref<boolean>(false)
 
 const emptyForm = (): Acquisition => ({
   id: null,
@@ -61,9 +54,13 @@ const emptyForm = (): Acquisition => ({
   remarks: '',
 })
 
+const pop = usePopup()
+const modal = ref<typeof Modal | null>()
+const { create } = useAcquisitionStore()
+
 const errors = reactive<Acquisition>(emptyForm())
 const form = reactive<Acquisition>(emptyForm())
-const today = new Date().toLocaleDateString('en-CA')
+const today = new Date().toISOString().split('T')[0]
 const hasInputs = computed(() => [form.dealer, form.acquisition_date, form.acquisition_mode, form.remarks].some((value) => String(value ?? '').trim().length > 0))
 
 const clearForm = async () => {
@@ -83,40 +80,21 @@ const clearForm = async () => {
 }
 
 async function submitForm() {
-  if (!auth.user?.id) {
-    pop.error('You must be logged in to create an acquisition.')
-    return
-  }
-
   Object.assign(errors, emptyForm())
 
-  const confirmed = await pop.confirm({ text: 'Are you sure you want to add this acquisition transaction?' })
+  const confirm = await pop.confirm({ text: 'Are you sure you want to add this acquisition transaction?' })
 
-  if (!confirmed.isConfirmed) {
-    return
-  }
-
-  loading.value = true
-
-  try {
-    pop.load()
-    await api.post('librarian/acquisition', {
-      ...form,
-      receiver_user_id: auth.user.id,
-    })
-
-    pop.success('Acquisition created successfully!')
-    Object.assign(form, emptyForm())
-    nextTick(() => {
-      modal.value?.close()
-    })
-  } catch (error: any) {
-    const res = error.response?.data
-    const message = res?.message || 'Failed to create acquisition.'
-    Object.assign(errors, res.errors)
-    console.error(error)
-  } finally {
-    loading.value = false
+  if (confirm.isConfirmed) {
+    const res = await create(form)
+    if (res.success) {
+      Object.assign(form, emptyForm())
+      Object.assign(errors, emptyForm())
+      nextTick(() => {
+        modal.value?.close()
+      })
+    } else {
+      Object.assign(errors, res.errors ?? {})
+    }
   }
 }
 </script>
