@@ -2,16 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Librarian;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreLibrarianRequest;
 use App\Http\Requests\UpdateLibrarianRequest;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use App\Models\User;
+use App\Models\Librarian;
+use App\Services\LibrarianService;
 
 class LibrarianController extends Controller
 {
+    protected LibrarianService $librarianService;
+
+    public function __construct(LibrarianService $librarianService)
+    {
+        $this->librarianService = $librarianService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -19,18 +23,16 @@ class LibrarianController extends Controller
     {
         return Librarian::with([
             'user',
-            'role',
-            'branch'
+            'branch',
         ])->get();
-
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Request $request)
+    public function create()
     {
-       //
+        //
     }
 
     /**
@@ -38,27 +40,14 @@ class LibrarianController extends Controller
      */
     public function store(StoreLibrarianRequest $request)
     {
-        $user = $this->user();
+        $result = $this->librarianService->create($request->validated());
 
-        $users = User::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'username' => $request->username,
-            'password' => Hash::make($request->password),
-            'role' => 'librarian',
-        ]);
-
-        $librarian = Librarian::create([
-            'user_id' => $user->id,
-            'branch_id' => $request->branch_id,
-            'role' => $request->role,
-            'tools' => $request->tools,
-        ]);
-
-        return response()->json([
-            'user' => $users,
-            'librarian' => $librarian,
-        ], 201);
+        return $this->response(
+            'success',
+            'Librarian successfully created.',
+            $result,
+            201,
+        );
     }
 
     /**
@@ -82,7 +71,14 @@ class LibrarianController extends Controller
      */
     public function update(UpdateLibrarianRequest $request, Librarian $librarian)
     {
-        //
+        $result = $this->librarianService->update($librarian, $request->validated());
+
+        return $this->response(
+            'success',
+            'Librarian successfully updated.',
+            $result,
+            200,
+        );
     }
 
     /**
@@ -90,6 +86,22 @@ class LibrarianController extends Controller
      */
     public function destroy(Librarian $librarian)
     {
-        //
+        $deleted = $this->librarianService->delete($librarian);
+
+        if (! $deleted) {
+            return $this->response(
+                'error',
+                'Librarian could not be deleted.',
+                null,
+                500,
+            );
+        }
+
+        return $this->response(
+            'success',
+            'Librarian deleted successfully.',
+            null,
+            200,
+        );
     }
 }

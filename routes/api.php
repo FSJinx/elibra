@@ -18,8 +18,10 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ItemTypeCategoryController;
 use App\Http\Controllers\ItemTypeController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\LibrarianController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\OpacSearchController;
+use App\Http\Controllers\PatronController;
 use App\Http\Controllers\ProgramsController;
 use App\Http\Controllers\SectionsController;
 use App\Http\Controllers\SerialController;
@@ -236,6 +238,12 @@ Route::group(['prefix' => '/section'], function () {
  *      all while as long as they are on the same campus.
  */
 Route::group(['prefix' => '/librarian'], function () {
+    // ============== LIBRARIAN RESOURCE ROUTE ==================
+    Route::get('', [LibrarianController::class, 'index'])->middleware('throttle:read');
+    Route::post('', [LibrarianController::class, 'store'])->middleware('throttle:write');
+    Route::put('{librarian}', [LibrarianController::class, 'update'])->middleware('throttle:write');
+    Route::delete('{librarian}', [LibrarianController::class, 'destroy'])->middleware('throttle:delete');
+
     // ============== DASHBOARD ROUTE ==================
     Route::group(['prefix' => 'dashboard'], function () {
         // Get
@@ -279,6 +287,14 @@ Route::group(['prefix' => '/librarian'], function () {
     });
 
 })->middleware('jwt.auth', 'role:admin,librarian');
+
+
+Route::group(['prefix' => '/patron'], function () {
+    Route::get('', [PatronController::class, 'index'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
+    Route::post('', [PatronController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
+    Route::put('{patron}', [PatronController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
+    Route::delete('{patron}', [PatronController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:delete');
+});
 
 /**
  *      Dead Zone
