@@ -6,6 +6,7 @@ use App\Http\Controllers\AcquisitionLinesController;
 use App\Http\Controllers\AcquisitionRequestController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\AttendanceLogsController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\AuthorshipController;
 use App\Http\Controllers\BookController;
@@ -294,6 +295,14 @@ Route::group(['prefix' => '/patron'], function () {
     Route::post('', [PatronController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
     Route::put('{patron}', [PatronController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
     Route::delete('{patron}', [PatronController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:delete');
+});
+
+Route::group(['prefix' => '/attendance'], function () {
+    Route::get('', [AttendanceLogsController::class, 'index'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
+    Route::get('{attendanceLogs}', [AttendanceLogsController::class, 'show'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
+    Route::post('', [AttendanceLogsController::class, 'store'])->withoutMiddleware(['jwt.auth', 'role:super_admin,admin,librarian'])->middleware('throttle:write');
+    Route::put('{attendanceLogs}', [AttendanceLogsController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
+    Route::delete('{attendanceLogs}', [AttendanceLogsController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:delete');
 });
 
 /**
