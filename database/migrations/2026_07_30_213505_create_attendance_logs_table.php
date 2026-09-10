@@ -17,6 +17,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->unsignedBigInteger('patron_id');
+            $table->unsignedBigInteger('branch_id');    
             $table->unsignedBigInteger('section_id');
         });
     }

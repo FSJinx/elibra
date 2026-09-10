@@ -13,6 +13,7 @@ class AcquisitionRequest extends Model
     protected $table = 'acquisition_requests';
 
     protected $fillable = [
+        'request_id',
         'requested_by',
         'item_type_id',
         'reviewed_by',
@@ -37,10 +38,13 @@ class AcquisitionRequest extends Model
         'preferred_supplier',
 
         // Workflow
-        'status',
+        'request_status',
+        'procurement_status',
+        'is_closed',
 
         // Review
         'reviewed_at',
+        'closed_remarks',
         'remarks',
     ];
 
@@ -49,6 +53,7 @@ class AcquisitionRequest extends Model
         'quantity' => 'integer',
         'estimated_unit_price' => 'decimal:2',
         'estimated_total_price' => 'decimal:2',
+        'is_closed' => 'boolean',
         'reviewed_at' => 'datetime',
     ];
 

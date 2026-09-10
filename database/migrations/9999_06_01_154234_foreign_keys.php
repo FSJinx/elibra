@@ -167,6 +167,14 @@ return new class extends Migration
                 ['name' => 'authorship_id', 'references' => 'id', 'on' => 'authorships', 'onDelete' => 'cascade'],
             ],
         ],
+        [
+            'name' => 'attendance_logs',
+            'foreign_columns' => [
+                ['name' => 'patron_id', 'references' => 'id', 'on' => 'users', 'onDelete' => 'cascade'],
+                ['name' => 'branch_id', 'references' => 'id', 'on' => 'branches', 'onDelete' => 'cascade'],
+                ['name' => 'section_id', 'references' => 'id', 'on' => 'sections', 'onDelete' => 'cascade'],
+            ]
+        ]
     ];
 
     // ============= LINKS RELATIONSHIPS ===============

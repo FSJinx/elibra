@@ -17,114 +17,50 @@ class UpdateAcquisitionRequestRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'item_type_id' => [
-                'sometimes',
-                'nullable',
-                'integer',
-                Rule::exists((new ItemType)->getTable(), 'id'),
-            ],
+            'request_id' => [ 'sometimes', 'uuid', 'unique:acquisition_requests,request_id' ],
+            'requested_by' => [ 'sometimes', 'integer', Rule::exists('users', 'id') ],
+            'item_type_id' => [ 'sometimes', 'nullable', 'integer', Rule::exists((new ItemType)->getTable(), 'id') ],
+            'reviewed_by' => [ 'sometimes', 'nullable', 'integer', Rule::exists('users', 'id') ],
 
-            'title' => [
-                'sometimes',
-                'required',
-                'string',
-                'max:255',
-            ],
+            'title' => [ 'sometimes', 'required', 'string', 'max:255' ],
+            'author' => [ 'sometimes', 'nullable', 'string', 'max:255' ],
+            'isbn' => [ 'sometimes', 'nullable', 'string', 'max:20' ],
+            'publisher' => [ 'sometimes', 'nullable', 'string', 'max:255' ],
+            'publication_year' => [ 'sometimes', 'nullable', 'integer', 'min:1900', 'max:2100' ],
+            'edition' => [ 'sometimes', 'nullable', 'string', 'max:255' ],
 
-            'author' => [
-                'sometimes',
-                'nullable',
-                'string',
-                'max:255',
-            ],
+            'subject' => [ 'sometimes', 'nullable', 'string', 'max:255' ],
+            'quantity' => [ 'sometimes', 'required', 'integer', 'min:1' ],
+            'justification' => [ 'sometimes', 'nullable', 'string' ],
+            'priority' => [ 'sometimes', 'nullable', Rule::in(['low', 'normal', 'high', 'urgent']) ],
 
-            'isbn' => [
-                'sometimes',
-                'nullable',
-                'string',
-                'max:20',
-            ],
+            'estimated_unit_price' => [ 'sometimes', 'nullable', 'numeric', 'min:0' ],
+            'estimated_total_price' => [ 'sometimes', 'nullable', 'numeric', 'min:0' ],
+            'preferred_supplier' => [ 'sometimes', 'nullable', 'string', 'max:255' ],
 
-            'publisher' => [
-                'sometimes',
-                'nullable',
-                'string',
-                'max:255',
-            ],
-
-            'publication_year' => [
-                'sometimes',
-                'nullable',
-                'integer',
-                'min:1900',
-                'max:2100',
-            ],
-
-            'edition' => [
-                'sometimes',
-                'nullable',
-                'string',
-                'max:255',
-            ],
-
-            'subject' => [
-                'sometimes',
-                'nullable',
-                'string',
-                'max:255',
-            ],
-
-            'quantity' => [
-                'sometimes',
-                'required',
-                'integer',
-                'min:1',
-            ],
-
-            'justification' => [
-                'sometimes',
-                'nullable',
-                'string',
-            ],
-
-            'priority' => [
-                'sometimes',
-                'nullable',
-                Rule::in([
-                    'low',
-                    'normal',
-                    'high',
-                    'urgent',
-                ]),
-            ],
-
-            'estimated_unit_price' => [
-                'sometimes',
-                'nullable',
-                'numeric',
-                'min:0',
-            ],
-
-            'preferred_supplier' => [
-                'sometimes',
-                'nullable',
-                'string',
-                'max:255',
-            ],
-
-            'remarks' => [
-                'sometimes',
-                'nullable',
-                'string',
-            ],
+            'request_status' => [ 'sometimes', 'nullable', Rule::in(['pending', 'approved', 'rejected']) ],
+            'procurement_status' => [ 'sometimes', 'nullable', Rule::in(['pending', 'ordered', 'received']) ],
+            'is_closed' => [ 'sometimes', 'nullable', 'boolean' ],
+            'closed_remarks' => [ 'sometimes', 'nullable', 'string' ],
+            'reviewed_at' => [ 'sometimes', 'nullable', 'date' ],
+            'remarks' => [ 'sometimes', 'nullable', 'string' ],
         ];
     }
 
     public function messages(): array
     {
         return [
+            'request_id.uuid' => 'The request ID must be a valid UUID.',
+            'request_id.unique' => 'This request ID has already been used.',
+
+            'requested_by.integer' => 'The requester ID must be a valid integer.',
+            'requested_by.exists' => 'The selected requester does not exist.',
+
             'item_type_id.integer' => 'The item type ID must be a valid integer.',
             'item_type_id.exists' => 'The selected item type does not exist.',
+
+            'reviewed_by.integer' => 'The reviewer ID must be a valid integer.',
+            'reviewed_by.exists' => 'The selected reviewer does not exist.',
 
             'title.required' => 'The title field is required.',
             'title.string' => 'The title must be a string.',
@@ -160,9 +96,17 @@ class UpdateAcquisitionRequestRequest extends BaseRequest
             'estimated_unit_price.numeric' => 'The estimated unit price must be a number.',
             'estimated_unit_price.min' => 'The estimated unit price must not be negative.',
 
+            'estimated_total_price.numeric' => 'The estimated total price must be a number.',
+            'estimated_total_price.min' => 'The estimated total price must not be negative.',
+
             'preferred_supplier.string' => 'The preferred supplier must be a string.',
             'preferred_supplier.max' => 'The preferred supplier may not be greater than 255 characters.',
 
+            'request_status.in' => 'The request status must be pending, approved, or rejected.',
+            'procurement_status.in' => 'The procurement status must be pending, ordered, or received.',
+            'is_closed.boolean' => 'The closed flag must be true or false.',
+            'closed_remarks.string' => 'The closed remarks must be a string.',
+            'reviewed_at.date' => 'The reviewed date must be a valid date.',
             'remarks.string' => 'The remarks must be a string.',
         ];
     }

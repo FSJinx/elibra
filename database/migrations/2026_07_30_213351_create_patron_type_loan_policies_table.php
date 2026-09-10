@@ -20,7 +20,7 @@ return new class extends Migration
             $table->integer('reservation_limit');
             $table->integer('loan_period_days');
             $table->integer('max_items');
-            $table->integer('max_renewals');
+            $table->integer('max_renewals');    
             $table->float('fine_per_due');
             $table->integer('grace_period');
             $table->string('notes');

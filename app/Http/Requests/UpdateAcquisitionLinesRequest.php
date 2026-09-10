@@ -31,9 +31,9 @@ class UpdateAcquisitionLinesRequest extends BaseRequest
     {
         $rules = [
             'quantity' => [ 'sometimes', 'required', 'numeric', 'min:1', ],
-            'unit_price' => [ 'sometimes', 'required', 'numeric', 'min:0', ],
-            'discount' => [ 'sometimes', 'required', 'numeric', 'min:0', ],
-            'net_price' => [ 'sometimes', 'required', 'numeric', 'min:0', ],
+            'unit_price' => [ 'sometimes', 'nullable', 'numeric', 'min:0', ],
+            'discount' => [ 'sometimes', 'nullable', 'numeric', 'min:0', ],
+            'net_price' => [ 'sometimes', 'nullable', 'numeric', 'min:0', ],
 
             'item_id' => [ 'sometimes', 'required', Rule::exists((new Item)->getTable(), 'id')],
             'acquisition_id' => [ 'sometimes', 'required', Rule::exists((new Acquisition)->getTable(), 'id')],
