@@ -181,7 +181,25 @@ return new class extends Migration
                 ['name' => 'branch_id', 'references' => 'id', 'on' => 'branches', 'onDelete' => 'cascade'],
                 ['name' => 'section_id', 'references' => 'id', 'on' => 'sections', 'onDelete' => 'cascade'],
             ]
-        ]
+        ],
+        [
+            'name' => 'circulations',
+            'foreign_columns' => [
+                ['name' => 'processed_by', 'references' => 'id', 'on' => 'users', 'onDelete' => 'cascade'],
+                ['name' => 'accession_id', 'references' => 'id', 'on' => 'accessions', 'onDelete' => 'cascade'],
+                ['name' => 'patron_id', 'references' => 'id', 'on' => 'users', 'onDelete' => 'cascade'],
+                ['name' => 'loan_mode_id', 'references' => 'id', 'on' => 'loan_modes', 'onDelete' => 'cascade'],
+                ['name' => 'return_received_by', 'references' => 'id', 'on' => 'users', 'onDelete' => 'cascade'],
+            ]
+        ],
+        [
+            'name' => 'fines_transactions',
+            'foreign_columns' => [
+                ['name' => 'patron_id', 'references' => 'id', 'on' => 'patrons', 'onDelete' => 'cascade'],
+                ['name' => 'circulation_id', 'references' => 'id', 'on' => 'circulations', 'onDelete' => 'cascade'],
+                ['name' => 'processed_by', 'references' => 'id', 'on' => 'users', 'onDelete' => 'cascade'],
+            ]
+        ],
     ];
 
     // ============= LINKS RELATIONSHIPS ===============

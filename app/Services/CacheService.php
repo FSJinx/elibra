@@ -44,6 +44,8 @@ class CacheService
     public const PATRONS = 'patrons';
     public const LIBRARIANS = 'librarians';
     public const ATTENDANCE_LOGS = 'attendance_logs';
+    public const CIRCULATIONS = 'circulations';
+    public const FINES_TRANSACTIONS = 'fines_transactions';
 
     public const PATRON_TYPE_LOAN_POLICY = 'patron_type_loan_policy';
 

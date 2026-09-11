@@ -2,27 +2,36 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Circulation;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCirculationRequest;
 use App\Http\Requests\UpdateCirculationRequest;
+use App\Models\Circulation;
+use App\Services\CirculationService;
 
 class CirculationController extends Controller
 {
+    public function __construct(
+        protected CirculationService $circulationService
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
-    }
+        $circulations = Circulation::with([
+            'processedBy',
+            'patron',
+            'accession',
+            'loanMode',
+            'returnReceivedBy',
+        ])->get();
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return $this->response(
+            'success',
+            'Circulations retrieved successfully.',
+            $circulations->toArray(),
+            200
+        );
     }
 
     /**
@@ -30,7 +39,14 @@ class CirculationController extends Controller
      */
     public function store(StoreCirculationRequest $request)
     {
-        //
+        $circulation = $this->circulationService->create($request->validated());
+
+        return $this->response(
+            'success',
+            'Circulation created successfully.',
+            $circulation->toArray(),
+            201
+        );
     }
 
     /**
@@ -38,15 +54,20 @@ class CirculationController extends Controller
      */
     public function show(Circulation $circulation)
     {
-        //
-    }
+        $circulation->load([
+            'processedBy',
+            'patron',
+            'accession',
+            'loanMode',
+            'returnReceivedBy',
+        ]);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Circulation $circulation)
-    {
-        //
+        return $this->response(
+            'success',
+            'Circulation retrieved successfully.',
+            $circulation->toArray(),
+            200
+        );
     }
 
     /**
@@ -54,7 +75,14 @@ class CirculationController extends Controller
      */
     public function update(UpdateCirculationRequest $request, Circulation $circulation)
     {
-        //
+        $updated = $this->circulationService->update($circulation, $request->validated());
+
+        return $this->response(
+            'success',
+            'Circulation updated successfully.',
+            $updated->toArray(),
+            200
+        );
     }
 
     /**
@@ -62,6 +90,22 @@ class CirculationController extends Controller
      */
     public function destroy(Circulation $circulation)
     {
-        //
+        $deleted = $this->circulationService->delete($circulation);
+
+        if (! $deleted) {
+            return $this->response(
+                'error',
+                'The selected circulation record could not be deleted.',
+                null,
+                500
+            );
+        }
+
+        return $this->response(
+            'success',
+            'Circulation record deleted successfully.',
+            null,
+            200
+        );
     }
 }
