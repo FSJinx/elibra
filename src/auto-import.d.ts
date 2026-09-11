@@ -156,6 +156,7 @@ declare global {
   const unref: typeof import('vue').unref
   const unrefElement: typeof import('@vueuse/core').unrefElement
   const until: typeof import('@vueuse/core').until
+  const useAccessionStore: typeof import('./stores/librarian/accessionStore').useAccessionStore
   const useAcquisitionLines: typeof import('./stores/librarian/acquisitionLinesStore').useAcquisitionLines
   const useAcquisitionLinesStore: typeof import('./stores/librarian/acquisitionLinesStore').useAcquisitionLinesStore
   const useAcquisitionStore: typeof import('./stores/librarian/acquisitionStore').useAcquisitionStore
@@ -380,6 +381,9 @@ declare global {
   export type { Campus, CampusParams } from './stores/campusStore'
   import('./stores/campusStore')
   // @ts-ignore
+  export type { Accession } from './stores/librarian/accessionStore'
+  import('./stores/librarian/accessionStore')
+  // @ts-ignore
   export type { AcquisitionLines } from './stores/librarian/acquisitionLinesStore'
   import('./stores/librarian/acquisitionLinesStore')
   // @ts-ignore
@@ -542,6 +546,7 @@ declare module 'vue' {
     readonly unref: UnwrapRef<typeof import('vue')['unref']>
     readonly unrefElement: UnwrapRef<typeof import('@vueuse/core')['unrefElement']>
     readonly until: UnwrapRef<typeof import('@vueuse/core')['until']>
+    readonly useAccessionStore: UnwrapRef<typeof import('./stores/librarian/accessionStore')['useAccessionStore']>
     readonly useAcquisitionLinesStore: UnwrapRef<typeof import('./stores/librarian/acquisitionLinesStore')['useAcquisitionLinesStore']>
     readonly useAcquisitionStore: UnwrapRef<typeof import('./stores/librarian/acquisitionStore')['useAcquisitionStore']>
     readonly useActiveElement: UnwrapRef<typeof import('@vueuse/core')['useActiveElement']>

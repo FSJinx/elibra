@@ -3,6 +3,7 @@
 
   <Modal ref="subjectModal" enable-close-btn>
     <template #header>Add subjects</template>
+    <ModalHeader use-default-layout title="Add Subjects" />
 
     <Form class="p-5" @submit="addSubject">
       <div class="flex items-center gap-2">

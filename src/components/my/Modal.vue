@@ -1,31 +1,24 @@
 <template>
   <Teleport to="body">
     <Transition name="fade">
-      <div v-if="isOpen" class="modal-wrapper fixed inset-0 flex items-center justify-center bg-backdrop h-dvh p-10" :class="[hasInputs ? '' : 'cursor-pointer']" @click.self="close">
+      <div v-if="isOpen" class="modal-wrapper fixed inset-0 flex items-center justify-center bg-backdrop h-dvh p-5" :class="[hasInputs ? '' : 'cursor-pointer']" @click.self="close">
         <div class="modal relative bg-background rounded-xl shadow-2xl border border-border cursor-default overflow-hidden" :class="[sizeClasses, positionClasses, position]" ref="modalRef">
-          <!-- Modal Header -->
-          <div class="flex items-start p-5 pb-4 gap-3 border-b border-gray-300 text-xl font-semibold" v-if="$slots.header || enableCloseBtn">
-            <slot name="header" v-if="$slots.header" />
-            <span class="ml-auto text-foreground/25 hover:text-foreground cursor-pointer transition-all duration-200">
-              <Icon icon="x-lg" @click="close" v-if="enableCloseBtn" style="-webkit-text-stroke: 1px" />
-            </span>
-          </div>
+          <span class="absolute top-5 right-5 ml-auto text-lg text-foreground/25 hover:text-foreground cursor-pointer transition-all duration-200">
+            <Icon icon="x-lg" @click="close" v-if="!disableCloseBtn" style="-webkit-text-stroke: 1px" />
+          </span>
 
-          <!-- Modal Body -->
-          <div class="max-h-[76dvh] flex flex-col overflow-y-auto">
+          <!-- Modal Body
+          <div class="flex flex-col overflow-y-auto transition-all duration-200">
             <Transition name="fade">
               <p class="text-danger p-3 px-5" v-if="errorMessage?.length > 0 && !loading"><Icon class="mr-2" icon="exclamation-circle" /> {{ errorMessage }}</p>
             </Transition>
-            <div class="flex-1 place-content-center min-h-100" v-if="loading">
-              <LogoLoader message="Loading content, please wait..." />
+            <div class="flex-1 flex min-h-100" v-if="loading">
+              <Spinner class="m-auto text-2xl" />
             </div>
             <slot v-else />
-          </div>
+          </div> -->
 
-          <!-- Modal Footer -->
-          <div class="p-3 border-t border-gray-300" v-if="$slots.footer && !loading">
-            <slot name="footer" />
-          </div>
+          <slot />
         </div>
       </div>
     </Transition>
@@ -39,7 +32,7 @@ interface Props {
   hasInputs?: boolean
   position?: ModalPosition
   size?: ModalSize
-  enableCloseBtn?: boolean
+  disableCloseBtn?: boolean
   loading?: boolean
   error?: string
 }
@@ -48,7 +41,7 @@ const props = withDefaults(defineProps<Props>(), {
   hasInputs: false,
   position: 'center',
   size: 'normal',
-  enableCloseBtn: false,
+  disableCloseBtn: false,
 })
 
 const emit = defineEmits(['show', 'closing'])
@@ -61,7 +54,7 @@ const errorMessage = ref(props.error ?? '')
 const positionClasses = computed(() => {
   const positions: Record<ModalPosition, string> = {
     top: 'mb-auto',
-    center: 'my-auto max-h-[90vh] overflow-y-auto',
+    center: 'my-auto max-h-[90vh]',
     bottom: 'mt-auto',
   }
 
@@ -74,7 +67,7 @@ const sizeClasses = computed(() => {
     normal: 'w-full sm:max-w-150',
     large: 'w-full sm:max-w-200',
     xlarge: 'w-full sm:max-w-250',
-    '2xlarge': 'w-full sm:max-w-300',
+    '2xlarge': 'w-full sm:max-w-400',
     full: 'w-full max-w-[95vw] h-[90vh]',
   }
 
@@ -108,6 +101,10 @@ function close() {
 
   isOpen.value = false
 }
+
+provide('modal', {
+  buttonDisabled: props.disableCloseBtn,
+})
 
 watch(isOpen, (opened) => {
   if (opened) {

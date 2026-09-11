@@ -2,13 +2,10 @@
   <Button variant="primary" data-title="Add new acquisition record" @click="modal?.open()">Add New</Button>
 
   <Modal ref="modal" size="xlarge" :has-inputs="hasInputs" enable-close-btn>
-    <template #header> New Acquisition Transaction </template>
+    <ModalHeader use-default-layout title="Acquisition Form" subtitle="Create new acquisition transaction" icon="building" />
     <Form class="flex flex-col p-5" @submit="submitForm">
-      <div class="flex items-end justify-between gap-3">
-        <div class="">
-          <h1 class="font-semibold text-lg">Acquisition Form</h1>
-          <p class="text-muted-foreground">Please fill out all required fields marked with <span class="text-danger">*</span></p>
-        </div>
+      <div class="flex items-center justify-between gap-3">
+        <span class="font-light"><span class="font-bold uppercase">directions.</span> Please fill out all required fields that are marked by <span class="text-danger">*</span></span>
         <Button @click="clearForm" :disabled="!hasInputs">Clear Form</Button>
       </div>
 
@@ -32,7 +29,7 @@
         </Control>
         <Control>
           <Label id="acquisition-remarks" class="mb-auto">Remarks</Label>
-          <Textarea id="acquisition-remarks" type="text" placeholder="" v-model="form.remarks" />
+          <Textarea id="acquisition-remarks" type="text" v-model="form.remarks" placeholder="Enter your remarks here..."/>
         </Control>
       </div>
 

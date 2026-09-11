@@ -60,7 +60,7 @@
 </template>
 
 <script setup lang="ts">
-import AddNewAcquisitionButton from '@/app/librarian/acquisition/acquisition/AddNewAcquisitionButton.vue'
+import AddNewAcquisitionButton from '@/app/librarian/acquisition/acquisition/modals/AddNewAcquisitionButton.vue'
 import SectionHeader from '@/components/my/SectionHeader.vue'
 
 const parse = useParser()

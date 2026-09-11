@@ -30,7 +30,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch, provide, nextTick, onMounted, onUnmounted } from 'vue'
 
 interface SelectedOption {
   value: any

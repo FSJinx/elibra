@@ -5,14 +5,14 @@
         <span class="text-lg">Back to Acquisition Record</span>
       </Button>
     </div>
-    <div class="grid grid-cols-2 p-5 bg-background border-b border-border">
+    <div class="grid grid-cols-2 p-7 bg-background border-b border-border">
       <div class="">
         <p class="font-semibold text-primary uppercase tracking-wider">{{ currentData?.acquisition_mode }}</p>
         <H5>Acquisiton ID#: {{ currentData?.acquisition_id }}</H5>
         <p>Date of Acquisition: {{ parse.formatDate(currentData?.acquisition_date) }}</p>
       </div>
       <div class="flex items-end justify-end gap-2">
-        <Button variant="primary" data-title="Add new item to this purchase">Add New Item</Button>
+        <AddNewAcquisitionItem />
       </div>
     </div>
 
@@ -28,7 +28,7 @@
           </tr>
         </Thead>
         <Tbody :data="lines.data" :loading="lines.loading" :cols="5">
-          <tr class="hover" v-for="(item, index) in lines.data">
+          <tr class="hover" v-for="(item, index) in lines.data" @click="view(item)">
             <Td class="text-left">
               <p class="font-medium">{{ item.items?.title }}</p>
               <p class="text-xs text-muted-foreground">{{ item.items?.subtitle }}</p>
@@ -42,16 +42,38 @@
       </Table>
     </div>
   </div>
+
+  <Modal ref="viewModal" size="2xlarge">
+    <ModalHeader useDefaultLayout :title="lines.currentData?.items?.title" />
+    <ModalBody class="flex flex-col overflow-hidden!">
+      <Form class="p-5 border-b border-border">
+        <div class="flex items-center justify-end gap-1">
+          <Input id="search-accession" type="text" placeholder="Search by accession number..." class="max-w-100" />
+          <Button>Search</Button>
+        </div>
+      </Form>
+      <div class="overflow-y-auto">
+        <div class="h-screen"></div>
+      </div>
+    </ModalBody>
+  </Modal>
 </template>
 
 <script setup lang="ts">
-import SectionHeader from '@/components/my/SectionHeader.vue'
+import AddNewAcquisitionItem from '@/app/librarian/acquisition/acquisition/modals/AddNewAcquisitionItem.vue'
+import Modal from '@/components/my/Modal.vue'
 
 const parse = useParser()
 
 const { currentData } = useAcquisitionStore()
 const lines = useAcquisitionLinesStore()
 
+const viewModal = ref<typeof Modal | null>(null)
+
+function view(item: AcquisitionLines) {
+  viewModal.value?.open()
+  lines.setCurrentData(item)
+}
 console.log(currentData)
 </script>
 
