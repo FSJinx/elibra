@@ -10,10 +10,28 @@ export const librarianCirculation = [
         path: 'loans',
         name: 'librarian.circulation.loans',
         meta: { breadcrumb: 'Loans' },
+        redirect: {name: 'librarian.circulation.loans.active'},
         component: () => import('@/app/librarian/circulation/loans/Loans.vue'),
-        beforeEnter: (to: any, from: any) => {
-          console.log(to, from)
-        },
+        children: [
+          {
+            path: 'active',
+            name: 'librarian.circulation.loans.active',
+            meta: {breadcrumb: 'Active'},
+            component: () => import('@/app/librarian/circulation/loans/active/Active.vue')
+          },
+          {
+            path: 'overdue',
+            name: 'librarian.circulation.loans.overdue',
+            meta: {breadcrumb: 'Overdue'},
+            component: () => import('@/app/librarian/circulation/loans/overdue/Overdue.vue')
+          },
+          {
+            path: 'history',
+            name: 'librarian.circulation.loans.history',
+            meta: {breadcrumb: 'History'},
+            component: () => import('@/app/librarian/circulation/loans/history/History.vue')
+          },
+        ],
       },
       {
         path: 'attendance',

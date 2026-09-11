@@ -11,7 +11,7 @@ const librarianMenu = {
   circulation: {
     name: 'Circulation',
     children: {
-      loans: { path: 'librarian.circulation.loans', name: 'Check-Out / Loans', icon: 'bag-plus' },
+      loans: { path: 'librarian.circulation.loans', name: 'Loans', icon: 'bag-plus' },
       // returns: { path: 'librarian.circulation.returns', name: 'Returns', icon: 'arrow-return-left' },
       // renewals: { path: 'librarian.circulation.renewals', name: 'Renewals', icon: 'arrow-repeat' },
       // holds: { path: 'librarian.circulation.holds', name: 'Holds & Reservations', icon: 'bookmark-check' },
