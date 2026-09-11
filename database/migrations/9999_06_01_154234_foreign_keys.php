@@ -82,7 +82,7 @@ return new class extends Migration
             'name' => 'librarians',
             'foreign_columns' => [
                 ['name' => 'user_id', 'references' => 'id', 'on' => 'users', 'onDelete' => 'cascade'],
-                ['name' => 'branch_id', 'references' => 'id', 'on' => 'branches', 'onDelete' => 'cascade'],
+            ['name' => 'branch_id', 'references' => 'id', 'on' => 'branches', 'onDelete' => 'cascade'],
             ],
         ],
         [
@@ -91,6 +91,13 @@ return new class extends Migration
                 ['name' => 'user_id', 'references' => 'id', 'on' => 'users', 'onDelete' => 'cascade'],
                 ['name' => 'program_id', 'references' => 'id', 'on' => 'programs', 'onDelete' => 'cascade'],
                 ['name' => 'patron_type_id', 'references' => 'id', 'on' => 'patron_types', 'onDelete' => 'cascade'],
+            ],
+        ],
+        [
+            'name' => 'patron_type_loan_policies',
+            'foreign_columns' => [
+                ['name' => 'patron_type_id', 'references' => 'id', 'on' => 'patron_types', 'onDelete' => 'cascade'],
+                ['name' => 'loan_mode_id', 'references' => 'id', 'on' => 'loan_modes', 'onDelete' => 'cascade']
             ],
         ],
         [
@@ -167,6 +174,14 @@ return new class extends Migration
                 ['name' => 'authorship_id', 'references' => 'id', 'on' => 'authorships', 'onDelete' => 'cascade'],
             ],
         ],
+        [
+            'name' => 'attendance_logs',
+            'foreign_columns' => [
+                ['name' => 'patron_id', 'references' => 'id', 'on' => 'users', 'onDelete' => 'cascade'],
+                ['name' => 'branch_id', 'references' => 'id', 'on' => 'branches', 'onDelete' => 'cascade'],
+                ['name' => 'section_id', 'references' => 'id', 'on' => 'sections', 'onDelete' => 'cascade'],
+            ]
+        ]
     ];
 
     // ============= LINKS RELATIONSHIPS ===============

@@ -46,7 +46,8 @@ return new class extends Migration
             $table->boolean('is_closed')->default(false);
             
             // Remarks
-            $table->text('closed_remarks')->nullable();
+            $table->text('closed_remarks')->nullable(); // user input
+            $table->text('closed_descriptions')->nullable(); //automatic
             $table->text('remarks')->nullable();
             
             $table->timestamp('reviewed_at')->nullable();

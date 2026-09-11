@@ -18,6 +18,12 @@ class AcquisitionLinesService
     {
         $acquisitionLine = DB::transaction(function () use ($data) {
 
+            $quantity = isset($data['quantity']) ? (float) $data['quantity'] : null;
+            $unitPrice = isset($data['unit_price']) ? (float) $data['unit_price'] : null;
+            $discount = isset($data['discount']) ? (float) $data['discount'] : 0.0;
+
+            $data['net_price'] = $this->calculateNetPrice($quantity, $unitPrice, $discount);
+
             /*
              * Get item and category.
              */
@@ -77,9 +83,7 @@ class AcquisitionLinesService
             ]);
         }, 5);
 
-        CacheService::invalidate(
-            CacheService::ACQUISITION_LINES
-        );
+        CacheService::invalidate(CacheService::ACQUISITION_LINES);
 
         return $acquisitionLine;
     }
@@ -87,24 +91,27 @@ class AcquisitionLinesService
     /**
      * Update acquisition line and synchronize its accessions.
      */
-    public function update(
-        AcquisitionLines $acquisitionLine,
-        array $data
-    ): AcquisitionLines {
+    public function update(AcquisitionLines $acquisitionLine, array $data): AcquisitionLines
+    {
 
-        $acquisitionLine = DB::transaction(function () use (
-            $acquisitionLine,
-            $data
-        ) {
+        $acquisitionLine = DB::transaction(function () use ($acquisitionLine, $data) {
+
+            $quantity = array_key_exists('quantity', $data) ? (float) $data['quantity'] : $acquisitionLine->quantity;
+            $unitPrice = array_key_exists('unit_price', $data) ? (float) $data['unit_price'] : $acquisitionLine->unit_price;
+            $discount = array_key_exists('discount', $data) ? (float) $data['discount'] : ($acquisitionLine->discount ?? 0.0);
+
+            $data['net_price'] = $this->calculateNetPrice($quantity, $unitPrice, $discount);
 
             $oldQuantity = (int) $acquisitionLine->quantity;
-            $newQuantity = (int) $data['quantity'];
+            $newQuantity = array_key_exists('quantity', $data)
+                ? (int) $data['quantity']
+                : $oldQuantity;
 
             /*
              * Get new item.
              */
             $item = Item::with('itemTypeCategory')
-                ->findOrFail($data['item_id']);
+                ->findOrFail($data['item_id'] ?? $acquisitionLine->item_id);
 
             /*
              * Update acquisition line.
@@ -141,22 +148,17 @@ class AcquisitionLinesService
              */
             if ($newQuantity > $oldQuantity) {
 
-                $additionalQuantity =
-                    $newQuantity - $oldQuantity;
+                $additionalQuantity = $newQuantity - $oldQuantity;
 
                 /*
                  * Get prefix.
-                 */
+                */
                 $prefix = $this->getAccessionPrefix($item);
 
                 /*
                  * Generate additional accession numbers.
                  */
-                $accessionNumbers =
-                    $this->generateAccessionNumbers(
-                        $prefix,
-                        $additionalQuantity
-                    );
+                $accessionNumbers = $this->generateAccessionNumbers($prefix, $additionalQuantity);
 
                 /*
                  * Create additional accessions.
@@ -180,8 +182,7 @@ class AcquisitionLinesService
              */
             if ($newQuantity < $oldQuantity) {
 
-                $removeQuantity =
-                    $oldQuantity - $newQuantity;
+                $removeQuantity = $oldQuantity - $newQuantity;
 
                 /*
                  * Only remove available accessions.
@@ -278,6 +279,18 @@ class AcquisitionLinesService
         }
 
         return $deleted;
+    }
+
+    private function calculateNetPrice(int $quantity, float $unitPrice, float $discount = 0.0): ?float
+    {
+        if ($quantity === null || $unitPrice === null) {
+            return null;
+        }
+
+        $grossTotal = (float) $quantity * (float) $unitPrice;
+        $discountAmount = $discount === null ? 0.0 : (float) $discount;
+
+        return $grossTotal - $discountAmount;
     }
 
     /**

@@ -13,6 +13,25 @@ class OpacSearchController extends Controller
         private CatalogSearchService $searchService
     ) {}
 
+    public function show(int $itemId): JsonResponse
+    {
+        $item = $this->searchService->show($itemId);
+
+        if (! $item) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Item not found.',
+                'data' => null,
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Item retrieved successfully.',
+            'data' => $item,
+        ]);
+    }
+
     public function search(CatalogSearchRequest $request): JsonResponse
     {
         $results = $this->searchService->search(

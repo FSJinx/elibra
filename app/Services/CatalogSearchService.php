@@ -12,6 +12,64 @@ class CatalogSearchService
         private SearchQueryService $queryService
     ) {}
 
+    public function show(int $itemId): ?array
+    {
+        $item = Item::query()
+            ->with([
+                'authors',
+                'itemType',
+                'itemTypeCategory',
+                'branch',
+                'language',
+                'book',
+                'academic',
+                'serial',
+            ])
+            ->find($itemId);
+
+        if (! $item) {
+            return null;
+        }
+
+        $catalog = CatalogIndex::query()
+            ->where('item_id', $item->id)
+            ->first();
+
+        return [
+            'id' => $item->id,
+            'item_id' => $item->id,
+            'title' => $item->title,
+            'subtitle' => $item->subtitle,
+            'description' => $item->description,
+            'call_number' => $item->call_number,
+            'publication_year' => $item->publication_year,
+            'keywords' => $item->keywords ?? [],
+            'authors' => $item->authors
+                ->map(function ($author) {
+                    return trim(implode(' ', array_filter([
+                        $author->first_name,
+                        $author->middle_name,
+                        $author->last_name,
+                        $author->suffix,
+                    ])));
+                })
+                ->values()
+                ->all(),
+            'item_type' => $item->itemType?->name,
+            'item_type_category' => $item->itemTypeCategory?->name,
+            'branch' => $item->branch?->name,
+            'branch_id' => $item->branch_id,
+            'language' => $item->language?->name,
+            'campus_id' => $catalog?->campus_id,
+            'department_id' => $catalog?->department_id,
+            'item_type_id' => $catalog?->item_type_id,
+            'item_type_category_id' => $catalog?->item_type_category_id,
+            'book' => $item->book,
+            'academic' => $item->academic,
+            'serial' => $item->serial,
+        ];
+    }
+
     public function search(
         string $query,
         array $filters = [],
