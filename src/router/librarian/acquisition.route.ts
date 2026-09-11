@@ -21,19 +21,25 @@ export const librarianAcquisition = [
       {
         path: ':id',
         name: 'librarian.acquisition.lines',
-        meta: { breadcrumb: 'Viewing:' },
         component: () => import('@/app/librarian/acquisition/acquisition/AcquisitionLines.vue'),
-        beforeEnter: async (to: any, from: any) => {
+        beforeEnter: async (to: any) => {
           const lines = useAcquisitionLinesStore()
           const acquisition = useAcquisitionStore()
+          const breadcrumb = useBreadcrumbStore()
 
           if (!acquisition.currentData) {
-            acquisition.read(to.params.id)
+            await acquisition.read(to.params.id)
           }
 
-          pop.load()
-          await lines.fetch(to.params.id)
-          pop.unload()
+          try {
+            pop.load()
+            await lines.fetch(to.params.id)
+          } finally {
+            pop.unload()
+            const key = `${to.name as string}:${to.params.id}`
+            breadcrumb.set(key, `Viewing Acquisition: ${acquisition.currentData?.acquisition_id}`)
+          }
+
           return true
         },
       },

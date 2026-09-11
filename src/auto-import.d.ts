@@ -183,6 +183,7 @@ declare global {
   const useBluetooth: typeof import('@vueuse/core').useBluetooth
   const useBranchStore: typeof import('./stores/branchStore').useBranchStore
   const useBreadcrumb: typeof import('./composables/utils/useBreadcrumbs').useBreadcrumb
+  const useBreadcrumbStore: typeof import('./stores/ui/breadcrumbs').useBreadcrumbStore
   const useBreakpoints: typeof import('@vueuse/core').useBreakpoints
   const useBroadcastChannel: typeof import('@vueuse/core').useBroadcastChannel
   const useBrowserLocation: typeof import('@vueuse/core').useBrowserLocation
@@ -571,7 +572,7 @@ declare module 'vue' {
     readonly useBattery: UnwrapRef<typeof import('@vueuse/core')['useBattery']>
     readonly useBluetooth: UnwrapRef<typeof import('@vueuse/core')['useBluetooth']>
     readonly useBranchStore: UnwrapRef<typeof import('./stores/branchStore')['useBranchStore']>
-    readonly useBreadcrumb: UnwrapRef<typeof import('./composables/utils/useBreadcrumbs')['useBreadcrumb']>
+    readonly useBreadcrumbStore: UnwrapRef<typeof import('./stores/ui/breadcrumbs')['useBreadcrumbStore']>
     readonly useBreakpoints: UnwrapRef<typeof import('@vueuse/core')['useBreakpoints']>
     readonly useBroadcastChannel: UnwrapRef<typeof import('@vueuse/core')['useBroadcastChannel']>
     readonly useBrowserLocation: UnwrapRef<typeof import('@vueuse/core')['useBrowserLocation']>

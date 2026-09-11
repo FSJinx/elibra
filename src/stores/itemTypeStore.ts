@@ -1,6 +1,6 @@
 interface ItemType {
   id: number
-  slug:string
+  slug: string
   name: string
   created_at: string
   updated_at: string
@@ -28,7 +28,6 @@ export const useItemTypeStore = defineStore('item_type', () => {
 
   function setItemTypes(data: ItemType[] | null) {
     item_types.value = data
-    console.log(item_types.value)
   }
 
   function setCurrentItemType(data: ItemType | null) {

@@ -1,4 +1,3 @@
-
 <template>
   <nav aria-label="Breadcrumb" class="flex items-center w-full min-h-10 px-5 border-b border-border bg-slate-50">
     <ol class="flex items-center min-w-0 gap-1 text-sm">
@@ -7,13 +6,13 @@
         <ChevronRight v-if="index > 0" :size="15" :stroke-width="1.75" class="mx-1.5 shrink-0 text-muted-foreground/50" />
 
         <!-- Parent -->
-        <router-link v-if="index < breadcrumbs.length - 1" :to="getCrumbRoute(crumb)" class="min-w-0 max-w-50 truncate rounded-md text-muted-foreground font-medium transition-colors hover:text-primary cursor-pointer">
-          {{ crumb.meta.breadcrumb }}
+        <router-link v-if="index < breadcrumbs.length - 1" :to="{ name: crumb.name, params: route.params }" class="min-w-0 max-w-50 truncate rounded-md text-muted-foreground font-medium transition-colors hover:text-primary cursor-pointer">
+          {{ crumb.label }}
         </router-link>
 
         <!-- Current Page -->
-        <span v-else class="min-w-0 max-w-60 truncate rounded-md font-semibold text-primary" aria-current="page">
-          {{ crumb.meta.breadcrumb }}
+        <span v-else class="min-w-0 max-w-60 truncate rounded-md font-semibold text-primary" aria-current="page" :data-title="crumb.label">
+          {{ crumb.label }}
         </span>
       </li>
     </ol>
@@ -24,18 +23,17 @@
 import { ChevronRight } from '@lucide/vue'
 
 const route = useRoute()
-const { getBreadcrumb } = useBreadcrumb()
+const breadcrumbStore = useBreadcrumbStore()
+const { overrides } = storeToRefs(breadcrumbStore)
 
 const breadcrumbs = computed(() => {
   return route.matched
-    .filter((record) => record.meta.breadcrumb)
-    .map((record) => ({
-      ...record,
-      meta: {
-        ...record.meta,
-        breadcrumb: getBreadcrumb(String(record.name), String(record.meta.breadcrumb)),
-      },
-    }))
+    .map((record) => {
+      const key = `${record.name as string}:${route.params.id}`
+      const label = overrides.value[key] ?? record.meta.breadcrumb
+      return { ...record, label }
+    })
+    .filter((crumb) => crumb.label)
 })
 
 const getCrumbRoute = (crumb: (typeof breadcrumbs.value)[number]) => {
@@ -49,4 +47,3 @@ const getCrumbRoute = (crumb: (typeof breadcrumbs.value)[number]) => {
   }
 }
 </script>
-```

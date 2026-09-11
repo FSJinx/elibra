@@ -74,7 +74,6 @@ function view(item: AcquisitionLines) {
   viewModal.value?.open()
   lines.setCurrentData(item)
 }
-console.log(currentData)
 </script>
 
 <style scoped></style>
