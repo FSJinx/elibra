@@ -83,9 +83,7 @@ class AcquisitionLinesService
             ]);
         }, 5);
 
-        CacheService::invalidate(
-            CacheService::ACQUISITION_LINES
-        );
+        CacheService::invalidate(CacheService::ACQUISITION_LINES);
 
         return $acquisitionLine;
     }
@@ -94,15 +92,9 @@ class AcquisitionLinesService
     /**
      * Update acquisition line and synchronize its accessions.
      */
-    public function update(
-        AcquisitionLines $acquisitionLine,
-        array $data
-    ): AcquisitionLines {
+    public function update( AcquisitionLines $acquisitionLine, array $data): AcquisitionLines {
 
-        $acquisitionLine = DB::transaction(function () use (
-            $acquisitionLine,
-            $data
-        ) {
+        $acquisitionLine = DB::transaction(function () use ( $acquisitionLine, $data) {
 
             $quantity = array_key_exists('quantity', $data) ? (float) $data['quantity'] : $acquisitionLine->quantity;
             $unitPrice = array_key_exists('unit_price', $data) ? (float) $data['unit_price'] : $acquisitionLine->unit_price;
@@ -157,22 +149,17 @@ class AcquisitionLinesService
              */
             if ($newQuantity > $oldQuantity) {
 
-                $additionalQuantity =
-                    $newQuantity - $oldQuantity;
+                $additionalQuantity = $newQuantity - $oldQuantity;
 
                 /*
                  * Get prefix.
-                 */
+                */
                 $prefix = $this->getAccessionPrefix($item);
 
                 /*
                  * Generate additional accession numbers.
                  */
-                $accessionNumbers =
-                    $this->generateAccessionNumbers(
-                        $prefix,
-                        $additionalQuantity
-                    );
+                $accessionNumbers = $this->generateAccessionNumbers( $prefix, $additionalQuantity);
 
                 /*
                  * Create additional accessions.
@@ -197,8 +184,7 @@ class AcquisitionLinesService
              */
             if ($newQuantity < $oldQuantity) {
 
-                $removeQuantity =
-                    $oldQuantity - $newQuantity;
+                $removeQuantity = $oldQuantity - $newQuantity;
 
                 /*
                  * Only remove available accessions.

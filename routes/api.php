@@ -23,6 +23,7 @@ use App\Http\Controllers\LibrarianController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\OpacSearchController;
 use App\Http\Controllers\PatronController;
+use App\Http\Controllers\PatronTypeLoanPolicyController;
 use App\Http\Controllers\ProgramsController;
 use App\Http\Controllers\SectionsController;
 use App\Http\Controllers\SerialController;
@@ -297,6 +298,14 @@ Route::group(['prefix' => '/patron'], function () {
     Route::delete('{patron}', [PatronController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:delete');
 });
 
+Route::group(['prefix' => '/patron-type-loan-policy'], function () {
+    Route::get('', [PatronTypeLoanPolicyController::class, 'index'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
+    Route::get('{patronTypeLoanPolicy}', [PatronTypeLoanPolicyController::class, 'show'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
+    Route::post('', [PatronTypeLoanPolicyController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
+    Route::put('{patronTypeLoanPolicy}', [PatronTypeLoanPolicyController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
+    Route::delete('{patronTypeLoanPolicy}', [PatronTypeLoanPolicyController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:delete');
+});
+
 Route::group(['prefix' => '/attendance'], function () {
     Route::get('', [AttendanceLogsController::class, 'index'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
     Route::get('{attendanceLogs}', [AttendanceLogsController::class, 'show'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
@@ -318,6 +327,7 @@ Route::group(['prefix' => '/attendance'], function () {
 // Public Routes
 Route::get('/try', [TestController::class, 'index']);
 Route::get('opac/search', [OpacSearchController::class, 'search'])->middleware('throttle:read');
+Route::get('opac/item/{itemId}', [OpacSearchController::class, 'show'])->middleware('throttle:read');
 
 // Media Routes
 Route::group(['prefix' => '/media'], function () {

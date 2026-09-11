@@ -45,6 +45,8 @@ class CacheService
     public const LIBRARIANS = 'librarians';
     public const ATTENDANCE_LOGS = 'attendance_logs';
 
+    public const PATRON_TYPE_LOAN_POLICY = 'patron_type_loan_policy';
+
     /**
      * Cache a query using a versioned cache key.
      *
