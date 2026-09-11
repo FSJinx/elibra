@@ -6,7 +6,7 @@
         <ChevronRight v-if="index > 0" :size="15" :stroke-width="1.75" class="mx-1.5 shrink-0 text-muted-foreground/50" />
 
         <!-- Parent -->
-        <router-link v-if="index < breadcrumbs.length - 1" :to="{ name: crumb.name, params: route.params }" class="min-w-0 max-w-50 truncate rounded-md text-muted-foreground font-medium transition-colors hover:text-primary cursor-pointer">
+        <router-link v-if="index < breadcrumbs.length - 1" :to="getCrumbPath(crumb.path)" class="min-w-0 max-w-50 truncate rounded-md text-muted-foreground font-medium transition-colors hover:text-primary cursor-pointer">
           {{ crumb.label }}
         </router-link>
 
@@ -36,14 +36,10 @@ const breadcrumbs = computed(() => {
     .filter((crumb) => crumb.label)
 })
 
-const getCrumbRoute = (crumb: (typeof breadcrumbs.value)[number]) => {
-  if (crumb.path) {
-    return crumb.path
-  }
-
-  return {
-    name: crumb.name,
-    params: route.params,
-  }
+const getCrumbPath = (path: string) => {
+  return path.replace(/:([a-zA-Z_]+)/g, (match, key) => {
+    const value = route.params[key]
+    return value != null ? String(value) : match
+  })
 }
 </script>
