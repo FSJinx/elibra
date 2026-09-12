@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col size-full overflow-hidden">
-    <SectionHeader title="Catalog" description="Browse all item found in your catalog" icon="journals" class="bg-background border-b border-border">
+    <SectionHeader title="Catalog" description="Browse all item found in your catalog" icon="journals">
       <div class="flex items-end gap-2 ml-auto">
         <Button left-icon="plus-lg" variant="primary" as="link" :to="{ name: 'librarian.collections.catalog.add-new' }"> Add New Item </Button>
       </div>

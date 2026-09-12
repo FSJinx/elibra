@@ -1,6 +1,6 @@
 <template>
   <div class="size-full flex flex-col">
-    <SectionHeader title="Attendance" description="Track patron visits and library gate logs." icon="clipboard-check" class="bg-background border-b border-border">
+    <SectionHeader title="Attendance" description="Track patron visits and library gate logs." icon="clipboard-check">
       <div class="flex items-end justify-end">
         <Button variant="primary" icon="plus" @click="openNewVisit"> Log visit </Button>
       </div>

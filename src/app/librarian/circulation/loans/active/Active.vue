@@ -41,7 +41,7 @@
         <th>Action</th>
       </tr>
     </Thead>
-    <Tbody :data="filteredLoans.length" :loading="false" :cols="7">w
+    <Tbody :data="filteredLoans.length" :loading="false" :cols="7">
       <tr v-for="row in filteredLoans" :key="row.id">
         <Td class="text-left">
           <p class="font-medium">{{ row.item_title }}</p>

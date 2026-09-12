@@ -50,6 +50,7 @@ export const librarianAcquisition = [
   {
     path: 'acquisition-requests',
     name: 'librarian.acquisition-requests',
+    meta: { title: 'Acquisition Requests', breadcrumb: 'Acquisition Requests' },
     component: () => import('@/app/librarian/acquisition/request/Requests.vue'),
   },
 ]
