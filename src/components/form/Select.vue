@@ -69,28 +69,31 @@ const dropdownStyle = ref({
 })
 
 const updatePosition = () => {
-  if (dropdownRef.value) {
+  if (dropdownRef.value && dropdownMenuRef.value) {
     const rect = dropdownRef.value.getBoundingClientRect()
     const spacing = 8
     const gap = 6
-    const minWidth = 300 // min-w-75
+    const minWidth = 300
+    const maxHeight = 240
 
     const spaceBelow = window.innerHeight - rect.bottom - gap - spacing
     const spaceAbove = rect.top - gap - spacing
-    const openUpward = spaceBelow < 240 && spaceAbove > spaceBelow
-    const availableHeight = Math.max(0, Math.min(240, openUpward ? spaceAbove : spaceBelow))
 
-    // Left aligned by default
+    const openUpward = spaceBelow < maxHeight && spaceAbove > spaceBelow
+
+    const availableHeight = Math.max(0, Math.min(maxHeight, openUpward ? spaceAbove : spaceBelow))
+
+    // Actual dropdown height, limited by available viewport space
+    const menuHeight = Math.min(dropdownMenuRef.value.scrollHeight, availableHeight)
+
     let left = rect.left
 
-    // If minimum width cannot fit on the right,
-    // align the dropdown's right edge with the select's right edge.
     if (rect.left + minWidth > window.innerWidth - spacing) {
       left = rect.right - minWidth
     }
 
     dropdownStyle.value = {
-      top: `${openUpward ? rect.top - gap - availableHeight : rect.bottom + gap}px`,
+      top: `${openUpward ? rect.top - gap - menuHeight - 5 : rect.bottom + gap}px`,
       left: `${left}px`,
       width: `${rect.width}px`,
       minWidth: `${minWidth}px`,
@@ -98,6 +101,7 @@ const updatePosition = () => {
     }
   }
 }
+
 watch(
   selectedOption,
   () => {
