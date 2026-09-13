@@ -1,52 +1,26 @@
 <template>
   <div class="size-full flex flex-col">
-    <SectionHeader title="Attendance" description="Track patron visits and library gate logs." icon="clipboard-check">
-      <div class="flex items-end justify-end">
-        <Button variant="primary" icon="plus" @click="openNewVisit"> Log visit </Button>
-      </div>
-    </SectionHeader>
+    <SectionHeader title="Attendance" description="Track patron visits and library gate logs." icon="clipboard-check"> </SectionHeader>
 
     <div class="flex-1 flex flex-col gap-5 p-5">
-      <!-- Stats -->
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard label="Visits today" :value="stats.visitsToday" icon="users" variant="default" />
-        <StatCard label="Currently in library" :value="stats.currentlyIn" icon="door-open" variant="success" />
-        <StatCard label="Avg. duration" :value="stats.avgDuration" icon="clock" variant="warning" />
-        <StatCard label="This week" :value="stats.thisWeek" icon="calendar" variant="default" />
-      </div>
-
       <!-- Filters -->
-      <Card>
-        <Form>
-          <template #body>
-            <Control>
-              <Input id="attendance-search" placeholder="Search by patron name or ID..." v-model="filters.search" enable-clear />
-              <Select id="attendance-status" title="Status" v-model="filters.status">
-                <Option value="">All statuses</Option>
-                <Option value="in">In library</Option>
-                <Option value="out">Checked out</Option>
-              </Select>
-              <Select id="attendance-branch" title="Branch" v-model="filters.branch">
-                <Option value="">All branches</Option>
-                <template v-for="item in branch.branches" :key="item.id">
-                  <Option :value="item.id">{{ item.name }}</Option>
-                </template>
-              </Select>
-              <Select id="attendance-purpose" title="Purpose" v-model="filters.purpose">
-                <Option value="">All purposes</Option>
-                <Option value="study">Study</Option>
-                <Option value="research">Research</Option>
-                <Option value="borrowing">Borrowing</Option>
-                <Option value="internet">Internet use</Option>
-                <Option value="other">Other</Option>
-              </Select>
-              <Button @click="resetFilters">Reset</Button>
-            </Control>
-          </template>
-        </Form>
-      </Card>
+      <Form class="flex items-center gap-2 justify-end">
+        <Label id="attendance-search" class="mr-2">Search</Label>
+        <Input id="attendance-search" placeholder="Search by patron name or ID..." v-model="filters.search" enable-clear class="max-w-100" />
 
-      <Table title="Attendance Log" subtitle="This is today's recent attendance logs.">
+        <Select id="attendance-branch" title="Branch" v-model="filters.branch" class="max-w-max">
+          <Option value="">All branches</Option>
+          <template v-for="item in branch.branches" :key="item.id">
+            <Option :value="item.id">{{ item.name }}</Option>
+          </template>
+        </Select>
+        <AttendanceFilter />
+
+        <Button variant="info" icon="search">Search</Button>
+        <Button variant="danger" @click="resetFilters">Reset</Button>
+      </Form>
+
+      <Table title="Attendance Log" subtitle="This is today's recent attendance logs." data-length="0">
         <Thead>
           <tr>
             <th class="text-left">Patron</th>
@@ -93,6 +67,8 @@
 </template>
 
 <script setup lang="ts">
+import AttendanceFilter from '@/app/librarian/circulation/attendance/AttendanceFilter.vue'
+
 interface AttendanceRecord {
   id: number
   patron_name: string

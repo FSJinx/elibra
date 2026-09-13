@@ -1,24 +1,22 @@
 <template>
   <!-- Filters -->
-  <Form>
-    <template #body>
-      <div class="flex items-center justify-end gap-1">
-        <Input class="max-w-100" id="loans-search" placeholder="Search by borrower or item title..." v-model="filters.search" enable-clear />
-        <Select class="max-w-max" id="loans-status" title="Status" v-model="filters.status">
-          <Option value="">All statuses</Option>
-          <Option value="active">Active</Option>
-          <Option value="overdue">Overdue</Option>
-          <Option value="returned">Returned</Option>
-        </Select>
-        <Select class="max-w-max" id="loans-branch" title="Branch" v-model="filters.branch">
-          <Option value="">All branches</Option>
-          <template v-for="item in branch.branches" :key="item.id">
-            <Option :value="item.id">{{ item.name }}</Option>
-          </template>
-        </Select>
-        <Button @click="resetFilters">Reset</Button>
-      </div>
-    </template>
+  <Form class="flex items-center justify-end gap-2 mb-5">
+    <Label id="loans-search" class="mr-2">Search</Label>
+    <Input class="max-w-100" id="loans-search" placeholder="Search by borrower or item title..." v-model="filters.search" enable-clear />
+    <Select class="max-w-max" id="loans-status" title="Status" v-model="filters.status">
+      <Option value="">All statuses</Option>
+      <Option value="active">Active</Option>
+      <Option value="overdue">Overdue</Option>
+      <Option value="returned">Returned</Option>
+    </Select>
+    <Select class="max-w-max" id="loans-branch" title="Branch" v-model="filters.branch">
+      <Option value="">All branches</Option>
+      <template v-for="item in branch.branches" :key="item.id">
+        <Option :value="item.id">{{ item.name }}</Option>
+      </template>
+    </Select>
+    <Button variant="danger" @click="resetFilters">Reset</Button>
+    <Button variant="primary">New Loan</Button>
   </Form>
 
   <!-- Stats -->
@@ -29,7 +27,7 @@
     <StatCard label="Returned this week" :value="stats.returnedThisWeek" icon="check-circle" variant="success" />
   </div> -->
 
-  <Table title="Active Loans Record" subtitle="Here are the active loans of your library">
+  <Table title="Active Loans Record" subtitle="Here are the active loans of your library" data-length="28">
     <Thead>
       <tr>
         <th class="text-left">Item</th>

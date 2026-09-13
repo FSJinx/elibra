@@ -28,7 +28,7 @@
                 :key="child.path"
                 :to="{ name: child.path }"
                 class="relative flex items-center gap-3.5 py-3.5 px-5 rounded-xl border font-medium text-[13px] cursor-pointer transition-all duration-200"
-                :class="[isActive(child.path) ? 'text-primary bg-primary-soft/25 hover:bg-primary-soft border-primary/50' : 'border-transparent hover:bg-slate-50 text-foreground-secondary hover:text-foreground']"
+                :class="[isActive(child.path) ? 'text-primary bg-primary-soft/25 hover:bg-primary-soft/25 border-primary/50' : 'border-transparent hover:bg-slate-100 text-foreground-secondary hover:text-foreground']"
                 :aria-current="isActive(child.path) ? 'page' : undefined"
               >
                 <!-- Active Indicator Bar -->

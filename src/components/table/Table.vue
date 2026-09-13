@@ -9,7 +9,7 @@
       </div>
 
       <slot name="header" v-if="$slots.header" />
-      <span class="text-sm text-foreground-secondary ml-auto" v-else-if="dataLength"> {{ dataLength }} items </span>
+      <span class="text-sm text-foreground-secondary ml-auto" v-else-if="dataLength"> {{ Number(dataLength) }} items </span>
     </div>
 
     <!-- Table Body -->
@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 interface Props {
-  dataLength?: number | undefined
+  dataLength?: string | number | undefined
   title?: string
   subtitle?: string
 }
