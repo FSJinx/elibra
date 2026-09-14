@@ -6,7 +6,7 @@
           <div class="grid size-20 shrink-0 place-items-center rounded-2xl bg-emerald-100 text-2xl font-bold text-emerald-800">{{ auth.getInitials || 'MS' }}</div>
           <div>
             <p class="text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">My account</p>
-            <h1 class="mt-2 text-2xl font-bold text-slate-950">{{ auth.getFullName || 'Mia Santos' }}</h1>
+            <h1 class="mt-2 text-2xl font-bold text-slate-950">{{ auth.getFullName || 'Isabela State University' }}</h1>
             <p class="mt-1 text-sm text-slate-500">Student member · ISU Main Campus</p>
           </div>
           <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700 sm:ml-auto">Active member</span>
@@ -30,7 +30,7 @@
           </div>
         </div>
       </section>
-      <section class="mt-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <section class="mt-5 rounded-2xl b1order border-slate-200 bg-white p-6 shadow-sm">
         <h2 class="font-bold text-slate-950">Account preferences</h2>
         <div class="mt-4 divide-y divide-slate-100">
           <label v-for="preference in preferences" :key="preference.title" class="flex items-center justify-between gap-4 py-4 first:pt-0 last:pb-0"
@@ -41,12 +41,16 @@
           /></label>
         </div>
       </section>
+      <section class="flex mt-5 rounded-2xl b1order border-slate-200 bg-white p-6 shadow-sm">
+        <Button class="w-full" variant="danger" @click="user.logout()">Logout</Button>
+      </section>
     </div>
   </main>
 </template>
 
 <script setup lang="ts">
 const auth = authStore()
+const user = useAuth()
 const preferences = [
   { title: 'Due date reminders', description: 'Receive an email before an item is due.', enabled: true },
   { title: 'New arrivals', description: 'Hear about new titles in your favorite subjects.', enabled: false },

@@ -29,7 +29,7 @@ class AcquisitionLines extends Model
 
     public function items()
     {
-        return $this->belongsTo(Item::class, 'item_id', 'id');
+        return $this->belongsTo(Item::class);
     }
 
     public function acquisition()

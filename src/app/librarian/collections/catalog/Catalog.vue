@@ -11,12 +11,12 @@
       <CatalogCards />
 
       <div class="flex flex-col bg-background border border-border divide-y divide-border rounded-2xl">
-        <Form @submit="fetchCatalog" class="flex items-center justify-start gap-1 p-5">
+        <Form @submit="items.fetch" class="flex items-center justify-start gap-1 p-5">
           <Label id="catalog-query">Search</Label>
           <Input id="catalog-query" v-model="search" placeholder="Search for an item in the catalog..." class="max-w-150" enable-clear />
           <Button type="submit" icon="search" variant="success" class="mr-auto">Search</Button>
           <CatalogFilter @filterApplied="filter" />
-          <Button variant="restore">Reset</Button>
+          <Button variant="restore" @click="items.fetch">Reset</Button>
         </Form>
 
         <!-- <template> -->
@@ -33,7 +33,7 @@
       </div>
 
       <div class="flex h-200">
-        <CatalogTable :data="items" :loading="loading" />
+        <CatalogTable :data="items.data" :loading="loading" />
       </div>
     </div>
   </div>
@@ -52,7 +52,7 @@ interface CatalogItem {
   publication_year: number | null
 }
 
-const items = ref<CatalogItem[]>([])
+const items = useItemStore()
 const loading = ref(false)
 const search = ref('')
 
@@ -70,23 +70,6 @@ const catalog = reactive<{
   item_type: '',
 })
 
-async function fetchCatalog() {
-  loading.value = true
-
-  try {
-    const res = await api.get('item/get', {
-      params: { search: search.value, ...catalog },
-    })
-
-    items.value = res.data?.data?.data ?? []
-  } catch (error) {
-    console.error('Failed to fetch catalog:', error)
-    items.value = []
-  } finally {
-    loading.value = false
-  }
-}
-
 function filter(f: any) {
   Object.assign(catalog, {
     category: f.category,
@@ -95,11 +78,5 @@ function filter(f: any) {
     order: f.order,
     item_type: f.item_type,
   })
-
-  fetchCatalog()
 }
-
-onMounted(() => {
-  fetchCatalog()
-})
 </script>

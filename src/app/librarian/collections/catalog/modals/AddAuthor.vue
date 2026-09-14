@@ -1,7 +1,7 @@
 <template>
   <Button class="ml-auto" variant="primary" @click="open()">Add New</Button>
 
-  <Modal ref="authorModal" size="large" enable-close-btn>
+  <Modal ref="authorModal" size="large">
     <ModalHeader use-default-layout title="Add Author" icon="person-check" />
 
     <div class="flex flex-col p-5 gap-5">
@@ -74,11 +74,9 @@
         </div>
       </div>
     </div>
-    <template #footer>
-      <div class="flex items-center">
-        <Button class="ml-auto" @click="close">Done</Button>
-      </div>
-    </template>
+    <ModalFooter>
+      <Button class="ml-auto" @click="close">Done</Button>
+    </ModalFooter>
   </Modal>
 </template>
 

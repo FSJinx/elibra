@@ -1,7 +1,7 @@
 <template>
   <Button @click="open()">Add New</Button>
 
-  <Modal ref="subjectModal" enable-close-btn>
+  <Modal ref="subjectModal">
     <template #header>Add subjects</template>
     <ModalHeader use-default-layout title="Add Subjects" />
 
@@ -26,6 +26,10 @@
         </div>
       </div>
     </Form>
+
+    <ModalFooter>
+      <Button @click="subjectModal?.close(  )">Done</Button>
+    </ModalFooter>
   </Modal>
 </template>
 

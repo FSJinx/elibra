@@ -23,7 +23,7 @@ class StoreAcademicRequest extends BaseRequest
         $user = $this->user();
 
         return
-        $user->hasPermission('academic.create') && ($user->isLibrarian() && $user->librarian->branch) ||
+        $user->hasPermission('academic.create') || ($user->isLibrarian() && $user->librarian->branch) ||
         $user->isAdmin();
     }
 

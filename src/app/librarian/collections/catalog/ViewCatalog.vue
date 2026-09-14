@@ -37,4 +37,3 @@ const active = (path: string) => {
   return route.name === path
 }
 </script>
-```

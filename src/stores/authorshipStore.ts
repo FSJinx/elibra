@@ -47,7 +47,7 @@ export const authorshipStore = defineStore('authorship', () => {
 
     try {
       const response = await get('authorship', { params: { ...params } })
-      const data = response.data?.data ?? []
+      const data = response.data ?? []
 
       setAuthorships(data)
       return data

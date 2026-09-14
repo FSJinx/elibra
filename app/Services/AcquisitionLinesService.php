@@ -77,7 +77,7 @@ class AcquisitionLinesService
             }
 
             return $acquisitionLine->fresh([
-                'item',
+                'items',
                 'acquisition',
                 'accessions',
             ]);

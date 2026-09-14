@@ -245,6 +245,7 @@ declare global {
   const useInterval: typeof import('@vueuse/core').useInterval
   const useIntervalFn: typeof import('@vueuse/core').useIntervalFn
   const useItemCategoriesStore: typeof import('./stores/itemCategoriesStore').useItemCategoriesStore
+  const useItemStore: typeof import('./stores/librarian/itemStore').useItemStore
   const useItemTypeStore: typeof import('./stores/itemTypeStore').useItemTypeStore
   const useKeyModifier: typeof import('@vueuse/core').useKeyModifier
   const useLanguagesStore: typeof import('./stores/languagesStore').useLanguagesStore
@@ -634,6 +635,7 @@ declare module 'vue' {
     readonly useInterval: UnwrapRef<typeof import('@vueuse/core')['useInterval']>
     readonly useIntervalFn: UnwrapRef<typeof import('@vueuse/core')['useIntervalFn']>
     readonly useItemCategoriesStore: UnwrapRef<typeof import('./stores/itemCategoriesStore')['useItemCategoriesStore']>
+    readonly useItemStore: UnwrapRef<typeof import('./stores/librarian/itemStore')['useItemStore']>
     readonly useItemTypeStore: UnwrapRef<typeof import('./stores/itemTypeStore')['useItemTypeStore']>
     readonly useKeyModifier: UnwrapRef<typeof import('@vueuse/core')['useKeyModifier']>
     readonly useLanguagesStore: UnwrapRef<typeof import('./stores/languagesStore')['useLanguagesStore']>

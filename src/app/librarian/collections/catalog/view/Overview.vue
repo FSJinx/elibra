@@ -1,5 +1,11 @@
 <template>
   <form class="flex flex-col gap-5 p-5 w-full max-w-7xl mx-auto" @submit.prevent="save">
+    <div v-if="loading" class="rounded-lg border border-border bg-muted/40 px-4 py-3 text-sm text-foreground-secondary" role="status">Loading item information...</div>
+
+    <div v-else-if="error" class="rounded-lg border border-danger/30 bg-danger/5 px-4 py-3 text-sm text-danger" role="alert">
+      {{ error }}
+    </div>
+
     <!-- Basic Information -->
     <section class="overflow-hidden rounded-xl border border-border bg-background">
       <div class="border-b border-border px-5 py-4">
@@ -64,7 +70,7 @@
           <label class="text-sm font-semibold text-foreground"> Item Type </label>
 
           <Select id="item_type" v-model="form.item_type_id" class="max-w-md">
-            <!-- Your Option components -->
+            <Option v-for="type in item_types" :value="type.id">{{ type.name }}</Option>
           </Select>
         </div>
 
@@ -73,7 +79,7 @@
           <label class="text-sm font-semibold text-foreground"> Category </label>
 
           <Select id="category" v-model="form.item_type_category_id" class="max-w-md">
-            <!-- Your Option components -->
+            <Option v-for="category in item_categories" :value="category.id">{{ category.name }}</Option>
           </Select>
         </div>
 
@@ -82,7 +88,7 @@
           <label class="text-sm font-semibold text-foreground"> Branch </label>
 
           <Select id="branch" v-model="form.branch_id" class="max-w-md">
-            <!-- Your Option components -->
+            <Option v-for="branch in branches" :value="branch.id">{{ branch.name }}</Option>
           </Select>
         </div>
 
@@ -91,7 +97,7 @@
           <label class="text-sm font-semibold text-foreground"> Language </label>
 
           <Select id="language" v-model="form.language_id" class="max-w-md">
-            <!-- Your Option components -->
+            <Option v-for="language in languages" :value="language.id">{{ language.name }}</Option>
           </Select>
         </div>
       </div>
@@ -114,7 +120,10 @@
             <p class="mt-1 text-xs text-foreground-secondary">Terms used when searching the catalog.</p>
           </div>
 
-          <textarea id="keywords" v-model="form.keywords" rows="3" placeholder="e.g. programming, software engineering, clean code" class="w-full resize-y rounded-lg border border-border bg-background px-3 py-2.5 text-sm text-foreground outline-none transition placeholder:text-foreground-secondary/60 focus:border-primary focus:ring-2 focus:ring-primary/10" />
+          <div class="flex items-start flex-wrap gap-2">
+            <Chip v-for="keyword in form.keywords">{{ keyword }}</Chip>
+          </div>
+          <!-- <textarea id="keywords" v-model="form.keywords" rows="3" placeholder="e.g. programming, software engineering, clean code" class="w-full resize-y rounded-lg border border-border bg-background px-3 py-2.5 text-sm text-foreground outline-none transition placeholder:text-foreground-secondary/60 focus:border-primary focus:ring-2 focus:ring-primary/10" /> -->
         </div>
 
         <!-- Electronic File -->
@@ -166,6 +175,15 @@ interface CatalogForm {
   language_id: number | string | null
 }
 
+const route = useRoute()
+const loading = ref(false)
+const error = ref('')
+const { item_categories } = useItemCategoriesStore()
+const { item_types } = useItemTypeStore()
+const { branches } = useBranchStore()
+const { languages } = useLanguagesStore()
+const item = useItemStore()
+
 const form = reactive<CatalogForm>({
   title: '',
   subtitle: '',
@@ -187,4 +205,49 @@ function save() {
 function reset() {
   // Restore original item values
 }
+
+async function fetchItem() {
+  const itemId = route.params.id
+
+  if (!itemId) {
+    error.value = 'The item ID is missing from the route.'
+    return
+  }
+
+  loading.value = true
+  error.value = ''
+
+  try {
+    const response = await api.get(`item/get/${itemId}`)
+    const item = response.data?.data
+
+    if (!item) {
+      throw new Error('The item could not be found.')
+    }
+
+    Object.assign(form, {
+      title: item.title ?? '',
+      subtitle: item.subtitle ?? '',
+      description: item.description ?? '',
+      call_number: item.call_number ?? '',
+      publication_year: item.publication_year ?? null,
+      electronic_file: item.electronic_file ?? null,
+      keywords: item.keywords,
+      item_type_id: item.item_type_id ?? null,
+      item_type_category_id: item.item_type_category_id ?? null,
+      branch_id: item.branch_id ?? null,
+      language_id: item.language_id ?? null,
+    })
+  } catch (fetchError: any) {
+    error.value = fetchError.response?.data?.message ?? fetchError.message ?? 'Unable to load item information.'
+  } finally {
+    loading.value = false
+  }
+}
+
+// watch(() => route.params.id, fetchItem, { immediate: true })
+
+onMounted(() => {
+  Object.assign(form, item.currentData)
+})
 </script>

@@ -37,15 +37,15 @@ const pop = usePopup()
 const auth = authStore()
 
 const emptyForm = (): Form => ({
-  title: 'e-Libra',
-  subtitle: 'A Centralized Web-Based Integrated Library Management System and Resource Monitoring for Isabela State University',
-  description: 'Si Wanda naging Scarlet Witch na talaga.',
-  call_number: 'Mom.12DS',
-  publication_year: '1998',
+  title: '',
+  subtitle: '',
+  description: '',
+  call_number: '',
+  publication_year: '',
   electronic_file: null,
   keywords: [],
 
-  item_type_category_id: '1',
+  item_type_category_id: '',
   branch_id: auth.user?.role === 'librarian' ? auth.user?.branch?.id : '',
   language_id: '',
 

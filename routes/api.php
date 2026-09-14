@@ -4,9 +4,9 @@ use App\Http\Controllers\AcademicController;
 use App\Http\Controllers\AcquisitionController;
 use App\Http\Controllers\AcquisitionLinesController;
 use App\Http\Controllers\AcquisitionRequestController;
+use App\Http\Controllers\AttendanceLogsController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\AttendanceLogsController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\AuthorshipController;
 use App\Http\Controllers\BookController;
@@ -20,7 +20,9 @@ use App\Http\Controllers\HolidaysController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ItemTypeCategoryController;
 use App\Http\Controllers\ItemTypeController;
+use App\Http\Controllers\LandingPage\LandingController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\Librarian\DashboardController;
 use App\Http\Controllers\LibrarianController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\OpacSearchController;
@@ -60,6 +62,12 @@ Route::group(['prefix' => '/auth'], function () {
  *      They provide all the data in the database are usually
  *      used as static data for selects.
  */
+
+// ============== LANDING ROUTE ==================
+Route::group(['prefix' => '/landing'], function () {
+    Route::get('new-items', [LandingController::class, 'newItems']);
+    Route::get('discover', [LandingController::class, 'discover']);
+});
 
 // ============== AUTHORS ROUTE ==================
 Route::group(['prefix' => '/authors'], function () {
@@ -241,6 +249,7 @@ Route::group(['prefix' => '/section'], function () {
  *
  *      all while as long as they are on the same campus.
  */
+
 Route::group(['prefix' => '/librarian'], function () {
     // ============== LIBRARIAN RESOURCE ROUTE ==================
     Route::get('', [LibrarianController::class, 'index'])->middleware('throttle:read');
@@ -251,6 +260,7 @@ Route::group(['prefix' => '/librarian'], function () {
     // ============== DASHBOARD ROUTE ==================
     Route::group(['prefix' => 'dashboard'], function () {
         // Get
+        Route::get('total-collections', [DashboardController::class, 'totalCollections']);
 
         // Post
 
@@ -317,7 +327,6 @@ Route::group(['prefix' => '/librarian'], function () {
     });
 
 })->middleware('jwt.auth', 'role:admin,librarian');
-
 
 Route::group(['prefix' => '/patron'], function () {
     Route::get('', [PatronController::class, 'index'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
@@ -422,6 +431,8 @@ Route::group(['prefix' => '/item'], function () {
         /* SUBSCRIPTION ROUTES */
         Route::get('subscriptions', [SubscriptionController::class, 'getResources'])->middleware('throttle:read');
         Route::get('subscription-credential/{subscriptionId}', [SubscriptionCredentialController::class, 'getCredential'])->middleware('throttle:read');
+
+        Route::get('{item}', [ItemController::class, 'show'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
     });
 
     Route::group(['prefix' => '/create'], function () {

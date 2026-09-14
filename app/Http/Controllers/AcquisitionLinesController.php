@@ -56,7 +56,7 @@ class AcquisitionLinesController extends Controller
         $data = Cache::remember(
             'acquisition-lines:${id}',
             now()->addHour(),
-            fn () => AcquisitionLines::with('items')->where('acquisition_id', $id)->get()
+            fn () => AcquisitionLines::with('item')->where('acquisition_id', $id)->get()
         );
 
         return $this->response(data: $data->toArray());
