@@ -261,6 +261,15 @@ Route::group(['prefix' => '/librarian'], function () {
     Route::group(['prefix' => 'dashboard'], function () {
         // Get
         Route::get('total-collections', [DashboardController::class, 'totalCollections']);
+        Route::get('total-academics', [DashboardController::class, 'totalAcademics']);
+        Route::get('total-serials', [DashboardController::class, 'totalSerials']);
+        Route::get('total-books', [DashboardController::class, 'totalBooks']);
+
+        Route::get('total-patrons', [DashboardController::class, 'totalPatrons']);
+        Route::get('total-librarians', [DashboardController::class, 'totalLibrarians']);
+
+        Route::get('total-campuses', [DashboardController::class, 'totalCampuses']);
+        Route::get('total-branches', [DashboardController::class, 'totalBranches']);
 
         // Post
 
