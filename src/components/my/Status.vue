@@ -18,17 +18,19 @@ const props = withDefaults(defineProps<Props>(), {
   variant: 'default',
 })
 
+const parse = useParser()
+
 const statusIndicator = computed(() => {
   const shades: Record<string, string> = {
     success: 'bg-success-soft text-success-soft-foreground',
-    danger: 'bg-danger/2 text-danger-soft-foreground',
-    warning: 'bg-warning/2 text-warning-soft-foreground',
-    restore: 'bg-restore/2 text-restore-soft-foreground',
-    info: 'bg-info/2 text-info-soft-foreground',
+    danger: 'bg-danger/5 text-danger-soft-foreground',
+    warning: 'bg-warning/5 text-warning-soft-foreground',
+    restore: 'bg-restore/5 text-restore-soft-foreground',
+    info: 'bg-info/5 text-info-soft-foreground',
     default: 'bg-default/25 ',
   }
 
-  return shades[props?.variant ?? 'default']
+  return shades[parse.status(props?.variant) ?? 'default']
 })
 </script>
 

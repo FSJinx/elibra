@@ -31,23 +31,23 @@ export const librarianCataloging = [
             name: 'librarian.collections.catalog.view',
             redirect: { name: 'librarian.collections.catalog.view.overview' },
             component: () => import('@/app/librarian/collections/catalog/ViewCatalog.vue'),
+            beforeEnter: async (to: any) => {
+              const item = useItemStore()
+
+              if (!item.currentData || item.currentData?.id !== to.params.id) {
+                pop.load()
+                await item.show(to.params.id)
+                pop.unload()
+              }
+
+              return true
+            },
             children: [
               {
                 path: '',
-                meta: { breadcrumb: 'Overview' },
+                meta: { title: 'Overview', breadcrumb: 'Overview' },
                 name: 'librarian.collections.catalog.view.overview',
                 component: () => import('@/app/librarian/collections/catalog/view/Overview.vue'),
-                beforeEnter: async (to: any) => {
-                  const item = useItemStore()
-
-                  if (!item.currentData || item.currentData?.id !== to.params.id) {
-                    pop.load()
-                    await item.show(to.params.id)
-                    pop.unload()
-                  }
-
-                  return true
-                },
               },
               { path: 'authors', meta: { breadcrumb: 'Authors' }, name: 'librarian.collections.catalog.view.authors', component: () => import('@/app/librarian/collections/catalog/view/Authors.vue') },
               { path: 'accession', meta: { breadcrumb: 'Accession' }, name: 'librarian.collections.catalog.view.accession', component: () => import('@/app/librarian/collections/catalog/view/Accession.vue') },

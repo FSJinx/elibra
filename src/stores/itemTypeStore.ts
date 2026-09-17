@@ -20,63 +20,65 @@ const defaultParams: Readonly<ItemTypeParams> = {
   order: 'asc',
 }
 
-export const useItemTypeStore = defineStore('item_type', () => {
-  const item_types = ref<ItemType[] | null>(null)
-  const currentItemType = ref<ItemType | null>(null)
-  const loading = ref<boolean>(false)
-  const params = reactive<ItemTypeParams>({ ...defaultParams })
+const paramsWatchers = new WeakSet<object>()
 
-  function setItemTypes(data: ItemType[] | null) {
-    item_types.value = data
-  }
+export const useItemTypeStore = defineStore('item_type', {
+  state: () => ({
+    item_types: null as ItemType[] | null,
+    currentItemType: null as ItemType | null,
+    loading: false,
+    params: { ...defaultParams } as ItemTypeParams,
+  }),
 
-  function setCurrentItemType(data: ItemType | null) {
-    currentItemType.value = data
-  }
+  getters: {
+    byId() {
+      return (id: any) => this.item_types?.find((i) => i.id === id)
+    },
+  },
 
-  function setLoading(status: boolean) {
-    loading.value = status
-  }
+  actions: {
+    setItemTypes(data: ItemType[] | null) {
+      this.item_types = data
+    },
 
-  async function fetch(forced = false) {
-    if (!forced && item_types.value?.length) return item_types.value
+    setCurrentItemType(data: ItemType | null) {
+      this.currentItemType = data
+    },
 
-    setLoading(true)
+    setLoading(status: boolean) {
+      this.loading = status
+    },
 
-    try {
-      const response = await get('item_types', { params: { ...params } })
-      const data = response.data
+    async fetch(forced = false) {
+      if (!paramsWatchers.has(this)) {
+        paramsWatchers.add(this)
+        watchDebounced(
+          () => ({ ...this.params }),
+          () => this.fetch(true),
+        )
+      }
 
-      setItemTypes(data)
-      return data
-    } catch (error) {
-      console.error('Error fetching item types:', error)
-      return []
-    } finally {
-      setLoading(false)
-    }
-  }
+      if (!forced && this.item_types?.length) return this.item_types
 
-  async function refresh() {
-    Object.assign(params, defaultParams)
-    return fetch(true)
-  }
+      this.setLoading(true)
 
-  watchDebounced(
-    () => ({ ...params }),
-    () => fetch(true),
-  )
+      try {
+        const response = await get('item_types', { params: { ...this.params } })
+        const data = response.data
 
-  return {
-    item_types,
-    currentItemType,
-    loading,
-    params,
+        this.setItemTypes(data)
+        return data
+      } catch (error) {
+        console.error('Error fetching item types:', error)
+        return []
+      } finally {
+        this.setLoading(false)
+      }
+    },
 
-    setItemTypes,
-    setCurrentItemType,
-    setLoading,
-    fetch,
-    refresh,
-  }
+    async refresh() {
+      Object.assign(this.params, defaultParams)
+      return this.fetch(true)
+    },
+  },
 })

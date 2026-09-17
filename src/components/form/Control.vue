@@ -16,7 +16,7 @@ const props = withDefaults(defineProps<Props>(), {
 const controlClass = computed(() => {
   const baseDesign = 'grid gap-2 group'
 
-  const direction = props.direction === 'row' ? 'grid-cols-2 items-center' : 'grid-cols-1'
+  const direction = props.direction === 'row' ? 'grid-cols-2 items-center' : 'grid-cols-1 items-start'
 
   return [baseDesign, direction]
 })

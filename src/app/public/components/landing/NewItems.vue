@@ -89,7 +89,7 @@ async function fetchNewItems() {
 }
 
 const parseCategory = (item_type_category_id: any) => {
-  return itemCategories.item_categories.find((i) => i.id === item_type_category_id)?.name
+  return itemCategories.categories.find((i) => i.id === item_type_category_id)?.name
 }
 
 onMounted(fetchNewItems)

@@ -3,38 +3,20 @@
     <SectionHeader title="Catalog" description="Browse all item found in your catalog" icon="journals">
       <div class="flex items-end gap-2 ml-auto">
         <Button left-icon="plus-lg" variant="primary" as="link" :to="{ name: 'librarian.collections.catalog.add-new' }"> Add New Item </Button>
+        <Button :icon="stats_expanded ? 'arrows-angle-contract' : 'arrows-angle-expand'" :data-title="stats_expanded ? 'Hide stat cards' : 'Show stat cards'" @click="stats_expanded = !stats_expanded"></Button>
       </div>
     </SectionHeader>
 
-    <div class="flex-1 space-y-4 p-5 overflow-y-auto scroll">
-      <!-- Statistical Cards -->
-      <CatalogCards />
-
-      <div class="flex flex-col bg-background border border-border divide-y divide-border rounded-2xl">
-        <Form @submit="items.fetch" class="flex items-center justify-start gap-1 p-5">
-          <Label id="catalog-query">Search</Label>
-          <Input id="catalog-query" v-model="search" placeholder="Search for an item in the catalog..." class="max-w-150" enable-clear />
-          <Button type="submit" icon="search" variant="success" class="mr-auto">Search</Button>
-          <CatalogFilter @filterApplied="filter" />
-          <Button variant="restore" @click="items.fetch">Reset</Button>
-        </Form>
-
-        <!-- <template> -->
-        <div class="flex items-center gap-3 flex-wrap p-5">
-          <p class="font-medium">Filters:</p>
-          <Chip enable-remove>Angadanan Campus</Chip>
-          <Chip enable-remove>Angadanan Campus</Chip>
-          <Chip enable-remove>Angadanan Campus</Chip>
-          <Chip enable-remove>Angadanan Campus</Chip>
-          <Chip enable-remove>Angadanan Campus</Chip>
-          <Chip variant="danger">Reset</Chip>
-        </div>
-        <!-- </template> -->
-      </div>
-
-      <div class="flex h-200">
-        <CatalogTable :data="items.data" :loading="loading" />
-      </div>
+    <div class="flex-1 flex flex-col gap-4 p-5 overflow-y-auto scroll">
+      <CatalogCards v-if="stats_expanded" />
+      <Form @submit="items.fetch" class="flex items-end justify-end gap-2" v-else>
+        <!-- <Label id="catalog-query">Search</Label> -->
+        <Input id="catalog-query" v-model="search" placeholder="Search for an item in the catalog..." class="max-w-150" enable-clear />
+        <!-- <Button type="submit" icon="search" variant="success">Search</Button> -->
+        <CatalogFilter @filterApplied="filter" />
+        <Button variant="restore" @click="items.fetch">Reset</Button>
+      </Form>
+      <CatalogTable :data="items.data" :loading="loading" />
     </div>
   </div>
 </template>
@@ -55,6 +37,7 @@ interface CatalogItem {
 const items = useItemStore()
 const loading = ref(false)
 const search = ref('')
+const stats_expanded = ref(false)
 
 const catalog = reactive<{
   category: string

@@ -3,7 +3,7 @@
     <!-- Textarea Container -->
     <div class="group relative flex w-full border transition-all duration-150 min-w-20 rounded-md overflow-hidden focus-within:ring-4" :class="[error && error.length > 0 ? 'border-danger focus-within:border-danger focus-within:ring-danger/20' : 'border-border focus-within:ring-success/25 focus-within:border-primary/50', { 'opacity-60 cursor-not-allowed bg-slate-100': disabled }]">
       <!-- Native Textarea -->
-      <textarea ref="textarea" :id="id" :name="id" v-model="model" :placeholder="placeholder" :required="required" :disabled="disabled" :readonly="readonly" :maxlength="maxlength" :spellcheck="spellcheck" :rows="rows" @input="handleInput" class="w-full flex-1 bg-transparent text-slate-900 transition-all duration-150 focus:outline-none disabled:cursor-not-allowed py-2.5 px-4" :class="[sizeConfig.input, resizeClass]" />
+      <textarea ref="textarea" :id="id" :name="id" v-model="model" :placeholder="placeholder" :required="required" :disabled="disabled" :readonly="readonly" :maxlength="maxlength" :spellcheck="spellcheck" :rows="rows" @input="handleInput" class="w-full flex-1 bg-transparent text-slate-900 transition-all duration-150 read-only:border-transparent focus:outline-none disabled:cursor-not-allowed py-2.5 px-4" :class="[sizeConfig.input, resizeClass]" />
 
       <!-- Clear Button -->
       <button v-if="enableClear && hasValue && !disabled" type="button" class="absolute top-2 right-2 flex items-center justify-center h-6 w-6 rounded text-slate-500 hover:text-slate-800 hover:bg-slate-100 focus:outline-none transition-colors" aria-label="Clear input" @click="clearInput">

@@ -2,6 +2,17 @@ interface Item {
   id: any
   title: string
   subtitle?: string
+  description: string
+  call_number: string
+  publication_year: string
+  keywords: string
+  electronic_file: string
+
+  item_type_id: any
+  item_type_category_id: any
+  branch_id: any
+  language_id: any
+  
   [key: string]: any
 }
 
