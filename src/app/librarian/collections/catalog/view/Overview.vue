@@ -33,7 +33,7 @@
         </Control>
         <Control direction="col">
           <label for="">Year of Publication</label>
-          <p>{{ item?.call_number }}</p>
+          <p>{{ item?.publication_year }}</p>
         </Control>
         <Control direction="col" class="col-span-2">
           <label for="">Description</label>
@@ -68,7 +68,8 @@
     <Card v-if="item?.item_type?.slug === 'academic'">
       <Title :level="2" class="text-primary mb-5">Academic Information</Title>
 
-      <div class="grid grid-cols-2 gap-5">spre
+      <div class="grid grid-cols-2 gap-5">
+        spre
         <Control direction="col">
           <label for="">DOI</label>
           <p>

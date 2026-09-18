@@ -3,21 +3,9 @@
     <Transition name="fade">
       <div v-if="isOpen" class="modal-wrapper fixed inset-0 flex items-center justify-center bg-backdrop h-dvh p-5" :class="[hasInputs ? '' : 'cursor-pointer']" @click.self="close">
         <div class="modal relative bg-background rounded-xl shadow-2xl border border-border cursor-default overflow-hidden" :class="[sizeClasses, positionClasses, position]" ref="modalRef">
-          <span class="absolute top-5 right-5 ml-auto text-lg text-foreground/25 hover:text-foreground cursor-pointer transition-all duration-200">
-            <Icon icon="x-lg" @click="close" v-if="!disableCloseBtn" style="-webkit-text-stroke: 1px" />
+          <span class="absolute top-3 right-3 p-2 ml-auto text-lg text-foreground/25 hover:text-foreground cursor-pointer transition-all duration-200" @click="close" v-if="!disableCloseBtn">
+            <Icon icon="x-lg" style="-webkit-text-stroke: 1px" />
           </span>
-
-          <!-- Modal Body
-          <div class="flex flex-col overflow-y-auto transition-all duration-200">
-            <Transition name="fade">
-              <p class="text-danger p-3 px-5" v-if="errorMessage?.length > 0 && !loading"><Icon class="mr-2" icon="exclamation-circle" /> {{ errorMessage }}</p>
-            </Transition>
-            <div class="flex-1 flex min-h-100" v-if="loading">
-              <Spinner class="m-auto text-2xl" />
-            </div>
-            <slot v-else />
-          </div> -->
-
           <slot />
         </div>
       </div>

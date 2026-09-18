@@ -18,7 +18,6 @@ export function usePopup() {
       text: options.text ?? 'Are you sure?',
 
       showCancelButton: true,
-      focusCancel: true,
       confirmButtonText: options.confirmButtonText ?? 'Confirm',
       focusConfirm: true,
     })

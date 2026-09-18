@@ -1,5 +1,5 @@
 <template>
-  <component :is="buttonAs" :type="type" class="relative shrink-0 inline-flex items-center font-medium rounded-md gap-3 transition-all duration-100 outline-none tracking-tight leading-0" :class="[btnClass, sizeClass]" :disabled="disabled" @mouseup="($event.currentTarget as HTMLButtonElement).blur()" @click="$emit('click')">
+  <component :is="buttonAs" :type="type" class="relative shrink-0 inline-flex items-center font-medium rounded-md gap-3 transition-all duration-100 outline-none tracking-tight select-none leading-0" :class="[btnClass, sizeClass]" :disabled="disabled" @mouseup="($event.currentTarget as HTMLButtonElement).blur()" @click="$emit('click')">
     <Spinner class="absolute" v-if="loading" />
 
     <Icon :icon="leftIcon" v-if="leftIcon && leftIcon.length > 0" :class="[loading && 'invisible']" />

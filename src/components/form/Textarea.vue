@@ -12,7 +12,7 @@
     </div>
 
     <!-- Helper Text + Char Count Row -->
-    <div v-if="helper || maxlength" class="flex items-center justify-between gap-1.5">
+    <div v-if="helper || maxlength" class="flex items-center justify-between gap-1.5 mt-1">
       <div v-if="helper" class="flex items-center gap-1.5 text-xs text-info">
         <Icon icon="info-circle" />
         <span>{{ helper }}</span>

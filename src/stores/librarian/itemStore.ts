@@ -36,6 +36,12 @@ export const useItemStore = defineStore('item', {
       this.fetchData = data
     },
 
+    setSearchData(data: Item[]) {
+      console.log(data)
+
+      this.searchData = data
+    },
+
     setCurrentData(data: Item) {
       this.currentData = data
     },
@@ -43,6 +49,11 @@ export const useItemStore = defineStore('item', {
     async fetch() {
       const res = await get('item/get')
       this.setFetchData(res.data?.data)
+    },
+
+    async search(params: {}) {
+      const res = await get('item/search', params)
+      this.setSearchData(res.data.data)
     },
 
     async show(id: any) {

@@ -22,6 +22,7 @@ use App\Http\Controllers\ItemTypeCategoryController;
 use App\Http\Controllers\ItemTypeController;
 use App\Http\Controllers\LandingPage\LandingController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\Librarian\Collections\CatalogController;
 use App\Http\Controllers\Librarian\DashboardController;
 use App\Http\Controllers\LibrarianController;
 use App\Http\Controllers\MediaController;
@@ -249,8 +250,10 @@ Route::group(['prefix' => '/section'], function () {
  *
  *      all while as long as they are on the same campus.
  */
-
-Route::group(['prefix' => '/librarian'], function () {
+Route::group([
+    'prefix' => '/librarian',
+    'middleware' => ['jwt.auth', 'role:admin,librarian'],
+], function () {
     // ============== LIBRARIAN RESOURCE ROUTE ==================
     Route::get('', [LibrarianController::class, 'index'])->middleware('throttle:read');
     Route::post('', [LibrarianController::class, 'store'])->middleware('throttle:write');
@@ -271,8 +274,12 @@ Route::group(['prefix' => '/librarian'], function () {
 
     // ============== COLLECTIONS ROUTE ==================
     Route::group(['prefix' => '/collections'], function () {
+        Route::group(['prefix' => '/catalog'], function () {
+            Route::get('', [CatalogController::class, 'index']);
+            Route::get('search', [CatalogController::class, 'search']);
+
+        });
         // Get
-        Route::get('', [AcquisitionController::class, 'index']);
 
         // Post
 
@@ -326,7 +333,7 @@ Route::group(['prefix' => '/librarian'], function () {
         // Delete
     });
 
-})->middleware('jwt.auth', 'role:admin,librarian');
+});
 
 Route::group(['prefix' => '/patron'], function () {
     Route::get('', [PatronController::class, 'index'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');

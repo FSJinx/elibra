@@ -73,8 +73,13 @@ api.interceptors.response.use(
     //   pop.error(response?.message)
     // }
 
+    if (status === 404) {
+      // pop.unload()
+      pop.error(response?.message)
+    }
+
     if (status === 422) {
-      pop.unload()
+      // pop.unload()
 
       const errors = response.errors
       const firstErrorMessage = Object.values(errors as object)[0][0]
