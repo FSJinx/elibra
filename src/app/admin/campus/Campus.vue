@@ -5,6 +5,7 @@
     <div class="flex-1 flex flex-col gap-3 p-5">
       <div class="flex items-center justify-end gap-2">
         <Input id="search-campus" class="max-w-100" placeholder="Search by campus name" />
+        <Button @click="campus.fetch()">Refresh</Button>
         <AddNewCampusModal />
       </div>
       <Table title="Campus Table" subtitle="List of campuses in ISU">

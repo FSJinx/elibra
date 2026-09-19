@@ -47,10 +47,8 @@ export const useCampusStore = defineStore('campus', {
     },
 
     async create(params: Partial<Campus>) {
-      this.pop.load()
       const res = await post('campus', params)
       this.pushData(res.data)
-      this.pop.success(res.message)
 
       return res
     },

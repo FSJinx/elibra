@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col size-full">
+  <div class="flex flex-col size-full overflow-hidden">
     <SectionHeader title="Branch" description="Manage branches of the Isabela State University" icon="buildings" />
 
     <div class="flex-1 flex flex-col gap-3 p-5">
@@ -44,6 +44,7 @@ import AddNewBranch from '@/app/admin/branch/modals/AddNewBranch.vue'
 const branch = useBranchStore()
 const parse = useParser()
 const pop = usePopup()
+const filters = reactive({})
 
 async function remove(c: Branch) {
   const res = await pop.confirm({ text: `Are you sure you want to delete ${c?.name}?` })

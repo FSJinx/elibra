@@ -47,7 +47,7 @@ const heading = computed(() => {
   if (auth.user?.campus) {
     if (auth.user?.role === 'librarian' || auth.user?.role === 'admin') {
       campus.value = auth.user?.campus?.name
-    } else if (auth.user?.role === 'super admin') {
+    } else if (auth.user?.role === 'super_admin') {
       campus.value = 'Global'
     }
   } else {
