@@ -19,7 +19,7 @@
         <Label id="book-item_type_category_id" required>Category</Label>
         <Select id="book-item_type_category_id" class="capitalize" v-model="form.item_type_category_id" :error="errors.item_type_category_id?.[0]" required>
           <Option value="" disabled>Select a category</Option>
-          <Option class="capitalize" :value="category.id" v-for="category in categories">{{ category.name }}</Option>
+          <Option class="capitalize" :value="category.id" v-for="category in categories.byItemType(item_type_id)">{{ category.name }}</Option>
         </Select>
       </Control>
 
@@ -42,7 +42,7 @@ interface Props {
 }
 
 const { languages } = useLanguagesStore()
-const { item_categories } = useItemCategoriesStore()
+const categories = useItemCategoriesStore()
 const { branches } = useBranchStore()
 const auth = authStore()
 
@@ -50,12 +50,8 @@ const props = defineProps<Props>()
 
 // Computed
 const branchOptions = computed(() => branches.filter((i) => i.campus_id === auth.user?.campus_id))
-const categories = computed(() =>
-  item_categories.filter((i) => i.item_type_id === props.item_type_id),
-)
 
 const form = defineModel<ClassficationField>({ default: {} })
-
 </script>
 
 <style scoped>

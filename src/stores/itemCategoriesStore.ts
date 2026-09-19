@@ -20,63 +20,65 @@ const defaultParams: Readonly<ItemCategoryParams> = {
   order: 'asc',
 }
 
-export const useItemCategoriesStore = defineStore('item_categories', () => {
-  const item_categories = ref<ItemCategory[]>([])
-  const currentItemCategory = ref<ItemCategory | null>(null)
-  const loading = ref<boolean>(false)
-  const params = reactive<ItemCategoryParams>({ ...defaultParams })
+const paramsWatchers = new WeakSet<object>()
 
-  function setItemCategories(data: ItemCategory[]) {
-    item_categories.value = data
-  }
+export const useItemCategoriesStore = defineStore('item_categories', {
+  state: () => ({
+    categories: [] as ItemCategory[],
+    currentItemCategory: null as ItemCategory | null,
+    loading: false,
+    params: { ...defaultParams } as ItemCategoryParams,
+  }),
 
-  function setCurrentItemCategory(data: ItemCategory | null) {
-    currentItemCategory.value = data
-  }
+  getters: {
+    byItemType() {
+      return (item_id: any) => this.categories.filter((i) => item_id === i.item_type_id)
+    },
+  },
 
-  function setLoading(status: boolean) {
-    loading.value = status
-  }
+  actions: {
+    setItemCategories(data: ItemCategory[]) {
+      this.categories = data
+    },
 
-  async function fetch(forced = false) {
-    if (!forced && item_categories.value.length) return item_categories.value
+    setCurrentItemCategory(data: ItemCategory | null) {
+      this.currentItemCategory = data
+    },
 
-    setLoading(true)
+    setLoading(status: boolean) {
+      this.loading = status
+    },
 
-    try {
-      const response = await get('item_type_category', { params: { ...params } })
-      const data = response.data
+    async fetch(forced = false) {
+      if (!paramsWatchers.has(this)) {
+        paramsWatchers.add(this)
+        watchDebounced(
+          () => ({ ...this.params }),
+          () => this.fetch(true),
+        )
+      }
 
-      setItemCategories(data)
-      return data
-    } catch (error) {
-      console.error('Error fetching item categories:', error)
-      return []
-    } finally {
-      setLoading(false)
-    }
-  }
+      if (!forced && this.categories.length) return this.categories
 
-  async function refresh() {
-    Object.assign(params, defaultParams)
-    return fetch(true)
-  }
+      this.setLoading(true)
 
-  watchDebounced(
-    () => ({ ...params }),
-    () => fetch(true),
-  )
+      try {
+        const response = await get('item_type_category', { params: { ...this.params } })
+        const data = response.data
 
-  return {
-    item_categories,
-    currentItemCategory,
-    loading,
-    params,
+        this.setItemCategories(data)
+        return data
+      } catch (error) {
+        console.error('Error fetching item categories:', error)
+        return []
+      } finally {
+        this.setLoading(false)
+      }
+    },
 
-    setItemCategories,
-    setCurrentItemCategory,
-    setLoading,
-    fetch,
-    refresh,
-  }
+    async refresh() {
+      Object.assign(this.params, defaultParams)
+      return this.fetch(true)
+    },
+  },
 })

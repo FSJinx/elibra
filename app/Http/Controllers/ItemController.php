@@ -52,11 +52,13 @@ class ItemController extends Controller
                 return $query->paginate(
                     $filters['per_page'],
                     [
-                        'id',
-                        'title',
-                        'subtitle',
-                        'call_number',
-                        'publication_year',
+                        // 'id',
+                        // 'title',
+                        // 'subtitle',
+                        // 'call_number',
+                        // 'publication_year',
+                        // 'item_type_id',
+                        '*',
                     ],
                     'page',
                     $filters['page']

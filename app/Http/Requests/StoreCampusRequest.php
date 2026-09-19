@@ -25,7 +25,7 @@ class StoreCampusRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', Rule::unique('campuses', 'name')],
             'code' => ['required', 'string', 'max:10', Rule::unique('campuses', 'code')],
             'address' => ['required', 'string', 'max:255'],
         ];
@@ -40,9 +40,12 @@ class StoreCampusRequest extends BaseRequest
     {
         return [
             'name.required' => 'Name is required',
+            'name.unique' => 'Name already exist in the record.',
+            
             'code.required' => 'Code is required',
-            'code.unique' => 'Code must be unique',
+            'code.unique' => 'Code already exist in the record',
             'code.max' => 'Code must not exceed 10 characters',
+
             'address.required' => 'Address is required',
         ];
     }

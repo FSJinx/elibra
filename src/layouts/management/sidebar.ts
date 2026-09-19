@@ -8,6 +8,22 @@ const librarianMenu = {
     },
   },
 
+  collections: {
+    name: 'Collections',
+    children: {
+      catalog: { path: 'librarian.collections.catalog', name: 'Catalog', icon: 'journal-plus' },
+      inventory: { path: 'librarian.collections.inventory', name: 'Inventory', icon: 'boxes' },
+    },
+  },
+
+  acquisition: {
+    name: 'Acquisitions',
+    children: {
+      acquisition: { path: 'librarian.acquisition', name: 'Acquisition', icon: 'receipt' },
+      acquisition_request: { path: 'librarian.acquisition-requests', name: 'Acquisition Request', icon: 'box-arrow-in-down' },
+    },
+  },
+
   circulation: {
     name: 'Circulation',
     children: {
@@ -20,14 +36,6 @@ const librarianMenu = {
     },
   },
 
-  collections: {
-    name: 'Collections',
-    children: {
-      catalog: { path: 'librarian.collections.catalog', name: 'Catalog', icon: 'journal-plus' },
-      inventory: { path: 'librarian.collections.inventory', name: 'Inventory', icon: 'boxes' },
-    },
-  },
-
   // patron: {
   //   name: 'Patrons',
   //   children: {
@@ -37,14 +45,6 @@ const librarianMenu = {
   //     borrowing_history: { path: 'librarian.borrowing-history', name: 'Borrowing History', icon: 'clock-history' },
   //   },
   // },
-
-  acquisition: {
-    name: 'Acquisitions',
-    children: {
-      acquisition: { path: 'librarian.acquisition', name: 'Acquisition', icon: 'receipt' },
-      acquisition_request: { path: 'librarian.acquisition-requests', name: 'Acquisition Request', icon: 'box-arrow-in-down' },
-    },
-  },
 
   // serials: {
   //   name: 'Serials',
@@ -103,6 +103,7 @@ export const menus = {
       children: [
         { path: 'admin.subscriptions', name: 'Subscriptions', icon: 'globe' },
         { path: 'admin.campus', name: 'Campus', icon: 'buildings' },
+        { path: 'admin.branch', name: 'Branch', icon: 'building' },
         { path: 'admin.users', name: 'Users', icon: 'people' },
       ],
     },

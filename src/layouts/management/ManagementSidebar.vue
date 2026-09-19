@@ -15,9 +15,9 @@
         </router-link>
 
         <!-- Navigation Menu -->
-        <nav class="flex-1 overflow-y-auto px-2 py-2 space-y-2 divide-y divide-border scrollbar-thin scrollbar-thumb-transparent hover:scrollbar-thumb-foreground/20 transition-all duration-200">
+        <nav class="flex-1 overflow-y-auto px-3 py-2 space-y-2 divide-y divide-border scrollbar-thin scrollbar-thumb-transparent hover:scrollbar-thumb-foreground/20 transition-all duration-200">
           <div v-for="menu in filteredMenus" :key="menu.name" class="space-y-2 py-2">
-            <h2 class="px-3 text-sm font-semibold uppercase tracking-wider text-foreground">
+            <h2 class="text-sm font-semibold uppercase tracking-wider text-foreground">
               {{ menu.name }}
             </h2>
 
@@ -57,7 +57,7 @@
               {{ auth.getFullName || 'User' }}
             </span>
             <span class="text-foreground-secondary truncate text-xs">
-              {{ parse.toCapital(auth.user?.role || 'Guest') }}
+              {{ auth.displayRole }}
               <template v-if="auth.user?.username">• @{{ auth.user.username }}</template>
             </span>
           </div>

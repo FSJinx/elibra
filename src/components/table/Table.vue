@@ -13,7 +13,7 @@
     </div>
 
     <!-- Table Body -->
-    <div class="relative flex-1 shrink-0 overflow-y-auto scrollbar-none bg-background">
+    <div class="relative flex-1 shrink-0 overflow-y-auto bg-background">
       <table class="relative w-full text-left table-auto text-[12.5px] border-collapse">
         <slot />
       </table>

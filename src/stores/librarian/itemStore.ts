@@ -2,6 +2,17 @@ interface Item {
   id: any
   title: string
   subtitle?: string
+  description: string
+  call_number: string
+  publication_year: string
+  keywords: string
+  electronic_file: string
+
+  item_type_id: any
+  item_type_category_id: any
+  branch_id: any
+  language_id: any
+  
   [key: string]: any
 }
 
@@ -25,6 +36,12 @@ export const useItemStore = defineStore('item', {
       this.fetchData = data
     },
 
+    setSearchData(data: Item[]) {
+      console.log(data)
+
+      this.searchData = data
+    },
+
     setCurrentData(data: Item) {
       this.currentData = data
     },
@@ -32,6 +49,11 @@ export const useItemStore = defineStore('item', {
     async fetch() {
       const res = await get('item/get')
       this.setFetchData(res.data?.data)
+    },
+
+    async search(params: {}) {
+      const res = await get('item/search', params)
+      this.setSearchData(res.data.data)
     },
 
     async show(id: any) {

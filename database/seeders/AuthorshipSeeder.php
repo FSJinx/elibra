@@ -13,7 +13,6 @@ class AuthorshipSeeder extends Seeder
         [
             'itemType' => 'book',
             'authorship' => [
-                
                 'Author',
                 'Co-author',
                 'Editor',
@@ -30,18 +29,10 @@ class AuthorshipSeeder extends Seeder
         [
             'itemType' => 'academic',
             'authorship' => [
-                'Researcher',
-                'Lead Researcher',
-                'Co-researcher',
                 'Adviser',
-                'Sub-adviser',
-                'Principal Investigator',
-                'Co-investigator',
-                'Thesis Author',
-                'Dissertation Author',
-                'Editor',
-                'Reviewer',
-                'Consultant',
+                'Co-adviser',
+                'Lead Researcher',
+                'Researcher',
             ],
         ],
 

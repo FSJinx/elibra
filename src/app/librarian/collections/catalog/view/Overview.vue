@@ -1,253 +1,109 @@
 <template>
-  <form class="flex flex-col gap-5 p-5 w-full max-w-7xl mx-auto" @submit.prevent="save">
-    <div v-if="loading" class="rounded-lg border border-border bg-muted/40 px-4 py-3 text-sm text-foreground-secondary" role="status">Loading item information...</div>
-
-    <div v-else-if="error" class="rounded-lg border border-danger/30 bg-danger/5 px-4 py-3 text-sm text-danger" role="alert">
-      {{ error }}
-    </div>
-
-    <!-- Basic Information -->
-    <section class="overflow-hidden rounded-xl border border-border bg-background">
-      <div class="border-b border-border px-5 py-4">
-        <h2 class="text-xl font-semibold text-foreground">Basic Information</h2>
-
-        <p class="mt-0.5 text-sm text-foreground-secondary">Bibliographic information for this catalog record.</p>
+  <div class="flex flex-col w-full max-w-7xl mx-auto gap-5">
+    <Card class="flex items-start justify-between gap-5 p-6!">
+      <div class="">
+        <Title :level="1">{{ item?.title }}</Title>
+        <p class="text-muted-foreground text-sm">
+          <span class="italic">{{ item?.subtitle }}</span>
+          <span class="italic" v-if="item?.subtitle && item.publication_year"> • </span>
+          <span>{{ item?.publication_year }}</span>
+        </p>
       </div>
 
-      <div class="divide-y divide-border">
-        <!-- Title -->
-        <div class="grid grid-cols-1 gap-3 px-5 py-5 lg:grid-cols-[12rem_1fr] lg:items-center">
-          <label for="title" class="text-sm font-semibold text-foreground"> Title </label>
-
-          <Input id="title" v-model="form.title" placeholder="Enter the title" />
-        </div>
-
-        <!-- Subtitle -->
-        <div class="grid grid-cols-1 gap-3 px-5 py-5 lg:grid-cols-[12rem_1fr] lg:items-center">
-          <label for="subtitle" class="text-sm font-semibold text-foreground"> Subtitle </label>
-
-          <Input id="subtitle" v-model="form.subtitle" placeholder="Enter the subtitle" enable-clear />
-        </div>
-
-        <!-- Description -->
-        <div class="grid grid-cols-1 gap-3 px-5 py-5 lg:grid-cols-[12rem_1fr] lg:items-start">
-          <div>
-            <label for="description" class="text-sm font-semibold text-foreground"> Description </label>
-
-            <p class="mt-1 text-xs leading-relaxed text-foreground-secondary">A brief description displayed on the catalog record.</p>
-          </div>
-
-          <textarea id="description" v-model="form.description" rows="6" placeholder="Enter a description..." class="w-full resize-y rounded-lg border border-border bg-background px-3 py-2.5 text-sm text-foreground outline-none transition placeholder:text-foreground-secondary/60 focus:border-primary focus:ring-2 focus:ring-primary/10" />
-        </div>
-
-        <!-- Call Number -->
-        <div class="grid grid-cols-1 gap-3 px-5 py-5 lg:grid-cols-[12rem_1fr] lg:items-center">
-          <label for="call-number" class="text-sm font-semibold text-foreground"> Call Number </label>
-
-          <Input id="call-number" v-model="form.call_number" placeholder="e.g. QA76.76.C672" class="max-w-md" />
-        </div>
-
-        <!-- Publication Year -->
-        <div class="grid grid-cols-1 gap-3 px-5 py-5 lg:grid-cols-[12rem_1fr] lg:items-center">
-          <label for="publication-year" class="text-sm font-semibold text-foreground"> Publication Year </label>
-
-          <Input id="publication-year" v-model="form.publication_year" type="number" placeholder="e.g. 2008" class="max-w-40" />
-        </div>
+      <div class="flex justify-end gap-2">
+        <Button left-icon="pencil-square">Edit</Button>
       </div>
-    </section>
+    </Card>
 
-    <!-- Classification -->
-    <section class="overflow-hidden rounded-xl border border-border bg-background">
-      <div class="border-b border-border px-5 py-4">
-        <h2 class="text-sm font-semibold text-foreground">Classification</h2>
+    <Card>
+      <Title :level="2" class="text-primary mb-5">Basic Information</Title>
 
-        <p class="mt-0.5 text-xs text-foreground-secondary">Classification and ownership information for this record.</p>
+      <div class="grid grid-cols-2 gap-5">
+        <Control direction="col">
+          <label for="">Title</label>
+          <p>{{ item?.title }}</p>
+        </Control>
+        <Control direction="col">
+          <label for="">Subtitle</label>
+          <p>{{ item?.title }}</p>
+        </Control>
+        <Control direction="col">
+          <label for="">Call Number</label>
+          <p>{{ item?.call_number }}</p>
+        </Control>
+        <Control direction="col">
+          <label for="">Year of Publication</label>
+          <p>{{ item?.publication_year }}</p>
+        </Control>
+        <Control direction="col" class="col-span-2">
+          <label for="">Description</label>
+          <p>{{ item?.title }}</p>
+        </Control>
       </div>
+    </Card>
 
-      <div class="divide-y divide-border">
-        <!-- Item Type -->
-        <div class="grid grid-cols-1 gap-3 px-5 py-5 lg:grid-cols-[12rem_1fr] lg:items-center">
-          <label class="text-sm font-semibold text-foreground"> Item Type </label>
+    <Card>
+      <Title :level="2" class="text-primary mb-5">Classification</Title>
 
-          <Select id="item_type" v-model="form.item_type_id" class="max-w-md">
-            <Option v-for="type in item_types" :value="type.id">{{ type.name }}</Option>
-          </Select>
-        </div>
-
-        <!-- Category -->
-        <div class="grid grid-cols-1 gap-3 px-5 py-5 lg:grid-cols-[12rem_1fr] lg:items-center">
-          <label class="text-sm font-semibold text-foreground"> Category </label>
-
-          <Select id="category" v-model="form.item_type_category_id" class="max-w-md">
-            <Option v-for="category in item_categories" :value="category.id">{{ category.name }}</Option>
-          </Select>
-        </div>
-
-        <!-- Branch -->
-        <div class="grid grid-cols-1 gap-3 px-5 py-5 lg:grid-cols-[12rem_1fr] lg:items-center">
-          <label class="text-sm font-semibold text-foreground"> Branch </label>
-
-          <Select id="branch" v-model="form.branch_id" class="max-w-md">
-            <Option v-for="branch in branches" :value="branch.id">{{ branch.name }}</Option>
-          </Select>
-        </div>
-
-        <!-- Language -->
-        <div class="grid grid-cols-1 gap-3 px-5 py-5 lg:grid-cols-[12rem_1fr] lg:items-center">
-          <label class="text-sm font-semibold text-foreground"> Language </label>
-
-          <Select id="language" v-model="form.language_id" class="max-w-md">
-            <Option v-for="language in languages" :value="language.id">{{ language.name }}</Option>
-          </Select>
-        </div>
+      <div class="grid grid-cols-2 gap-5">
+        <Control direction="col">
+          <label for="">Item type</label>
+          <p>{{ item?.item_type?.name }}</p>
+        </Control>
+        <Control direction="col">
+          <label for="">Category</label>
+          <p>{{ item?.item_type_category?.name }}</p>
+        </Control>
+        <Control direction="col">
+          <label for="">Language</label>
+          <p>{{ item?.language?.name }}</p>
+        </Control>
+        <Control direction="col">
+          <label for="">General Location</label>
+          <p>{{ item?.branch?.name }}</p>
+        </Control>
       </div>
-    </section>
+    </Card>
 
-    <!-- Additional Information -->
-    <section class="overflow-hidden rounded-xl border border-border bg-background">
-      <div class="border-b border-border px-5 py-4">
-        <h2 class="text-sm font-semibold text-foreground">Additional Information</h2>
+    <Card v-if="item?.item_type?.slug === 'academic'">
+      <Title :level="2" class="text-primary mb-5">Academic Information</Title>
 
-        <p class="mt-0.5 text-xs text-foreground-secondary">Search and digital resource information.</p>
+      <div class="grid grid-cols-2 gap-5">
+        spre
+        <Control direction="col">
+          <label for="">DOI</label>
+          <p>
+            <template v-if="item?.academic?.doi">
+              <a :href="item?.academic?.doi" class="hover:text-primary underline">{{ item?.academic?.doi }}</a>
+            </template>
+            <template v-else>
+              <span>Null</span>
+            </template>
+          </p>
+        </Control>
+        <Control direction="col">
+          <label for="">Related Department</label>
+          <p>{{ item?.department?.name ?? 'None' }}</p>
+        </Control>
       </div>
-
-      <div class="divide-y divide-border">
-        <!-- Keywords -->
-        <div class="grid grid-cols-1 gap-3 px-5 py-5 lg:grid-cols-[12rem_1fr] lg:items-start">
-          <div>
-            <label for="keywords" class="text-sm font-semibold text-foreground"> Keywords </label>
-
-            <p class="mt-1 text-xs text-foreground-secondary">Terms used when searching the catalog.</p>
-          </div>
-
-          <div class="flex items-start flex-wrap gap-2">
-            <Chip v-for="keyword in form.keywords">{{ keyword }}</Chip>
-          </div>
-          <!-- <textarea id="keywords" v-model="form.keywords" rows="3" placeholder="e.g. programming, software engineering, clean code" class="w-full resize-y rounded-lg border border-border bg-background px-3 py-2.5 text-sm text-foreground outline-none transition placeholder:text-foreground-secondary/60 focus:border-primary focus:ring-2 focus:ring-primary/10" /> -->
-        </div>
-
-        <!-- Electronic File -->
-        <div class="grid grid-cols-1 gap-3 px-5 py-5 lg:grid-cols-[12rem_1fr] lg:items-center">
-          <div>
-            <p class="text-sm font-semibold text-foreground">Electronic File</p>
-
-            <p class="mt-1 text-xs text-foreground-secondary">Optional digital copy associated with this record.</p>
-          </div>
-
-          <div class="flex items-center gap-3">
-            <div v-if="form.electronic_file" class="flex min-w-0 items-center gap-3 rounded-lg border border-border bg-muted/50 px-3 py-2">
-              <Icon icon="file-earmark" class="shrink-0 text-foreground-secondary" />
-
-              <span class="truncate text-sm font-medium">
-                {{ form.electronic_file }}
-              </span>
-            </div>
-
-            <Button type="button" variant="default" left-icon="upload">
-              {{ form.electronic_file ? 'Replace' : 'Upload' }}
-            </Button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Form Actions -->
-    <div class="sticky bottom-0 z-10 flex items-center justify-end gap-2 rounded-b-xl border border-border bg-background/95 px-5 py-4 backdrop-blur">
-      <Button type="button" variant="default" @click="reset"> Cancel </Button>
-
-      <Button type="submit" variant="primary" left-icon="check-lg"> Update Item </Button>
-    </div>
-  </form>
+    </Card>
+  </div>
 </template>
 
 <script setup lang="ts">
-interface CatalogForm {
-  title: string
-  subtitle: string
-  description: string
-  call_number: string
-  publication_year: number | null
-  electronic_file: string | null
-  keywords: string
-  item_type_id: number | string | null
-  item_type_category_id: number | string | null
-  branch_id: number | string | null
-  language_id: number | string | null
-}
-
-const route = useRoute()
-const loading = ref(false)
-const error = ref('')
-const { item_categories } = useItemCategoriesStore()
-const { item_types } = useItemTypeStore()
-const { branches } = useBranchStore()
-const { languages } = useLanguagesStore()
-const item = useItemStore()
-
-const form = reactive<CatalogForm>({
-  title: '',
-  subtitle: '',
-  description: '',
-  call_number: '',
-  publication_year: null,
-  electronic_file: null,
-  keywords: '',
-  item_type_id: null,
-  item_type_category_id: null,
-  branch_id: null,
-  language_id: null,
-})
-
-function save() {
-  // API update
-}
-
-function reset() {
-  // Restore original item values
-}
-
-async function fetchItem() {
-  const itemId = route.params.id
-
-  if (!itemId) {
-    error.value = 'The item ID is missing from the route.'
-    return
-  }
-
-  loading.value = true
-  error.value = ''
-
-  try {
-    const response = await api.get(`item/get/${itemId}`)
-    const item = response.data?.data
-
-    if (!item) {
-      throw new Error('The item could not be found.')
-    }
-
-    Object.assign(form, {
-      title: item.title ?? '',
-      subtitle: item.subtitle ?? '',
-      description: item.description ?? '',
-      call_number: item.call_number ?? '',
-      publication_year: item.publication_year ?? null,
-      electronic_file: item.electronic_file ?? null,
-      keywords: item.keywords,
-      item_type_id: item.item_type_id ?? null,
-      item_type_category_id: item.item_type_category_id ?? null,
-      branch_id: item.branch_id ?? null,
-      language_id: item.language_id ?? null,
-    })
-  } catch (fetchError: any) {
-    error.value = fetchError.response?.data?.message ?? fetchError.message ?? 'Unable to load item information.'
-  } finally {
-    loading.value = false
-  }
-}
-
-// watch(() => route.params.id, fetchItem, { immediate: true })
-
-onMounted(() => {
-  Object.assign(form, item.currentData)
-})
+const item = useItemStore().currentData
 </script>
+
+<style scoped>
+label {
+  color: var(--color-muted-foreground);
+  font-size: smaller;
+  font-weight: 500;
+  /* letter-spacing: 0.015rem; */
+  text-transform: uppercase;
+}
+
+.control p {
+  font-weight: 500;
+}
+</style>

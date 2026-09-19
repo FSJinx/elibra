@@ -4,34 +4,40 @@ export function useParser() {
       return text ? text?.charAt(0).toUpperCase() + text.slice(1) : ''
     },
 
-    status(status: string | null) {
+    status(s: string | null) {
       const stats: Record<string, Variants> = {
         // ====== SUCCESS =======
+        success: 'success',
         available: 'success',
         active: 'success',
         admin: 'success',
 
         // ====== INFO =======
+        info: 'info',
         librarian: 'info',
         reserved: 'info',
         book: 'info',
 
         // ====== WARNING =======
+        warning: 'warning',
         serial: 'warning',
 
         // ====== ERROR =======
+        danger: 'danger',
         inactive: 'danger',
         borrowed: 'danger',
 
         // ====== RESTORE =======
+        restore: 'restore',
         patron: 'restore',
         academic: 'restore',
         super_admin: 'restore',
 
+        // ====== DEFAULT =======
         default: 'default',
       }
 
-      return status ? stats[status ?? 'default'] : 'default'
+      return stats[s ? s : 'default']
     },
 
     formatDate(dateString?: string | null) {

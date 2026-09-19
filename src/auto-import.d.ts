@@ -380,7 +380,10 @@ declare global {
   export type { Author } from './stores/authorStore'
   import('./stores/authorStore')
   // @ts-ignore
-  export type { Campus, CampusParams } from './stores/campusStore'
+  export type { Branch } from './stores/branchStore'
+  import('./stores/branchStore')
+  // @ts-ignore
+  export type { Campus } from './stores/campusStore'
   import('./stores/campusStore')
   // @ts-ignore
   export type { Accession } from './stores/librarian/accessionStore'
@@ -391,6 +394,9 @@ declare global {
   // @ts-ignore
   export type { Acquisition } from './stores/librarian/acquisitionStore'
   import('./stores/librarian/acquisitionStore')
+  // @ts-ignore
+  export type { BaseParams } from './services/params'
+  import('./services/params')
 }
 
 // for vue template auto import
