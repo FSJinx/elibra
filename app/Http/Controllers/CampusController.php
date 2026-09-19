@@ -229,6 +229,7 @@ class CampusController extends Controller
         DB::beginTransaction();
 
         try {
+            $campus->update([ 'status' => 'inactive' ]);
 
             $campus->delete();
 
