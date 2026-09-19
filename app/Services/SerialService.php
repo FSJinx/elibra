@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Jobs\IndexCatalogItemJob;
 use App\Jobs\RemoveCatalogIndexJob;
 use App\Models\Item;
+use App\Models\Media;
 use App\Models\Serial;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
@@ -13,6 +14,10 @@ use Illuminate\Support\Facades\Storage;
 
 class SerialService
 {
+    public function __construct(private MediaService $mediaService)
+    {
+    }
+
 
     public function index(array $filters)
     {
@@ -23,7 +28,7 @@ class SerialService
             function () use ($filters) {
 
                 $query = Serial::query()
-                    ->with('item');
+                    ->with('item.coverMedia');
 
                 if ($filters['search'] !== '') {
                     $search = $filters['search'];
@@ -97,6 +102,11 @@ class SerialService
                 ])
             );
 
+            if (($data['cover_image'] ?? null) instanceof UploadedFile) {
+                $media = $this->mediaService->store($data['cover_image'], Media::ITEM_COVER);
+                $item->update(['cover_media_id' => $media->id]);
+            }
+
             $serial = $item->serial()->create(
                 arr::only($data, [
                     'isbn_issn',
@@ -119,6 +129,7 @@ class SerialService
 
         return $serial->load([
             'item',
+            'item.coverMedia',
             'item.authors'
         ]);
     }
@@ -149,6 +160,8 @@ class SerialService
                 ])
             );
 
+            $this->saveCoverImage($serial->item, $data);
+
             $serial->update(
                 arr::only($data, [
                     'isbn_issn',
@@ -167,6 +180,7 @@ class SerialService
                 
             return $serial->fresh([
                 'item',
+                'item.coverMedia',
                 'item.authors',
             ]);
         });
@@ -186,9 +200,14 @@ class SerialService
     {
         $deleted = DB::transaction(function () use ($serial){
             $item = $serial->item;
+            $coverMedia = $item->coverMedia;
 
             $serial->delete();
             $item->delete();
+
+            if ($coverMedia) {
+                $this->mediaService->delete($coverMedia);
+            }
 
             RemoveCatalogIndexJob::dispatch($item->id)
                 ->afterCommit();
@@ -202,6 +221,23 @@ class SerialService
         }
 
         return $deleted;
+    }
+
+    private function saveCoverImage(Item $item, array $data): void
+    {
+        if (! ($data['cover_image'] ?? null) instanceof UploadedFile) {
+            return;
+        }
+
+        $coverMedia = $item->coverMedia;
+
+        if ($coverMedia) {
+            $this->mediaService->replaceFile($coverMedia, $data['cover_image']);
+            return;
+        }
+
+        $media = $this->mediaService->store($data['cover_image'], Media::ITEM_COVER);
+        $item->update(['cover_media_id' => $media->id]);
     }
 
     private function saveElectronicFile(array &$data): bool

@@ -22,9 +22,9 @@ class Media extends Model
     public const LOGO = 'logo'; // for logo's (campus, branch logo)
     public const SUBSCRIPTION = 'subscription'; // for subscription images (e.g. ebsco, proquest, etc.)
     public const BOOK_COVER = 'book_cover'; // book cover, pwede na alisin wala namang book cover
+    public const ITEM_COVER = 'item_cover'; // cover image for books, academics, or serials
     public const DOCUMENT = 'document'; // document (scanned documents)
     public const BANNER = 'banner'; // banner? ewan need feedback
     public const OTHER = 'other'; 
-    
 
 }

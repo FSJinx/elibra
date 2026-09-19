@@ -20,7 +20,7 @@ class ItemService
             now()->addMinutes(10),
             function () use ($filters, $user) {
 
-                $query = Item::query();
+                $query = Item::query()->with('coverMedia');
                 $search = $filters['search'];
                 $sort = $filters['sort'];
                 $order = $filters['order'];

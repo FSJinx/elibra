@@ -7,6 +7,7 @@ use App\Jobs\RemoveCatalogIndexJob;
 use App\Models\Book;
 use App\Models\Item;
 use App\Models\Language;
+use App\Models\Media;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +16,10 @@ use Illuminate\Support\Str;
 
 class BookService
 {
+    public function __construct(private MediaService $mediaService)
+    {
+    }
+
     public function index(array $filters)
     {
         return CacheService::remember(
@@ -24,7 +29,7 @@ class BookService
             function () use ($filters) {
 
                 $query = Book::query()
-                    ->with('item');
+                    ->with('item.coverMedia');
 
                 if ($filters['search'] !== '') {
                     $search = $filters['search'];
@@ -105,6 +110,11 @@ class BookService
                 ])
             );
 
+            if (($data['cover_image'] ?? null) instanceof UploadedFile) {
+                $media = $this->mediaService->store($data['cover_image'], Media::ITEM_COVER);
+                $item->update(['cover_media_id' => $media->id]);
+            }
+
             $book = $item->book()->create(
                 Arr::only($data, [
                     'edition',
@@ -125,6 +135,7 @@ class BookService
 
         return $book->load([
             'item',
+            'item.coverMedia',
             'item.authors',
         ]);
     }
@@ -157,6 +168,8 @@ class BookService
                 ])
             );
 
+            $this->saveCoverImage($book->item, $data);
+
             $book->update(
                 Arr::only($data, [
                     'edition',
@@ -175,6 +188,7 @@ class BookService
             // Refresh the book model to get the latest data from the database
             return $book->fresh([
                 'item',
+                'item.coverMedia',
                 'item.authors',
             ]);
         });
@@ -197,9 +211,14 @@ class BookService
     {
         $deleted = DB::transaction(function () use ($book) {
             $item = $book->item;
+            $coverMedia = $item->coverMedia;
 
             $book->delete();
             $item->delete();
+
+            if ($coverMedia) {
+                $this->mediaService->delete($coverMedia);
+            }
 
             RemoveCatalogIndexJob::dispatch($item->id)
                 ->afterCommit();
@@ -213,6 +232,23 @@ class BookService
         }
 
         return $deleted;
+    }
+
+    private function saveCoverImage(Item $item, array $data): void
+    {
+        if (! ($data['cover_image'] ?? null) instanceof UploadedFile) {
+            return;
+        }
+
+        $coverMedia = $item->coverMedia;
+
+        if ($coverMedia) {
+            $this->mediaService->replaceFile($coverMedia, $data['cover_image']);
+            return;
+        }
+
+        $media = $this->mediaService->store($data['cover_image'], Media::ITEM_COVER);
+        $item->update(['cover_media_id' => $media->id]);
     }
 
     private function saveElectronicFile(array &$data): bool
