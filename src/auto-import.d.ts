@@ -380,6 +380,9 @@ declare global {
   export type { Author } from './stores/authorStore'
   import('./stores/authorStore')
   // @ts-ignore
+  export type { Branch } from './stores/branchStore'
+  import('./stores/branchStore')
+  // @ts-ignore
   export type { Campus } from './stores/campusStore'
   import('./stores/campusStore')
   // @ts-ignore

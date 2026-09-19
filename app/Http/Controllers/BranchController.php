@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Branch;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreBranchRequest;
 use App\Http\Requests\UpdateBranchRequest;
+use App\Models\Branch;
 use App\Services\CacheService;
 use App\Services\QueryService;
 use Illuminate\Http\Request;
@@ -32,7 +31,7 @@ class BranchController extends Controller
         $campusId = null;
         $isGuest = is_null($user);
 
-        if ($user && !$user->isSuperAdmin()) {
+        if ($user && ! $user->isSuperAdmin()) {
             $campusId = $user->campus_id;
         } elseif ($user && $request->filled('campus_id')) {
             $campusId = $request->campus_id;
@@ -61,21 +60,21 @@ class BranchController extends Controller
                 $query = Branch::query();
 
                 // Admin: only branches from their campus
-                if (!is_null($campusId)) {
+                if (! is_null($campusId)) {
                     $query->where('campus_id', $campusId);
                 } elseif ($isGuest) {
-                    
-                        $query->select([
-                            'id',
-                            'name',
-                            'contact_info',
-                            'email',
-                            'opening_hour',
-                            'closing_hour',
-                            'logo_id',
-                            'branch_head_id',
-                            'campus_id',
-                        ]);
+
+                    $query->select([
+                        'id',
+                        'name',
+                        'contact_info',
+                        'email',
+                        'opening_hour',
+                        'closing_hour',
+                        'logo_id',
+                        'branch_head_id',
+                        'campus_id',
+                    ]);
 
                 }
 
@@ -89,7 +88,7 @@ class BranchController extends Controller
                 }
 
                 // Sort
-                if (is_array($sort) && !empty($sort)) {
+                if (is_array($sort) && ! empty($sort)) {
                     foreach ($sort as $field) {
                         if (in_array($field, $allowedSortFields, true)) {
                             $query->orderBy(
@@ -113,6 +112,7 @@ class BranchController extends Controller
             200
         );
     }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -140,15 +140,15 @@ class BranchController extends Controller
                 201
             );
 
-        } catch(Throwable $e) {
+        } catch (Throwable $e) {
             DB::rollBack();
 
             throw $e;
         }
-        
+
     }
 
-    /** 
+    /**
      * Display the specified resource.
      */
     public function show(Branch $branch)
@@ -170,7 +170,7 @@ class BranchController extends Controller
     public function update(UpdateBranchRequest $request, Branch $branch)
     {
         DB::beginTransaction();
-        try{
+        try {
             $branch->update($request->validated());
 
             DB::commit();
@@ -183,7 +183,7 @@ class BranchController extends Controller
                 $branch->toArray(),
                 200
             );
-        } catch (Throwable $e){
+        } catch (Throwable $e) {
             DB::rollBack();
             throw $e;
         }
@@ -198,7 +198,7 @@ class BranchController extends Controller
         $this->authorize('delete', $branch);
 
         DB::beginTransaction();
-        try{
+        try {
 
             $branch->delete();
             DB::commit();
@@ -213,11 +213,10 @@ class BranchController extends Controller
                 null,
                 200
             );
-        } catch(Throwable $e){
+        } catch (Throwable $e) {
             DB::rollBack();
             throw $e;
         }
-    
 
     }
 }

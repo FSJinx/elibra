@@ -47,12 +47,7 @@ export const useCampusStore = defineStore('campus', {
     },
 
     async create(params: Partial<Campus>) {
-      if (!this.auth.roleIs(['super_admin'])) {
-        return this.pop.error('You are not permitted to commit this action. Ask permission to the developers or the main administrator.')
-      }
-
       this.pop.load()
-
       const res = await post('campus', params)
       this.pushData(res.data)
       this.pop.success(res.message)

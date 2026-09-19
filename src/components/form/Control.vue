@@ -29,7 +29,7 @@ const direction = computed(() => {
 })
 
 const controlClass = computed(() => {
-  const baseDesign = 'grid gap-2 group'
+  const baseDesign = 'grid gap-2 group max-size-max'
 
   return [baseDesign, direction.value]
 })

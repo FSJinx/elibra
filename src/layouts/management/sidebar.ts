@@ -103,6 +103,7 @@ export const menus = {
       children: [
         { path: 'admin.subscriptions', name: 'Subscriptions', icon: 'globe' },
         { path: 'admin.campus', name: 'Campus', icon: 'buildings' },
+        { path: 'admin.branch', name: 'Branch', icon: 'building' },
         { path: 'admin.users', name: 'Users', icon: 'people' },
       ],
     },
