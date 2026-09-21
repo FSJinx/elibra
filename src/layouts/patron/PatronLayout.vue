@@ -23,7 +23,7 @@
 const auth = authStore()
 const navigation = [
   { name: 'patron.dashboard', label: 'Home', icon: 'house' },
-  { name: 'OPAC', label: 'Discover', icon: 'search' },
+  { name: 'opac', label: 'Discover', icon: 'search' },
   { name: 'patron.services', label: 'Services', icon: 'grid' },
   { name: 'patron.profile', label: 'Profile', icon: 'person' },
 ]

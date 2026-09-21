@@ -3,7 +3,7 @@
     <div class="flex items-start justify-center gap-3 mx-auto w-full p-3">
       <OpacFilter v-model:params="params" @apply="search" @reset="resetFilters" />
 
-      <OpacMain v-model:params="params" :library-data="libraryData" :total="total" :loading="loading" @search="search" />
+      <OpacMain v-model:params="params" :library-data="libraryData", :total="total" :loading="loading" @search="search" />
 
       <OpacHistory />
     </div>

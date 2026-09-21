@@ -1,23 +1,23 @@
 <template>
-  <main class="min-h-full bg-slate-50 p-4 text-slate-900 sm:p-6 lg:p-8">
+  <main class="min-h-full px-5 pb-24 pt-7 text-slate-900 sm:px-8 sm:pb-12">
     <div class="mx-auto max-w-7xl space-y-6">
-      <section class="overflow-hidden rounded-3xl bg-linear-to-br from-emerald-700 via-emerald-600 to-teal-700 px-6 py-8 text-white shadow-xl shadow-emerald-900/10 sm:px-8 lg:flex lg:items-end lg:justify-between">
+      <section class="overflow-hidden rounded-3xl bg-linear-to-br from-emerald-800 via-emerald-700 to-teal-700 px-6 py-8 text-white shadow-xl shadow-emerald-950/10 sm:px-8 lg:flex lg:items-end lg:justify-between">
         <div class="max-w-2xl">
-          <p class="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-100">Patron dashboard</p>
-          <h1 class="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Good morning, {{ auth.user?.first_name || 'Reader' }}.</h1>
-          <p class="mt-3 max-w-xl text-sm leading-6 text-emerald-50 sm:text-base">Keep track of your loans, discover your next read, and make the most of your library membership.</p>
+          <p class="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-100">My library</p>
+          <h1 class="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Welcome back, {{ auth.user?.first_name || 'Reader' }}.</h1>
+          <p class="mt-3 max-w-xl text-sm leading-6 text-emerald-50 sm:text-base">Everything you need for your library account, in one place.</p>
         </div>
 
-        <router-link :to="{ name: 'OPAC' }" class="mt-6 inline-flex items-center gap-2 self-start rounded-xl bg-white px-4 py-3 text-sm font-semibold text-emerald-700 shadow-sm transition hover:bg-emerald-50 lg:mt-0">
+        <router-link :to="{ name: 'opac' }" class="mt-6 inline-flex items-center gap-2 self-start rounded-xl bg-white px-4 py-3 text-sm font-semibold text-emerald-700 shadow-sm transition hover:bg-emerald-50 lg:mt-0">
           <Icon icon="search" />
           Browse the catalog
         </router-link>
       </section>
 
-      <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label="Account summary">
         <article v-for="stat in stats" :key="stat.label" class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div class="flex items-start justify-between gap-4">
-            <span class="grid size-11 place-items-center rounded-xl" :class="`bg-${stat.color}-50 text-${stat.color}-600`">
+            <span class="grid size-11 place-items-center rounded-xl" :class="stat.color">
               <Icon :icon="stat.icon" />
             </span>
             <span class="text-2xl font-bold text-slate-950">{{ stat.value }}</span>
@@ -52,15 +52,15 @@
             </article>
           </div>
 
-          <button type="button" class="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-emerald-700 transition hover:text-emerald-800">
-            View borrowing history
+          <router-link :to="{ name: 'patron.services' }" class="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-emerald-700 transition hover:text-emerald-800">
+            Manage loans
             <Icon icon="arrow-right" />
-          </button>
+          </router-link>
         </div>
 
         <aside class="rounded-2xl bg-slate-950 p-5 text-white shadow-sm sm:p-6">
-          <p class="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-300">Explore more</p>
-          <h2 class="mt-2 text-xl font-bold">Library services</h2>
+          <p class="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-300">Quick links</p>
+          <h2 class="mt-2 text-xl font-bold">Make the most of your library</h2>
           <div class="mt-5 space-y-3">
             <router-link v-for="service in services" :key="service.title" :to="service.to" class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3 transition hover:border-emerald-300/50 hover:bg-white/10">
               <span class="grid size-10 place-items-center rounded-lg bg-emerald-400/15 text-emerald-300"><Icon :icon="service.icon" /></span>
@@ -81,10 +81,10 @@
 const auth = authStore()
 
 const stats = [
-  { icon: 'book', value: 3, label: 'Books currently borrowed', color: 'emerald' },
-  { icon: 'clock', value: 1, label: 'Due this week', color: 'amber' },
-  { icon: 'bookmark', value: 8, label: 'Saved titles', color: 'sky' },
-  { icon: 'check-circle', value: 12, label: 'Books read this year', color: 'violet' },
+  { icon: 'book', value: 3, label: 'Books currently borrowed', color: 'bg-emerald-50 text-emerald-700' },
+  { icon: 'clock', value: 1, label: 'Due this week', color: 'bg-amber-50 text-amber-700' },
+  { icon: 'bookmark', value: 8, label: 'Saved titles', color: 'bg-sky-50 text-sky-700' },
+  { icon: 'check-circle', value: 12, label: 'Books read this year', color: 'bg-violet-50 text-violet-700' },
 ]
 
 const loans = [
@@ -94,7 +94,7 @@ const loans = [
 ]
 
 const services = [
-  { icon: 'search', title: 'Search the catalog', description: 'Find books, journals, and more', to: { name: 'OPAC' } },
+  { icon: 'search', title: 'Search the catalog', description: 'Find books, journals, and more', to: { name: 'opac' } },
   { icon: 'user', title: 'Manage your profile', description: 'Update your account details', to: { name: 'patron.profile' } },
 ]
 </script>

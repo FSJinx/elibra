@@ -107,7 +107,7 @@ class CatalogSearchService
                 'authors',
                 'itemType',
                 'itemTypeCategory',
-                'branch',
+                'branch.campus',
                 'language',
             ])
             ->whereIn('id', $itemIds)
@@ -203,6 +203,9 @@ class CatalogSearchService
 
                     'branch' =>
                         $item?->branch?->name,
+
+                    'campus' =>
+                        $item?->branch?->campus?->name,
 
                     'language' =>
                         $item?->language?->name,

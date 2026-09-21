@@ -41,12 +41,23 @@
           /></label>
         </div>
       </section>
+      <section class="mt-5 flex flex-col gap-4 rounded-2xl border border-rose-100 bg-rose-50/50 p-6 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 class="font-bold text-slate-950">Sign out</h2>
+          <p class="mt-1 text-sm text-slate-500">Sign out securely from your library account on this device.</p>
+        </div>
+        <button type="button" class="inline-flex items-center justify-center gap-2 rounded-xl bg-rose-600 px-4 py-3 text-sm font-bold text-white transition hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2" @click="account.logout">
+          <Icon icon="box-arrow-right" />
+          Log out
+        </button>
+      </section>
     </div>
   </main>
 </template>
 
 <script setup lang="ts">
 const auth = authStore()
+const account = useAuth()
 const preferences = [
   { title: 'Due date reminders', description: 'Receive an email before an item is due.', enabled: true },
   { title: 'New arrivals', description: 'Hear about new titles in your favorite subjects.', enabled: false },

@@ -107,7 +107,7 @@
 
                 <span class="inline-flex items-center gap-1.5">
                   <Icon icon="building-2" />
-                  {{ item.branch || 'Unknown Branch' }}
+                  {{ item.branch }} - {{ item.campus || 'Unknown Campus' }}
                 </span>
               </div>
             </div>
@@ -146,6 +146,7 @@ interface LibraryItem {
   authors?: string[]
   publication_year?: string | number
   branch?: string
+  campus?: string
   item_type?: string
   itemType?: string
 }
