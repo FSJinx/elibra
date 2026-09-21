@@ -1,4 +1,4 @@
-import adminCampusRoutes from '@/router/admin/campusRoutes'
+import adminCampusRoutes from '@/router/admin/campus.route'
 
 export const adminRoutes = [
   {
@@ -44,18 +44,7 @@ export const adminRoutes = [
         name: 'admin.management',
         meta: { breadcrumb: 'Management', title: 'Management' },
         children: [
-          {
-            // Campus List
-            path: 'campus',
-            name: 'admin.campus',
-            meta: {
-              breadcrumb: 'Campus',
-              permission: '',
-              maintenance: false,
-            },
-            redirect: { name: 'admin.campus.list' },
-            children: adminCampusRoutes,
-          },
+          ...adminCampusRoutes,
           {
             // Branch List
             path: 'branch',

@@ -38,7 +38,7 @@ const subHeading = computed(() => {
   } else {
     branch.value = 'Not assigned to any branch'
   }
-  return `${branch.value ?? 'Not assigned to a library branch'}, ${parse.toCapital(auth.user?.role || 'Unknown')}`
+  return `${branch.value ?? 'Not assigned to a library branch'}, ${parse.toCapital(auth.displayRole || 'Unknown')}`
 })
 
 const heading = computed(() => {

@@ -6,7 +6,7 @@
   line-height: 1.55;
 }
 
-.swal2-styled.swal2-confirm:focus-visible {
+/* .swal2-styled.swal2-confirm:focus-visible {
   outline: none !important;
   box-shadow: 0 0 0 5px color-mix(in srgb, var(--color-success) 25%, transparent) !important;
 }
@@ -14,4 +14,4 @@
 .swal2-styled.swal2-cancel:focus-visible {
   outline: none !important;
   box-shadow: 0 0 0 5px color-mix(in srgb, var(--color-danger) 25%, transparent) !important;
-}
+} */

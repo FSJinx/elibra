@@ -66,6 +66,7 @@ declare module 'vue' {
     Textarea: typeof import('./form/Textarea.vue')['default']
     Th: typeof import('./table/Th.vue')['default']
     Thead: typeof import('./table/Thead.vue')['default']
+    TimePicker: typeof import('./form/TimePicker.vue')['default']
     Title: typeof import('./my/Title.vue')['default']
     Tload: typeof import('./table/Tload.vue')['default']
     Tooltip: typeof import('./my/Tooltip.vue')['default']

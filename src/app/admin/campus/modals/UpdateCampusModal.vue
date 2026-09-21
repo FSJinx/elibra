@@ -1,5 +1,5 @@
 <template>
-  <Button size="sm" variant="warning" @click="open()">Edit</Button>
+  <Button class="text-info!" left-icon="pencil-square" @click="open()">Edit Campus</Button>
 
   <Modal ref="modal" size="xlarge" :has-inputs="hasChanges">
     <ModalHeader use-default-layout :title="data.name" :subtitle="`Currently editing campus information of ${data.name}`" icon="buildings" />
@@ -30,7 +30,7 @@
       </Form>
     </ModalBody>
 
-    <ModalFooter class="gap-1">
+    <ModalFooter class="gap-2">
       <Button @click="close" variant="danger">Cancel</Button>
       <Button type="submit" variant="success" form="campus-update-form" v-if="hasChanges">Submit</Button>
     </ModalFooter>

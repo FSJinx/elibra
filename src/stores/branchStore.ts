@@ -8,7 +8,7 @@ export interface Branch {
   closing_hour: string
   logo_id: any
   branch_head_id: number
-  campus_id: number
+  campus_id: any
   created_at: string
   updated_at: string
   [key: string]: any
@@ -18,7 +18,7 @@ const url = 'branch'
 
 export const useBranchStore = defineStore('branch', {
   state: () => ({
-    data: [] as Branch[],
+    data: null as Branch[] | null,
     currentData: null as Branch | null,
     loading: false as true | false,
     pop: usePopup(),
@@ -32,12 +32,12 @@ export const useBranchStore = defineStore('branch', {
     },
 
     updateData(data: Branch) {
-      this.data = this.data.filter((i) => i.id !== data.id)
+      this.data = (this.data as Branch[]).filter((i) => i.id !== data.id)
       nextTick(() => this.data?.push(data))
     },
 
     removeData(data: Branch) {
-      this.data = this.data.filter((i) => i.id !== data.id)
+      this.data = (this.data as Branch[]).filter((i) => i.id !== data.id)
     },
 
     setData(data: Branch[]) {
@@ -45,11 +45,15 @@ export const useBranchStore = defineStore('branch', {
     },
 
     // =========== ACTIONS ============
-    async fetch() {
+    async fetch(forced = false) {
+      if (this.data && !forced) return
+
       this.loading = true
       const res = await get(url)
-      this.setData(res.data?.data)
+      this.setData(res.data)
       this.loading = false
+
+      return res
     },
 
     async create(params: Partial<Branch>) {

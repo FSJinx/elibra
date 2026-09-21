@@ -99,7 +99,7 @@ Route::group(['prefix' => '/authorship'], function () {
 // ============== BRANCH ROUTE ==================
 Route::group(['prefix' => '/branch'], function () {
     // Get
-    Route::get('', [BranchController::class, 'index'])->middleware('throttle:read');
+    Route::get('', [BranchController::class, 'temporaryIndex'])->middleware('throttle:read');
     Route::get('show', [BranchController::class, 'index'])->middleware('throttle:read');
 
     // Post
@@ -131,6 +131,7 @@ Route::group(['prefix' => '/branch_section'], function () {
 Route::group(['prefix' => '/campus'], function () {
     // Get
     Route::get('', [CampusController::class, 'index']);
+    Route::get('deleted', [CampusController::class, 'deleted']);
     Route::get('{campus}', [CampusController::class, 'show'])->middleware('jwt.auth', 'role:super_admin,admin', 'throttle:api');
 
     // Post
@@ -141,6 +142,7 @@ Route::group(['prefix' => '/campus'], function () {
 
     // Delete
     Route::delete('{campus}', [CampusController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin', 'throttle:delete');
+    Route::delete('delete-permanent/{campus}', [CampusController::class, 'deletePermanently'])->middleware('jwt.auth', 'role:super_admin', 'throttle:delete');
 });
 
 // ============== DEPARTMENT ROUTE ==================

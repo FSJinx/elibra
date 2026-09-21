@@ -113,8 +113,16 @@ function close() {
   isOpen.value = false
 }
 
+function handleKeydown(event: KeyboardEvent) {
+  if (event.key === 'Escape' && isOpen.value) {
+    close()
+  }
+}
+
 provide('modal', {
   buttonDisabled: props.disableCloseBtn,
+  loading: props.loading,
+  error: props.error,
 })
 
 watch(isOpen, (opened) => {
@@ -137,6 +145,14 @@ watch(
 defineExpose({
   open,
   close,
+})
+
+onMounted(() => {
+  document.addEventListener('keydown', handleKeydown)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('keydown', handleKeydown)
 })
 </script>
 

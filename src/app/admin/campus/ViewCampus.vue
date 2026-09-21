@@ -1,58 +1,37 @@
 <template>
-  <div class="flex-1 flex flex-col gap-3 bg-background">
-    <div class="flex flex-col border-b border-border">
-      <div class="flex items-center gap-3 p-5">
-        <Button as="link" :to="{ name: 'admin.campus' }" variant="text" icon="arrow-left">Back</Button>
+  <div class="size-full flex-1 flex flex-col">
+    <div class="flex flex-col border-b border-border bg-background">
+      <div class="flex items-center justify-between gap-3 h-20 px-5">
+        <Button as="link" :to="{ name: 'admin.campus' }" variant="text" icon="arrow-left">Back to campus list</Button>
 
-        <div class="flex items-center ml-auto gap-2">
-          <Button left-icon="pencil">Edit Campus</Button>
-          <Button icon="three-dots-vertical"></Button>
-        </div>
+        <nav class="flex items-center gap-1 text-sm">
+          <router-link v-for="nav in navRoutes" :key="nav.route" :to="{ name: nav.route }" class="py-1.5 px-3 rounded-lg border border-transparent transition-all duration-200" exact-active-class="bg-primary-soft/25 text-primary border-primary/50!">
+            {{ nav.name }}
+          </router-link>
+        </nav>
       </div>
-
-      <nav class="flex px-3">
-        <router-link v-for="nav in navRoutes" :key="nav.route" :to="{ name: nav.route, params: { id: route.params.id } }" class="p-3" exact-active-class="border-b-2 border-primary text-primary">
-          {{ nav.name }}
-        </router-link>
-      </nav>
     </div>
 
-    <div class="flex-1">
+    <div class="flex-1 flex flex-col gap-5 p-5">
       <router-view />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const loading = ref<boolean>(false)
-const campus = ref<Campus | null>(null)
-const { setBreadcrumb } = useBreadcrumb()
+const campus = useCampusStore()
 
 const route = useRoute()
 
 const navRoutes = [
   { name: 'Overview', route: 'admin.campus.show.overview' },
-  { name: 'Departments & Programs', route: 'admin.campus.show.departments' },
+  { name: 'Departments', route: 'admin.campus.show.departments' },
   { name: 'Branches', route: 'admin.campus.show.branches' },
 ]
 
-async function fetchCampusDetails() {
-  loading.value = true
-  setBreadcrumb('admin.campus.show', null)
-  try {
-    const res = await api.get(`campus/get/${route.params?.id}`)
-    campus.value = res.data.data
-    setBreadcrumb('admin.campus.show', campus.value?.name as string)
-  } catch (error) {
-    console.error('Failed to load campus:', error)
-  } finally {
-    loading.value = false
-  }
-}
+onBeforeUnmount(() => {
+  console.log('Unmounting, deleted')
 
-watch(
-  () => route.params.id,
-  () => fetchCampusDetails(),
-  { immediate: true },
-)
+  campus.currentData = null
+})
 </script>
