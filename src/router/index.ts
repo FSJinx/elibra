@@ -67,7 +67,6 @@ router.beforeEach(async (to, from) => {
   // ======== COMPOSABLES ===========
   const auth = useAuth()
   const error = useError()
-  const preload = usePreloader()
   const pop = usePopup()
 
   const accessRoles = String(role ?? '')
@@ -77,7 +76,7 @@ router.beforeEach(async (to, from) => {
     await auth.getUser()
   }
 
-  await preload
+  usePreloader()
 
   if (to.name === 'login' && store.isAuthenticated) {
     router.replace({ name: auth.userHomeLink })

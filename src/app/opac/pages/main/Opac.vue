@@ -1,13 +1,27 @@
 <template>
-  <div class="relative min-h-screen w-full bg-tertiary">
-    <div class="flex items-start justify-center gap-3 mx-auto w-full p-3">
-      <OpacFilter v-model:params="params" @apply="search" @reset="resetFilters" />
+  <div class="size-full flex justify-center gap-3 mx-auto w-full p-5 overflow-hidden">
+    <OpacFilter v-model:params="params" @apply="search" @reset="resetFilters" />
+    <!-- <div class="flex flex-col w-full max-w-6xl bg-restore border border-border rounded-xl overflow-hidden">
+      <div class="h-50 bg-background"></div>
 
+<<<<<<< HEAD
       <OpacMain v-model:params="params" :library-data="libraryData", :total="total" :loading="loading" @search="search" />
 
       <OpacHistory />
     </div>
+=======
+      <div class="flex-1 overflow-y-auto">
+        <div class="h-screen"></div>
+      </div>
+    </div> -->
+    <OpacMain v-model:params="params" :library-data="libraryData" :total="total" :loading="loading" @search="search" />
+    <!-- <div class="w-100 bg-danger">
+      <div class="h-[40vh]"></div>
+    </div> -->
+>>>>>>> dc589cece2127835548c01de82f4bd238c045bd6
   </div>
+
+  <!-- <OpacHistory /> -->
 </template>
 
 <script setup lang="ts">
@@ -41,11 +55,11 @@ watch(
 )
 
 async function fetchResults() {
-  if (!params.search) {
-    libraryData.value = []
-    total.value = 0
-    return
-  }
+  // if (!params.search) {
+  //   libraryData.value = []
+  //   total.value = 0
+  //   return
+  // }
 
   try {
     await searchOpac({
@@ -123,13 +137,7 @@ watch(
 )
 
 onMounted(async () => {
-  const { getItemTypes } = useItemTypes()
-  const { getItemCategories } = useItemCategories()
-  const { getBranches } = useBranch()
-
-  await getItemTypes()
-  await getItemCategories()
-  await getBranches()
+  await fetchResults()
 })
 </script>
 

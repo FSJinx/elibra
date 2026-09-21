@@ -1,5 +1,5 @@
 <template>
-  <div class="grid grid-cols-4 gap-3">
+  <div class="grid grid-cols-4 gap-2">
     <template v-for="stat in stats">
       <StatCard :label="stat.label" :value="stat.value" :icon="stat.icon" />
     </template>

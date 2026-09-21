@@ -18,8 +18,8 @@ export function usePopup() {
       text: options.text ?? 'Are you sure?',
 
       showCancelButton: true,
-      focusCancel: true,
       confirmButtonText: options.confirmButtonText ?? 'Confirm',
+      focusConfirm: true,
     })
   }
 
@@ -58,7 +58,7 @@ export function usePopup() {
     return swal.fire({
       title: title ?? 'Info',
       text: message ?? 'Are you sure you want to proceed? This action might be irreversible.',
-      icon: 'info',
+      icon: 'info', 
       iconColor: 'var(--color-info)',
       confirmButtonColor: 'var(--color-info)',
       confirmButtonText: 'Okay',
@@ -66,20 +66,22 @@ export function usePopup() {
   }
 
   function load(message?: string) {
-    return swal.fire({
-      title: 'Please wait',
-      text: message ?? "We're loading it for you...",
-      imageUrl: loadingGif,
-      imageWidth: 72,
-      imageHeight: 72,
-      showConfirmButton: false,
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-      didOpen: () => {
-        // swal.showLoading()
-      },
-      //   ...options,
-    })
+    if (!swal.isLoading()) {
+      return swal.fire({
+        title: 'Please wait',
+        text: message ?? "We're loading it for you...",
+        imageUrl: loadingGif,
+        imageWidth: 72,
+        imageHeight: 72,
+        showConfirmButton: false,
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+          // swal.showLoading()
+        },
+        //   ...options,
+      })
+    }
   }
 
   function unload() {

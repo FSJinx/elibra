@@ -2,13 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AcquisitionLines;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAcquisitionLinesRequest;
 use App\Http\Requests\UpdateAcquisitionLinesRequest;
+use App\Models\AcquisitionLines;
+use App\Services\AcquisitionLinesService;
+use Illuminate\Support\Facades\Cache;
 
 class AcquisitionLinesController extends Controller
 {
+    protected AcquisitionLinesService $acquisitionLineService;
+
+    public function __construct(AcquisitionLinesService $acquisitionLineService)
+    {
+        $this->acquisitionLineService = $acquisitionLineService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -30,15 +38,28 @@ class AcquisitionLinesController extends Controller
      */
     public function store(StoreAcquisitionLinesRequest $request)
     {
-        //
+        $acquisitionLine = $this->acquisitionLineService->create($request->validated());
+
+        return $this->response(
+            'success',
+            'Acquisition Line created successfully',
+            $acquisitionLine->toArray(),
+            201
+        );
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(AcquisitionLines $acquisitionLines)
+    public function show(string $id)
     {
-        //
+        $data = Cache::remember(
+            'acquisition-lines:${id}',
+            now()->addHour(),
+            fn () => AcquisitionLines::with('item')->where('acquisition_id', $id)->get()
+        );
+
+        return $this->response(data: $data->toArray());
     }
 
     /**
@@ -52,16 +73,45 @@ class AcquisitionLinesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateAcquisitionLinesRequest $request, AcquisitionLines $acquisitionLines)
+    public function update(UpdateAcquisitionLinesRequest $request, AcquisitionLines $acquisitionLine)
     {
-        //
+        $acquisitionLine = $this->acquisitionLineService->update(
+            $acquisitionLine,
+            $request->validated()
+        );
+
+        return $this->response(
+            'success',
+            'Acquisition updated successfully',
+            $acquisitionLine->toArray(),
+            200
+        );
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(AcquisitionLines $acquisitionLines)
+    public function destroy(AcquisitionLines $acquisitionLine)
     {
-        //
+        $this->authorize('delete', $acquisitionLine);
+
+        $deleted = $this->acquisitionLineService->delete($acquisitionLine);
+
+        if (! $deleted) {
+            return $this->response(
+                'Error',
+                'The selected Acquisition Line record could not be deleted.',
+                null,
+                500
+            );
+        }
+
+        return $this->response(
+            'success',
+            'Acquisition Line record deleted successfully',
+            null,
+            200
+        );
+
     }
 }

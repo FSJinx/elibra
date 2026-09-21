@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('fines_transactions', function (Blueprint $table) {
             $table->id();
-            $table->float('amount');
-            $table->enum('transaction_type', ['charged', 'paid', 'waived']);
-            $table->string('remarks');
+            $table->decimal('amount', 10, 2)->default(0);
+            $table->enum('transaction_type', ['charged', 'paid', 'waived'])->default('charged');
+            $table->text('remarks')->nullable();
             $table->timestamps();
 
-            $table->unsignedBigInteger('patron_id');
-            $table->unsignedBigInteger('loan_id');
-            $table->unsignedBigInteger('processed_by');
+            $table->unsignedBigInteger('patron_id')->nullable()->index();
+            $table->unsignedBigInteger('circulation_id')->nullable()->index();
+            $table->unsignedBigInteger('processed_by')->nullable()->index();
         });
     }
 

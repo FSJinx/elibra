@@ -7,8 +7,10 @@
     </div>
 
     <!-- Results Grid -->
-    <div v-if="paginatedItems.length > 0" class="grid grid-cols-1 xl:grid-cols-2 gap-4">
-      <Card v-for="item in paginatedItems" :key="item.id" class="p-4 hover:shadow-md transition-shadow border border-border bg-background rounded-xl">
+    <div v-if="loading" class="text-center py-12 text-foreground-secondary">Loading new library materials...</div>
+
+    <div v-else-if="data.length" class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+      <Card v-for="item in data" :key="item.id" class="p-4 hover:shadow-md transition-shadow border border-border bg-background rounded-xl">
         <div class="flex items-start gap-4">
           <!-- Book Cover / Thumbnail -->
           <div class="w-24 h-32 shrink-0 overflow-hidden rounded-md border border-border bg-muted">
@@ -18,29 +20,29 @@
           <!-- Book Metadata -->
           <div class="flex-1 min-w-0 flex flex-col justify-between self-stretch">
             <div>
+              <div class="flex items-center gap-2">
+                <Icon icon="geo-alt-fill" class="text-danger" />
+                <span class="text-sm">{{ useBranchStore().branches.find((i) => i.id === item.branch_id)?.name }}</span>
+              </div>
               <div class="flex items-center justify-between gap-2 mb-1.5">
-                <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-primary/10 text-primary truncate">
-                  {{ item.category }}
-                </span>
-                <span class="text-[10px] font-semibold px-2 py-0.5 rounded capitalize shrink-0" :class="getStatusClass(item.status)">
-                  {{ item.status.replace('_', ' ') }}
+                <h2 class="font-bold text-base text-foreground line-clamp-1" :title="item.title">
+                  {{ item.title }}
+                </h2>
+                <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-primary/10 text-primary shrink-0">
+                  {{ parseCategory(item.item_type_category_id) ?? 'Library material' }}
                 </span>
               </div>
 
-              <h2 class="font-bold text-base text-foreground line-clamp-1" :title="item.title">
-                {{ item.title }}
-              </h2>
-
               <p class="text-xs text-foreground-secondary mt-0.5 font-medium line-clamp-1">
-                {{ item.authorOrCreator }}
+                {{ item.subtitle || 'No additional information' }}
               </p>
             </div>
 
             <!-- Detailed Info -->
             <div class="mt-3 text-xs text-foreground-secondary space-y-0.5 border-t border-border/50 pt-2">
-              <p class="truncate"><span class="font-semibold text-foreground">Call No:</span> {{ item.callNumber }}</p>
-              <p class="truncate"><span class="font-semibold text-foreground">Publisher:</span> {{ item.publisherOrInstitution }} ({{ item.publicationYear }})</p>
-              <p class="truncate"><span class="font-semibold text-foreground">Location:</span> {{ item.location }}</p>
+              <p class="truncate"><span class="font-semibold text-foreground">Call No:</span> {{ item.call_number || 'N/A' }}</p>
+              <p class="truncate"><span class="font-semibold text-foreground">Publication Year:</span> {{ item.publication_year || 'N/A' }}</p>
+              <p class="truncate"><span class="font-semibold text-foreground">Item Type:</span> {{ item.item_type_id || 'N/A' }}</p>
             </div>
           </div>
         </div>
@@ -51,128 +53,46 @@
     <div v-else class="text-center py-12 border border-dashed rounded-xl border-border">
       <p class="text-base font-medium text-foreground-secondary">No new library materials found.</p>
     </div>
-
-    <!-- Pagination -->
-    <div v-if="totalPages > 1" class="mt-8 flex justify-center items-center gap-3">
-      <button @click="currentPage--" :disabled="currentPage === 1" class="px-3 py-1.5 rounded-lg border border-border bg-background disabled:opacity-50 disabled:cursor-not-allowed hover:bg-muted transition text-xs font-medium">Previous</button>
-
-      <span class="text-xs font-semibold px-2 text-foreground-secondary"> Page {{ currentPage }} of {{ totalPages }} </span>
-
-      <button @click="currentPage++" :disabled="currentPage === totalPages" class="px-3 py-1.5 rounded-lg border border-border bg-background disabled:opacity-50 disabled:cursor-not-allowed hover:bg-muted transition text-xs font-medium">Next</button>
-    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
 import default_book from '@/assets/images/default_book.png'
-// import Card from '@/components/ui/Card.vue'
 
 export interface LibraryItem {
-  id: string
+  id: number
   title: string
-  itemType: 'book' | 'academic' | 'serial'
-  category: string
-  authorOrCreator: string
-  callNumber: string
-  publicationYear: number
-  publisherOrInstitution: string
-  status: 'available' | 'borrowed' | 'reserved' | 'in_maintenance'
-  location: string
+  subtitle: string | null
+  call_number: string | null
+  publication_year: number | null
+  item_type_id: number | null
+  item_type_category_id: number | null
+  status: string | null
+  [key: string]: any
 }
 
 // State
-const currentPage = ref(1)
-const itemsPerPage = 6
+const data = ref<LibraryItem[]>([])
+const loading = ref(true)
+const itemCategories = useItemCategoriesStore()
 
-// Sample Library Data
-const libraryItems = ref<LibraryItem[]>([
-  {
-    id: 'LIB-ACAD-001',
-    title: 'AI-Powered Microgrid Optimization for Rural Barangays',
-    itemType: 'academic',
-    category: 'capstone project',
-    authorOrCreator: 'Dela Cruz, Juan & Santos, Maria',
-    callNumber: 'CP 621.31 D37 2024',
-    publicationYear: 2024,
-    publisherOrInstitution: 'College of Engineering',
-    status: 'available',
-    location: 'Academic Archives - Shelf A3',
-  },
-  {
-    id: 'LIB-ACAD-003',
-    title: 'Socio-Economic Impacts of Ecotourism in Coastal Communities',
-    itemType: 'academic',
-    category: 'dissertation',
-    authorOrCreator: 'Dr. Alcantara, Sofia P.',
-    callNumber: 'DIS 338.47 AL15 2022',
-    publicationYear: 2022,
-    publisherOrInstitution: 'Graduate School',
-    status: 'available',
-    location: 'Graduate Research Room',
-  },
-  {
-    id: 'LIB-BOOK-001',
-    title: 'The Silent Patient',
-    itemType: 'book',
-    category: 'fiction',
-    authorOrCreator: 'Alex Michaelides',
-    callNumber: 'FIC Mic 2019',
-    publicationYear: 2019,
-    publisherOrInstitution: 'Celadon Books',
-    status: 'borrowed',
-    location: 'General Fiction - Shelf 12',
-  },
-  {
-    id: 'LIB-BOOK-003',
-    title: 'Noli Me Tangere',
-    itemType: 'book',
-    category: 'filipiniana',
-    authorOrCreator: 'José Rizal',
-    callNumber: 'FIL 899.21 R52n 1996',
-    publicationYear: 1996,
-    publisherOrInstitution: 'National Book Store',
-    status: 'available',
-    location: 'Filipiniana Section - Cabinet 01',
-  },
-  {
-    id: 'LIB-SER-001',
-    title: 'IEEE Transactions on Software Engineering - Vol. 50 No. 2',
-    itemType: 'serial',
-    category: 'journal',
-    authorOrCreator: 'IEEE Computer Society',
-    callNumber: 'PER 005.1 I27 2024',
-    publicationYear: 2024,
-    publisherOrInstitution: 'IEEE',
-    status: 'available',
-    location: 'Serials Section - Rack 05',
-  },
-  {
-    id: 'LIB-SER-002',
-    title: 'National Geographic - March 2024 Edition',
-    itemType: 'serial',
-    category: 'magazine',
-    authorOrCreator: 'National Geographic Society',
-    callNumber: 'PER 910 N21 2024-03',
-    publicationYear: 2024,
-    publisherOrInstitution: 'National Geographic Partners',
-    status: 'reserved',
-    location: 'Serials Display',
-  },
-])
+async function fetchNewItems() {
+  try {
+    const res = await get<{ data: LibraryItem[] }>('/landing/new-items')
+    data.value = res.data ?? []
+  } catch (error) {
+    console.error('Failed to fetch new items:', error)
+    data.value = []
+  } finally {
+    loading.value = false
+  }
+}
 
-// Automatically sort items by publication year descending ("What's New")
-const sortedItems = computed(() => {
-  return [...libraryItems.value].sort((a, b) => b.publicationYear - a.publicationYear)
-})
+const parseCategory = (item_type_category_id: any) => {
+  return itemCategories.categories.find((i) => i.id === item_type_category_id)?.name
+}
 
-// Pagination logic
-const totalPages = computed(() => Math.ceil(sortedItems.value.length / itemsPerPage) || 1)
-
-const paginatedItems = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage
-  return sortedItems.value.slice(start, start + itemsPerPage)
-})
+onMounted(fetchNewItems)
 
 // Badge status color mapping
 const getStatusClass = (status: LibraryItem['status']) => {

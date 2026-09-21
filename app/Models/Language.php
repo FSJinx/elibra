@@ -19,6 +19,6 @@ class Language extends Model
 
     protected $formatter = [
         'code' => 'lowercase',
-        'name' => 'titlecase',
+        'name' => 'capitalize',
     ];
 }

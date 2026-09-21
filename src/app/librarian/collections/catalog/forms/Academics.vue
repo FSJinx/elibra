@@ -31,21 +31,21 @@ import AcademicForm from '@/app/librarian/collections/catalog/forms/sections/Aca
 
 interface Form extends BaseField, AcademicField, ClassficationField, AuthorField {}
 
-const { itemTypes } = itemTypeStore()
+const { item_types } = useItemTypeStore()
 
 const pop = usePopup()
 const auth = authStore()
 
 const emptyForm = (): Form => ({
-  title: 'e-Libra',
-  subtitle: 'A Centralized Web-Based Integrated Library Management System and Resource Monitoring for Isabela State University',
-  description: 'Si Wanda naging Scarlet Witch na talaga.',
-  call_number: 'Mom.12DS',
-  publication_year: '1998',
+  title: '',
+  subtitle: '',
+  description: '',
+  call_number: '',
+  publication_year: '',
   electronic_file: null,
   keywords: [],
 
-  item_type_category_id: '1',
+  item_type_category_id: '',
   branch_id: auth.user?.role === 'librarian' ? auth.user?.branch?.id : '',
   language_id: '',
 
@@ -93,7 +93,7 @@ const clearForm = async () => {
 }
 
 const bookId = computed(() => {
-  const book = itemTypes?.find((i) => i.name === 'academic')
+  const book = item_types?.find((i) => i.slug === 'academic')
   return book?.id
 })
 

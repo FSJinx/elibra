@@ -29,4 +29,8 @@ class Author extends Model
         );
     }
 
+    public function authorship(){
+        return $this->belongsTo(Authorship::class);
+    }
+
 }

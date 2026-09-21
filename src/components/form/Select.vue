@@ -1,7 +1,16 @@
 <template>
   <div ref="dropdownRef" class="relative inline-flex flex-col gap-2 min-w-40 w-full">
-    <div type="button" @click="toggle" class="flex items-center h-11 text-left px-4 text-foreground w-full rounded-md border border-border cursor-pointer disabled:cursor-not-allowed transition-all duration-200" :class="[open ? 'bg-tertiary' : 'bg-background']" :disabled="disabled" :aria-expanded="open" aria-haspopup="listbox" :data-title="enableTooltip ? `${parse.toCapital(title as string)}: ${selectedOption.label}` : ''">
-      <span class="line-clamp-1 mr-5">{{ selectedOption.label }}</span>
+    <div
+      type="button"
+      @click="toggle"
+      class="flex items-center h-11 text-left px-4 text-foreground w-full bg-background rounded-md border outline-none focus-visible:ring-4 ring-primary/20 focus-visible:border-success cursor-pointer disabled:cursor-not-allowed transition-all duration-200"
+      :class="[open ? 'ring-4 border-success' : 'border-border']"
+      :disabled="disabled"
+      :aria-expanded="open"
+      aria-haspopup="listbox"
+      :data-title="enableTooltip ? `${parse.toCapital(title as string)}: ${selectedOption.label}` : ''"
+    >
+      <span class="line-clamp-1 mr-5">{{ selectedOption.label ?? placeholder }}</span>
       <Icon icon="chevron-down" class="ml-auto transition-all duration-300 pointer-events-none" :class="{ '-rotate-180': open }" />
     </div>
     <p v-if="error && error.length > 0" class="text-xs font-medium text-danger">
@@ -21,8 +30,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch, provide, nextTick, onMounted, onUnmounted } from 'vue'
-
 interface SelectedOption {
   value: any
   label: string
@@ -35,6 +42,7 @@ interface Props {
   disabled?: boolean
   enableTooltip?: boolean
   error?: string | null
+  placeholder?: string
 }
 
 const dropdownRef = ref<HTMLElement | null>(null)
@@ -45,7 +53,7 @@ const parse = useParser()
 
 const props = withDefaults(defineProps<Props>(), {
   enableTooltip: false,
-  error: ''
+  error: '',
 })
 
 const selectedOption = reactive<SelectedOption>({
@@ -57,23 +65,39 @@ const dropdownStyle = ref({
   top: '0px',
   left: '0px',
   width: '0px',
+  minWidth: '300px',
   maxHeight: '240px',
 })
 
 const updatePosition = () => {
-  if (dropdownRef.value) {
+  if (dropdownRef.value && dropdownMenuRef.value) {
     const rect = dropdownRef.value.getBoundingClientRect()
     const spacing = 8
     const gap = 6
+    const minWidth = 300
+    const maxHeight = 240
+
     const spaceBelow = window.innerHeight - rect.bottom - gap - spacing
     const spaceAbove = rect.top - gap - spacing
-    const openUpward = spaceBelow < 240 && spaceAbove > spaceBelow
-    const availableHeight = Math.max(0, Math.min(240, openUpward ? spaceAbove : spaceBelow))
+
+    const openUpward = spaceBelow < maxHeight && spaceAbove > spaceBelow
+
+    const availableHeight = Math.max(0, Math.min(maxHeight, openUpward ? spaceAbove : spaceBelow))
+
+    // Actual dropdown height, limited by available viewport space
+    const menuHeight = Math.min(dropdownMenuRef.value.scrollHeight, availableHeight)
+
+    let left = rect.left
+
+    if (rect.left + minWidth > window.innerWidth - spacing) {
+      left = rect.right - minWidth
+    }
 
     dropdownStyle.value = {
-      top: `${openUpward ? rect.top - gap - availableHeight : rect.bottom + gap}px`,
-      left: `${rect.left}px`,
+      top: `${openUpward ? rect.top - gap - menuHeight - 5 : rect.bottom + gap}px`,
+      left: `${left}px`,
       width: `${rect.width}px`,
+      minWidth: `${minWidth}px`,
       maxHeight: `${availableHeight}px`,
     }
   }

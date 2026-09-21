@@ -69,6 +69,7 @@ trait AutoFormatter
             'uppercase' => Str::upper($value),
             'lowercase' => Str::lower($value),
             'titlecase' => Str::title(Str::lower($value)), // "mark angelo" -> "Mark Angelo"
+            'capitalize' => Str::title(Str::lower($value)), // "mark angelo" -> "Mark Angelo"
             'ucfirst' => Str::ucfirst(Str::lower($value)),
             'trim' => trim($value),
             'slug' => Str::slug($value),

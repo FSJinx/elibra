@@ -25,7 +25,7 @@
             <!-- Error Message -->
             <p class="text-muted-foreground" v-if="state.message">{{ state.message }}</p>
           </div>
-          <p class="text-sm text-foreground-secondary/50">Click outside to close this modal.</p>
+          <p class="text-sm text-muted-foreground/75">Click outside this modal to close.</p>
         </div>
       </div>
     </Transition>

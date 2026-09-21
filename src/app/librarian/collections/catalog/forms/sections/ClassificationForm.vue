@@ -7,7 +7,7 @@
     </div>
 
     <div class="divide-y divide-border">
-      <Control class="control" v-if="auth.user?.role === 'admin'">
+      <Control v-if="auth.user?.role === 'admin'">
         <Label id="book-branch_id" required>Branch</Label>
         <Select id="book-branch_id" class="capitalize" v-model="form.branch_id" required :error="errors.branch_id?.[0]">
           <Option value="" disabled>Select a branch</Option>
@@ -15,15 +15,15 @@
         </Select>
       </Control>
 
-      <Control class="control">
+      <Control>
         <Label id="book-item_type_category_id" required>Category</Label>
         <Select id="book-item_type_category_id" class="capitalize" v-model="form.item_type_category_id" :error="errors.item_type_category_id?.[0]" required>
           <Option value="" disabled>Select a category</Option>
-          <Option class="capitalize" :value="category.id" v-for="category in categories">{{ category.name }}</Option>
+          <Option class="capitalize" :value="category.id" v-for="category in categories.byItemType(item_type_id)">{{ category.name }}</Option>
         </Select>
       </Control>
 
-      <Control class="control">
+      <Control>
         <Label id="book-language">Language</Label>
         <Select id="book-language" class="capitalize" v-model="form.language_id" :error="errors.language_id?.[0]">
           <Option value="" disabled>Select a language</Option>
@@ -41,15 +41,14 @@ interface Props {
   item_type_id: any
 }
 
-const { languages } = languagesStore()
-const { itemCategories } = itemCategoriesStore()
-const { branches } = branchStore()
+const { languages } = useLanguagesStore()
+const categories = useItemCategoriesStore()
+const { branches } = useBranchStore()
 const auth = authStore()
 
 const props = defineProps<Props>()
 
 // Computed
-const categories = computed(() => itemCategories.filter((i) => i.item_type_id === props.item_type_id))
 const branchOptions = computed(() => branches.filter((i) => i.campus_id === auth.user?.campus_id))
 
 const form = defineModel<ClassficationField>({ default: {} })
@@ -57,8 +56,6 @@ const form = defineModel<ClassficationField>({ default: {} })
 
 <style scoped>
 .control {
-  display: grid !important;
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   padding: 1.25rem;
 }
 </style>

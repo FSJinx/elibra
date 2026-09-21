@@ -52,11 +52,13 @@ class ItemController extends Controller
                 return $query->paginate(
                     $filters['per_page'],
                     [
-                        'id',
-                        'title',
-                        'subtitle',
-                        'call_number',
-                        'publication_year',
+                        // 'id',
+                        // 'title',
+                        // 'subtitle',
+                        // 'call_number',
+                        // 'publication_year',
+                        // 'item_type_id',
+                        '*',
                     ],
                     'page',
                     $filters['page']
@@ -77,6 +79,42 @@ class ItemController extends Controller
             'success',
             'Items retrieved successfully.',
             $items->toArray(),
+            200
+        );
+    }
+
+    /**
+     * Display the specified item.
+     */
+    public function show(Request $request, Item $item)
+    {
+        $this->authorize('viewAny', Item::class);
+
+        $user = $request->user();
+
+        if ($user->isAdmin() && $item->branch?->campus_id !== $user->campus_id) {
+            abort(404);
+        }
+
+        if (! $user->isSuperAdmin() && $user->isLibrarian() && $item->branch_id !== $user->librarian?->branch_id) {
+            abort(404);
+        }
+
+        $item->load([
+            'book',
+            'academic',
+            'serial',
+            'authors',
+            'itemType',
+            'itemTypeCategory',
+            'branch',
+            'language',
+        ]);
+
+        return $this->response(
+            'success',
+            'Item retrieved successfully.',
+            $item->toArray(),
             200
         );
     }

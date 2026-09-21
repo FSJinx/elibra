@@ -44,6 +44,10 @@ class CatalogIndex extends Model
             'language',
         ])->first();
 
+        // Get branch and campus from the Item relationship
+        $branch = $item?->branch;
+        $campus = $branch?->campus;
+
         return [
             'id' => $this->id,
             'item_id' => $this->item_id,
@@ -69,16 +73,20 @@ class CatalogIndex extends Model
 
             'item_type' => $item?->itemType?->name,
             'item_type_category' => $item?->itemTypeCategory?->name,
-            'branch' => $item?->branch?->name,
-            'campus' => $item?->branch?->campus?->name,
+
+            // Location
+            'branch' => $branch?->name,
+            'branch_id' => $branch?->id,
+
+            'campus' => $campus?->name,
+            'campus_id' => $campus?->id,
+
             'language' => $item?->language?->name,
 
             // Complete text
             'content' => $this->content,
 
-            // Filters
-            'campus_id' => $this->campus_id,
-            'branch_id' => $this->branch_id,
+            // Other filters
             'item_type_id' => $this->item_type_id,
             'item_type_category_id' => $this->item_type_category_id,
             'department_id' => $this->department_id,
@@ -102,3 +110,4 @@ class CatalogIndex extends Model
         ));
     }
 }
+

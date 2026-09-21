@@ -62,7 +62,7 @@
           <p class="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-300">Quick links</p>
           <h2 class="mt-2 text-xl font-bold">Make the most of your library</h2>
           <div class="mt-5 space-y-3">
-            <router-link v-for="service in services" :key="service.title" :to="service.to" class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3 transition hover:border-emerald-300/50 hover:bg-white/10">
+            <router-link v-for="service in services" :key="service.title" :to="{ name: service.name }" class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3 transition hover:border-emerald-300/50 hover:bg-white/10">
               <span class="grid size-10 place-items-center rounded-lg bg-emerald-400/15 text-emerald-300"><Icon :icon="service.icon" /></span>
               <span class="min-w-0 flex-1">
                 <span class="block font-semibold">{{ service.title }}</span>
@@ -94,8 +94,13 @@ const loans = [
 ]
 
 const services = [
+<<<<<<< HEAD
   { icon: 'search', title: 'Search the catalog', description: 'Find books, journals, and more', to: { name: 'opac' } },
   { icon: 'user', title: 'Manage your profile', description: 'Update your account details', to: { name: 'patron.profile' } },
+=======
+  { icon: 'search', title: 'Search the catalog', description: 'Find books, journals, and more', name: 'opac' },
+  { icon: 'user', title: 'Manage your profile', description: 'Update your account details', name: 'patron.profile' },
+>>>>>>> dc589cece2127835548c01de82f4bd238c045bd6
 ]
 </script>
 

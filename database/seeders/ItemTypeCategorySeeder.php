@@ -17,15 +17,8 @@ class ItemTypeCategorySeeder extends Seeder
             [
                 'name' => 'academic',
                 'categories' => [
-                    ['name' => 'capstone project', 'code' => 'cp'],
-                    ['name' => 'case study', 'code' => 'cs'],
-                    ['name' => 'dissertation', 'code' => 'gt'],
-                    ['name' => 'feasibility study', 'code' => 'fs'],
-                    ['name' => 'practicum report', 'code' => 'pr'],
-                    ['name' => 'project study', 'code' => 'ps'],
-                    ['name' => 'research paper', 'code' => 'rp'],
-                    ['name' => 'terminal report', 'code' => 'tr'],
-                    ['name' => 'thesis', 'code' => 'ut'],
+                    ['name' => 'undergraduate thesis', 'code' => 'ut'],
+                    ['name' => 'graduate thesis', 'code' => 'gt'],
                 ],
             ],
             [
@@ -48,7 +41,7 @@ class ItemTypeCategorySeeder extends Seeder
                     ['name' => 'yearbook', 'code' => 'rc'],
 
                     // Filipiniana Collections
-                    ['name' => 'filipiniana', 'code' => 'fc'],
+                    // ['name' => 'filipiniana', 'code' => 'fc'],
                     ['name' => 'reserved', 'code' => 'rc'],
                 ],
             ],

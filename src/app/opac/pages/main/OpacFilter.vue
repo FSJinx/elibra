@@ -1,5 +1,5 @@
 <template>
-  <aside class="hidden xl:block sticky top-20 w-100 shrink-0 p-5 bg-background border border-border rounded-xl">
+  <aside class="hidden xl:block w-100 p-5 bg-background border border-border rounded-xl overflow-y-auto">
     <div class="flex items-start justify-between">
       <div>
         <p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-foreground-secondary">Filters</p>
@@ -74,8 +74,8 @@ defineEmits<{
   reset: []
 }>()
 
-const campus = campusStore()
-const branch = branchStore()
+const campus = useCampusStore()
+const branch = useBranchStore()
 
 const campusBranches = computed(() => {
   if (params.value.campus) {
@@ -90,6 +90,17 @@ const campusBranches = computed(() => {
     }
   })
 })
+
+watch(
+  () => campus.campuses,
+  () => console.log(campus.campuses),
+  { deep: true, immediate: true },
+)
+watch(
+  () => branch.branches,
+  () => console.log(branch.branches),
+  { deep: true, immediate: true },
+)
 </script>
 
 <style scoped></style>

@@ -17,7 +17,7 @@
         <Td>
           <Select :id="`authorship-${item.id ?? index}`" v-model="item.authorship_id" required>
             <Option value="" disabled>Select Authorship</Option>
-            <Option v-for="i in authorshipsOption" :key="i.id" :value="i.id">{{ i.name }}</Option>
+            <Option v-for="i in authorships.byItemType(item_type_id)" :key="i.id" :value="i.id">{{ i.name }}</Option>
           </Select>
         </Td>
       </tr>
@@ -33,17 +33,14 @@ interface Props {
   item_type_id: any
 }
 
-const { authorships } = authorshipStore()
+const authorships = authorshipStore()
 const props = defineProps<Props>()
 
 const form = defineModel<AuthorField>({ default: {} })
-const authorshipsOption = computed(() => authorships?.filter((i) => i.item_type_id === props.item_type_id))
 </script>
 
 <style scoped>
 .control {
-  display: grid !important;
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  padding: 1.25rem;
+  padding-block: '1.25rem';
 }
 </style>

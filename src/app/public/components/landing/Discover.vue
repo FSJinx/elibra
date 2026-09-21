@@ -6,8 +6,10 @@
       <p class="text-foreground-secondary mt-1">Discover library materials that suit your taste buds.</p>
     </div>
 
+    <div v-if="loading" class="text-center py-12 text-foreground-secondary">Loading library materials...</div>
+
     <!-- Results Grid -->
-    <div v-if="paginatedItems.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+    <div v-else-if="paginatedItems.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
       <Card v-for="item in paginatedItems" :key="item.id" class="p-4 hover:shadow-md transition">
         <div class="flex items-start gap-4">
           <!-- Thumbnail -->
@@ -19,10 +21,10 @@
           <div class="flex-1 min-w-0">
             <div class="flex items-center justify-between gap-2 mb-1">
               <span class="text-xs uppercase font-semibold px-2 py-0.5 rounded bg-primary/10 text-primary">
-                {{ item.category }}
+                {{ item.category || 'Library material' }}
               </span>
               <span class="text-xs font-semibold px-2 py-0.5 rounded capitalize" :class="getStatusClass(item.status)">
-                {{ item.status.replace('_', ' ') }}
+                {{ (item.status || 'available').replace('_', ' ') }}
               </span>
             </div>
 
@@ -31,13 +33,13 @@
             </h2>
 
             <p class="text-sm text-foreground-secondary mt-0.5 font-medium">
-              {{ item.authorOrCreator }}
+              {{ item.authorOrCreator || 'No author information' }}
             </p>
 
             <div class="mt-3 text-xs text-foreground-secondary space-y-1">
-              <p><span class="font-semibold text-foreground">Call No:</span> {{ item.callNumber }}</p>
-              <p><span class="font-semibold text-foreground">Publisher:</span> {{ item.publisherOrInstitution }} ({{ item.publicationYear }})</p>
-              <p><span class="font-semibold text-foreground">Location:</span> {{ item.location }}</p>
+              <p><span class="font-semibold text-foreground">Call No:</span> {{ item.callNumber || 'N/A' }}</p>
+              <p><span class="font-semibold text-foreground">Publication Year:</span> {{ item.publicationYear || 'N/A' }}</p>
+              <p><span class="font-semibold text-foreground">Item Type:</span> {{ item.itemType || 'N/A' }}</p>
             </div>
           </div>
         </div>
@@ -62,21 +64,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { onMounted, ref, computed, watch } from 'vue'
 import default_book from '@/assets/images/default_book.png'
 // Import your Card component if it's not globally registered:
 // import Card from '@/components/ui/Card.vue'
 
 export interface LibraryItem {
-  id: string
+  id: number
   title: string
-  itemType: 'book' | 'academic' | 'serial'
+  itemType: 'book' | 'academic' | 'serial' | string
   category: string
   authorOrCreator: string
   callNumber: string
   publicationYear: number
   publisherOrInstitution: string
-  status: 'available' | 'borrowed' | 'reserved' | 'in_maintenance'
+  status: 'available' | 'borrowed' | 'reserved' | 'in_maintenance' | null
   location: string
 }
 
@@ -93,82 +95,34 @@ const selectedType = ref<'all' | 'book' | 'academic' | 'serial'>('all')
 const selectedCategory = ref('all')
 const currentPage = ref(1)
 const itemsPerPage = 8
+const loading = ref(true)
 
-// Sample Library Data
-const libraryItems = ref<LibraryItem[]>([
-  {
-    id: 'LIB-ACAD-001',
-    title: 'AI-Powered Microgrid Optimization for Rural Barangays',
-    itemType: 'academic',
-    category: 'capstone project',
-    authorOrCreator: 'Dela Cruz, Juan & Santos, Maria',
-    callNumber: 'CP 621.31 D37 2024',
-    publicationYear: 2024,
-    publisherOrInstitution: 'College of Engineering',
-    status: 'available',
-    location: 'Academic Archives - Shelf A3',
-  },
-  {
-    id: 'LIB-ACAD-003',
-    title: 'Socio-Economic Impacts of Ecotourism in Coastal Communities',
-    itemType: 'academic',
-    category: 'dissertation',
-    authorOrCreator: 'Dr. Alcantara, Sofia P.',
-    callNumber: 'DIS 338.47 AL15 2022',
-    publicationYear: 2022,
-    publisherOrInstitution: 'Graduate School',
-    status: 'available',
-    location: 'Graduate Research Room',
-  },
-  {
-    id: 'LIB-BOOK-001',
-    title: 'The Silent Patient',
-    itemType: 'book',
-    category: 'fiction',
-    authorOrCreator: 'Alex Michaelides',
-    callNumber: 'FIC Mic 2019',
-    publicationYear: 2019,
-    publisherOrInstitution: 'Celadon Books',
-    status: 'borrowed',
-    location: 'General Fiction - Shelf 12',
-  },
-  {
-    id: 'LIB-BOOK-003',
-    title: 'Noli Me Tangere',
-    itemType: 'book',
-    category: 'filipiniana',
-    authorOrCreator: 'José Rizal',
-    callNumber: 'FIL 899.21 R52n 1996',
-    publicationYear: 1996,
-    publisherOrInstitution: 'National Book Store',
-    status: 'available',
-    location: 'Filipiniana Section - Cabinet 01',
-  },
-  {
-    id: 'LIB-SER-001',
-    title: 'IEEE Transactions on Software Engineering - Vol. 50 No. 2',
-    itemType: 'serial',
-    category: 'journal',
-    authorOrCreator: 'IEEE Computer Society',
-    callNumber: 'PER 005.1 I27 2024',
-    publicationYear: 2024,
-    publisherOrInstitution: 'IEEE',
-    status: 'available',
-    location: 'Serials Section - Rack 05',
-  },
-  {
-    id: 'LIB-SER-002',
-    title: 'National Geographic - March 2024 Edition',
-    itemType: 'serial',
-    category: 'magazine',
-    authorOrCreator: 'National Geographic Society',
-    callNumber: 'PER 910 N21 2024-03',
-    publicationYear: 2024,
-    publisherOrInstitution: 'National Geographic Partners',
-    status: 'reserved',
-    location: 'Serials Display',
-  },
-])
+const libraryItems = ref<LibraryItem[]>([])
+
+async function fetchDiscoverItems() {
+  try {
+    const res = await get<{ data: any[] }>('/landing/discover')
+    libraryItems.value = (res.data ?? []).map((item) => ({
+      id: item.id,
+      title: item.title,
+      itemType: item.item_type?.slug ?? item.item_type?.name?.toLowerCase() ?? '',
+      category: item.item_type_category?.name?.toLowerCase() ?? '',
+      authorOrCreator: item.authors?.map((author: any) => [author.first_name, author.middle_name, author.last_name, author.suffix].filter(Boolean).join(' ')).join(', ') || item.subtitle || '',
+      callNumber: item.call_number ?? '',
+      publicationYear: item.publication_year,
+      publisherOrInstitution: '',
+      status: item.status ?? 'available',
+      location: '',
+    }))
+  } catch (error) {
+    console.error('Failed to fetch discover items:', error)
+    libraryItems.value = []
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(fetchDiscoverItems)
 
 // Computed Categories based on selected Type
 const availableCategories = computed(() => {

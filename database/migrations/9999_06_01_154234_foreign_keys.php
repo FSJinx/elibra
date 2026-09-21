@@ -11,7 +11,7 @@ return new class extends Migration
             'name' => 'accessions',
             'foreign_columns' => [
                 ['name' => 'item_id', 'references' => 'id', 'on' => 'items', 'onDelete' => 'cascade'],
-                ['name' => 'section_id', 'references' => 'id', 'on' => 'sections', 'onDelete' => 'cascade'],
+                ['name' => 'branch_section_id', 'references' => 'id', 'on' => 'branch_sections', 'onDelete' => 'cascade'],
                 ['name' => 'acquisition_line_id', 'references' => 'id', 'on' => 'acquisition_lines', 'onDelete' => 'cascade'],
             ],
         ],
@@ -82,7 +82,7 @@ return new class extends Migration
             'name' => 'librarians',
             'foreign_columns' => [
                 ['name' => 'user_id', 'references' => 'id', 'on' => 'users', 'onDelete' => 'cascade'],
-                ['name' => 'branch_id', 'references' => 'id', 'on' => 'branches', 'onDelete' => 'cascade'],
+            ['name' => 'branch_id', 'references' => 'id', 'on' => 'branches', 'onDelete' => 'cascade'],
             ],
         ],
         [
@@ -91,6 +91,13 @@ return new class extends Migration
                 ['name' => 'user_id', 'references' => 'id', 'on' => 'users', 'onDelete' => 'cascade'],
                 ['name' => 'program_id', 'references' => 'id', 'on' => 'programs', 'onDelete' => 'cascade'],
                 ['name' => 'patron_type_id', 'references' => 'id', 'on' => 'patron_types', 'onDelete' => 'cascade'],
+            ],
+        ],
+        [
+            'name' => 'patron_type_loan_policies',
+            'foreign_columns' => [
+                ['name' => 'patron_type_id', 'references' => 'id', 'on' => 'patron_types', 'onDelete' => 'cascade'],
+                ['name' => 'loan_mode_id', 'references' => 'id', 'on' => 'loan_modes', 'onDelete' => 'cascade']
             ],
         ],
         [
@@ -166,6 +173,32 @@ return new class extends Migration
                 ['name' => 'item_id', 'references' => 'id', 'on' => 'items', 'onDelete' => 'cascade'],
                 ['name' => 'authorship_id', 'references' => 'id', 'on' => 'authorships', 'onDelete' => 'cascade'],
             ],
+        ],
+        [
+            'name' => 'attendance_logs',
+            'foreign_columns' => [
+                ['name' => 'patron_id', 'references' => 'id', 'on' => 'users', 'onDelete' => 'cascade'],
+                ['name' => 'branch_id', 'references' => 'id', 'on' => 'branches', 'onDelete' => 'cascade'],
+                ['name' => 'section_id', 'references' => 'id', 'on' => 'sections', 'onDelete' => 'cascade'],
+            ]
+        ],
+        [
+            'name' => 'circulations',
+            'foreign_columns' => [
+                ['name' => 'processed_by', 'references' => 'id', 'on' => 'users', 'onDelete' => 'cascade'],
+                ['name' => 'accession_id', 'references' => 'id', 'on' => 'accessions', 'onDelete' => 'cascade'],
+                ['name' => 'patron_id', 'references' => 'id', 'on' => 'users', 'onDelete' => 'cascade'],
+                ['name' => 'loan_mode_id', 'references' => 'id', 'on' => 'loan_modes', 'onDelete' => 'cascade'],
+                ['name' => 'return_received_by', 'references' => 'id', 'on' => 'users', 'onDelete' => 'cascade'],
+            ]
+        ],
+        [
+            'name' => 'fines_transactions',
+            'foreign_columns' => [
+                ['name' => 'patron_id', 'references' => 'id', 'on' => 'patrons', 'onDelete' => 'cascade'],
+                ['name' => 'circulation_id', 'references' => 'id', 'on' => 'circulations', 'onDelete' => 'cascade'],
+                ['name' => 'processed_by', 'references' => 'id', 'on' => 'users', 'onDelete' => 'cascade'],
+            ]
         ],
     ];
 

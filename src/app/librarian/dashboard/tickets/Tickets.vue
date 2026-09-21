@@ -1,6 +1,6 @@
 <template>
   <div class="size-full flex flex-col">
-    <SectionHeader title="Support Tickets" description="Track and resolve patron issues and requests." icon="ticket" class="bg-background border-b border-border">
+    <SectionHeader title="Support Tickets" description="Track and resolve patron issues and requests." icon="ticket">
       <div class="flex items-end justify-end">
         <Button variant="primary" icon="plus" @click="openNewTicket"> New ticket </Button>
       </div>

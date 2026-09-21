@@ -1,28 +1,12 @@
 <template>
   <Teleport to="body">
     <Transition name="fade">
-      <div v-if="isOpen" class="modal-wrapper fixed inset-0 flex items-center justify-center bg-backdrop h-dvh p-10" :class="[hasInputs ? '' : 'cursor-pointer']" @click.self="close">
+      <div v-if="isOpen" class="modal-wrapper fixed inset-0 flex items-center justify-center bg-backdrop h-dvh p-5" :class="[hasInputs ? '' : 'cursor-pointer']" @click.self="close">
         <div class="modal relative bg-background rounded-xl shadow-2xl border border-border cursor-default overflow-hidden" :class="[sizeClasses, positionClasses, position]" ref="modalRef">
-          <!-- Modal Header -->
-          <div class="flex items-start p-5 pb-4 gap-3 border-b border-gray-300 text-xl font-semibold" v-if="$slots.header || enableCloseBtn">
-            <slot name="header" v-if="$slots.header" />
-            <span class="ml-auto text-foreground/25 hover:text-foreground cursor-pointer transition-all duration-200">
-              <Icon icon="x-lg" @click="close" v-if="enableCloseBtn" style="-webkit-text-stroke: 1px" />
-            </span>
-          </div>
-
-          <!-- Modal Body -->
-          <div class="max-h-[76dvh] flex flex-col overflow-y-auto">
-            <div class="flex-1 place-content-center min-h-100" v-if="loading">
-              <LogoLoader message="Loading content, please wait..." />
-            </div>
-            <slot v-else />
-          </div>
-
-          <!-- Modal Footer -->
-          <div class="p-3 border-t border-gray-300" v-if="$slots.footer && !loading">
-            <slot name="footer" />
-          </div>
+          <span class="absolute top-3 right-3 p-2 ml-auto text-lg text-foreground/25 hover:text-foreground cursor-pointer transition-all duration-200" @click="close" v-if="!disableCloseBtn">
+            <Icon icon="x-lg" style="-webkit-text-stroke: 1px" />
+          </span>
+          <slot />
         </div>
       </div>
     </Transition>
@@ -36,27 +20,29 @@ interface Props {
   hasInputs?: boolean
   position?: ModalPosition
   size?: ModalSize
-  enableCloseBtn?: boolean
+  disableCloseBtn?: boolean
   loading?: boolean
+  error?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
   hasInputs: false,
   position: 'center',
   size: 'normal',
-  enableCloseBtn: false,
+  disableCloseBtn: false,
 })
 
-const emit = defineEmits(['show'])
+const emit = defineEmits(['show', 'closing'])
 
 const isOpen = ref(false)
 const modalRef = ref<HTMLElement | null>(null)
 const timer = ref<ReturnType<typeof setTimeout> | null>(null)
+const errorMessage = ref(props.error ?? '')
 
 const positionClasses = computed(() => {
   const positions: Record<ModalPosition, string> = {
     top: 'mb-auto',
-    center: 'my-auto max-h-[90vh] overflow-y-auto',
+    center: 'my-auto max-h-[90vh]',
     bottom: 'mt-auto',
   }
 
@@ -69,7 +55,7 @@ const sizeClasses = computed(() => {
     normal: 'w-full sm:max-w-150',
     large: 'w-full sm:max-w-200',
     xlarge: 'w-full sm:max-w-250',
-    '2xlarge': 'w-full sm:max-w-300',
+    '2xlarge': 'w-full sm:max-w-400',
     full: 'w-full max-w-[95vw] h-[90vh]',
   }
 
@@ -83,6 +69,8 @@ function open() {
 function close() {
   if (props.hasInputs) {
     const el = modalRef.value
+
+    errorMessage.value = "You can't close this modal yet because it has inputs. Please clear inputs before closing."
 
     if (el) {
       if (timer.value) {
@@ -102,6 +90,10 @@ function close() {
   isOpen.value = false
 }
 
+provide('modal', {
+  buttonDisabled: props.disableCloseBtn,
+})
+
 watch(isOpen, (opened) => {
   if (opened) {
     document.body.style.overflow = 'hidden'
@@ -111,6 +103,13 @@ watch(isOpen, (opened) => {
 
   emit('show', isOpen.value)
 })
+
+watch(
+  () => props.hasInputs,
+  () => {
+    errorMessage.value = ''
+  },
+)
 
 defineExpose({
   open,

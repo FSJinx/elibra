@@ -2,24 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Patron;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePatronRequest;
 use App\Http\Requests\UpdatePatronRequest;
+use App\Models\Patron;
+use App\Services\PatronService;
 
 class PatronController extends Controller
 {
+    protected PatronService $patronService;
+
+    public function __construct(PatronService $patronService)
+    {
+        $this->patronService = $patronService;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-      return Patron::with([
-        'user',
-        'patronType'
-    ])->get();  
+        return Patron::with([
+            'user',
+            'patronType',
+            'program'
+        ])->get();
     }
 
     /**
@@ -35,27 +41,14 @@ class PatronController extends Controller
      */
     public function store(StorePatronRequest $request)
     {
+        $result = $this->patronService->create($request->validated());
 
-    $user = User::create([
-        'first_name' => $request->first_name,
-        'last_name' => $request->last_name,
-        'username' => $request->username,
-        'password' => Hash::make($request->password),
-        'role' => 'patron',
-    ]);
-
-    $patron = Patron::create([
-        'user_id' => $user->id,
-        'patron_type_id' => $request->patron_type_id,
-        'program_id' => $request->program_id,
-        'ebc_number' => $request->ebc_number,
-        'remarks' => $request->remarks,
-    ]);
-
-    return response()->json([
-        'user' => $user,
-        'patron' => $patron,
-    ], 201);
+        return $this->response(
+            'success',
+            'Patron successfully created.',
+            $result,
+            201,
+        );
     }
 
     /**
@@ -79,7 +72,14 @@ class PatronController extends Controller
      */
     public function update(UpdatePatronRequest $request, Patron $patron)
     {
-        //
+        $result = $this->patronService->update($patron, $request->validated());
+
+        return $this->response(
+            'success',
+            'Patron successfully updated.',
+            $result,
+            200,
+        );
     }
 
     /**
@@ -87,6 +87,22 @@ class PatronController extends Controller
      */
     public function destroy(Patron $patron)
     {
-        //
+        $deleted = $this->patronService->delete($patron);
+
+        if (! $deleted) {
+            return $this->response(
+                'error',
+                'Patron could not be deleted.',
+                null,
+                500,
+            );
+        }
+
+        return $this->response(
+            'success',
+            'Patron deleted successfully.',
+            null,
+            200,
+        );
     }
 }

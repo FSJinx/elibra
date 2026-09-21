@@ -3,7 +3,7 @@ export interface User {
   first_name: string
   last_name: string
   middle_initial?: string | null
-  role: 'super admin' | 'admin' | 'librarian' | 'patron' | null
+  role: 'super_admin' | 'admin' | 'librarian' | 'patron' | null
   email?: string
   campus?: any
   [key: string]: any
@@ -18,7 +18,8 @@ export const authStore = defineStore(
     const user = ref<User | null>(null)
     const isAuthenticated = ref<boolean>(false)
     const loading = ref<boolean>(false)
-    const swal = useSwal()
+
+    const parse = useParser()
 
     // ============= SETTERS ===============
     const setUser = (data: User) => {
@@ -35,16 +36,23 @@ export const authStore = defineStore(
     }
 
     // ============= GETTERS ===============
+    const roleIs = (roles: string[]) => roles.includes(user.value?.role as string)
+
     const getFullName = computed<string>(() => {
       if (!user.value) return ''
 
       const u = user.value
-      return `${u.first_name} ${u.middle_initial ? u.middle_initial + '.' : ''} ${u.last_name}`
+      return `${u.first_name} ${u.middle_initial ? u.middle_initial + '.' : ''} ${u.last_name ?? ''}`
     })
-    
+
     const displayRole = computed(() => {
-      if (!user.value)
-      return 
+      if (!user.value) return
+
+      if (user.value.role === 'super_admin') {
+        return 'Super Admin'
+      }
+
+      return parse.toCapital(user.value.role)
     })
 
     const getFormalName = computed<string>(() => {
@@ -64,8 +72,8 @@ export const authStore = defineStore(
     // ============= ACTIONS ===============
     function clearUser() {
       token.value = null
-        user.value = null
-        isAuthenticated.value = false
+      user.value = null
+      isAuthenticated.value = false
     }
 
     return {
@@ -84,6 +92,8 @@ export const authStore = defineStore(
       getFullName,
       getFormalName,
       getInitials,
+      displayRole,
+      roleIs,
 
       // ============= ACTIONS ===============
       clearUser,

@@ -7,29 +7,73 @@ interface Authorship {
   authorship_id: number
 }
 
-export const authorshipStore = defineStore('authorship', () => {
-  const authorships = ref<Authorship[] | null>(null)
-  const loading = ref(false)
-  const error = ref<string | null>(null)
+interface AuthorshipParams {
+  sort: string
+  page: number
+  per_page: number
+  order: 'asc' | 'desc'
+}
 
-  function setAuthorships(data: Authorship[] | null) {
-    authorships.value = data
-  }
+const defaultParams: Readonly<AuthorshipParams> = {
+  sort: '',
+  page: 1,
+  per_page: 10,
+  order: 'asc',
+}
 
-  function setLoading(status: boolean) {
-    loading.value = status
-  }
+export const authorshipStore = defineStore('authorship', {
+  state: () => ({
+    authorships: null as Authorship[] | null,
+    loading: false,
+    error: null as string | null,
+    params: { ...defaultParams } as AuthorshipParams,
+  }),
 
-  function setError(message: string | null) {
-    error.value = message
-  }
+  getters: {
+    byItemType() {
+      return (item_id: any) => this.authorships?.filter((i) => i.item_type_id === item_id)
+    },
+  },
 
-  return {
-    authorships,
-    loading,
-    error,
-    setAuthorships,
-    setLoading,
-    setError,
-  }
+  actions: {
+    setAuthorships(data: Authorship[] | null) {
+      this.authorships = data
+    },
+
+    setLoading(status: boolean) {
+      this.loading = status
+    },
+
+    setError(message: string | null) {
+      this.error = message
+    },
+
+    async fetch(forced = false) {
+      if (!forced && this.authorships) return this.authorships
+
+      this.setLoading(true)
+      this.setError(null)
+
+      try {
+        const response = await get('authorship', { params: { ...this.params } })
+        const data = response.data ?? []
+
+        this.setAuthorships(data)
+        return data
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'Unable to fetch authorship types.'
+
+        this.setError(message)
+        console.error('Error fetching authorships:', error)
+        return []
+      } finally {
+        this.setLoading(false)
+      }
+    },
+
+    async refresh() {
+      Object.assign(this.params, defaultParams)
+      return this.fetch(true)
+    },
+  },
 })

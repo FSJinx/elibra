@@ -6,9 +6,16 @@ use App\Models\AcquisitionRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAcquisitionRequestRequest;
 use App\Http\Requests\UpdateAcquisitionRequestRequest;
+use App\Services\AcquisitionRequestService;
 
 class AcquisitionRequestController extends Controller
 {
+    protected AcquisitionRequestService $acquisitionRequestService;
+
+    public function __construct(AcquisitionRequestService $acquisitionRequestService)
+    {
+        $this->acquisitionRequestService = $acquisitionRequestService;
+    }
     /**
      * Display a listing of the resource.
      */
@@ -30,7 +37,17 @@ class AcquisitionRequestController extends Controller
      */
     public function store(StoreAcquisitionRequestRequest $request)
     {
-        //
+        $acquisitionRequest = $this->acquisitionRequestService->create(
+            $request->validated(),
+            $request->user()->id
+        );
+
+        return $this->response( 
+            'success', 
+            'Acquisition Request created successfully', 
+            $acquisitionRequest->toArray(),            
+            201
+        );
     }
 
     /**
@@ -54,7 +71,35 @@ class AcquisitionRequestController extends Controller
      */
     public function update(UpdateAcquisitionRequestRequest $request, AcquisitionRequest $acquisitionRequest)
     {
-        //
+        $requestedProcurementStatus = $request->input('procurement_status');
+        $isClosingAttempt = $request->boolean('is_closed') || $acquisitionRequest->is_closed;
+
+        if (
+            in_array($acquisitionRequest->procurement_status, ['ordered', 'received'], true)
+            || in_array($requestedProcurementStatus, ['ordered', 'received'], true)
+        ) {
+            if ($isClosingAttempt) {
+                return $this->response(
+                    'error',
+                    'This acquisition request cannot be closed because it is already ordered or received.',
+                    null,
+                    422
+                );
+            }
+        }
+
+        $acquisitionRequest = $this->acquisitionRequestService->update(
+            $acquisitionRequest,
+            $request->validated(),
+            $request->user()?->id
+        );
+
+        return $this->response(
+            'success', 
+            'Acquisition Request updated successfully', 
+            $acquisitionRequest->toArray(), 
+            200
+        );
     }
 
     /**
@@ -62,6 +107,24 @@ class AcquisitionRequestController extends Controller
      */
     public function destroy(AcquisitionRequest $acquisitionRequest)
     {
-        //
+        $this->authorize('delete', $acquisitionRequest);
+
+        $deleted = $this->acquisitionRequestService->delete($acquisitionRequest);
+
+        if (!$deleted) {
+            return $this->response(
+                'Error',
+                'The selected Acquisition Request record could not be deleted.',
+                null,
+                500
+            );
+        }
+
+        return $this->response(
+            'success',
+            'Acquisition Request record deleted successfully',
+            null,
+            200
+        );
     }
 }

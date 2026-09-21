@@ -9,7 +9,7 @@
   }
 
   th {
-    @apply font-semibold uppercase tracking-wide text-foreground-secondary;
+    @apply font-semibold bg-secondary uppercase tracking-wide text-foreground-secondary;
   }
 
   td {

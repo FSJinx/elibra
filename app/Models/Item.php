@@ -99,4 +99,8 @@ class Item extends Model
         return $this->belongsTo(Language::class);
     }
 
+    public function acquisition_lines() {
+        return $this->hasMany(AcquisitionLines::class);
+    }
+
 }

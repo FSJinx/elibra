@@ -1,6 +1,6 @@
 <template>
-  <div class="min-h-dvh bg-[#f4f7f4] text-slate-900">
-    <header class="sticky top-0 z-20 border-b border-slate-200/80 bg-[#f4f7f4]/95 backdrop-blur">
+  <div class="min-h-dvh bg-secondary text-slate-900">
+    <header class="sticky top-0 z-20 border-b border-slate-200/80 bg-background backdrop-blur">
       <div class="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8">
         <router-link :to="{ name: 'patron.dashboard' }" class="flex items-center gap-3">
           <span class="grid size-10 place-items-center rounded-xl bg-emerald-700 text-white shadow-sm"><Icon icon="book" /></span>

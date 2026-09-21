@@ -1,5 +1,5 @@
 <template>
-  <div :class="controlClass">
+  <div class="control" :class="controlClass">
     <slot />
   </div>
 </template>
@@ -7,18 +7,35 @@
 <script setup lang="ts">
 interface Props {
   direction?: 'row' | 'col'
+  required?: boolean
+
+  col?: boolean
+  row?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   direction: 'row',
+
+  col: false,
+  row: true,
+})
+
+const direction = computed(() => {
+  if (props.direction === 'col' || props.col) {
+    return 'grid-cols-1 items-start'
+  } else if (props.direction === 'row' || props.row) {
+    return 'grid-cols-2 items-start'
+  }
 })
 
 const controlClass = computed(() => {
-  const baseDesign = 'flex gap-2 group'
+  const baseDesign = 'grid gap-2 group max-size-max'
 
-  const direction = props.direction === 'row' ? 'flex-row items-center' : 'flex-col'
+  return [baseDesign, direction.value]
+})
 
-  return [baseDesign, direction]
+provide('control', {
+  required: props.required,
 })
 </script>
 

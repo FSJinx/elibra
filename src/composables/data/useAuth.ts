@@ -7,7 +7,7 @@ export function useAuth() {
   // ---------- COMPUTED ROUTER LINK THAT RETUNS THE PATH TO USER'S HOME ----------
   const userHomeLink = computed(() => {
     const routes: Record<string, string> = {
-      "super_admin": 'admin',
+      super_admin: 'admin',
       admin: 'librarian',
       librarian: 'librarian',
       patron: 'patron',
@@ -57,8 +57,8 @@ export function useAuth() {
 
       return { success: true, data: response?.data, reroute: userHomeLink.value }
     } catch (error: any) {
-      console.log(error.response?.data);
-      
+      console.log(error.response?.data)
+
       return { success: false, data: error.response?.data ?? { message: error.message } }
     } finally {
       store.loading = false
@@ -82,10 +82,11 @@ export function useAuth() {
             pop.fire({ title: 'Success', text: res.data.message, icon: 'success' })
           })
           .finally(() => {
-            store.clearUser()
+            router.push({ name: 'home' })
             nextTick(() => {
-              return router.push({ name: 'home' })
+              store.clearUser()
             })
+            return
           })
 
         console.log('Logged out successfully.')

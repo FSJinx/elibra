@@ -28,7 +28,6 @@ import icons from '@/plugins/icons.js'
 import '@flaticon/flaticon-uicons/css/all/all.css'
 import 'bootstrap-icons/font/bootstrap-icons.min.css'
 
-
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
@@ -39,7 +38,7 @@ import router from '@/router/index.js'
 const app = createApp(App)
 const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)
-;(app.config as any).devtools = false
+;(app.config as any).devtools = true
 
 app.use(pinia)
 app.use(icons)

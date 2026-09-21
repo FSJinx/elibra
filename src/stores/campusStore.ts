@@ -1,43 +1,70 @@
 export interface Campus {
-  id: number | null
-  name: string | null
-  code: string | null
-  address: string | null
-  heading: string | null
-  status: string | null
-  created_at: string | null
-  updated_at: string | null
+  id: any
+  name: string
+  code: string
+  address: string
+  heading: string
+  status: string
+  created_at: any
+  updated_at: any
+  deleted_at: any
 }
 
-export const campusStore = defineStore('campus', () => {
-  // ============= STATES ===============
-  const campuses = ref<Campus[] | null>(null)
-  const currentCampus = ref<Campus | null>(null)
-  const loading = ref<boolean>(false)
+export const useCampusStore = defineStore('campus', {
+  state: () => ({
+    data: [] as Campus[],
+    currentData: null as Campus | null,
+    loading: false as true | false,
+    pop: usePopup(),
+    auth: authStore(),
+  }),
 
-  // ============= SETTERS ===============
-  function setCampuses(data: Campus[] | null) {
-    campuses.value = data
-  }
+  actions: {
+    // =========== SETTERS ============
+    pushData(data: Campus) {
+      this.data?.push(data)
+    },
 
-  function setCurrentCampus(data: Campus | null) {
-    currentCampus.value = data
-  }
+    updateData(data: Campus) {
+      this.data = this.data.filter((i) => i.id !== data.id)
+      nextTick(() => this.data?.push(data))
+    },
 
-  function setLoading(status: boolean) {
-    loading.value = status
-  }
+    removeData(data: Campus) {
+      this.data = this.data.filter((i) => i.id !== data.id)
+    },
 
-  return {
-    // ============= STATES ===============
-    campuses,
-    currentCampus,
-    loading,
+    setData(data: Campus[]) {
+      this.data = data
+    },
 
-    // ============= SETTERS ===============
-    setCampuses,
-    setCurrentCampus,
-    setLoading,
+    // =========== ACTIONS ============
+    async fetch() {
+      this.loading = true
+      const res = await get('campus')
+      this.setData(res.data)
+      this.loading = false
+    },
 
-  }
+    async create(params: Partial<Campus>) {
+      this.pop.load()
+      const res = await post('campus', params)
+      this.pushData(res.data)
+      this.pop.success(res.message)
+
+      return res
+    },
+
+    async update(params: Campus) {
+      const res = await put(`campus/${params.id}`, params)
+      this.updateData(res.data)
+      return res
+    },
+
+    async remove(params: Campus) {
+      const res = await del(`campus/${params?.id}`)
+      this.removeData(params)
+      return res
+    },
+  },
 })

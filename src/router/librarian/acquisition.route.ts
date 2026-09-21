@@ -1,14 +1,56 @@
+const pop = usePopup()
 export const librarianAcquisition = [
+  // ======== Acquisition ========
   {
     path: 'acquisition',
-    name: 'librarian.acquisition',
-    meta: { breadcrumb: 'Acquisitions' },
+    meta: { title: 'Acquisition', breadcrumb: 'Acquisition' },
+    redirect: { name: 'librarian.acquisition' },
     children: [
-      { path: 'requests', name: 'librarian.acquisition.requests', meta: { title: 'Requests', breadcrumb: 'Requests' }, component: () => import('@/app/librarian/acquisition/Acquisition.vue') },
-      { path: 'purchase-orders', name: 'librarian.acquisition.purchase-orders', meta: { title: 'Purchase Orders', breadcrumb: 'Purchase Orders' }, component: () => import('@/app/librarian/acquisition/Acquisition.vue') },
-      { path: 'vendors', name: 'librarian.acquisition.vendors', meta: { title: 'Vendors', breadcrumb: 'Vendors' }, component: () => import('@/app/librarian/acquisition/Acquisition.vue') },
-      { path: 'budget-funds', name: 'librarian.acquisition.budget-funds', meta: { title: 'Budget & Funds', breadcrumb: 'Budget & Funds' }, component: () => import('@/app/librarian/acquisition/Acquisition.vue') },
-      { path: 'donations', name: 'librarian.acquisition.donations', meta: { title: 'Donations & Gifts', breadcrumb: 'Donations & Gifts' }, component: () => import('@/app/librarian/acquisition/Acquisition.vue') },
+      {
+        path: '',
+        name: 'librarian.acquisition',
+        component: () => import('@/app/librarian/acquisition/acquisition/Acquisition.vue'),
+        beforeEnter: async (to: any, from: any) => {
+          const acquisition = useAcquisitionStore()
+          if (!acquisition.fetchData) {
+            acquisition.fetch()
+          }
+          return true
+        },
+      },
+      {
+        path: ':id',
+        name: 'librarian.acquisition.lines',
+        component: () => import('@/app/librarian/acquisition/acquisition/AcquisitionLines.vue'),
+        beforeEnter: async (to: any) => {
+          const lines = useAcquisitionLinesStore()
+          const acquisition = useAcquisitionStore()
+          const breadcrumb = useBreadcrumbStore()
+
+          if (!acquisition.currentData) {
+            await acquisition.read(to.params.id)
+          }
+
+          try {
+            pop.load()
+            await lines.fetch(to.params.id)
+          } finally {
+            pop.unload()
+            const key = `${to.name as string}:${to.params.id}`
+            breadcrumb.set(key, `Viewing Acquisition: ${acquisition.currentData?.acquisition_id}`)
+          }
+
+          return true
+        },
+      },
     ],
+  },
+
+  // ======== Acquisition Requests ========
+  {
+    path: 'acquisition-requests',
+    name: 'librarian.acquisition-requests',
+    meta: { title: 'Acquisition Requests', breadcrumb: 'Acquisition Requests' },
+    component: () => import('@/app/librarian/acquisition/request/Requests.vue'),
   },
 ]
