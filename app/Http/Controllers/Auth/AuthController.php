@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Requests\RegisterRequest;
 use App\Http\Controllers\Controller;
 use App\Services\AuthService;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -17,6 +18,24 @@ class AuthController extends Controller
         }
 
         return $this->response(data: $authService->index());
+    }
+
+    public function registration(RegisterRequest $request, AuthService $authService)
+    {
+        $data = $request->validated();
+
+        $result = $authService->register($data, $request->file('profile_picture'));
+
+        if (empty($result['token'])) {
+            return $this->response('error', 'Unable to register user at this time.', statusCode: 500);
+        }
+
+        return $this->response('success', 'Registration successful.', data: [
+            'token' => $result['token'],
+            'token_type' => 'bearer',
+            'user' => $authService->index(),
+            'patron' => $result['patron']->load(['patronType', 'program.department']),
+        ], statusCode: 201);
     }
 
     public function refresh()
@@ -38,6 +57,8 @@ class AuthController extends Controller
             return $this->response('error', 'Session expired, please login again.', statusCode: 401);
         }
     }
+
+    
 
     public function logout()
     {
