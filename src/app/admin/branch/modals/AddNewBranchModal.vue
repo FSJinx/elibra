@@ -18,7 +18,7 @@
           </Control>
           <Control col required>
             <Label id="branch-email">Email</Label>
-            <Input id="branch-email" placeholder="e.g. example@email.com" v-model="form.email" />
+            <Input id="branch-email" type="email" placeholder="e.g. example@email.com" v-model="form.email" />
           </Control>
           <Control col required class="col-span-2">
             <Label id="branch-campus">Campus</Label>
@@ -33,18 +33,19 @@
         <div class="grid grid-cols-2 gap-5">
           <Control col required>
             <Label id="branch-opening_hour">Opening Hours</Label>
-            <input type="time" v-model="form.opening_hour" />
+            <TimePicker id="branch-opening_hour" v-model="form.opening_hour" />
           </Control>
           <Control col required>
             <Label id="branch-closing_hour">Closing Hours</Label>
-            <input type="time" v-model="form.closing_hour" />
+            <TimePicker id="branch-closing_hour" v-model="form.closing_hour" />
           </Control>
         </div>
       </Form>
     </ModalBody>
 
-    <ModalFooter>
-      <Button variant="primary" type="submit" form="branch-form">Create Branch</Button>
+    <ModalFooter class="gap-2">
+      <Button variant="danger" @click="close()">Cancel</Button>
+      <Button variant="success" type="submit" form="branch-form">Create Branch</Button>
     </ModalFooter>
   </Modal>
 </template>
@@ -55,8 +56,11 @@ import Modal from '@/components/my/Modal.vue'
 
 const defaultBranch = (): Partial<Branch> => ({
   name: '',
-  code: '',
-  address: '',
+  contact_info: '',
+  email: '',
+  campus_id: '',
+  opening_hour: '',
+  closing_hour: '',
 })
 
 const modal = ref<typeof Modal | null>(null)
@@ -67,12 +71,34 @@ const form = reactive(defaultBranch())
 const hasInputs = computed(() => Object.values(form).some((value) => value != null && String(value).length > 0))
 
 async function submit() {
-  const res = await branch.create(form)
+  const confirm = await pop.confirm({ text: `Are you sure you want to add ${form.name} to ${campus.getCampus(form.campus_id)?.name}?` })
 
-  if (res?.status === 'success') {
-    Object.assign(form, defaultBranch())
-    nextTick(() => modal?.value?.close())
+  if (confirm.isConfirmed) {
+    pop.load()
+
+    try {
+      const res = await branch.create(form)
+
+      if (res?.status === 'success') {
+        Object.assign(form, defaultBranch())
+        nextTick(() => modal?.value?.close())
+        return pop.success(res?.message)
+      }
+    } catch (e: any) {
+      throw e
+    }
   }
+}
+
+async function close() {
+  if (hasInputs.value) {
+    const confirm = await pop.confirm({ text: 'You have unsaved changes, do you really want to cancel adding?' })
+    if (!confirm.isConfirmed) return
+
+    Object.assign(form, defaultBranch())
+  }
+
+  nextTick(() => modal.value?.close())
 }
 </script>
 

@@ -15,6 +15,7 @@ class MediaService
             Media::LOGO      => 'media/logos',
             Media::SUBSCRIPTION => 'media/subscriptions',
             Media::BOOK_COVER=> 'media/books',
+            Media::ITEM_COVER => 'media/items',
             Media::DOCUMENT  => 'media/documents',
             Media::BANNER    => 'media/banners',
             Media::OTHER     => 'media/others',

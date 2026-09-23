@@ -152,6 +152,8 @@ class CampusController extends Controller
         try {
             $campus = Campus::create($request->validated());
 
+            $campus->refresh();
+
             DB::commit();
 
             CacheService::invalidate(CacheService::CAMPUSES);
@@ -229,6 +231,7 @@ class CampusController extends Controller
         DB::beginTransaction();
 
         try {
+            $campus->update(['status' => 'inactive']);
 
             $campus->delete();
 
@@ -246,8 +249,79 @@ class CampusController extends Controller
             );
         } catch (Throwable $e) {
             DB::rollBack();
+            dd($e);
+            throw $e;
+        }
+    }
+
+    public function deleted()
+    {
+        $campuses = Campus::onlyTrashed()->get();
+
+        return $this->response(
+            'success',
+            'Deleted campuses retrieved successfully.',
+            $campuses->toArray(),
+            200
+        );
+    }
+
+    public function deletePermanently(int $campus)
+    {
+        $campus = Campus::withTrashed()->findOrFail($campus);
+
+        $this->authorize('forceDelete', $campus);
+
+        DB::beginTransaction();
+
+        try {
+            $campus->forceDelete();
+
+            DB::commit();
+
+            CacheService::invalidate(CacheService::CAMPUSES);
+            CacheService::invalidate(CacheService::DEPARTMENTS);
+            CacheService::invalidate(CacheService::PROGRAMS);
+
+            return $this->response(
+                'success',
+                'Campus permanently deleted successfully',
+            );
+        } catch (Throwable $e) {
+            DB::rollBack();
 
             throw $e;
         }
+    }
+
+    public function restore(int $campus)
+    {
+        $campus = Campus::withTrashed()->findOrFail($campus);
+
+        $this->authorize('restore', $campus);
+
+        DB::beginTransaction();
+
+        try {
+            $campus->restore();
+
+            DB::commit();
+
+            CacheService::invalidate(CacheService::CAMPUSES);
+            CacheService::invalidate(CacheService::DEPARTMENTS);
+            CacheService::invalidate(CacheService::PROGRAMS);
+
+            return $this->response(
+                'success',
+                'Campus has been restored successfully',
+                $campus->toArray(),
+                200
+            );
+        } catch (Throwable $e) {
+            DB::rollBack();
+
+            throw $e;
+        }
+
     }
 }

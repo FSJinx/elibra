@@ -52,7 +52,7 @@ class CampusPolicy
      */
     public function restore(User $user, Campus $campus): bool
     {
-        return false;
+        return $user->isSuperAdmin();
     }
 
     /**
@@ -60,6 +60,6 @@ class CampusPolicy
      */
     public function forceDelete(User $user, Campus $campus): bool
     {
-        return false;
+        return $user->isSuperAdmin();
     }
 }

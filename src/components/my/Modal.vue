@@ -7,6 +7,29 @@
             <Icon icon="x-lg" style="-webkit-text-stroke: 1px" />
           </span>
           <slot />
+          <!-- <div class="modal relative bg-background rounded-xl shadow-2xl border border-border cursor-default overflow-hidden flex flex-col" :class="[sizeClasses, positionClasses, position]" ref="modalRef">
+            <span class="absolute top-5 right-5 ml-auto text-lg text-foreground/25 hover:text-foreground cursor-pointer transition-all duration-200">
+              <Icon icon="x-lg" @click="close" v-if="!disableCloseBtn" style="-webkit-text-stroke: 1px" />
+            </span>
+
+            <div class="modal-header px-5 pt-5 pr-14 font-semibold text-lg shrink-0" v-if="$slots.header">
+              <slot name="header" />
+            </div>
+
+            <Transition name="fade">
+              <p class="text-danger px-5 pt-3 shrink-0" v-if="errorMessage?.length > 0">
+                <Icon class="mr-2" icon="exclamation-circle" /> {{ errorMessage }}
+              </p>
+            </Transition>
+
+            <div class="modal-body flex-1 overflow-y-auto">
+              <slot />
+            </div>
+
+            <div class="modal-footer px-5 pb-5 pt-3 shrink-0" v-if="$slots.footer">
+              <slot name="footer" />
+            </div>
+          </div> -->
         </div>
       </div>
     </Transition>
@@ -90,8 +113,16 @@ function close() {
   isOpen.value = false
 }
 
+function handleKeydown(event: KeyboardEvent) {
+  if (event.key === 'Escape' && isOpen.value) {
+    close()
+  }
+}
+
 provide('modal', {
   buttonDisabled: props.disableCloseBtn,
+  loading: props.loading,
+  error: props.error,
 })
 
 watch(isOpen, (opened) => {
@@ -114,6 +145,14 @@ watch(
 defineExpose({
   open,
   close,
+})
+
+onMounted(() => {
+  document.addEventListener('keydown', handleKeydown)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('keydown', handleKeydown)
 })
 </script>
 

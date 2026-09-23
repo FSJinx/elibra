@@ -40,6 +40,7 @@ class ItemController extends Controller
             function () use ($user, $branchId, $campusId, $filters) {
 
                 $query = Item::query();
+                $query->with('coverMedia');
 
                 if ($user->isAdmin()) {
                     $query->whereHas('branch', function ($query) use ($campusId) {
@@ -109,6 +110,7 @@ class ItemController extends Controller
             'itemTypeCategory',
             'branch',
             'language',
+            'coverMedia',
         ]);
 
         return $this->response(

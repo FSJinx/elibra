@@ -43,6 +43,7 @@ class StoreAcademicRequest extends BaseRequest
             'publication_year' => ['nullable', 'integer', 'min:1900', 'max:'.date('Y')],
             'keywords' => ['nullable', 'array'],
             'electronic_file' => ['nullable', 'file', 'mimes:pdf,doc,docx'],
+            'cover_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'language_id' => ['required', Rule::exists((new Language)->getTable(), 'id')],
             'item_type_id' => ['required', Rule::exists((new ItemType)->getTable(), 'id')],
             'item_type_category_id' => ['required', Rule::exists((new ItemTypeCategory)->getTable(), 'id')],

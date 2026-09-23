@@ -1,4 +1,4 @@
-import adminCampusRoutes from '@/router/admin/campusRoutes'
+import adminCampusRoutes from '@/router/admin/campus.route'
 
 export const adminRoutes = [
   {
@@ -38,24 +38,12 @@ export const adminRoutes = [
         },
         component: () => import('@/app/admin/subscriptions/Subscriptions.vue'),
       },
-
       {
         path: 'management',
         name: 'admin.management',
         meta: { breadcrumb: 'Management', title: 'Management' },
         children: [
-          {
-            // Campus List
-            path: 'campus',
-            name: 'admin.campus',
-            meta: {
-              breadcrumb: 'Campus',
-              permission: '',
-              maintenance: false,
-            },
-            redirect: { name: 'admin.campus.list' },
-            children: adminCampusRoutes,
-          },
+          ...adminCampusRoutes,
           {
             // Branch List
             path: 'branch',
@@ -69,18 +57,7 @@ export const adminRoutes = [
           },
         ],
       },
-      {
-        // Campus List
-        path: 'users',
-        name: 'admin.users',
-        meta: {
-          title: 'User Management',
-          description: 'Manage users accross campuses.',
-          permission: '',
-          maintenance: false,
-        },
-        component: () => import('@/app/admin/users/Users.vue'),
-      },
+      ...adminUserRoutes
     ],
   },
 ]

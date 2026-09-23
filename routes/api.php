@@ -131,6 +131,7 @@ Route::group(['prefix' => '/branch_section'], function () {
 Route::group(['prefix' => '/campus'], function () {
     // Get
     Route::get('', [CampusController::class, 'index']);
+    Route::get('deleted', [CampusController::class, 'deleted']);
     Route::get('{campus}', [CampusController::class, 'show'])->middleware('jwt.auth', 'role:super_admin,admin', 'throttle:api');
 
     // Post
@@ -141,6 +142,10 @@ Route::group(['prefix' => '/campus'], function () {
 
     // Delete
     Route::delete('{campus}', [CampusController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin', 'throttle:delete');
+    Route::delete('delete-permanent/{campus}', [CampusController::class, 'deletePermanently'])->middleware('jwt.auth', 'role:super_admin', 'throttle:delete');
+
+    // Restore
+    Route::patch('{campus}', [CampusController::class, 'restore'])->middleware('jwt.auth', 'role:super_admin', 'throttle:write');
 });
 
 // ============== DEPARTMENT ROUTE ==================
@@ -236,6 +241,10 @@ Route::group(['prefix' => '/section'], function () {
     Route::delete('{section}', [SectionsController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin', 'throttle:delete');
 });
 
+Route::group(['prefix' => '/users', 'middleware', ['jwt.auth', 'role:super_admin,admin,librarian']], function () {
+    Route::get('', [UserController::class, 'index']);
+});
+
 /**
  *      Private Routes
  *
@@ -264,6 +273,15 @@ Route::group([
     Route::group(['prefix' => 'dashboard'], function () {
         // Get
         Route::get('total-collections', [DashboardController::class, 'totalCollections']);
+        Route::get('total-academics', [DashboardController::class, 'totalAcademics']);
+        Route::get('total-serials', [DashboardController::class, 'totalSerials']);
+        Route::get('total-books', [DashboardController::class, 'totalBooks']);
+
+        Route::get('total-patrons', [DashboardController::class, 'totalPatrons']);
+        Route::get('total-librarians', [DashboardController::class, 'totalLibrarians']);
+
+        Route::get('total-campuses', [DashboardController::class, 'totalCampuses']);
+        Route::get('total-branches', [DashboardController::class, 'totalBranches']);
 
         // Post
 

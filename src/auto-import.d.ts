@@ -8,8 +8,9 @@ export {}
 declare global {
   const EffectScope: typeof import('vue').EffectScope
   const acceptHMRUpdate: typeof import('pinia').acceptHMRUpdate
-  const adminCampusRoutes: typeof import('./router/admin/campusRoutes').adminCampusRoutes
+  const adminCampusRoutes: typeof import('./router/admin/campus.route').adminCampusRoutes
   const adminRoutes: typeof import('./router/adminRoutes').adminRoutes
+  const adminUserRoutes: typeof import('./router/admin/users.route').adminUserRoutes
   const api: typeof import('./plugins/axios').api
   const asyncComputed: typeof import('@vueuse/core').asyncComputed
   const authRoute: typeof import('./router/authRoute').authRoute
@@ -18,7 +19,7 @@ declare global {
   const autoResetRef: typeof import('@vueuse/core').autoResetRef
   const axios: typeof import('./plugins/axios').default
   const backendRoute: typeof import('./plugins/axios').backendRoute
-  const campusRoutes: typeof import('./router/admin/campusRoutes').default
+  const campusRoute: typeof import('./router/admin/campus.route').default
   const computed: typeof import('vue').computed
   const computedAsync: typeof import('@vueuse/core').computedAsync
   const computedEager: typeof import('@vueuse/core').computedEager
@@ -157,10 +158,12 @@ declare global {
   const unrefElement: typeof import('@vueuse/core').unrefElement
   const until: typeof import('@vueuse/core').until
   const useAccessionStore: typeof import('./stores/librarian/accessionStore').useAccessionStore
-  const useAcquisitionLines: typeof import('./stores/librarian/acquisitionLinesStore').useAcquisitionLines
   const useAcquisitionLinesStore: typeof import('./stores/librarian/acquisitionLinesStore').useAcquisitionLinesStore
   const useAcquisitionStore: typeof import('./stores/librarian/acquisitionStore').useAcquisitionStore
   const useActiveElement: typeof import('@vueuse/core').useActiveElement
+  const useAdminBranchStore: typeof import('./stores/admin/branchStore').useAdminBranchStore
+  const useAdminUser: typeof import('./stores/admin/userStore').useAdminUser
+  const useAdminUserStore: typeof import('./stores/admin/userStore').useAdminUserStore
   const useAnimate: typeof import('@vueuse/core').useAnimate
   const useArrayDifference: typeof import('@vueuse/core').useArrayDifference
   const useArrayEvery: typeof import('@vueuse/core').useArrayEvery
@@ -182,7 +185,6 @@ declare global {
   const useBattery: typeof import('@vueuse/core').useBattery
   const useBluetooth: typeof import('@vueuse/core').useBluetooth
   const useBranchStore: typeof import('./stores/branchStore').useBranchStore
-  const useBreadcrumb: typeof import('./composables/utils/useBreadcrumbs').useBreadcrumb
   const useBreadcrumbStore: typeof import('./stores/ui/breadcrumbs').useBreadcrumbStore
   const useBreakpoints: typeof import('@vueuse/core').useBreakpoints
   const useBroadcastChannel: typeof import('@vueuse/core').useBroadcastChannel
@@ -209,6 +211,7 @@ declare global {
   const useDebounce: typeof import('@vueuse/core').useDebounce
   const useDebounceFn: typeof import('@vueuse/core').useDebounceFn
   const useDebouncedRefHistory: typeof import('@vueuse/core').useDebouncedRefHistory
+  const useDepartmentStore: typeof import('./stores/departmentStore').useDepartmentStore
   const useDeviceMotion: typeof import('@vueuse/core').useDeviceMotion
   const useDeviceOrientation: typeof import('@vueuse/core').useDeviceOrientation
   const useDevicePixelRatio: typeof import('@vueuse/core').useDevicePixelRatio
@@ -386,6 +389,9 @@ declare global {
   export type { Campus } from './stores/campusStore'
   import('./stores/campusStore')
   // @ts-ignore
+  export type { Department } from './stores/departmentStore'
+  import('./stores/departmentStore')
+  // @ts-ignore
   export type { Accession } from './stores/librarian/accessionStore'
   import('./stores/librarian/accessionStore')
   // @ts-ignore
@@ -406,8 +412,9 @@ declare module 'vue' {
   interface ComponentCustomProperties {
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
     readonly acceptHMRUpdate: UnwrapRef<typeof import('pinia')['acceptHMRUpdate']>
-    readonly adminCampusRoutes: UnwrapRef<typeof import('./router/admin/campusRoutes')['adminCampusRoutes']>
+    readonly adminCampusRoutes: UnwrapRef<typeof import('./router/admin/campus.route')['adminCampusRoutes']>
     readonly adminRoutes: UnwrapRef<typeof import('./router/adminRoutes')['adminRoutes']>
+    readonly adminUserRoutes: UnwrapRef<typeof import('./router/admin/users.route')['adminUserRoutes']>
     readonly api: UnwrapRef<typeof import('./plugins/axios')['api']>
     readonly asyncComputed: UnwrapRef<typeof import('@vueuse/core')['asyncComputed']>
     readonly authRoute: UnwrapRef<typeof import('./router/authRoute')['authRoute']>
@@ -416,7 +423,7 @@ declare module 'vue' {
     readonly autoResetRef: UnwrapRef<typeof import('@vueuse/core')['autoResetRef']>
     readonly axios: UnwrapRef<typeof import('./plugins/axios')['default']>
     readonly backendRoute: UnwrapRef<typeof import('./plugins/axios')['backendRoute']>
-    readonly campusRoutes: UnwrapRef<typeof import('./router/admin/campusRoutes')['default']>
+    readonly campusRoute: UnwrapRef<typeof import('./router/admin/campus.route')['default']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
     readonly computedAsync: UnwrapRef<typeof import('@vueuse/core')['computedAsync']>
     readonly computedEager: UnwrapRef<typeof import('@vueuse/core')['computedEager']>
@@ -558,6 +565,8 @@ declare module 'vue' {
     readonly useAcquisitionLinesStore: UnwrapRef<typeof import('./stores/librarian/acquisitionLinesStore')['useAcquisitionLinesStore']>
     readonly useAcquisitionStore: UnwrapRef<typeof import('./stores/librarian/acquisitionStore')['useAcquisitionStore']>
     readonly useActiveElement: UnwrapRef<typeof import('@vueuse/core')['useActiveElement']>
+    readonly useAdminBranchStore: UnwrapRef<typeof import('./stores/admin/branchStore')['useAdminBranchStore']>
+    readonly useAdminUserStore: UnwrapRef<typeof import('./stores/admin/userStore')['useAdminUserStore']>
     readonly useAnimate: UnwrapRef<typeof import('@vueuse/core')['useAnimate']>
     readonly useArrayDifference: UnwrapRef<typeof import('@vueuse/core')['useArrayDifference']>
     readonly useArrayEvery: UnwrapRef<typeof import('@vueuse/core')['useArrayEvery']>
@@ -605,6 +614,7 @@ declare module 'vue' {
     readonly useDebounce: UnwrapRef<typeof import('@vueuse/core')['useDebounce']>
     readonly useDebounceFn: UnwrapRef<typeof import('@vueuse/core')['useDebounceFn']>
     readonly useDebouncedRefHistory: UnwrapRef<typeof import('@vueuse/core')['useDebouncedRefHistory']>
+    readonly useDepartmentStore: UnwrapRef<typeof import('./stores/departmentStore')['useDepartmentStore']>
     readonly useDeviceMotion: UnwrapRef<typeof import('@vueuse/core')['useDeviceMotion']>
     readonly useDeviceOrientation: UnwrapRef<typeof import('@vueuse/core')['useDeviceOrientation']>
     readonly useDevicePixelRatio: UnwrapRef<typeof import('@vueuse/core')['useDevicePixelRatio']>

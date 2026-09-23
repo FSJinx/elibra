@@ -1,7 +1,7 @@
 <template>
   <main class="px-5 pb-24 pt-8 sm:px-8 sm:pb-12">
-    <div class="mx-auto max-w-3xl">
-      <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+    <div class="flex flex-col gap-5 mx-auto max-w-3xl">
+      <Card>
         <div class="flex flex-col gap-5 sm:flex-row sm:items-center">
           <div class="grid size-20 shrink-0 place-items-center rounded-2xl bg-emerald-100 text-2xl font-bold text-emerald-800">{{ auth.getInitials || 'MS' }}</div>
           <div>
@@ -29,8 +29,8 @@
             <p class="mt-1 font-semibold text-slate-800">August 2023</p>
           </div>
         </div>
-      </section>
-      <section class="mt-5 rounded-2xl b1order border-slate-200 bg-white p-6 shadow-sm">
+      </Card>
+      <Card>
         <h2 class="font-bold text-slate-950">Account preferences</h2>
         <div class="mt-4 divide-y divide-slate-100">
           <label v-for="preference in preferences" :key="preference.title" class="flex items-center justify-between gap-4 py-4 first:pt-0 last:pb-0"
@@ -40,6 +40,7 @@
             ><input type="checkbox" :checked="preference.enabled" class="size-4 accent-emerald-700"
           /></label>
         </div>
+<<<<<<< HEAD
       </section>
 <<<<<<< HEAD
       <section class="mt-5 flex flex-col gap-4 rounded-2xl border border-rose-100 bg-rose-50/50 p-6 sm:flex-row sm:items-center sm:justify-between">
@@ -56,6 +57,16 @@
         <Button class="w-full" variant="danger" @click="user.logout()">Logout</Button>
 >>>>>>> dc589cece2127835548c01de82f4bd238c045bd6
       </section>
+=======
+      </Card>
+      <Card>
+        <div>
+          <Title :level="4">Sign Out</Title>
+          <p class="text-sm text-muted-foreground">Securely sign out this account to this device</p>
+        </div>
+        <Button variant="danger" @click="user.logout()">Logout</Button>
+      </Card>
+>>>>>>> e32688c1189fa09ce5f5fa44714f35f539d448dd
     </div>
   </main>
 </template>

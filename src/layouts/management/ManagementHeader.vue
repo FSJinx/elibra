@@ -38,7 +38,7 @@ const subHeading = computed(() => {
   } else {
     branch.value = 'Not assigned to any branch'
   }
-  return `${branch.value ?? 'Not assigned to a library branch'}, ${parse.toCapital(auth.user?.role || 'Unknown')}`
+  return `${branch.value ?? 'Not assigned to a library branch'}, ${parse.toCapital(auth.displayRole || 'Unknown')}`
 })
 
 const heading = computed(() => {
@@ -47,7 +47,7 @@ const heading = computed(() => {
   if (auth.user?.campus) {
     if (auth.user?.role === 'librarian' || auth.user?.role === 'admin') {
       campus.value = auth.user?.campus?.name
-    } else if (auth.user?.role === 'super admin') {
+    } else if (auth.user?.role === 'super_admin') {
       campus.value = 'Global'
     }
   } else {

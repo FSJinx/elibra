@@ -1,7 +1,7 @@
 <template>
   <div class="max-h-[75dvh] overflow-y-auto">
     <Transition name="fade">
-      <p class="text-danger p-3 px-5" v-if="modal?.errorMessage?.length > 0 && !modal?.loading"><Icon class="mr-2" icon="exclamation-circle" /> {{ modal?.errorMessage }}</p>
+      <p class="text-danger p-3 px-5" v-if="modal?.error?.length > 0 && !modal?.loading"><Icon class="mr-2" icon="exclamation-circle" /> {{ modal?.error }}</p>
     </Transition>
     
     <div class="flex-1 flex min-h-100" v-if="modal?.loading">

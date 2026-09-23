@@ -43,6 +43,7 @@ class UpdateAcademicRequest extends BaseRequest
             'publication_year' => [ 'sometimes', 'nullable', 'integer', 'min:1900', 'max:' . date('Y') ],
             'keywords' => [ 'sometimes', 'nullable', 'string' ],
             'electronic_file' => [ 'sometimes', 'nullable', 'file', 'mimes:pdf,doc,docx' ],
+            'cover_image' => [ 'sometimes', 'nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048' ],
             'item_type_id' => [ 'sometimes', 'required', Rule::exists((new ItemType)->getTable(), 'id') ],
             'item_type_category_id' => [ 'sometimes', 'required', Rule::exists((new ItemTypeCategory)->getTable(), 'id') ],
             'branch_id' => [ 'sometimes', 'required', Rule::exists((new Branch)->getTable(), 'id') ],

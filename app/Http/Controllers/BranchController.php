@@ -113,6 +113,19 @@ class BranchController extends Controller
         );
     }
 
+    public function temporaryIndex()
+    {
+        $branches = Branch::all()->load('campus');
+
+        return $this->response(
+            'success',
+            'Branches retrieved successfully',
+            $branches->toArray(),
+            200
+        );
+
+    }
+
     /**
      * Show the form for creating a new resource.
      */

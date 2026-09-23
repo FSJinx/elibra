@@ -42,6 +42,7 @@ class StoreSerialRequest extends BaseRequest
             'publication_year' => ['nullable', 'integer', 'min:1900', 'max:'.date('Y')],
             'keywords' => ['nullable', 'array'],
             'electronic_file' => ['nullable', 'file', 'mimes:pdf,doc,docx'],
+            'cover_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'item_type_id' => ['required', Rule::exists((new ItemType)->getTable(), 'id')],
             'item_type_category_id' => ['required', Rule::exists((new ItemTypeCategory)->getTable(), 'id')],
             'branch_id' => ['required', Rule::exists((new Branch)->getTable(), 'id')],
