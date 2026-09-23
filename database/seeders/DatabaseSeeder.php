@@ -24,16 +24,16 @@ class DatabaseSeeder extends Seeder
             AuthorshipSeeder::class,
 
             // Dev Seeds
-            // CampusSeeder::class,
-            // BranchSeeder::class,
-            // DepartmentSeeder::class,
-            // BranchSectionSeeder::class,
-            // ProgramsSeeder::class,
-            // UsersSeeder::class,
-            // AuthorSeeder::class,
-            // AcquisitionSeeder::class,
-            // ItemSeeder::class,
-            // AcquisitionLinesSeeder::class,
+            CampusSeeder::class,
+            BranchSeeder::class,
+            DepartmentSeeder::class,
+            BranchSectionSeeder::class,
+            ProgramsSeeder::class,
+            UsersSeeder::class,
+            AuthorSeeder::class,
+            AcquisitionSeeder::class,
+            ItemSeeder::class,
+            AcquisitionLinesSeeder::class,
         ]);
     }
 }

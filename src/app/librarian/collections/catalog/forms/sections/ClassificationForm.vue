@@ -43,13 +43,13 @@ interface Props {
 
 const { languages } = useLanguagesStore()
 const categories = useItemCategoriesStore()
-const { branches } = useBranchStore()
+const { data } = useBranchStore()
 const auth = authStore()
 
 const props = defineProps<Props>()
 
 // Computed
-const branchOptions = computed(() => branches.filter((i) => i.campus_id === auth.user?.campus_id))
+const branchOptions = computed(() => data?.filter((i) => i.campus_id === auth.user?.campus_id))
 
 const form = defineModel<ClassficationField>({ default: {} })
 </script>

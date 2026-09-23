@@ -9,8 +9,9 @@
             <th>No</th>
             <th class="text-left">Last Name</th>
             <th class="text-left">First Name</th>
-            <th class="text-left">Middle Initial</th>
+            <th>Middle Initial</th>
             <th>Sex</th>
+            <th>Username</th>
             <th class="text-left">Email</th>
             <th>Status</th>
           </tr>
@@ -19,13 +20,14 @@
         <Tbody :data="users.data" :loading="users.loading" cols="7">
           <tr v-for="(user, index) in users.data" :key="index">
             <Td :data="index + 1" />
-            <Td :data="user.last_name" class="text-left"/>
-            <Td :data="user.first_name" class="text-left"/>
-            <Td :data="user.middle_initial" class="text-left"/>
+            <Td :data="user.last_name" class="text-left" />
+            <Td :data="user.first_name" class="text-left" />
+            <Td :data="user.middle_initial" />
             <Td>
               <Status :variant="parse.status(user.sex)">{{ user.sex }}</Status>
             </Td>
-            <Td :data="user.email" class="text-left"/>
+            <Td :data="user.username" />
+            <Td :data="user.email" class="text-left" />
             <Td>
               <Status :variant="parse.status(user.status)">{{ user.status }}</Status>
             </Td>

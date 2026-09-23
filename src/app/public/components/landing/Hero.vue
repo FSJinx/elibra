@@ -8,14 +8,14 @@
         <div class="absolute size-15 sm:size-25 z-1 rounded-full bg-primary/25 blur-md"></div>
       </div>
 
-      <p class="font-medium text-[75%]">The Online Public Access Catalog (OPAC) of the</p>
+      <p class="font-medium text-[75%]">The Official Integrated Library Management System of the</p>
 
       <div class="text-[160%] uppercase font-semibold text-green-700 tracking-tight"><span class="text-[125%]">I</span>sabela <span class="text-[125%]">S</span>tate <span class="text-[125%]">U</span>niversity</div>
     </div>
 
     <!-- Statement of the System -->
     <div class="max-w-5xl mx-auto text-center px-5">
-      <Chip class="px-3 rounded-md">e-Libra</Chip>
+      <span class="text-primary font-bold">e-Libra</span>
       is the official Integrated Library Management System of the Isabela State University. Developed by FSJinx, e-Libra acts as a centralized database for library/academic materials for all Student across the Isabela State Universitys.
     </div>
 
@@ -26,7 +26,7 @@
 
         <input required id="opac-search" v-model="opac.search" type="text" class="flex-1 px-5 sm:text-lg bg-background leading-0 border-x border-border outline-none" placeholder="Search for title, author, or call number..." autocomplete="off" />
 
-        <Button type="submit" class="rounded-none! bg-slate-50 h-full sm:text-lg hover:text-primary" variant="text" left-icon="search"> Search </Button>
+        <Button type="submit" class="rounded-none! bg-slate-50 h-full sm:text-lg hover:text-primary" variant="text" left-icon="search">Search</Button>
       </Form>
 
       <!-- Search Recommendations -->

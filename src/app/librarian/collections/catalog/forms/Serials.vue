@@ -1,6 +1,6 @@
 <template>
   <Form class="flex flex-col gap-3 p-5" @submit="submitForm">
-    <SectionHeader class="bg-background border border-border rounded-t-xl rounded-b-lg" :title="`New ${$route.meta.breadcrumb}`" description="Please fill all required fields and re-check your inputs before submitting." />
+    <SectionHeader class="bg-background border border-border rounded-t-xl rounded-b-lg pb-5" :title="`New ${$route.meta.breadcrumb}`" description="Please fill all required fields and re-check your inputs before submitting." />
 
     <BaseForm v-model="form" :errors="errors" />
 

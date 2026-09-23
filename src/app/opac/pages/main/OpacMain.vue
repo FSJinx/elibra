@@ -139,12 +139,12 @@ const { typedText } = useSearchTyping()
 const route = useRoute()
 const parse = useParser()
 
-const {item_types} = useItemTypeStore()
-const { item_categories } = useItemCategoriesStore()
-const { campuses } = useCampusStore()
+const { item_types } = useItemTypeStore()
+const { categories } = useItemCategoriesStore()
+const { data } = useCampusStore()
 
-const selectedCampus = computed(() => campuses?.find((i) => String(i.id) === params.value.campus)?.name)
-const itemTypeCategories = computed(() => item_categories.filter((item) => String(item.item_type_id) === String(params.value.item_type)))
+const selectedCampus = computed(() => data?.find((i) => String(i.id) === params.value.campus)?.name)
+const itemTypeCategories = computed(() => categories.filter((item) => String(item.item_type_id) === String(params.value.item_type)))
 </script>
 
 <style scoped>
