@@ -4,12 +4,6 @@
     <!-- <div class="flex flex-col w-full max-w-6xl bg-restore border border-border rounded-xl overflow-hidden">
       <div class="h-50 bg-background"></div>
 
-<<<<<<< HEAD
-      <OpacMain v-model:params="params" :library-data="libraryData", :total="total" :loading="loading" @search="search" />
-
-      <OpacHistory />
-    </div>
-=======
       <div class="flex-1 overflow-y-auto">
         <div class="h-screen"></div>
       </div>
@@ -18,7 +12,6 @@
     <!-- <div class="w-100 bg-danger">
       <div class="h-[40vh]"></div>
     </div> -->
->>>>>>> dc589cece2127835548c01de82f4bd238c045bd6
   </div>
 
   <!-- <OpacHistory /> -->

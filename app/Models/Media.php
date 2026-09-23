@@ -5,6 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property int $id
+ * @property string|null $file_name
+ * @property string|null $file_path
+ * @property string|null $mime_type
+ * @property int|null $file_size
+ * @property string|null $image_type
+ */
 class Media extends Model
 {
     /** @use HasFactory<\Database\Factories\MediaFactory> */

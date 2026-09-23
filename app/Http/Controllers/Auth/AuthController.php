@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateOwnProfileRequest;
+use App\Models\User;
 use App\Services\AuthService;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
@@ -51,7 +52,13 @@ class AuthController extends Controller
 
     public function updateProfile(UpdateOwnProfileRequest $request, AuthService $authService)
     {
-        $this->auth()->user()->update($request->validated());
+        $user = $this->user();
+
+        if (! $user instanceof User) {
+            return $this->response('error', 'You are not logged in.', statusCode: 401);
+        }
+
+        $user->update($request->validated());
 
         return $this->response('success', 'Profile successfully updated.', $authService->index());
     }

@@ -4,15 +4,21 @@ namespace App\Services;
 
 use App\Models\Branch;
 use App\Models\Campus;
+use App\Models\User;
 
 class AuthService
 {
     /**
      * Returns User Information
      */
-    public function index()
+    public function index(): array
     {
+        /** @var User|null $user */
         $user = auth('api')->user();
+
+        if (! $user instanceof User) {
+            return [];
+        }
 
         $campus = null;
         $branch = null;

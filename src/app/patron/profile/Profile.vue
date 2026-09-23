@@ -48,33 +48,17 @@
       </div>
     </div>
 
-    <Modal ref="editModal" size="large">
-      <ModalHeader use-default-layout title="Edit personal information" subtitle="Update your personal and contact details." icon="person" />
-      <ModalBody>
-        <form id="patron-profile-form" class="grid gap-4 p-5 sm:grid-cols-2" @submit.prevent="saveProfile">
-          <label class="text-sm font-semibold text-slate-700">First name<input v-model.trim="form.first_name" required class="field" /></label>
-          <label class="text-sm font-semibold text-slate-700">Last name<input v-model.trim="form.last_name" required class="field" /></label>
-          <label class="text-sm font-semibold text-slate-700">Middle initial<input v-model.trim="form.middle_initial" maxlength="2" class="field" /></label>
-          <label class="text-sm font-semibold text-slate-700">Email<input v-model.trim="form.email" type="email" class="field" /></label>
-          <label class="text-sm font-semibold text-slate-700">Contact number<input v-model.trim="form.contact_number" type="tel" maxlength="20" class="field" /></label>
-          <label class="text-sm font-semibold text-slate-700">Birth date<input v-model="form.birthdate" type="date" class="field" /></label>
-          <label class="text-sm font-semibold text-slate-700">Sex<select v-model="form.sex" class="field"><option value="">Prefer not to say</option><option value="male">Male</option><option value="female">Female</option></select></label>
-        </form>
-      </ModalBody>
-      <ModalFooter class="gap-2"><Button variant="danger" :disabled="saving" @click="editModal?.close()">Cancel</Button><Button type="submit" form="patron-profile-form" :disabled="saving">{{ saving ? 'Saving...' : 'Save changes' }}</Button></ModalFooter>
-    </Modal>
+    <EditProfileModal ref="editModal" :user="auth.user" @saved="handleProfileSaved" />
   </main>
 </template>
 
 <script setup lang="ts">
-import Modal from '@/components/my/Modal.vue'
+import EditProfileModal from '@/app/patron/profile/modals/EditProfileModal.vue'
 
 const auth = authStore()
 const user = useAuth()
 const pop = usePopup()
-const editModal = ref<InstanceType<typeof Modal> | null>(null)
-const saving = ref(false)
-const form = reactive({ first_name: '', last_name: '', middle_initial: '', email: '', contact_number: '', birthdate: '', sex: '' })
+const editModal = ref<InstanceType<typeof EditProfileModal> | null>(null)
 const memberSince = computed(() => formatDate(auth.user?.patron?.date_joined || auth.user?.created_at))
 function formatDate(date?: string | null) { return date ? new Intl.DateTimeFormat('en', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(date)) : 'Not provided' }
 function formatDateTime(date?: string | null) { return date ? new Intl.DateTimeFormat('en', { month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' }).format(new Date(date)) : 'Not available' }
@@ -87,29 +71,11 @@ function formatProgram(name?: string | null) {
     .map((word, index) => (index > 0 && lowerCaseWords.has(word) ? word : `${word.charAt(0).toUpperCase()}${word.slice(1)}`))
     .join(' ')
 }
-function fillForm() { Object.assign(form, { first_name: auth.user?.first_name || '', last_name: auth.user?.last_name || '', middle_initial: auth.user?.middle_initial || '', email: auth.user?.email || '', contact_number: auth.user?.contact_number || '', birthdate: auth.user?.birthdate || '', sex: auth.user?.sex || '' }) }
-watch(() => auth.user, fillForm, { immediate: true })
-function openEditModal() { fillForm(); editModal.value?.open() }
-async function saveProfile() { saving.value = true; try { const response = await api.put('auth/profile', form); auth.setUser(response.data.data); editModal.value?.close(); pop.fire({ title: 'Saved', text: response.data.message, icon: 'success' }) } finally { saving.value = false } }
+function openEditModal() { editModal.value?.open() }
+function handleProfileSaved(user: User, message?: string) { auth.setUser(user); pop.fire({ title: 'Saved', text: message, icon: 'success' }) }
 </script>
 
 <style scoped>
-.field {
-  width: 100%;
-  margin-top: 0.25rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 0.5rem;
-  background: white;
-  padding: 0.5rem 0.75rem;
-  font-size: 0.875rem;
-  outline: none;
-}
-
-.field:focus {
-  border-color: #059669;
-  box-shadow: 0 0 0 2px #d1fae5;
-}
-
 .label {
   font-size: 0.75rem;
   font-weight: 600;

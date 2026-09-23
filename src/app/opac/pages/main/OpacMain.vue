@@ -87,53 +87,6 @@
             </div>
           </div>
 
-<<<<<<< HEAD
-            <div class="relative w-20 sm:w-24 aspect-2/3 shrink-0 rounded-lg overflow-hidden bg-primary/5 border border-border">
-              <img :src="default_book" alt="" class="w-full h-full object-cover transition-transform duration-300" />
-            </div>
-
-            <div class="flex-1 min-w-0 py-1">
-              <div class="flex items-start gap-3">
-                <div class="min-w-0 flex-1">
-                  <h3 class="font-semibold text-lg leading-snug truncate group-hover:text-primary transition-colors">
-                    {{ item.title }}
-                  </h3>
-                  <p v-if="item.subtitle" class="mt-1 text-sm text-foreground-secondary truncate">
-                    {{ item.subtitle }}
-                  </p>
-                </div>
-
-                <Icon icon="arrow-up-right" class="hidden sm:block shrink-0 text-foreground-secondary opacity-0 group-hover:opacity-100 group-hover:text-primary transition-all" />
-              </div>
-
-              <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mt-4 text-xs text-foreground-secondary">
-                <span class="inline-flex items-center gap-1.5">
-                  <Icon icon="user" />
-                  {{ item.authors?.join(', ') || 'No Author' }}
-                </span>
-
-                <span class="inline-flex items-center gap-1.5">
-                  <Icon icon="calendar" />
-                  {{ item.publication_year || 'Unknown Year' }}
-                </span>
-
-                <span class="inline-flex items-center gap-1.5">
-                  <Icon icon="building-2" />
-                  {{ item.branch }} - {{ item.campus || 'Unknown Campus' }}
-                </span>
-              </div>
-            </div>
-
-            <div class="hidden sm:block shrink-0 pt-1">
-              <Status class="text-xs capitalize px-3 py-1.5 rounded-full border border-current/30" :variant="parse.status(item.itemType as string)">
-                {{ item.item_type }}
-              </Status>
-            </div>
-          </Card>
-        </router-link>
-      </div>
-    </section>
-=======
           <div class="hidden sm:block shrink-0 pt-1">
             <Status class="text-xs capitalize px-3 py-1.5 rounded-full border border-current/30" :variant="parse.status(item.itemType as string)">
               {{ item.item_type }}
@@ -142,7 +95,6 @@
         </div>
       </router-link>
     </div>
->>>>>>> dc589cece2127835548c01de82f4bd238c045bd6
   </main>
 </template>
 

@@ -11,6 +11,24 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
+/**
+ * @property int $id
+ * @property string|null $uuid
+ * @property string|null $first_name
+ * @property string|null $last_name
+ * @property string|null $middle_initial
+ * @property string|null $sex
+ * @property string|null $birthdate
+ * @property string|null $contact_number
+ * @property string|null $email
+ * @property string|null $email_verified_at
+ * @property string|null $role
+ * @property string|null $status
+ * @property int|null $login_attempts
+ * @property string|null $username
+ * @property int|null $campus_id
+ * @property int|null $profile_picture_id
+ */
 class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 {
     use AutoFormatter, HasFactory, Notifiable, SoftDeletes;
@@ -58,19 +76,9 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         return $this->hasOne(Librarian::class, 'user_id');
     }
 
-    public function section()
-    {
-        return $this->belongsTo($this->librarian(), 'section_id');
-    }
-
     public function patron()
     {
         return $this->hasOne(Patron::class, 'user_id');
-    }
-
-    public function program()
-    {
-        return $this->belongsTo($this->patron(), 'program_id');
     }
 
     public function campus()
