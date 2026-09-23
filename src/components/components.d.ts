@@ -20,10 +20,7 @@ declare module 'vue' {
     CloseButton: typeof import('./my/CloseButton.vue')['default']
     Construction: typeof import('./PageConstruction.vue/index.js')['default']
     Control: typeof import('./form/Control.vue')['default']
-<<<<<<< HEAD
-=======
     DatePicker: typeof import('./form/DatePicker.vue')['default']
->>>>>>> dc589cece2127835548c01de82f4bd238c045bd6
     FeatureBelt: typeof import('./layout/FeatureBelt.vue')['default']
     Footer: typeof import('./layout/Footer.vue')['default']
     Form: typeof import('./form/Form.vue')['default']
@@ -46,15 +43,11 @@ declare module 'vue' {
     LogoLoader: typeof import('./brand/LogoLoader.vue')['default']
     LucideIcon: typeof import('./my/LucideIcon.vue')['default']
     Modal: typeof import('./my/Modal.vue')['default']
-<<<<<<< HEAD
-    Option: typeof import('./form/Option.vue')['default']
-=======
     ModalBody: typeof import('./my/ModalBody.vue')['default']
     ModalFooter: typeof import('./my/ModalFooter.vue')['default']
     ModalHeader: typeof import('./my/ModalHeader.vue')['default']
     Option: typeof import('./form/Option.vue')['default']
     PageConstruction: typeof import('./PageConstruction.vue')['default']
->>>>>>> dc589cece2127835548c01de82f4bd238c045bd6
     RedMark: typeof import('./my/RedMark.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
