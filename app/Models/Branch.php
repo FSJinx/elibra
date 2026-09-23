@@ -6,6 +6,7 @@ use Database\Factories\BranchFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Override;
 
 class Branch extends Model
 {
@@ -13,6 +14,12 @@ class Branch extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = ['name', 'contact_info', 'email', 'email_verified_at', 'opening_hour', 'closing_hour', 'logo_id', 'branch_head_id', 'campus_id'];
+
+    #[Override]
+    protected static function booted()
+    {
+        return parent::booted();
+    }
 
     public function campus()
     {
@@ -22,5 +29,10 @@ class Branch extends Model
     public function librarian()
     {
         return $this->hasMany(Librarian::class);
+    }
+
+    public function items()
+    {
+        return $this->hasMany(Item::class);
     }
 }

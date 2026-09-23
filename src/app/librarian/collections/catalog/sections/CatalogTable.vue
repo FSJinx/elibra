@@ -1,6 +1,6 @@
 <template>
   <!-- Catalog Table -->
-  <Table :data-length="data.length" title="Catalog List" subtitle="List of all library materials.">
+  <Table :data-length="data?.length" title="Catalog List" subtitle="List of all library materials.">
     <Thead>
       <tr>
         <Th>No</Th>
