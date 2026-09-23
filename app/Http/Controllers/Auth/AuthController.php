@@ -58,8 +58,6 @@ class AuthController extends Controller
         }
     }
 
-    
-
     public function logout()
     {
         if ($this->auth()->check()) {

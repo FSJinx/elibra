@@ -32,8 +32,6 @@ class StoreAcquisitionLinesRequest extends BaseRequest
         $rules = [
             'quantity' => [ 'required', 'numeric', 'min:1', ],
             'unit_price' => [ 'nullable', 'numeric', 'min:0', ],
-            'discount' => [ 'nullable', 'numeric', 'min:0', ],
-            'net_price' => [ 'nullable', 'numeric', 'min:0', ],
 
             'item_id' => [ 'required', Rule::exists((new Item)->getTable(), 'id')],
             'acquisition_id' => [ 'required', Rule::exists((new Acquisition)->getTable(), 'id')],
@@ -52,12 +50,6 @@ class StoreAcquisitionLinesRequest extends BaseRequest
 
             'unit_price.numeric' => 'Unit price must be a valid number.',
             'unit_price.min' => 'Unit price cannot be negative.',
-
-            'discount.numeric' => 'Discount must be a valid number.',
-            'discount.min' => 'Discount cannot be negative.',
-
-            'net_price.numeric' => 'Net price must be a valid number.',
-            'net_price.min' => 'Net price cannot be negative.',
 
             'item_id.required' => 'Item is required.',
             'item_id.integer' => 'Item ID must be a valid number.',

@@ -23,4 +23,9 @@ class Branch extends Model
     {
         return $this->hasMany(Librarian::class);
     }
+
+    public function branch_sections()
+    {
+        return $this->hasMany(BranchSection::class);
+    }
 }

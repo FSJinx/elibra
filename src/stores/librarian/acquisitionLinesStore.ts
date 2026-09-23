@@ -2,8 +2,6 @@ export interface AcquisitionLines {
   id?: any
   quantity: number | null
   unit_price: number | null
-  discount: number | null
-  net_price: number | null
   [key: string]: any
 }
 

@@ -18,9 +18,9 @@ class Campus extends Model
     #[Override]
     protected static function booted()
     {
-        static::deleting(function ($campus) {
-            $campus->branches()->delete();
-        });
+        // static::deleting(function ($campus) {
+        //     $campus->branches()->delete();
+        // });
 
         static::restoring(function ($campus) {
             $campus->branches()->withTrashed()->restore();
