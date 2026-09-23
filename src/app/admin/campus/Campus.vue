@@ -25,7 +25,7 @@
           </tr>
         </Thead>
         <Tbody :data="campus.data" :loading="campus.loading" cols="5">
-          <tr class="hover" v-for="(c, index) in campus.data" :key="index" @click="router.push({ name: 'admin.campus.show', params: { id: c.id } })">
+          <tr class="hover" v-for="(c, index) in campus.data" :key="index" @click="check(c)">
             <Td :data="index + 1" />
             <Td class="text-left" :data="c?.name" />
             <Td :data="c?.code" />
@@ -48,6 +48,11 @@ import UpdateCampusModal from '@/app/admin/campus/modals/UpdateCampusModal.vue'
 const campus = useCampusStore()
 const parse = useParser()
 const pop = usePopup()
+
+function check(c: Campus) {
+  campus.setCurrentData(c)
+  return router.push({ name: 'admin.campus.show', params: { id: c.id } })
+}
 </script>
 
 <style scoped></style>

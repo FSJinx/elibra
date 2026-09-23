@@ -12,7 +12,7 @@
       </div>
     </div>
 
-    <div class="flex-1 flex flex-col gap-5 p-5">
+    <div class="flex-1 flex flex-col gap-5">
       <router-view />
     </div>
   </div>
@@ -25,8 +25,8 @@ const route = useRoute()
 
 const navRoutes = [
   { name: 'Overview', route: 'admin.campus.show.overview' },
-  { name: 'Departments', route: 'admin.campus.show.departments' },
   { name: 'Branches', route: 'admin.campus.show.branches' },
+  { name: 'Departments', route: 'admin.campus.show.departments' },
 ]
 
 onBeforeUnmount(() => {

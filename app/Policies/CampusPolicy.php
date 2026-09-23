@@ -52,7 +52,7 @@ class CampusPolicy
      */
     public function restore(User $user, Campus $campus): bool
     {
-        return false;
+        return $user->isSuperAdmin();
     }
 
     /**

@@ -1,4 +1,4 @@
-export interface Campus {
+export interface Department {
   id: any
   name: string
   code: string
@@ -10,52 +10,52 @@ export interface Campus {
   deleted_at: any
 }
 
-const url = 'campus'
+const url = 'department'
 
-export const useCampusStore = defineStore('campus', {
+export const useDepartmentStore = defineStore('department', {
   state: () => ({
-    data: null as Campus[] | null,
-    currentData: null as Campus | null,
+    data: null as Department[] | null,
+    currentData: null as Department | null,
     loading: false as true | false,
     pop: usePopup(),
     auth: authStore(),
   }),
 
   getters: {
-    getCampus() {
-      return (id: any) => (this.data as Campus[]).find((i) => i.id === id)
+    getDepartment() {
+      return (id: any) => (this.data as Department[]).find((i) => i.id === id)
     },
   },
 
   actions: {
     // =========== SETTERS ============
-    pushData(data: Campus) {
+    pushData(data: Department) {
       this.data?.push(data)
     },
 
-    updateData(data: Campus) {
-      this.data = (this.data as Campus[]).filter((i) => i.id !== data.id)
+    updateData(data: Department) {
+      this.data = (this.data as Department[]).filter((i) => i.id !== data.id)
       nextTick(() => this.data?.push(data))
     },
 
-    removeData(data: Campus) {
-      this.data = (this.data as Campus[]).filter((i) => i.id !== data.id)
+    removeData(data: Department) {
+      this.data = (this.data as Department[]).filter((i) => i.id !== data.id)
     },
 
-    setData(data: Campus[]) {
+    setData(data: Department[]) {
       this.data = data
     },
 
-    setCurrentData(data: Campus) {
+    setCurrentData(data: Department) {
       this.currentData = data
     },
 
     // =========== ACTIONS ============
-    async fetch(forced = false) {
+    async fetch(params = {}, forced = false) {
       if (this.data && !forced) return
 
       this.loading = true
-      const res = await get(url)
+      const res = await get(url, params)
       this.setData(res.data)
       this.loading = false
 
@@ -68,29 +68,22 @@ export const useCampusStore = defineStore('campus', {
       return res
     },
 
-    async create(params: Partial<Campus>) {
+    async create(params: Partial<Department>) {
       const res = await post(url, params)
       this.pushData(res.data)
 
       return res
     },
 
-    async update(params: Campus) {
+    async update(params: Department) {
       const res = await put(`${url}/${params.id}`, params)
       this.updateData(res.data)
-      this.setCurrentData(res.data)
       return res
     },
 
-    async remove(params: Campus) {
+    async remove(params: Department) {
       const res = await del(`${url}/${params?.id}`)
       this.removeData(params)
-      return res
-    },
-
-    async restore(params: Campus) {
-      const res = await patch(`${url}/${params?.id}`)
-      this.pushData(res.data)
       return res
     },
   },

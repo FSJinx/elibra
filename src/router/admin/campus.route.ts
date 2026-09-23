@@ -21,6 +21,7 @@ export const adminCampusRoutes = [
       {
         path: ':id',
         name: 'admin.campus.show',
+        meta: { title: 'Campus Management' },
         redirect: { name: 'admin.campus.show.overview' },
         component: () => import('@/app/admin/campus/ViewCampus.vue'),
         beforeEnter: async (to: any) => {
@@ -28,20 +29,19 @@ export const adminCampusRoutes = [
           const pop = usePopup()
           const breadcrumb = useBreadcrumbStore()
 
-          if (!campus.currentData || (campus.currentData && campus.currentData?.id !== to.params?.id)) {
-            pop.load()
-            try {
-              await campus.show(to.params.id)
-              pop.unload()
-            } catch (e: any) {
-              router.replace({name: 'admin.campus'})
+          if (campus.currentData !== null && campus.currentData.id == to.params?.id) return true
 
-              const message = e?.response?.data?.message
-              pop.error(message)
-            } finally {
-              const key = `${to.name as string}:${to.params.id}`
-              breadcrumb.set(key, (campus.currentData as { name?: string } | null)?.name ?? '')
-            }
+          pop.load()
+          try {
+            await campus.show(to.params.id)
+            pop.unload()
+          } catch (e: any) {
+            const message = e?.response?.data?.message
+            pop.error(message)
+            return router.replace({ name: 'admin.campus' })
+          } finally {
+            const key = `${to.name as string}:${to.params.id}`
+            breadcrumb.set(key, (campus.currentData as { name?: string } | null)?.name ?? '')
           }
 
           return true
