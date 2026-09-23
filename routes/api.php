@@ -53,6 +53,8 @@ Route::group(['prefix' => '/auth'], function () {
 
     Route::group(['middleware' => 'jwt.auth'], function () {
         Route::get('', [AuthController::class, 'index']); // /api/auth
+        Route::patch('/me', [AuthController::class, 'updateMe']);
+        Route::put('/me', [AuthController::class, 'updateMe']);
     });
 });
 
