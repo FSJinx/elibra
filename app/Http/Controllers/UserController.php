@@ -5,68 +5,29 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreUsersRequest;
 use App\Http\Requests\UpdateUsersRequest;
 use App\Models\User;
-use App\Services\UserPermissionService;
 use App\Services\UserService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $user = auth('api')->user();
-        $role = $request->role; // Tiyakin na walang space ang pagpasa nito mula sa Vue ('librarian')
+        $user = $this->user();
+        $users = null;
 
-        // I-eager load ang malalalim na relasyon para iwas sa N+1 query problem
-        $users = User::query()->with(['librarian.branch.campus', 'patron.program.department.campus']);
-
-        if ($user->role === 'librarian') {
-            $campusId = $user->librarian?->branch?->campus_id;
-
-            if (! $campusId) {
-                return response()->json(['status' => 'error', 'message' => 'Librarian has no assigned campus.'], 400);
-            }
-
-            // 1. I-GROUP NATIN ANG CAMPUS FILTER GAMIT ANG 'OR'
-            $users->where(function ($mainQuery) use ($campusId) {
-                // Option A: Kung siya ay librarian sa campus na ito
-                $mainQuery->whereHas('librarian.branch', function ($query) use ($campusId) {
-                    $query->where('campus_id', $campusId);
-                })
-                // Option B: O kaya naman siya ay patron sa campus na ito
-                    ->orWhereHas('patron.program.department', function ($query) use ($campusId) {
-                        $query->where('campus_id', $campusId);
-                    });
-            });
-
-            // 2. IBALIK NATIN ANG ROLE FILTERING (Para sa dropdown sa frontend)
-            if ($role && ($role === 'librarian' || $role === 'patron')) {
-                $users->where('role', $role);
-            } else {
-                // Kung walang piniling role sa filter, ipakita pareho ang mga librarian at patron sa campus na yon (bawal admin)
-                $users->where('role', '!=', 'admin');
-            }
-
-        } elseif ($user->role === 'admin') {
-            // Kung admin, walang campus isolation. Pero pwede pa rin siya mag-filter ng role kung gusto niya.
-            if ($role) {
-                $users->where('role', $role);
-            }
-        } else {
-            return response()->json(['status' => 'error', 'message' => 'Forbidden'], 403);
+        if ($user->isSuperAdmin()) {
+            $users = User::all();
         }
 
-        return response()->json([
-            'status' => 'success',
-            'data' => $users->get(),
-        ]);
+        // $users->paginate();
+
+        return $this->response(message: 'All users retrieved successfully!', data: $users->toArray());
     }
 
     /**
@@ -80,7 +41,7 @@ class UserController extends Controller
     public function store(StoreUsersRequest $request)
     {
         DB::beginTransaction();
-        try{
+        try {
             $data = $request->validated();
 
             UserService::verifyCampus($request->user(), $data);
@@ -112,7 +73,7 @@ class UserController extends Controller
                 422,
             );
             // throw $e;
-       }
+        }
     }
 
     /**
@@ -136,25 +97,25 @@ class UserController extends Controller
      */
     public function update(UpdateUsersRequest $request, User $user)
     {
-        
+
         DB::beginTransaction();
-        try{
+        try {
             $data = $request->validated();
-            
+
             UserService::verifyCampus($request->user(), $data);
 
-            //Update password if provided from request
-            if(!empty($data['password'])){
+            // Update password if provided from request
+            if (! empty($data['password'])) {
                 $data['password'] = Hash::make($data['password']);
             } else {
                 unset($data['password']);
             }
 
             // Only Super Admin is allowed to update role
-            if(isset($data['role']) && $user->role !== $data['role']){
+            if (isset($data['role']) && $user->role !== $data['role']) {
 
                 UserService::syncRolePermissions($user, $data['role']);
-                //no need to update role, may role na sa service
+                // no need to update role, may role na sa service
                 unset($data['role']);
 
             }
@@ -167,7 +128,7 @@ class UserController extends Controller
                 'message' => 'User updated successfully.',
                 $user->toArray(),
             ]);
-        }catch(Exception $e){
+        } catch (Exception $e) {
             DB::rollback();
 
             return $this->response(

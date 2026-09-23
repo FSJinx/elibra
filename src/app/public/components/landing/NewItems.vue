@@ -19,23 +19,26 @@
 
           <!-- Book Metadata -->
           <div class="flex-1 min-w-0 flex flex-col justify-between self-stretch">
-            <div>
-              <div class="flex items-center gap-2">
-                <Icon icon="geo-alt-fill" class="text-danger" />
-                <span class="text-sm">{{ useBranchStore().branches.find((i) => i.id === item.branch_id)?.name }}</span>
-              </div>
-              <div class="flex items-center justify-between gap-2 mb-1.5">
-                <h2 class="font-bold text-base text-foreground line-clamp-1" :title="item.title">
-                  {{ item.title }}
-                </h2>
-                <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-primary/10 text-primary shrink-0">
-                  {{ parseCategory(item.item_type_category_id) ?? 'Library material' }}
-                </span>
-              </div>
+            <div class="flex items-start justify-between gap-5">
+              <div>
+                <div class="flex items-center gap-2" v-if="useBranchStore().data?.find((i) => i.id === item.branch_id)?.name">
+                  <!-- Item Location -->
+                  <Icon icon="geo-alt-fill" class="text-danger" />
+                  <span class="text-sm">{{ useBranchStore().data?.find((i) => i.id === item.branch_id)?.name }}</span>
+                </div>
+                <div class="flex items-center justify-between gap-2 mb-1.5">
+                  <h2 class="font-bold text-base text-foreground line-clamp-1" :title="item.title">
+                    {{ item.title }}
+                  </h2>
+                </div>
 
-              <p class="text-xs text-foreground-secondary mt-0.5 font-medium line-clamp-1">
-                {{ item.subtitle || 'No additional information' }}
-              </p>
+                <p class="text-xs text-foreground-secondary mt-0.5 font-medium line-clamp-1">
+                  {{ item.subtitle || 'No additional information' }}
+                </p>
+              </div>
+              <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-primary/10 text-primary shrink-0">
+                {{ parseCategory(item.item_type_category_id) ?? 'Library material' }}
+              </span>
             </div>
 
             <!-- Detailed Info -->

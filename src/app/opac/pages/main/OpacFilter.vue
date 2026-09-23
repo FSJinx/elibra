@@ -16,8 +16,8 @@
         <Control direction="col">
           <Label id="params-campus">Campus</Label>
           <Select id="params-campus" title="Campus" v-model="params.campus">
-            <Option value="">All campuses</Option>
-            <template v-for="(item, index) in campus.campuses" :key="index">
+            <Option value="">All data</Option>
+            <template v-for="(item, index) in campus.data" :key="index">
               <Option :value="item.id">{{ item.name }}</Option>
             </template>
           </Select>
@@ -26,7 +26,7 @@
         <Control direction="col">
           <Label id="params-branch">Branch</Label>
           <Select id="params-branch" title="Branch" v-model="params.branch">
-            <Option value="">All branches</Option>
+            <Option value="">All data?</Option>
             <template v-for="item in campusBranches" :key="item.id">
               <Option :value="item.id">{{ item.name }}</Option>
             </template>
@@ -79,11 +79,11 @@ const branch = useBranchStore()
 
 const campusBranches = computed(() => {
   if (params.value.campus) {
-    return branch.branches.filter((item) => String(item.campus_id) === String(params.value.campus))
+    return branch.data?.filter((item) => String(item.campus_id) === String(params.value.campus))
   }
 
-  return branch.branches.map((b) => {
-    const c = campus.campuses?.find((i) => i.id === b.campus_id)
+  return branch.data?.map((b) => {
+    const c = campus.data?.find((i) => i.id === b.campus_id)
     return {
       ...b,
       name: `${b.name} - ${c?.name}`,
@@ -92,13 +92,13 @@ const campusBranches = computed(() => {
 })
 
 watch(
-  () => campus.campuses,
-  () => console.log(campus.campuses),
+  () => campus.data,
+  () => console.log(campus.data),
   { deep: true, immediate: true },
 )
 watch(
-  () => branch.branches,
-  () => console.log(branch.branches),
+  () => branch.data,
+  () => console.log(branch.data),
   { deep: true, immediate: true },
 )
 </script>

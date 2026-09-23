@@ -18,9 +18,9 @@
       </section>
 
       <!-- Filters -->
-      <div class="p-5 bg-background border border-border rounded-xl">
-        <Form>
-          <Control>
+      <Card>
+        <Form class="grid grid-cols-2">
+          <div class="flex items-center gap-2">
             <Input id="inventory-search" placeholder="Search by SKU or item name..." v-model="filters.search" enable-clear />
 
             <Select id="inventory-category" title="Category" v-model="filters.category">
@@ -36,10 +36,9 @@
               <Option value="over">Overage</Option>
               <Option value="under">Shortage</Option>
             </Select>
-            <Button variant="text" @click="resetFilters">Reset</Button>
-          </Control>
+          </div>
         </Form>
-      </div>
+      </Card>
 
       <Table title="Shelf Stocks" subtitle="Verify library materials that are available on-shelf." :data-length="filteredItems.length">
         <Thead>

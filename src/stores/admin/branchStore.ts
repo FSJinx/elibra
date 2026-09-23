@@ -16,7 +16,7 @@ export interface Branch {
 
 const url = 'branch'
 
-export const useBranchStore = defineStore('branch', {
+export const useAdminBranchStore = defineStore('admin_branch', {
   state: () => ({
     data: null as Branch[] | null,
     currentData: null as Branch | null,

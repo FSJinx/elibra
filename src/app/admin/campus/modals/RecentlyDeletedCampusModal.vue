@@ -10,11 +10,11 @@
           <Spinner />
         </div>
         <div class="flex flex-col justify-center text-center flex-1" v-else-if="data !== null && !data.length">No deleted campus yet.</div>
-        <template v-for="d in data" v-else>
+        <template v-for="(d, index) in data" v-else>
           <div class="flex items-center p-5 gap-3 hover:bg-secondary">
-            <span class="mr-auto">{{ d.name }} ({{ d.code }})</span>
+            <span class="mr-auto">{{ index + 1 }}. {{ d.name }} ({{ d.code }})</span>
 
-            <Button size="sm" variant="text" class="text-restore!">Restore</Button>
+            <Button size="sm" variant="text" class="text-restore!" @click="restore(d)">Restore</Button>
             <Button size="sm" class="text-danger!" @click="remove(d)" icon="trash" data-title="Delete campus permanently" />
           </div>
         </template>
@@ -30,6 +30,7 @@ const modal = ref<typeof Modal | null>(null)
 const loading = ref<boolean>(false)
 const data = ref<Campus[] | null>(null)
 const pop = usePopup()
+const campus = useCampusStore()
 
 async function fetch() {
   loading.value = true
@@ -50,6 +51,21 @@ function open() {
 
 function close() {
   modal.value?.close()
+}
+
+async function restore(c: Campus) {
+  const confirm = await pop.confirm({ text: `Are you sure you want to restore ${c.name}?` })
+
+  if (confirm.isConfirmed) {
+    pop.load()
+    try {
+      const res = await campus.restore(c)
+      pop.success(res.message)
+      close()
+    } catch (e: any) {
+      throw e
+    }
+  }
 }
 
 async function remove(d: Campus) {

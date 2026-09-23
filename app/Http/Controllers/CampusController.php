@@ -286,7 +286,35 @@ class CampusController extends Controller
             return $this->response(
                 'success',
                 'Campus permanently deleted successfully',
-                null,
+            );
+        } catch (Throwable $e) {
+            DB::rollBack();
+
+            throw $e;
+        }
+    }
+
+    public function restore(int $campus)
+    {
+        $campus = Campus::withTrashed()->findOrFail($campus);
+
+        $this->authorize('restore', $campus);
+
+        DB::beginTransaction();
+
+        try {
+            $campus->restore();
+
+            DB::commit();
+
+            CacheService::invalidate(CacheService::CAMPUSES);
+            CacheService::invalidate(CacheService::DEPARTMENTS);
+            CacheService::invalidate(CacheService::PROGRAMS);
+
+            return $this->response(
+                'success',
+                'Campus has been restored successfully',
+                $campus->toArray(),
                 200
             );
         } catch (Throwable $e) {
@@ -294,5 +322,6 @@ class CampusController extends Controller
 
             throw $e;
         }
+
     }
 }

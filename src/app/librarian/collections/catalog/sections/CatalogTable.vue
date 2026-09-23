@@ -16,9 +16,7 @@
         <Td :data="(index as number) + 1" />
 
         <Td class="text-left">
-          <p class="text-lg font-medium">
-            {{ item.title }}
-          </p>
+          <Title :level="4">{{ item.title }}</Title>
 
           <p v-if="item.subtitle" class="text-sm text-foreground-secondary">
             {{ item.subtitle }}

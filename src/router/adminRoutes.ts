@@ -38,7 +38,6 @@ export const adminRoutes = [
         },
         component: () => import('@/app/admin/subscriptions/Subscriptions.vue'),
       },
-
       {
         path: 'management',
         name: 'admin.management',
@@ -58,18 +57,7 @@ export const adminRoutes = [
           },
         ],
       },
-      {
-        // Campus List
-        path: 'users',
-        name: 'admin.users',
-        meta: {
-          title: 'User Management',
-          description: 'Manage users accross campuses.',
-          permission: '',
-          maintenance: false,
-        },
-        component: () => import('@/app/admin/users/Users.vue'),
-      },
+      ...adminUserRoutes
     ],
   },
 ]
