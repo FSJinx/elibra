@@ -94,13 +94,10 @@ const loans = [
 ]
 
 const services = [
-<<<<<<< HEAD
   { icon: 'search', title: 'Search the catalog', description: 'Find books, journals, and more', to: { name: 'opac' } },
   { icon: 'user', title: 'Manage your profile', description: 'Update your account details', to: { name: 'patron.profile' } },
-=======
   { icon: 'search', title: 'Search the catalog', description: 'Find books, journals, and more', name: 'opac' },
   { icon: 'user', title: 'Manage your profile', description: 'Update your account details', name: 'patron.profile' },
->>>>>>> dc589cece2127835548c01de82f4bd238c045bd6
 ]
 </script>
 

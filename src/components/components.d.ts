@@ -21,7 +21,6 @@ declare module 'vue' {
     CenterSpinner: typeof import('./loaders/CenterSpinner.vue')['default']
     Chip: typeof import('./my/Chip.vue')['default']
     CloseButton: typeof import('./my/CloseButton.vue')['default']
-    Construction: typeof import('./PageConstruction.vue/index.js')['default']
     Control: typeof import('./form/Control.vue')['default']
     DatePicker: typeof import('./form/DatePicker.vue')['default']
     FeatureBelt: typeof import('./layout/FeatureBelt.vue')['default']

@@ -41,6 +41,12 @@ class AuthService
                 break;
 
             case 'patron':
+                $user->loadMissing(['patron.program', 'patron.patronType', 'campus']);
+                $data = [
+                    ...$user->toArray(),
+                    'patron' => $user->patron,
+                ];
+                $campus = $user->campus;
                 break;
 
             default:
