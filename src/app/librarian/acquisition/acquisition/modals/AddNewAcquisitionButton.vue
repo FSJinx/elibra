@@ -1,25 +1,22 @@
 <template>
   <Button variant="primary" data-title="Add new acquisition record" @click="modal?.open()">Add New</Button>
 
-  <Modal ref="modal" size="large" :has-inputs="hasInputs" enable-close-btn>
-    <template #header> New Acquisition Transaction </template>
+  <Modal ref="modal" size="xlarge" :has-inputs="hasInputs" enable-close-btn>
+    <ModalHeader use-default-layout title="Acquisition Form" subtitle="Create new acquisition transaction" icon="building" />
     <Form class="flex flex-col p-5" @submit="submitForm">
-      <div class="flex items-end justify-between gap-3">
-        <div class="">
-          <h1 class="font-semibold text-lg">Acquisition Form</h1>
-          <p class="text-muted-foreground">Please fill out all required fields marked with <span class="text-danger">*</span></p>
-        </div>
+      <div class="flex items-center justify-between gap-3">
+        <span class="font-light"><span class="font-bold uppercase">directions.</span> Please fill out all required fields that are marked by <span class="text-danger">*</span></span>
         <Button @click="clearForm" :disabled="!hasInputs">Clear Form</Button>
       </div>
 
       <div class="flex flex-col divide-y divide-border">
         <Control>
           <Label id="acquisition-dealer" required>Dealer</Label>
-          <Input id="acquisition-dealer" type="text" placeholder="Enter dealer's name" required v-model="form.dealer" />
+          <Input id="acquisition-dealer" type="text" placeholder="Enter dealer's name" required v-model="form.dealer" auto-focus />
         </Control>
         <Control>
           <Label id="acquisition-dealer" required>Mode of Acquisition</Label>
-          <Select id="acquisition-dealer" v-model="form.acquisition_mode">
+          <Select id="acquisition-dealer" v-model="form.acquisition_mode" :error="errors.acquisition_mode?.[0]">
             <Option value="">Select Acquisition Mode</Option>
             <Option value="gift">Gift</Option>
             <Option value="purchased">Purchased</Option>
@@ -28,11 +25,11 @@
         </Control>
         <Control>
           <Label id="acquisition-date" required>Date of Acquisition</Label>
-          <DatePicker id="acquisition-date" v-model="form.acquisition_date" :max="today" />
+          <DatePicker id="acquisition-date" v-model="form.acquisition_date" :max="today" required :error="errors.acquisition_date?.[0]" />
         </Control>
         <Control>
-          <Label id="acquisition-remarks" class="mb-auto" required>Remarks</Label>
-          <Textarea id="acquisition-remarks" type="text" placeholder="" required v-model="form.remarks" />
+          <Label id="acquisition-remarks" class="mb-auto">Remarks</Label>
+          <Textarea id="acquisition-remarks" type="text" v-model="form.remarks" placeholder="Enter your remarks here..."/>
         </Control>
       </div>
 
@@ -45,12 +42,6 @@
 
 <script setup lang="ts">
 import Modal from '@/components/my/Modal.vue'
-import { Acquisition } from '@/stores/acquisitionStore'
-
-const modal = ref<typeof Modal | null>()
-const loading = ref<boolean>(false)
-const pop = usePopup()
-const auth = authStore()
 
 const emptyForm = (): Acquisition => ({
   id: null,
@@ -60,8 +51,13 @@ const emptyForm = (): Acquisition => ({
   remarks: '',
 })
 
+const pop = usePopup()
+const modal = ref<typeof Modal | null>()
+const { create } = useAcquisitionStore()
+
+const errors = reactive<Acquisition>(emptyForm())
 const form = reactive<Acquisition>(emptyForm())
-const today = new Date().toLocaleDateString('en-CA')
+const today = new Date().toISOString().split('T')[0]
 const hasInputs = computed(() => [form.dealer, form.acquisition_date, form.acquisition_mode, form.remarks].some((value) => String(value ?? '').trim().length > 0))
 
 const clearForm = async () => {
@@ -81,35 +77,21 @@ const clearForm = async () => {
 }
 
 async function submitForm() {
-  if (!auth.user?.id) {
-    pop.error('You must be logged in to create an acquisition.')
-    return
-  }
+  Object.assign(errors, emptyForm())
 
-  const confirmed = await pop.confirm({ text: 'Are you sure you want to add this acquisition transaction?' })
+  const confirm = await pop.confirm({ text: 'Are you sure you want to add this acquisition transaction?' })
 
-  if (!confirmed.isConfirmed) {
-    return
-  }
-
-  loading.value = true
-
-  try {
-    await api.post('librarian/acquisition', {
-      ...form,
-      receiver_user_id: auth.user.id,
-    })
-
-    pop.success('Acquisition created successfully!')
-    Object.assign(form, emptyForm())
-    modal.value?.close()
-  } catch (error: any) {
-    const res = error.response?.data
-    const message = res?.message || 'Failed to create acquisition.'
-    pop.error(message)
-    console.error(error)
-  } finally {
-    loading.value = false
+  if (confirm.isConfirmed) {
+    const res = await create(form)
+    if (res.success) {
+      Object.assign(form, emptyForm())
+      Object.assign(errors, emptyForm())
+      nextTick(() => {
+        modal.value?.close()
+      })
+    } else {
+      Object.assign(errors, res.errors ?? {})
+    }
   }
 }
 </script>

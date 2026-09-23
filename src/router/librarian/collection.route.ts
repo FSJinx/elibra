@@ -1,3 +1,5 @@
+const pop = usePopup()
+
 export const librarianCataloging = [
   {
     path: 'collections',
@@ -13,14 +15,40 @@ export const librarianCataloging = [
             path: '',
             name: 'librarian.collections.catalog',
             component: () => import('@/app/librarian/collections/catalog/Catalog.vue'),
+            beforeEnter: async (to: any) => {
+              const item = useItemStore()
+              if (!item.fetchData && !item.searchData) {
+                pop.load()
+                await item.fetch()
+                pop.unload()
+              }
+
+              return true
+            },
           },
           {
             path: ':id',
             name: 'librarian.collections.catalog.view',
             redirect: { name: 'librarian.collections.catalog.view.overview' },
             component: () => import('@/app/librarian/collections/catalog/ViewCatalog.vue'),
+            beforeEnter: async (to: any) => {
+              const item = useItemStore()
+
+              if (!item.currentData || item.currentData?.id !== to.params.id) {
+                pop.load()
+                await item.show(to.params.id)
+                pop.unload()
+              }
+
+              return true
+            },
             children: [
-              { path: '', meta: { breadcrumb: 'Overview' }, name: 'librarian.collections.catalog.view.overview', component: () => import('@/app/librarian/collections/catalog/view/Overview.vue') },
+              {
+                path: '',
+                meta: { title: 'Overview', breadcrumb: 'Overview' },
+                name: 'librarian.collections.catalog.view.overview',
+                component: () => import('@/app/librarian/collections/catalog/view/Overview.vue'),
+              },
               { path: 'authors', meta: { breadcrumb: 'Authors' }, name: 'librarian.collections.catalog.view.authors', component: () => import('@/app/librarian/collections/catalog/view/Authors.vue') },
               { path: 'accession', meta: { breadcrumb: 'Accession' }, name: 'librarian.collections.catalog.view.accession', component: () => import('@/app/librarian/collections/catalog/view/Accession.vue') },
               { path: 'acquisition-history', meta: { breadcrumb: 'Acquisition' }, name: 'librarian.collections.catalog.view.acquisition', component: () => import('@/app/librarian/collections/catalog/view/Acquisition.vue') },

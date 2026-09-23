@@ -1,4 +1,4 @@
-interface Branch {
+export interface Branch {
   id: number
   name: string
   contact_info: string
@@ -6,79 +6,78 @@ interface Branch {
   email_verified_at: string
   opening_hour: string
   closing_hour: string
-  logo_id: number
+  logo_id: any
   branch_head_id: number
-  campus_id: number
+  campus_id: any
   created_at: string
   updated_at: string
+  [key: string]: any
 }
 
-interface BranchParams {
-  sort: string
-  page: number
-  per_page: number
-  order: 'asc' | 'desc'
-}
+const url = 'branch'
 
-const defaultParams: Readonly<BranchParams> = {
-  sort: '',
-  page: 1,
-  per_page: 10,
-  order: 'asc',
-}
+export const useBranchStore = defineStore('branch', {
+  state: () => ({
+    data: null as Branch[] | null,
+    currentData: null as Branch | null,
+    loading: false as true | false,
+    pop: usePopup(),
+    auth: authStore(),
+  }),
 
-export const useBranchStore = defineStore('branches', () => {
-  const branches = ref<Branch[]>([])
-  const currentBranch = ref<Branch | null>(null)
-  const loading = ref<boolean>(false)
-  const params = reactive<BranchParams>({ ...defaultParams })
+  actions: {
+    // =========== SETTERS ============
+    pushData(data: Branch) {
+      this.data?.push(data)
+    },
 
-  function setBranches(data: Branch[]) {
-    branches.value = data
-  }
+    updateData(data: Branch) {
+      this.data = (this.data as Branch[]).filter((i) => i.id !== data.id)
+      nextTick(() => this.data?.push(data))
+    },
 
-  function setCurrentBranch(data: Branch | null) {
-    currentBranch.value = data
-  }
+    removeData(data: Branch) {
+      this.data = (this.data as Branch[]).filter((i) => i.id !== data.id)
+    },
 
-  function setLoading(status: boolean) {
-    loading.value = status
-  }
+    setData(data: Branch[]) {
+      this.data = data
+    },
 
-  async function fetch(forced = false) {
-    if (!forced && branches.value.length) return branches.value
+    // =========== ACTIONS ============
+    async fetch(params = {}, forced = false) {
+      try {
+        if (this.data && !forced) return
 
-    setLoading(true)
+        this.loading = true
+        const res = await get(url, params)
+        this.setData(res.data?.data)
 
-    try {
-      const response = await get('branch', { ...params })
-      const data = response.data.data
+        return res
+      } finally {
+        this.loading = false
+      }
+    },
 
-      setBranches(data)
-      return data
-    } catch (error) {
-      console.error('Error fetching branches:', error)
-      return []
-    } finally {
-      setLoading(false)
-    }
-  }
+    async create(params: Partial<Branch>) {
+      this.pop.load()
+      const res = await post(url, params)
+      this.pushData(res.data)
+      this.pop.success(res.message)
 
-  async function refresh() {
-    Object.assign(params, defaultParams)
-    return fetch(true)
-  }
+      return res
+    },
 
-  return {
-    branches,
-    currentBranch,
-    loading,
-    params,
+    async update(params: Branch) {
+      const res = await put(`${url}/${params.id}`, params)
+      this.updateData(res.data)
+      return res
+    },
 
-    setBranches,
-    setCurrentBranch,
-    setLoading,
-    fetch,
-    refresh,
-  }
+    async remove(params: Branch) {
+      const res = await del(`${url}/${params?.id}`)
+      this.removeData(params)
+      return res
+    },
+  },
 })

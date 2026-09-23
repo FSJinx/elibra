@@ -41,6 +41,13 @@ class CacheService
     public const ACQUISITIONS = 'acquisitions';
     public const ACQUISITION_REQUESTS = 'acquisition_requests';
     public const ACQUISITION_LINES = 'acquisition_lines';
+    public const PATRONS = 'patrons';
+    public const LIBRARIANS = 'librarians';
+    public const ATTENDANCE_LOGS = 'attendance_logs';
+    public const CIRCULATIONS = 'circulations';
+    public const FINES_TRANSACTIONS = 'fines_transactions';
+
+    public const PATRON_TYPE_LOAN_POLICY = 'patron_type_loan_policy';
 
     /**
      * Cache a query using a versioned cache key.

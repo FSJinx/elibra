@@ -15,9 +15,10 @@
         v-model="model"
         :type="inputType"
         :placeholder="placeholder"
-        :required="required"
+        :required="required || control?.required"
         :disabled="disabled"
         :readonly="readonly"
+        :tabindex="tabindex"
         :min="min"
         :max="max"
         :minlength="min"
@@ -30,7 +31,7 @@
         @click="checkCapsLock"
         @keydown="checkCapsLock"
         @keyup="checkCapsLock"
-        class="h-full w-full flex-1 bg-transparent text-slate-900 transition-all duration-150 focus:outline-none disabled:cursor-not-allowed autofill:bg-primary"
+        class="h-full w-full flex-1 bg-background focus:bg-primary-soft/15 text-slate-900 transition-all duration-150 focus:outline-none disabled:cursor-not-allowed autofill:bg-primary"
         :class="[sizeConfig.input, leftIcon ? 'pl-2' : 'pl-4', hasSuffixActions ? 'pr-2' : 'pr-4']"
       />
 
@@ -54,24 +55,24 @@
     </div>
 
     <!-- Caps Lock Warning -->
-    <div v-if="isCapsLockOn && checkcapslock" class="flex items-center gap-1.5 text-xs text-warning">
+    <div v-if="isCapsLockOn && checkcapslock" class="flex items-center gap-1.5 mt-1 text-sm text-warning">
       <Icon icon="info-circle" />
       <span>Caps Lock is on</span>
     </div>
 
     <!-- Helper Text -->
-    <div v-if="helper" class="flex items-center gap-1.5 text-xs text-info">
+    <div v-if="helper" class="flex items-center gap-1.5 mt-1 text-sm text-info">
       <Icon icon="info-circle" />
       <span>{{ helper }}</span>
     </div>
 
     <!-- Error Message -->
-    <p v-if="error && error.length > 0" class="text-xs font-medium text-danger">
+    <p v-if="error && error.length > 0" class="text-sm font-medium mt-1 text-danger">
       {{ error }}
     </p>
 
     <!-- Warning Message -->
-    <p v-if="warning && warning.length > 0" class="text-xs text-warning">
+    <p v-if="warning && warning.length > 0" class="text-sm mt-1 text-warning">
       {{ warning }}
     </p>
   </div>
@@ -101,6 +102,7 @@ interface Props {
   readonly?: boolean
   autocomplete?: Autocomplete
   autoFocus?: boolean
+  tabindex?: number
   spellcheck?: boolean
 
   // Actions
@@ -133,6 +135,9 @@ const model = defineModel<any>({ default: '' })
 const show = ref(false)
 const isCapsLockOn = ref(false)
 const input = ref<HTMLInputElement | null>(null)
+
+// Injections
+const control = inject<any>('control', null)
 
 // Safe value check
 const hasValue = computed(() => String(model.value ?? '').length > 0)

@@ -5,6 +5,7 @@
       <tr>
         <Th>No</Th>
         <Th class="text-left">Title</Th>
+        <Th>Item Type</Th>
         <Th>Call Number</Th>
         <Th>Publication Year</Th>
       </tr>
@@ -15,15 +16,14 @@
         <Td :data="(index as number) + 1" />
 
         <Td class="text-left">
-          <p class="text-lg font-medium">
-            {{ item.title }}
-          </p>
+          <Title :level="4">{{ item.title }}</Title>
 
           <p v-if="item.subtitle" class="text-sm text-foreground-secondary">
             {{ item.subtitle }}
           </p>
         </Td>
 
+        <Td :data="item_type.byId(item.item_type_id)?.name" />
         <Td :data="item.call_number" />
 
         <Td :data="item.publication_year" />
@@ -39,6 +39,7 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+const item_type = useItemTypeStore()
 
 function view(id: number) {
   return router.push({ name: 'librarian.collections.catalog.view', params: { id: id } })

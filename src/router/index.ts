@@ -63,11 +63,11 @@ router.beforeEach(async (to, from) => {
 
   // ======== STORES ===========
   const store = authStore()
+  const preloader = usePreloader()
 
   // ======== COMPOSABLES ===========
   const auth = useAuth()
   const error = useError()
-  const preload = usePreloader()
   const pop = usePopup()
 
   const accessRoles = String(role ?? '')
@@ -77,7 +77,12 @@ router.beforeEach(async (to, from) => {
     await auth.getUser()
   }
 
-  await preload
+  // ======== PRELOAD ===========
+  if (!preloader.preloaded) {
+    console.log('nakarating')
+
+    preloader.preload()
+  }
 
   if (to.name === 'login' && store.isAuthenticated) {
     router.replace({ name: auth.userHomeLink })
@@ -101,7 +106,7 @@ router.beforeEach(async (to, from) => {
     return false
   }
 
-  document.title = typeof to.meta.title === 'string' ? 'e-Libra: ' + store.user?.role?.charAt(0).toUpperCase() + store.user?.role?.slice(1) + ' | ' + to.meta.title : 'e-Libra: The ISU-1 Library Management and Resource Monitoring System'
+  document.title = typeof to.meta.title === 'string' ? 'e-Libra: ' + store.displayRole + ' | ' + to.meta.title : 'e-Libra: The ISU-1 Library Management and Resource Monitoring System'
 })
 
 export default router

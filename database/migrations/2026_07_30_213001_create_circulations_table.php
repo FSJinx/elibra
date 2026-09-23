@@ -24,11 +24,11 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
             
-            $table->unsignedBigInteger('processed_by');
-            $table->unsignedBigInteger('accession_id');
-            $table->unsignedBigInteger('patron_id');
-            $table->unsignedBigInteger('loan_mode_id');
-            $table->unsignedBigInteger('return_received_by');
+            $table->unsignedBigInteger('processed_by'); //users table
+            $table->unsignedBigInteger('accession_id'); //accession_table
+            $table->unsignedBigInteger('patron_id'); // users table
+            $table->unsignedBigInteger('loan_mode_id'); // loan_mode Table
+            $table->unsignedBigInteger('return_received_by'); // users table
         });
     }
 

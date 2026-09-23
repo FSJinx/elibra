@@ -37,6 +37,18 @@ class LibrarianSeeder extends Seeder
                 'password' => bcrypt('elibra2026'),
                 'campus_id' => 1,
             ],
+            [
+                'uuid' => Str::uuid()->toString(),
+                'last_name' => 'Villanueva',
+                'first_name' => 'Hyacinth',
+                'middle_initial' => 'd',
+                'username' => 'hyacinth',
+                'role' => 'librarian',
+                'sex' => 'female',
+                'email' => 'hyacinth@isu.edu.ph',
+                'password' => bcrypt('elibra2026'),
+                'campus_id' => 1,
+            ],
         ];
 
         foreach ($users as $user) {

@@ -36,7 +36,7 @@
                 </h2>
 
                 <Badge class="shrink-0 capitalize" :variant="parse.status(user.user?.role || 'patron')">
-                  {{ user.user?.role }}
+                  {{ user.displayRole }}
                 </Badge>
               </div>
 

@@ -1,99 +1,97 @@
 export interface Campus {
-  id: number | null
-  name: string | null
-  code: string | null
-  address: string | null
-  heading: string | null
-  status: string | null
-  created_at: string | null
-  updated_at: string | null
-}
-
-export interface CampusParams {
-  query: string
-  sort: string
-  order: 'asc' | 'desc'
+  id: any
+  name: string
+  code: string
+  address: string
+  heading: string
   status: string
-  page: number
-  per_page: number
+  created_at: any
+  updated_at: any
+  deleted_at: any
 }
 
-const defaultParams: Readonly<CampusParams> = {
-  query: '',
-  sort: '',
-  order: 'asc',
-  status: '',
-  page: 1,
-  per_page: 10,
-}
+const url = 'campus'
 
-export const useCampusStore = defineStore('campus', () => {
-  const campuses = ref<Campus[] | null>(null)
-  const currentCampus = ref<Campus | null>(null)
-  const loading = ref(false)
-  const params = reactive<CampusParams>({ ...defaultParams })
+export const useCampusStore = defineStore('campus', {
+  state: () => ({
+    data: null as Campus[] | null,
+    currentData: null as Campus | null,
+    loading: false as true | false,
+    pop: usePopup(),
+    auth: authStore(),
+  }),
 
-  function setCampuses(data: Campus[] | null) {
-    campuses.value = data
-  }
+  getters: {
+    getCampus() {
+      return (id: any) => (this.data as Campus[]).find((i) => i.id === id)
+    },
+  },
 
-  function setCurrentCampus(data: Campus | null) {
-    currentCampus.value = data
-  }
+  actions: {
+    // =========== SETTERS ============
+    pushData(data: Campus) {
+      this.data?.push(data)
+    },
 
-  function setLoading(status: boolean) {
-    loading.value = status
-  }
+    updateData(data: Campus) {
+      this.data = (this.data as Campus[]).filter((i) => i.id !== data.id)
+      nextTick(() => this.data?.push(data))
+    },
 
-  async function fetch(forced = false) {
-    if (!forced && campuses.value?.length) {
-      return campuses.value
-    }
+    removeData(data: Campus) {
+      this.data = (this.data as Campus[]).filter((i) => i.id !== data.id)
+    },
 
-    setLoading(true)
+    setData(data: Campus[]) {
+      this.data = data
+    },
 
-    try {
-      const response = await get('campus', {
-        params: { ...params },
-      })
-      const data = response.data
+    setCurrentData(data: Campus) {
+      this.currentData = data
+    },
 
-      setCampuses(data)
-      return data
-    } catch (error) {
-      console.error('Failed to fetch campuses:', error)
-      return []
-    } finally {
-      setLoading(false)
-    }
-  }
+    // =========== ACTIONS ============
+    async fetch(forced = false) {
+      if (this.data && !forced) return
 
-  async function refresh() {
-    Object.assign(params, defaultParams)
-    return fetch(true)
-  }
+      this.loading = true
+      const res = await get(url)
+      this.setData(res.data)
+      this.loading = false
 
-  async function deleteCampus(campus: Campus) {
-    await api.delete(`campus/delete/${campus.id}`)
-    return fetch(true)
-  }
+      return res
+    },
 
-  watchDebounced(
-    () => ({ ...params }),
-    () => fetch(true),
-    { debounce: 300 },
-  )
+    async show(id: any) {
+      const res = await get(`${url}/${id}`)
+      this.setCurrentData(res?.data)
+      return res
+    },
 
-  return {
-    campuses,
-    currentCampus,
-    loading,
-    params,
-    setCampuses,
-    setCurrentCampus,
-    setLoading,
-    fetch,
-    refresh,
-    deleteCampus,
-  }
+    async create(params: Partial<Campus>) {
+      const res = await post(url, params)
+      this.pushData(res.data)
+
+      return res
+    },
+
+    async update(params: Campus) {
+      const res = await put(`${url}/${params.id}`, params)
+      this.updateData(res.data)
+      this.setCurrentData(res.data)
+      return res
+    },
+
+    async remove(params: Campus) {
+      const res = await del(`${url}/${params?.id}`)
+      this.removeData(params)
+      return res
+    },
+
+    async restore(params: Campus) {
+      const res = await patch(`${url}/${params?.id}`)
+      this.pushData(res.data)
+      return res
+    },
+  },
 })

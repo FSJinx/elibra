@@ -21,61 +21,59 @@ const defaultParams: Readonly<AuthorshipParams> = {
   order: 'asc',
 }
 
-export const authorshipStore = defineStore('authorship', () => {
-  const authorships = ref<Authorship[] | null>(null)
-  const loading = ref(false)
-  const error = ref<string | null>(null)
-  const params = reactive<AuthorshipParams>({ ...defaultParams })
+export const authorshipStore = defineStore('authorship', {
+  state: () => ({
+    authorships: null as Authorship[] | null,
+    loading: false,
+    error: null as string | null,
+    params: { ...defaultParams } as AuthorshipParams,
+  }),
 
-  function setAuthorships(data: Authorship[] | null) {
-    authorships.value = data
-  }
+  getters: {
+    byItemType() {
+      return (item_id: any) => this.authorships?.filter((i) => i.item_type_id === item_id)
+    },
+  },
 
-  function setLoading(status: boolean) {
-    loading.value = status
-  }
+  actions: {
+    setAuthorships(data: Authorship[] | null) {
+      this.authorships = data
+    },
 
-  function setError(message: string | null) {
-    error.value = message
-  }
+    setLoading(status: boolean) {
+      this.loading = status
+    },
 
-  async function fetch(forced = false) {
-    if (!forced && authorships.value) return authorships.value
+    setError(message: string | null) {
+      this.error = message
+    },
 
-    setLoading(true)
-    setError(null)
+    async fetch(forced = false) {
+      if (!forced && this.authorships) return this.authorships
 
-    try {
-      const response = await get('authorship', { params: { ...params } })
-      const data = response.data?.data ?? []
+      this.setLoading(true)
+      this.setError(null)
 
-      setAuthorships(data)
-      return data
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Unable to fetch authorship types.'
+      try {
+        const response = await get('authorship', { params: { ...this.params } })
+        const data = response.data ?? []
 
-      setError(message)
-      console.error('Error fetching authorships:', error)
-      return []
-    } finally {
-      setLoading(false)
-    }
-  }
+        this.setAuthorships(data)
+        return data
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'Unable to fetch authorship types.'
 
-  async function refresh() {
-    Object.assign(params, defaultParams)
-    return fetch(true)
-  }
+        this.setError(message)
+        console.error('Error fetching authorships:', error)
+        return []
+      } finally {
+        this.setLoading(false)
+      }
+    },
 
-  return {
-    authorships,
-    loading,
-    error,
-    params,
-    setAuthorships,
-    setLoading,
-    setError,
-    fetch,
-    refresh,
-  }
+    async refresh() {
+      Object.assign(this.params, defaultParams)
+      return this.fetch(true)
+    },
+  },
 })

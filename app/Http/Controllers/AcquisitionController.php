@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Acquisition;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAcquisitionRequest;
 use App\Http\Requests\UpdateAcquisitionRequest;
+use App\Models\Acquisition;
 use App\Services\AcquisitionService;
 use App\Services\QueryService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class AcquisitionController extends Controller
 {
@@ -18,6 +18,7 @@ class AcquisitionController extends Controller
     {
         $this->acquisitionService = $acquisitionService;
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -27,7 +28,7 @@ class AcquisitionController extends Controller
 
         $acquisition = $this->acquisitionService->index($filters);
 
-        if($acquisition->isEmpty()){
+        if ($acquisition->isEmpty()) {
             return $this->response(
                 'success',
                 'No acquisition record found.',
@@ -35,6 +36,7 @@ class AcquisitionController extends Controller
                 200
             );
         }
+
         return $this->response(
             'success',
             'Acquisitions retrieved successfully.',
@@ -58,10 +60,10 @@ class AcquisitionController extends Controller
     {
         $acquisition = $this->acquisitionService->create($request->validated());
 
-        return $this->response( 
-            'success', 
-            'Acquisition created successfully', 
-            $acquisition->toArray(),            
+        return $this->response(
+            'success',
+            'Acquisition created successfully',
+            $acquisition->toArray(),
             201
         );
     }
@@ -69,9 +71,15 @@ class AcquisitionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(UpdateAcquisitionRequest $request, Acquisition $acquisition)
+    public function show(string $id)
     {
-//
+        $data = Cache::remember(
+            "acquisition-show:$id",
+            now()->addHour(),
+            fn () => Acquisition::find($id)
+        );
+
+        return $this->response(data: $data->toArray());
     }
 
     /**
@@ -88,14 +96,14 @@ class AcquisitionController extends Controller
     public function update(UpdateAcquisitionRequest $request, Acquisition $acquisition)
     {
         $acquisition = $this->acquisitionService->update(
-                $acquisition, 
-                $request->validated()
+            $acquisition,
+            $request->validated()
         );
 
         return $this->response(
-            'success', 
-            'Acquisition updated successfully', 
-            $acquisition->toArray(), 
+            'success',
+            'Acquisition updated successfully',
+            $acquisition->toArray(),
             200
         );
     }
@@ -109,7 +117,7 @@ class AcquisitionController extends Controller
 
         $deleted = $this->acquisitionService->delete($acquisition);
 
-        if (!$deleted) {
+        if (! $deleted) {
             return $this->response(
                 'Error',
                 'The selected Acquisition record could not be deleted.',

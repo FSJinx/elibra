@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Branch;
+use App\Models\Campus;
 use Illuminate\Database\Seeder;
 
 class BranchSeeder extends Seeder
@@ -12,16 +13,21 @@ class BranchSeeder extends Seeder
      */
     public function run(): void
     {
-        $branches = [
-            ['name' => 'University Library', 'campus_id' => 1],
-            ['name' => 'University Library', 'campus_id' => 10],
-            ['name' => 'University Library', 'campus_id' => 5],
-            ['name' => 'University Library', 'campus_id' => 3],
-            ['name' => 'University Library', 'campus_id' => 4],
-        ];
+        collect([
+            // Echague Campus Branches
+            ['name' => 'University Library', 'campus' => 'ISU-E'],
+            ['name' => 'CCSICT Research Room', 'campus' => 'ISU-E'],
 
-        foreach ($branches as $branch) {
-            Branch::create($branch);
-        }
+            // Angadanan Campus Branches
+            ['name' => 'Public Library', 'campus' => 'ISU-AC'],
+            ['name' => 'CCJE Library', 'campus' => 'ISU-AC'],
+
+        ])->each(function ($branch) {
+            $campus_id = Campus::where('code', '=', $branch['campus'])->first();
+            Branch::create([
+                'name' => $branch['name'],
+                'campus_id' => $campus_id['id'],
+            ]);
+        });
     }
 }

@@ -33,7 +33,14 @@ class StoreMediaRequest extends BaseRequest
 
             'image_type' => [
                 'required',
-                'in:profile,logo,book_cover,document,banner,other',
+                'in:profile,logo,subscription,book_cover,item_cover,document,banner,other',
+            ],
+
+            'item_id' => [
+                'nullable',
+                'required_if:image_type,item_cover',
+                'integer',
+                'exists:items,id',
             ],
         ];
     }

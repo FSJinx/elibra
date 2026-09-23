@@ -31,8 +31,8 @@ class StoreBranchRequest extends BaseRequest
                 'contact_info' => [ 'nullable', 'string', 'max:255' ],
                 'email' => [ 'nullable', 'email', 'max:255', Rule::unique('branches', 'email') ],
 
-                'opening_hour' => [ 'nullable', 'date_format:H:i', 'required_with:closing_hour', ],
-                'closing_hour' => [ 'nullable', 'date_format:H:i', 'required_with:opening_hour', 'after:opening_hour' ],
+                'opening_hour' => [ 'nullable', 'date_format:H:i,H:i:s', 'required_with:closing_hour', ],
+                'closing_hour' => [ 'nullable', 'date_format:H:i,H:i:s', 'required_with:opening_hour', 'after:opening_hour' ],
 
                 'logo_id' => [ 'nullable', Rule::exists((new Media)->getTable(), 'id') ],
                 'branch_head_id' => [ 'nullable',  Rule::exists((new Librarian)->getTable(), 'id') ],

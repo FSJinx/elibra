@@ -2,27 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\FinesTransaction;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreFinesTransactionRequest;
 use App\Http\Requests\UpdateFinesTransactionRequest;
+use App\Models\FinesTransaction;
+use App\Services\FinesTransactionService;
 
 class FinesTransactionController extends Controller
 {
+    public function __construct(
+        protected FinesTransactionService $finesTransactionService
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
-    }
+        $transactions = FinesTransaction::with([
+            'patron',
+            'circulation',
+            'processedBy',
+        ])->get();
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return $this->response(
+            'success',
+            'Fine transactions retrieved successfully.',
+            $transactions->toArray(),
+            200
+        );
     }
 
     /**
@@ -30,7 +37,14 @@ class FinesTransactionController extends Controller
      */
     public function store(StoreFinesTransactionRequest $request)
     {
-        //
+        $transaction = $this->finesTransactionService->create($request->validated());
+
+        return $this->response(
+            'success',
+            'Fine transaction created successfully.',
+            $transaction->toArray(),
+            201
+        );
     }
 
     /**
@@ -38,15 +52,18 @@ class FinesTransactionController extends Controller
      */
     public function show(FinesTransaction $finesTransaction)
     {
-        //
-    }
+        $finesTransaction->load([
+            'patron',
+            'circulation',
+            'processedBy',
+        ]);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(FinesTransaction $finesTransaction)
-    {
-        //
+        return $this->response(
+            'success',
+            'Fine transaction retrieved successfully.',
+            $finesTransaction->toArray(),
+            200
+        );
     }
 
     /**
@@ -54,7 +71,14 @@ class FinesTransactionController extends Controller
      */
     public function update(UpdateFinesTransactionRequest $request, FinesTransaction $finesTransaction)
     {
-        //
+        $updated = $this->finesTransactionService->update($finesTransaction, $request->validated());
+
+        return $this->response(
+            'success',
+            'Fine transaction updated successfully.',
+            $updated->toArray(),
+            200
+        );
     }
 
     /**
@@ -62,6 +86,22 @@ class FinesTransactionController extends Controller
      */
     public function destroy(FinesTransaction $finesTransaction)
     {
-        //
+        $deleted = $this->finesTransactionService->delete($finesTransaction);
+
+        if (! $deleted) {
+            return $this->response(
+                'error',
+                'The selected fine transaction could not be deleted.',
+                null,
+                500
+            );
+        }
+
+        return $this->response(
+            'success',
+            'Fine transaction deleted successfully.',
+            null,
+            200
+        );
     }
 }

@@ -1,31 +1,35 @@
 <template>
   <Teleport to="body">
     <Transition name="fade">
-      <div v-if="isOpen" class="modal-wrapper fixed inset-0 flex items-center justify-center bg-backdrop h-dvh p-10" :class="[hasInputs ? '' : 'cursor-pointer']" @click.self="close">
+      <div v-if="isOpen" class="modal-wrapper fixed inset-0 flex items-center justify-center bg-backdrop h-dvh p-5" :class="[hasInputs ? '' : 'cursor-pointer']" @click.self="close">
         <div class="modal relative bg-background rounded-xl shadow-2xl border border-border cursor-default overflow-hidden" :class="[sizeClasses, positionClasses, position]" ref="modalRef">
-          <!-- Modal Header -->
-          <div class="flex items-start p-5 pb-4 gap-3 border-b border-gray-300 text-xl font-semibold" v-if="$slots.header || enableCloseBtn">
-            <slot name="header" v-if="$slots.header" />
-            <span class="ml-auto text-foreground/25 hover:text-foreground cursor-pointer transition-all duration-200">
-              <Icon icon="x-lg" @click="close" v-if="enableCloseBtn" style="-webkit-text-stroke: 1px" />
+          <span class="absolute top-3 right-3 p-2 ml-auto text-lg text-foreground/25 hover:text-foreground cursor-pointer transition-all duration-200" @click="close" v-if="!disableCloseBtn">
+            <Icon icon="x-lg" style="-webkit-text-stroke: 1px" />
+          </span>
+          <slot />
+          <!-- <div class="modal relative bg-background rounded-xl shadow-2xl border border-border cursor-default overflow-hidden flex flex-col" :class="[sizeClasses, positionClasses, position]" ref="modalRef">
+            <span class="absolute top-5 right-5 ml-auto text-lg text-foreground/25 hover:text-foreground cursor-pointer transition-all duration-200">
+              <Icon icon="x-lg" @click="close" v-if="!disableCloseBtn" style="-webkit-text-stroke: 1px" />
             </span>
-          </div>
 
-          <!-- Modal Body -->
-          <div class="max-h-[76dvh] flex flex-col overflow-y-auto">
-            <Transition name="fade">
-              <p class="text-danger p-3 px-5" v-if="errorMessage?.length > 0"><Icon class="mr-2" icon="exclamation-circle" /> {{ errorMessage }}</p>
-            </Transition>
-            <div class="flex-1 place-content-center min-h-100" v-if="loading">
-              <LogoLoader message="Loading content, please wait..." />
+            <div class="modal-header px-5 pt-5 pr-14 font-semibold text-lg shrink-0" v-if="$slots.header">
+              <slot name="header" />
             </div>
-            <slot v-else />
-          </div>
 
-          <!-- Modal Footer -->
-          <div class="p-3 border-t border-gray-300" v-if="$slots.footer && !loading">
-            <slot name="footer" />
-          </div>
+            <Transition name="fade">
+              <p class="text-danger px-5 pt-3 shrink-0" v-if="errorMessage?.length > 0">
+                <Icon class="mr-2" icon="exclamation-circle" /> {{ errorMessage }}
+              </p>
+            </Transition>
+
+            <div class="modal-body flex-1 overflow-y-auto">
+              <slot />
+            </div>
+
+            <div class="modal-footer px-5 pb-5 pt-3 shrink-0" v-if="$slots.footer">
+              <slot name="footer" />
+            </div>
+          </div> -->
         </div>
       </div>
     </Transition>
@@ -39,7 +43,7 @@ interface Props {
   hasInputs?: boolean
   position?: ModalPosition
   size?: ModalSize
-  enableCloseBtn?: boolean
+  disableCloseBtn?: boolean
   loading?: boolean
   error?: string
 }
@@ -48,7 +52,7 @@ const props = withDefaults(defineProps<Props>(), {
   hasInputs: false,
   position: 'center',
   size: 'normal',
-  enableCloseBtn: false,
+  disableCloseBtn: false,
 })
 
 const emit = defineEmits(['show', 'closing'])
@@ -61,7 +65,7 @@ const errorMessage = ref(props.error ?? '')
 const positionClasses = computed(() => {
   const positions: Record<ModalPosition, string> = {
     top: 'mb-auto',
-    center: 'my-auto max-h-[90vh] overflow-y-auto',
+    center: 'my-auto max-h-[90vh]',
     bottom: 'mt-auto',
   }
 
@@ -74,7 +78,7 @@ const sizeClasses = computed(() => {
     normal: 'w-full sm:max-w-150',
     large: 'w-full sm:max-w-200',
     xlarge: 'w-full sm:max-w-250',
-    '2xlarge': 'w-full sm:max-w-300',
+    '2xlarge': 'w-full sm:max-w-400',
     full: 'w-full max-w-[95vw] h-[90vh]',
   }
 
@@ -109,6 +113,18 @@ function close() {
   isOpen.value = false
 }
 
+function handleKeydown(event: KeyboardEvent) {
+  if (event.key === 'Escape' && isOpen.value) {
+    close()
+  }
+}
+
+provide('modal', {
+  buttonDisabled: props.disableCloseBtn,
+  loading: props.loading,
+  error: props.error,
+})
+
 watch(isOpen, (opened) => {
   if (opened) {
     document.body.style.overflow = 'hidden'
@@ -129,6 +145,14 @@ watch(
 defineExpose({
   open,
   close,
+})
+
+onMounted(() => {
+  document.addEventListener('keydown', handleKeydown)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('keydown', handleKeydown)
 })
 </script>
 

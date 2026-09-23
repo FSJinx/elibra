@@ -45,6 +45,7 @@ class StoreBookRequest extends BaseRequest
             'keywords' => ['nullable', 'array'],
             'language_id' => ['required', Rule::exists((new Language)->getTable(), 'id')],
             'electronic_file' => ['nullable', 'file', 'mimes:pdf,doc,docx'],
+            'cover_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'item_type_id' => ['required', Rule::exists((new ItemType)->getTable(), 'id')],
             'item_type_category_id' => ['required', Rule::exists((new ItemTypeCategory)->getTable(), 'id')],
             'branch_id' => ['required', Rule::exists((new Branch)->getTable(), 'id')],

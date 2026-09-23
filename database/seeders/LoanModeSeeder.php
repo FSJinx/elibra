@@ -13,10 +13,9 @@ class LoanModeSeeder extends Seeder
     public function run(): void
     {
         $data = [
-            ['code' => 'in_house', 'name' => 'In House'],
-            ['code' => 'take_home', 'name' => 'Take Home'],
-            ['code' => 'reserve', 'name' => 'Reservation'],
-            ['code' => 'reserve_pickup', 'name' => 'reserve_pickup'],
+            ['slug' => 'in_house', 'name' => 'In House'],
+            ['slug' => 'take_home', 'name' => 'Take Home'],
+            ['slug' => 'reserve', 'name' => 'Reservation'],
         ];
 
         foreach ($data as $d) {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Media;
+use App\Models\Item;
 use App\Http\Requests\StoreMediaRequest;
 use App\Http\Requests\UpdateMediaRequest;
 use App\Services\CacheService;
@@ -27,7 +28,7 @@ class MediaController extends Controller
 
     $request->validate([
             'query' => ['nullable', 'string', 'max:255'],
-            'image_type' => ['nullable', 'in:profile,logo,book_cover,document,banner,other'],
+            'image_type' => ['nullable', 'in:profile,logo,subscription,book_cover,item_cover,document,banner,other'],
             'page' => ['nullable', 'integer', 'min:1'],
             'per_page' => ['nullable', 'integer', 'min:1', 'max:100'],
         ]);
@@ -101,6 +102,11 @@ class MediaController extends Controller
                 $request->file('image'),
                 $request->image_type
             );
+
+            if ($request->image_type === Media::ITEM_COVER) {
+                Item::whereKey($request->integer('item_id'))
+                    ->update(['cover_media_id' => $media->id]);
+            }
 
             DB::commit();
 

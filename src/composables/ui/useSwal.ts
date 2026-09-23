@@ -16,6 +16,7 @@ export const useSwal = () => {
 
     // Confirm Button
     confirmButtonColor: 'var(--color-success)',
+    
     confirmButtonText: 'Confirm',
 
     // Cancel Button

@@ -7,6 +7,7 @@ use App\Jobs\RemoveCatalogIndexJob;
 use App\Models\Academic;
 use App\Models\CatalogIndex;
 use App\Models\Item;
+use App\Models\Media;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +15,10 @@ use Illuminate\Support\Facades\Storage;
 
 class AcademicService
 {
+    public function __construct(private MediaService $mediaService)
+    {
+    }
+
     public function index(array $filters)
     {
         return CacheService::remember(
@@ -25,6 +30,7 @@ class AcademicService
                 $query = Academic::query()
                     ->with([
                         'item',
+                        'item.coverMedia',
                         'department',
                     ]);
 
@@ -100,6 +106,11 @@ class AcademicService
                 ])
             );
 
+            if (($data['cover_image'] ?? null) instanceof UploadedFile) {
+                $media = $this->mediaService->store($data['cover_image'], Media::ITEM_COVER);
+                $item->update(['cover_media_id' => $media->id]);
+            }
+
             $academic = $item->academic()->create(
                 Arr::only($data, [
                     'subjects',
@@ -120,6 +131,7 @@ class AcademicService
 
         return $academic->load([
             'item',
+            'item.coverMedia',
             'item.authors'
         ]);
     }
@@ -150,6 +162,8 @@ class AcademicService
                 ])
             );
 
+            $this->saveCoverImage($academic->item, $data);
+
             $academic->update(
                 Arr::only($data, [
                     'subjects',
@@ -168,6 +182,7 @@ class AcademicService
             // Refresh the academic model to get the latest data from the database
             return $academic->fresh([
                 'item',
+                'item.coverMedia',
                 'item.authors',
             ]);
         });
@@ -190,9 +205,14 @@ class AcademicService
     {
         $deleted = DB::transaction(function () use ($academic){
             $item = $academic->item;
+            $coverMedia = $item->coverMedia;
 
             $academic->delete();
             $item->delete();
+
+            if ($coverMedia) {
+                $this->mediaService->delete($coverMedia);
+            }
 
             RemoveCatalogIndexJob::dispatch($item->id)
                 ->afterCommit();
@@ -206,6 +226,23 @@ class AcademicService
         }
 
         return $deleted;
+    }
+
+    private function saveCoverImage(Item $item, array $data): void
+    {
+        if (! ($data['cover_image'] ?? null) instanceof UploadedFile) {
+            return;
+        }
+
+        $coverMedia = $item->coverMedia;
+
+        if ($coverMedia) {
+            $this->mediaService->replaceFile($coverMedia, $data['cover_image']);
+            return;
+        }
+
+        $media = $this->mediaService->store($data['cover_image'], Media::ITEM_COVER);
+        $item->update(['cover_media_id' => $media->id]);
     }
 
     private function saveElectronicFile(array &$data): bool

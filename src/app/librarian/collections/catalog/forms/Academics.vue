@@ -1,6 +1,6 @@
 <template>
   <Form class="flex flex-col gap-3 p-5" @submit="submitForm">
-    <SectionHeader class="bg-background border border-border rounded-t-xl rounded-b-lg" :title="`New ${$route.meta.breadcrumb}`" description="Please fill all required fields and re-check your inputs before submitting." />
+    <SectionHeader class="bg-background border border-border rounded-t-xl rounded-b-lg pb-5" :title="`New ${$route.meta.breadcrumb}`" description="Please fill all required fields and re-check your inputs before submitting." />
 
     <!-- BASIC INFORMATION -->
     <BaseForm v-model="form" :errors="errors" />
@@ -37,15 +37,15 @@ const pop = usePopup()
 const auth = authStore()
 
 const emptyForm = (): Form => ({
-  title: 'e-Libra',
-  subtitle: 'A Centralized Web-Based Integrated Library Management System and Resource Monitoring for Isabela State University',
-  description: 'Si Wanda naging Scarlet Witch na talaga.',
-  call_number: 'Mom.12DS',
-  publication_year: '1998',
+  title: '',
+  subtitle: '',
+  description: '',
+  call_number: '',
+  publication_year: '',
   electronic_file: null,
   keywords: [],
 
-  item_type_category_id: '1',
+  item_type_category_id: '',
   branch_id: auth.user?.role === 'librarian' ? auth.user?.branch?.id : '',
   language_id: '',
 

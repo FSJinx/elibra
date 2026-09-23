@@ -16,7 +16,5 @@
 </template>
 
 <script setup lang="ts">
-import { MessageCircleX } from '@lucide/vue'
-
 defineProps<{ loading: boolean; cols: any; data: any }>()
 </script>

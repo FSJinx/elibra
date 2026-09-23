@@ -22,10 +22,10 @@
     </div>
   </header>
 
-  <main class="min-h-full bg-slate-50 p-5 sm:p-7">
+  <main class="min-h-full bg-slate-50 p-5">
     <div class="mx-auto space-y-6">
       <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label="Collection summary">
-        <StatCard v-for="metric in metrics" :label="metric.label" :value="metric.value" :icon="metric.icon"></StatCard>
+        <StatCard v-for="metric in metrics" :label="metric.label" :value="Number(metric.value).toLocaleString()" :icon="metric.icon" :variant="metric.iconClass as Variants"></StatCard>
       </section>
 
       <section class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
@@ -65,19 +65,18 @@
         </aside>
       </section>
     </div>
-
-    <div class="h-screen bg-primary"></div>
   </main>
 </template>
 
 <script setup lang="ts">
 const clock = useClock()
 const auth = authStore()
+const parse = useParser()
 
 const metrics = [
-  { label: 'Total collection', value: '-', note: 'Awaiting collection data', icon: 'library', iconClass: 'bg-emerald-50 text-emerald-600' },
-  { label: 'On loan', value: '-', note: 'Circulation data pending', icon: 'book', iconClass: 'bg-sky-50 text-sky-600' },
-  { label: 'Overdue items', value: '-', note: 'No live data yet', icon: 'clock', iconClass: 'bg-amber-50 text-amber-600' },
+  { label: 'Total collection', value: '230142', note: 'Awaiting collection data', icon: 'library', iconClass: 'bg-emerald-50 text-emerald-600' },
+  { label: 'On loan', value: '2', note: 'Circulation data pending', icon: 'book', iconClass: 'bg-sky-50 text-sky-600' },
+  { label: 'Overdue items', value: '4', note: 'No live data yet', icon: 'clock', iconClass: 'bg-amber-50 text-amber-600' },
   { label: 'Active patrons', value: '-', note: 'Patron data pending', icon: 'people', iconClass: 'bg-violet-50 text-violet-600' },
 ]
 
@@ -86,6 +85,21 @@ const activities = [
   { title: 'Quick actions are being prepared', description: 'Create records, manage loans, and review requests from one place.', time: 'Soon', icon: 'zap', iconClass: 'bg-sky-50 text-sky-600' },
   { title: 'Reports will be available here', description: 'Track collection health and daily service activity at a glance.', time: 'Soon', icon: 'chart-bar', iconClass: 'bg-violet-50 text-violet-600' },
 ]
+
+const data = ref({
+  total_collections: 0,
+})
+
+onMounted(async () => {
+  try {
+    const res = await get<{ data?: { total_collections: number } }>('/librarian/dashboard/total-collections')
+
+    data.value.total_collections = res.data?.total_collections ?? 0
+  } catch (error) {
+    console.error('Failed to fetch total collections:', error)
+    data.value.total_collections = 0
+  }
+})
 </script>
 
 <style scoped></style>

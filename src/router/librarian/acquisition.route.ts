@@ -1,3 +1,4 @@
+const pop = usePopup()
 export const librarianAcquisition = [
   // ======== Acquisition ========
   {
@@ -8,13 +9,39 @@ export const librarianAcquisition = [
       {
         path: '',
         name: 'librarian.acquisition',
-        component: () => import('@/app/librarian/acquisition/Acquisition.vue'),
+        component: () => import('@/app/librarian/acquisition/acquisition/Acquisition.vue'),
+        beforeEnter: async (to: any, from: any) => {
+          const acquisition = useAcquisitionStore()
+          if (!acquisition.fetchData) {
+            acquisition.fetch()
+          }
+          return true
+        },
       },
       {
-        path: 'view',
-        name: 'librarian.acquisition.view',
-        meta: { breadcrumb: 'Viewing:' },
-        component: () => import('@/app/librarian/acquisition/pages/ViewAcquisitions.vue'),
+        path: ':id',
+        name: 'librarian.acquisition.lines',
+        component: () => import('@/app/librarian/acquisition/acquisition/AcquisitionLines.vue'),
+        beforeEnter: async (to: any) => {
+          const lines = useAcquisitionLinesStore()
+          const acquisition = useAcquisitionStore()
+          const breadcrumb = useBreadcrumbStore()
+
+          if (!acquisition.currentData) {
+            await acquisition.read(to.params.id)
+          }
+
+          try {
+            pop.load()
+            await lines.fetch(to.params.id)
+          } finally {
+            pop.unload()
+            const key = `${to.name as string}:${to.params.id}`
+            breadcrumb.set(key, `Viewing Acquisition: ${acquisition.currentData?.acquisition_id}`)
+          }
+
+          return true
+        },
       },
     ],
   },
@@ -23,6 +50,7 @@ export const librarianAcquisition = [
   {
     path: 'acquisition-requests',
     name: 'librarian.acquisition-requests',
-    component: () => import('@/app/librarian/acquisition/Requests.vue'),
+    meta: { title: 'Acquisition Requests', breadcrumb: 'Acquisition Requests' },
+    component: () => import('@/app/librarian/acquisition/request/Requests.vue'),
   },
 ]

@@ -1,11 +1,8 @@
 <template>
   <Button class="ml-auto" variant="primary" @click="open()">Add New</Button>
 
-  <Modal ref="authorModal" size="large" enable-close-btn>
-    <template #header>
-      <Icon icon="person-plus" />
-      Add Author
-    </template>
+  <Modal ref="authorModal" size="large">
+    <ModalHeader use-default-layout title="Add Author" icon="person-check" />
 
     <div class="flex flex-col p-5 gap-5">
       <!-- Add Author by Create -->
@@ -39,11 +36,11 @@
       <!-- Add author by Search -->
       <div class="flex flex-col gap-5" v-else>
         <Form @submit="searchAuthor">
-          <Control>
+          <div class="flex items-center gap-3">
             <Input id="" type="text" placeholder="Search authors..." v-model="author" enable-clear />
             <Button variant="info">Search</Button>
             <Button variant="primary" icon="plus" @click="openCreate">Add New</Button>
-          </Control>
+          </div>
         </Form>
 
         <div class="flex flex-col border border-border rounded-lg" v-if="author?.trim().length > 0">
@@ -77,11 +74,9 @@
         </div>
       </div>
     </div>
-    <template #footer>
-      <div class="flex items-center">
-        <Button class="ml-auto" @click="close">Done</Button>
-      </div>
-    </template>
+    <ModalFooter>
+      <Button class="ml-auto" @click="close">Done</Button>
+    </ModalFooter>
   </Modal>
 </template>
 

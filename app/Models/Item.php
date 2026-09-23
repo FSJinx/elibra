@@ -25,6 +25,7 @@ class Item extends Model
         'item_type_category_id',
         'branch_id',
         'language_id',
+        'cover_media_id',
     ];
 
     protected $formatter = [
@@ -97,6 +98,16 @@ class Item extends Model
     public function language()
     {
         return $this->belongsTo(Language::class);
+    }
+
+    public function acquisition_lines() {
+        return $this->hasMany(AcquisitionLines::class);
+    }
+
+    public function coverMedia()
+    {
+        return $this->belongsTo(Media::class, 'cover_media_id')
+            ->where('image_type', Media::ITEM_COVER);
     }
 
 }

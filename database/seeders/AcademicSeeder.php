@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Academic;
 use App\Services\AcademicService;
 use Illuminate\Database\Seeder;
 
@@ -15,70 +14,89 @@ class AcademicSeeder extends Seeder
     {
         collect([
             [
-                'title' => 'Multi Layered Convolutional Neural Network in Classification of Different Tomato Diseases',
-                'subtitle' => 'A Transfer Learning Approach via ShuffleNet V2 and Inception V3',
-                'description' => 'Tomato leaf diseases are a major danger to worldwide crop yields, necessitating early and accurate detection for successful management. In this study, we assess and compare two transfer-learned convolutional neural network backbones for categorizing seven typical tomato leaf states.',
-                'call_number' => '201a.343',
-                'publication_year' => '2025',
-                'item_type_id' => 1, // Academic
-                'item_type_category_id' => 3, // Dissertation
-                'language_id' => 1, // English
-                'branch_id' => 2,
-                'keywords' => ['Tomato', 'CNN', 'InceptionV3', 'ShuffleNet', 'Deep Learning'],
-                'doi' => 'https://doi.org/10.1109/ICSET65917.2025.11283838',
+                'title' => 'Development of a Machine Learning-Based Student Performance Prediction System',
+                'description' => 'This study explores the application of machine learning techniques in predicting student academic performance using historical academic records and behavioral indicators.',
+                'call_number' => '005.133 M23',
+                'publication_year' => 2025,
+                'item_type_category_id' => 1, // Undergraduate Thesis
+                'branch_id' => 1, // University Library
+                'keywords' => ['Machine Learning', 'Student Performance', 'Prediction', 'Education Technology'],
             ],
             [
-                'title' => 'Development of an IoT-Based Smart Flood Monitoring and Early Warning System for River Basins',
-                'subtitle' => 'Real-time Water Level and Rainfall Telemetry Using LoRaWAN Networks',
-                'description' => 'Frequent flash floods in low-lying river basin communities present severe risks to life and infrastructure. This study introduces an automated, solar-powered Internet of Things monitoring node deployed along critical river tributaries.',
-                'call_number' => '621.381 0285',
-                'publication_year' => '2024',
-                'item_type_id' => 1,
-                'item_type_category_id' => 9, // Thesis
-                'language_id' => 1,
-                'branch_id' => 1,
-                'keywords' => ['IoT', 'LoRaWAN', 'Flood Warning', 'Telemetry', 'Embedded Systems'],
-                'doi' => 'https://doi.org/10.1016/j.iot.2024.100912',
+                'title' => 'Cybersecurity Awareness and Safe Computing Practices Among University Students',
+                'description' => 'This study examines cybersecurity awareness among university students and evaluates their practices concerning passwords, phishing, malware, and personal data protection.',
+                'call_number' => '005.8 C93',
+                'publication_year' => 2024,
+                'item_type_category_id' => 2, // Graduate Thesis
+                'branch_id' => 1, // University Library
+                'keywords' => ['Cybersecurity', 'Security Awareness', 'Students', 'Information Security'],
             ],
             [
-                'title' => 'Blockchain-Based Decentralized Identity Management Protocol for Academic Credential Verification',
-                'subtitle' => 'Eliminating Diploma Fraud through Self-Sovereign Identity Architecture',
-                'description' => 'Academic degree fraud poses significant challenges to employers and higher education institutions globally. This study presents an Ethereum-compatible smart contract framework designed to issue, verify, and revoke university credentials.',
-                'call_number' => '005.74 C86',
-                'publication_year' => '2024',
-                'item_type_id' => 1,
-                'item_type_category_id' => 7, // Research Paper
-                'language_id' => 1,
-                'branch_id' => 1,
-                'keywords' => ['Blockchain', 'Smart Contracts', 'Credential Verification', 'Decentralized Identity'],
-                'doi' => 'https://doi.org/10.1109/TSE.2024.3382910',
+                'title' => 'IoT-Based Smart Classroom Monitoring and Environmental Control System',
+                'description' => 'This study presents an Internet of Things system for monitoring classroom environmental conditions and automatically controlling selected classroom equipment.',
+                'call_number' => '621.384 I56',
+                'publication_year' => 2025,
+                'item_type_category_id' => 1, // Undergraduate Thesis
+                'branch_id' => 2, // CCSICT Research Room
+                'keywords' => ['IoT', 'Smart Classroom', 'Environmental Monitoring', 'Automation'],
             ],
             [
-                'title' => 'Optimization of Solar Photovoltaic Cell Efficiency Using Graphene-Based Nanocomposite Coatings',
-                'subtitle' => 'Experimental Evaluation Under High Humidity Tropical Climates',
-                'description' => 'Photovoltaic module efficiency drops significantly under high temperature and ambient relative humidity. This paper investigates the thermal dispersion and light transmittance performance of graphene oxide thin films applied over polycrystalline silicon cells.',
-                'call_number' => '621.312 44',
-                'publication_year' => '2023',
-                'item_type_id' => 1,
-                'item_type_category_id' => 1,
-                'language_id' => 1,
-                'branch_id' => 1,
-                'keywords' => ['Solar Energy', 'Photovoltaics', 'Graphene', 'Nanotechnology', 'Renewable Energy'],
-                'doi' => 'https://doi.org/10.1016/j.solmat.2023.112450',
+                'title' => 'Deep Learning Approach for Automated Classification of Philippine Plant Species',
+                'description' => 'This study investigates the use of deep learning techniques for automatically identifying and classifying selected Philippine plant species from digital images.',
+                'call_number' => '006.31 D44',
+                'publication_year' => 2024,
+                'item_type_category_id' => 2, // Graduate Thesis
+                'branch_id' => 2, // CCSICT Research Room
+                'keywords' => ['Deep Learning', 'Plant Classification', 'Computer Vision', 'Philippine Flora'],
             ],
             [
-                'title' => 'An Assessment of Philippine Micro-Enterprise Resilience Post-Pandemic',
-                'subtitle' => 'Evaluating Financial Literacy and Digital Payment Adoption in Rural Communities',
-                'description' => 'Micro-enterprises constitute over ninety percent of commercial establishments in developing economic zones. This empirical dissertation analyzes the post-pandemic business continuity strategies employed by sari-sari store owners and local vendors.',
-                'call_number' => '338.642 P53',
-                'publication_year' => '2025',
-                'item_type_id' => 1,
-                'item_type_category_id' => 4,
-                'language_id' => 1,
-                'branch_id' => 2,
-                'keywords' => ['Microenterprises', 'Financial Literacy', 'Digital Payments', 'Business Resilience'],
-                'doi' => 'https://doi.org/10.1080/09585206.2025.2104928',
+                'title' => 'Digital Financial Literacy and Mobile Payment Adoption Among Rural Entrepreneurs',
+                'description' => 'This study investigates the relationship between digital financial literacy and the adoption of mobile payment platforms among entrepreneurs operating in rural communities.',
+                'call_number' => '332.024 D57',
+                'publication_year' => 2025,
+                'item_type_category_id' => 1, // Undergraduate Thesis
+                'branch_id' => 3, // Public Library
+                'keywords' => ['Financial Literacy', 'Mobile Payments', 'Entrepreneurship', 'Rural Communities'],
             ],
-        ])->each(fn ($item) => $academicService->create($item));
+            [
+                'title' => 'Community-Based Disaster Preparedness and Flood Risk Reduction Strategies',
+                'description' => 'This study assesses disaster preparedness practices and flood risk reduction strategies implemented by communities located in flood-prone areas.',
+                'call_number' => '363.349 D37',
+                'publication_year' => 2023,
+                'item_type_category_id' => 2, // Graduate Thesis
+                'branch_id' => 3, // Public Library
+                'keywords' => ['Disaster Preparedness', 'Flood Risk', 'Risk Reduction', 'Community Resilience'],
+            ],
+            [
+                'title' => 'Digital Evidence Management System for Improving Criminal Case Documentation',
+                'description' => 'This study proposes a digital evidence management system designed to improve the organization, retrieval, and tracking of evidence records used in criminal case documentation.',
+                'call_number' => '345.05 D57',
+                'publication_year' => 2025,
+                'item_type_category_id' => 1, // Undergraduate Thesis
+                'branch_id' => 4, // CCJE Library
+                'keywords' => ['Digital Evidence', 'Criminal Justice', 'Case Documentation', 'Records Management'],
+            ],
+            [
+                'title' => 'Assessment of Legal Information Access and Research Practices Among Criminal Justice Students',
+                'description' => 'This study examines how criminal justice students access, evaluate, and utilize legal information resources for academic research and coursework.',
+                'call_number' => '340.072 L44',
+                'publication_year' => 2024,
+                'item_type_category_id' => 2, // Graduate Thesis
+                'branch_id' => 4, // CCJE Library
+                'keywords' => ['Legal Research', 'Information Access', 'Criminal Justice', 'Academic Research'],
+            ],
+        ])->each(function ($item) use ($academicService) {
+            $academicService->create([
+                ...$item,
+                'subtitle' => match ($item['branch_id']) {
+                    1 => 'Academic resource for Echague - University Library',
+                    2 => 'Academic resource for Echague - CCSICT Research Room',
+                    3 => 'Academic resource for Angadanan - Public Library',
+                    4 => 'Academic resource for Angadanan - CCJE Library',
+                },
+                'item_type_id' => 1,
+                'language_id' => 1,
+            ]);
+        });
     }
 }
