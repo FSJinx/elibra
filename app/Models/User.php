@@ -58,6 +58,11 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         return $this->hasOne(Librarian::class, 'user_id');
     }
 
+    public function profilePicture()
+    {
+        return $this->belongsTo(Media::class, 'profile_picture_id');
+    }
+
     public function section()
     {
         return $this->belongsTo($this->librarian(), 'section_id');

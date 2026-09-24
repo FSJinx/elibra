@@ -23,11 +23,9 @@
             <Th class="text-left">Title</Th>
             <Th>Quantity</Th>
             <Th>Unit Price</Th>
-            <Th>Discount</Th>
-            <Th>Net Price</Th>
           </tr>
         </Thead>
-        <Tbody :data="lines.data" :loading="lines.loading" :cols="5">
+        <Tbody :data="lines.data" :loading="lines.loading" :cols="3">
           <tr class="hover" v-for="(item, index) in lines.data" @click="view(item)">
             <Td class="text-left">
               <p class="font-medium">{{ item.items?.title }}</p>
@@ -35,8 +33,6 @@
             </Td>
             <Td :data="item.quantity" />
             <Td :data="parse.toMoney(item.unitPrice)" />
-            <Td :data="parse.toMoney(item.discount)" />
-            <Td :data="parse.toMoney(item.netPrice)" />
           </tr>
         </Tbody>
       </Table>

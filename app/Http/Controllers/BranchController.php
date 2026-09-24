@@ -214,10 +214,11 @@ class BranchController extends Controller
         try {
 
             $branch->delete();
+            $branch->branch_sections()->delete();
+
             DB::commit();
 
             CacheService::invalidate(CacheService::BRANCHES);
-            CacheService::invalidate(CacheService::SECTIONS);
             CacheService::invalidate(CacheService::BRANCH_SECTIONS);
 
             return $this->response(

@@ -55,7 +55,14 @@ class CampusController extends Controller
                     $query->orderBy('name');
                 }
 
-                return $query->select('*')->get();
+                return $query->select([
+                    'id',
+                    'name',
+                    'code',
+                    'address',
+                    'heading',
+                    'status',
+                ])->get();
             }
         );
 
@@ -103,11 +110,6 @@ class CampusController extends Controller
                     unset($campus->similarity);
 
                     return $campus;
-                    // return [
-                    //     'name' => $campus->name,
-                    //     'code' => $campus->code,
-                    //     'address' => $campus->address,
-                    // ];
                 });
 
             if ($suggestions->isNotEmpty()) {
@@ -233,11 +235,18 @@ class CampusController extends Controller
         try {
             $campus->update(['status' => 'inactive']);
 
-            $campus->delete();
+            $campus->departments()->each(function ($department) {
+                $department->programs()->delete();
+            });    
+            $campus->departments()->delete();
 
+            $campus->branches()->delete();
+            
+            $campus->delete();
             DB::commit();
 
             CacheService::invalidate(CacheService::CAMPUSES);
+            CacheService::invalidate(CacheService::BRANCHES);
             CacheService::invalidate(CacheService::DEPARTMENTS);
             CacheService::invalidate(CacheService::PROGRAMS);
 
