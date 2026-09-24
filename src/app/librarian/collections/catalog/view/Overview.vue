@@ -16,7 +16,7 @@
     </Card>
 
     <Card>
-      <Title :level="2" class="text-primary mb-5">Basic Information</Title>
+      <Title :level="2" class="text-primary">Basic Information</Title>
 
       <div class="grid grid-cols-2 gap-5">
         <Control direction="col">
@@ -43,30 +43,30 @@
     </Card>
 
     <Card>
-      <Title :level="2" class="text-primary mb-5">Classification</Title>
+      <Title :level="2" class="text-primary">Classification</Title>
 
       <div class="grid grid-cols-2 gap-5">
         <Control direction="col">
           <label for="">Item type</label>
-          <p>{{ item?.item_type?.name }}</p>
+          <p>{{ catalog?.getItemType(item?.item_type_id)?.name }}</p>
         </Control>
         <Control direction="col">
           <label for="">Category</label>
-          <p>{{ item?.item_type_category?.name }}</p>
+          <p>{{ catalog.getCategory(item?.item_type_category_id)?.name }}</p>
         </Control>
         <Control direction="col">
           <label for="">Language</label>
-          <p>{{ item?.language?.name }}</p>
+          <p>{{ catalog.getLanguage(item?.language_id)?.name }}</p>
         </Control>
         <Control direction="col">
           <label for="">General Location</label>
-          <p>{{ item?.branch?.name }}</p>
+          <p>{{ catalog.getBranches(item?.branch_id)?.name }}</p>
         </Control>
       </div>
     </Card>
 
     <Card v-if="item?.item_type?.slug === 'academic'">
-      <Title :level="2" class="text-primary mb-5">Academic Information</Title>
+      <Title :level="2" class="text-primary">Academic Information</Title>
 
       <div class="grid grid-cols-2 gap-5">
         spre
@@ -87,11 +87,20 @@
         </Control>
       </div>
     </Card>
+
+    <Card>
+      <Title :level="2" class="text-primary">Subjects</Title>
+
+      <div class="flex items-center gap-2">
+        <Chip v-for="tag in item?.keywords">{{ tag }}</Chip>
+      </div>
+    </Card>
   </div>
 </template>
 
 <script setup lang="ts">
-const item = useItemStore().currentData
+const catalog = useCatalogStore()
+const item = catalog.currentData
 </script>
 
 <style scoped>

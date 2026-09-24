@@ -41,9 +41,7 @@ class DashboardController extends Controller
     {
         $total = $this->scopedItems()->count();
 
-        return $this->response(data: [
-            'total_collections' => $total,
-        ]);
+        return $this->response(data: $total);
     }
 
     /**
@@ -91,7 +89,6 @@ class DashboardController extends Controller
     /**
      * Total number of users.
      */
-
     public function totalPatrons()
     {
         $user = $this->user();

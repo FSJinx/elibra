@@ -78,11 +78,7 @@ router.beforeEach(async (to, from) => {
   }
 
   // ======== PRELOAD ===========
-  if (!preloader.preloaded) {
-    console.log('nakarating')
-
-    preloader.preload()
-  }
+  preloader.preload()
 
   if (to.name === 'login' && store.isAuthenticated) {
     router.replace({ name: auth.userHomeLink })

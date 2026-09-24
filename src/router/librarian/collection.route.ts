@@ -16,10 +16,10 @@ export const librarianCataloging = [
             name: 'librarian.collections.catalog',
             component: () => import('@/app/librarian/collections/catalog/Catalog.vue'),
             beforeEnter: async (to: any) => {
-              const item = useItemStore()
-              if (!item.fetchData && !item.searchData) {
+              const item = useCatalogStore()
+              if (!item.data) {
                 pop.load()
-                await item.fetch()
+                await item.fetch(true)
                 pop.unload()
               }
 
@@ -32,15 +32,21 @@ export const librarianCataloging = [
             redirect: { name: 'librarian.collections.catalog.view.overview' },
             component: () => import('@/app/librarian/collections/catalog/ViewCatalog.vue'),
             beforeEnter: async (to: any) => {
-              const item = useItemStore()
+              const item = useCatalogStore()
 
-              if (!item.currentData || item.currentData?.id !== to.params.id) {
+              if (item.currentData?.id != to.params.id) {
+
                 pop.load()
-                await item.show(to.params.id)
-                pop.unload()
-              }
 
-              return true
+                try {
+                  await item.show(to.params.id)
+                  return true
+                } catch (e) {
+                  return false
+                } finally {
+                  pop.unload()
+                }
+              }
             },
             children: [
               {

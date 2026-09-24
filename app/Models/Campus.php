@@ -18,12 +18,13 @@ class Campus extends Model
     #[Override]
     protected static function booted()
     {
-        static::deleting(function ($campus) {
-            $campus->branches()->delete();
-        });
+        // static::deleting(function ($campus) {
+        //     $campus->branches()->delete();
+        // });
 
         static::restoring(function ($campus) {
             $campus->branches()->withTrashed()->restore();
+            $campus->users()->withTrashed()->restore();
         });
     }
 
@@ -35,5 +36,15 @@ class Campus extends Model
     public function branches()
     {
         return $this->hasMany(Branch::class);
+    }
+
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
+
+    public function items()
+    {
+        return $this->hasManyThrough(Item::class, Branch::class);
     }
 }

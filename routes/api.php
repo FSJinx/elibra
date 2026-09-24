@@ -53,6 +53,8 @@ Route::group(['prefix' => '/auth'], function () {
 
     Route::group(['middleware' => 'jwt.auth'], function () {
         Route::get('', [AuthController::class, 'index']); // /api/auth
+        Route::patch('/me', [AuthController::class, 'updateMe']);
+        Route::put('/me', [AuthController::class, 'updateMe']);
     });
 });
 
@@ -294,7 +296,7 @@ Route::group([
     Route::group(['prefix' => '/collections'], function () {
         Route::group(['prefix' => '/catalog'], function () {
             Route::get('', [CatalogController::class, 'index']);
-            Route::get('search', [CatalogController::class, 'search']);
+            Route::get('{catalogId}', [CatalogController::class, 'show']);
 
         });
         // Get

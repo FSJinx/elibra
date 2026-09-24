@@ -8,7 +8,7 @@
       <div class="ml-4 min-w-0">
         <p class="text-xs text-foreground-secondary uppercase tracking-wider">Online Public Access Catalog</p>
 
-        <h5 class="font-medium text-lg sm:text-2xl truncate">Now Viewing: Clean Code</h5>
+        <h5 class="font-medium text-lg sm:text-2xl truncate">Now Viewing: {{ opac.currentData?.title }}</h5>
       </div>
     </div>
 
@@ -19,13 +19,13 @@
         <!-- Cover -->
         <div class="flex justify-center lg:justify-start max-w-100 shrink-0">
           <div class="relative w-full h-max rounded-2xl border-2 border-border shadow-lg overflow-hidden group contain-content">
-            <img :src="default_book" alt="Clean Code book cover" class="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105" />
+            <img :src="default_book" :alt="`${opac.currentData?.title ?? 'Item'} cover`" class="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105" />
 
             <!-- Availability Badge -->
             <div class="absolute top-0 left-0 size-full group hover:bg-backdrop/50 transition-all duration-300">
-              <span class="inline-flex items-center gap-2 px-3 py-1.5 m-5 rounded-full bg-background/95 backdrop-blur text-sm font-medium shadow opacity-0 group-hover:opacity-100 transition-all duration-300">
+                <span class="inline-flex items-center gap-2 px-3 py-1.5 m-5 rounded-full bg-background/95 backdrop-blur text-sm font-medium shadow opacity-0 group-hover:opacity-100 transition-all duration-300">
                 <span class="size-2 rounded-full bg-green-500"></span>
-                Available
+                {{ opac.currentData?.status ?? 'Available' }}
               </span>
             </div>
           </div>
@@ -36,18 +36,18 @@
           <!-- Title -->
           <div class="mb-6">
             <div class="flex flex-wrap items-center gap-2 mb-3">
-              <span class="px-2.5 py-1 rounded-md bg-primary/10 text-primary text-xs font-semibold uppercase"> Book </span>
+              <span class="px-2.5 py-1 rounded-md bg-primary/10 text-primary text-xs font-semibold uppercase"> {{ opac.currentData?.item_type ?? 'Item' }} </span>
 
-              <span class="px-2.5 py-1 rounded-md bg-background border border-border text-xs"> 3rd Edition </span>
+              <span v-if="opac.currentData?.item_type_category" class="px-2.5 py-1 rounded-md bg-background border border-border text-xs"> {{ opac.currentData.item_type_category }} </span>
             </div>
 
-            <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight leading-tight">Clean Code</h1>
+            <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight leading-tight">{{ opac.currentData?.title }}</h1>
 
-            <p class="mt-2 text-xl text-foreground-secondary">A Handbook of Agile Software Craftsmanship</p>
+            <p v-if="opac.currentData?.subtitle" class="mt-2 text-xl text-foreground-secondary">{{ opac.currentData.subtitle }}</p>
 
-            <p class="mt-4 text-sm">
+            <p v-if="opac.currentData?.authors?.length" class="mt-4 text-sm">
               by
-              <span class="font-medium text-primary"> Robert C. Martin </span>
+              <span class="font-medium text-primary"> {{ opac.currentData.authors.join(', ') }} </span>
             </p>
           </div>
 
@@ -55,22 +55,22 @@
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-7">
             <div class="p-4 rounded-xl border border-border bg-background-secondary">
               <p class="text-xs text-foreground-secondary mb-1">Publication</p>
-              <p class="font-medium">2008</p>
+              <p class="font-medium">{{ opac.currentData?.publication_year ?? 'Unknown' }}</p>
             </div>
 
             <div class="p-4 rounded-xl border border-border bg-background-secondary">
               <p class="text-xs text-foreground-secondary mb-1">Publisher</p>
-              <p class="font-medium">Prentice Hall</p>
+              <p class="font-medium">{{ itemDetails.publisher ?? 'Unknown' }}</p>
             </div>
 
             <div class="p-4 rounded-xl border border-border bg-background-secondary">
               <p class="text-xs text-foreground-secondary mb-1">Pages</p>
-              <p class="font-medium">464</p>
+              <p class="font-medium">{{ itemDetails.pages ?? 'Unknown' }}</p>
             </div>
 
             <div class="p-4 rounded-xl border border-border bg-background-secondary">
               <p class="text-xs text-foreground-secondary mb-1">Language</p>
-              <p class="font-medium">English</p>
+              <p class="font-medium">{{ opac.currentData?.language ?? 'Unknown' }}</p>
             </div>
           </div>
 
@@ -83,7 +83,7 @@
                 <p class="text-sm text-foreground-secondary">Current copies in the library</p>
               </div>
 
-              <span class="text-sm font-medium text-green-600"> 3 of 5 copies available </span>
+              <span class="text-sm font-medium text-green-600"> {{ opac.currentData?.status ?? 'Available' }} </span>
             </div>
 
             <div class="space-y-3">
@@ -94,45 +94,26 @@
                   </span>
 
                   <div>
-                    <p class="font-medium text-sm">Main Campus Library</p>
+                    <p class="font-medium text-sm">{{ opac.currentData?.branch ?? 'Unknown branch' }}</p>
 
-                    <p class="text-xs text-foreground-secondary">General Collection · Shelf A-12</p>
+                    <p class="text-xs text-foreground-secondary">{{ opac.currentData?.item_type_category ?? 'Collection' }}</p>
                   </div>
                 </div>
 
-                <span class="text-xs font-medium text-green-600"> Available </span>
+                <span class="text-xs font-medium text-green-600"> {{ opac.currentData?.status ?? 'Available' }} </span>
               </div>
 
-              <div class="flex items-center justify-between p-3 rounded-lg bg-background-secondary">
+              <div v-if="opac.currentData?.branch" class="flex items-center justify-between p-3 rounded-lg bg-background-secondary">
                 <div class="flex items-center gap-3">
                   <span class="size-9 rounded-lg bg-green-500/10 text-green-600 flex items-center justify-center">
                     <i class="icon-book-open text-sm"></i>
                   </span>
-
                   <div>
-                    <p class="font-medium text-sm">Main Campus Library</p>
-
-                    <p class="text-xs text-foreground-secondary">General Collection · Shelf A-12</p>
+                    <p class="font-medium text-sm">{{ opac.currentData.branch }}</p>
+                    <p class="text-xs text-foreground-secondary">{{ opac.currentData.call_number ?? 'No call number' }}</p>
                   </div>
                 </div>
-
-                <span class="text-xs font-medium text-green-600"> Available </span>
-              </div>
-
-              <div class="flex items-center justify-between p-3 rounded-lg bg-background-secondary">
-                <div class="flex items-center gap-3">
-                  <span class="size-9 rounded-lg bg-red-500/10 text-red-600 flex items-center justify-center">
-                    <i class="icon-book text-sm"></i>
-                  </span>
-
-                  <div>
-                    <p class="font-medium text-sm">Main Campus Library</p>
-
-                    <p class="text-xs text-foreground-secondary">General Collection · Shelf A-12</p>
-                  </div>
-                </div>
-
-                <span class="text-xs font-medium text-red-600"> Borrowed </span>
+                <span class="text-xs font-medium text-green-600"> {{ opac.currentData.status ?? 'Available' }} </span>
               </div>
             </div>
           </div>
@@ -163,24 +144,14 @@
         <div class="lg:col-span-2">
           <h2 class="text-2xl font-semibold mb-4">About this item</h2>
 
-          <p class="leading-7 text-foreground-secondary">Even bad code can function. But if code isn't clean, it can bring a development organization to its knees. Every year, countless hours and significant resources are lost because of poorly written code. This book presents practical principles and techniques for writing clean, readable, maintainable, and flexible software.</p>
-
-          <p class="mt-4 leading-7 text-foreground-secondary">Written by software craftsmanship expert Robert C. Martin, this handbook provides examples of code transformations and explains how professional developers can produce better software through discipline, craftsmanship, and continuous improvement.</p>
+          <p class="leading-7 text-foreground-secondary">{{ opac.currentData?.description ?? 'No description available.' }}</p>
 
           <!-- Subjects -->
           <div class="mt-7">
             <h3 class="font-semibold mb-3">Subjects</h3>
 
             <div class="flex flex-wrap gap-2">
-              <span class="px-3 py-1.5 rounded-lg border border-border text-sm"> Software Engineering </span>
-
-              <span class="px-3 py-1.5 rounded-lg border border-border text-sm"> Programming </span>
-
-              <span class="px-3 py-1.5 rounded-lg border border-border text-sm"> Agile Development </span>
-
-              <span class="px-3 py-1.5 rounded-lg border border-border text-sm"> Software Craftsmanship </span>
-
-              <span class="px-3 py-1.5 rounded-lg border border-border text-sm"> Code Quality </span>
+              <span v-for="keyword in opac.currentData?.keywords ?? []" :key="keyword" class="px-3 py-1.5 rounded-lg border border-border text-sm"> {{ keyword }} </span>
             </div>
           </div>
         </div>
@@ -194,37 +165,37 @@
               <div>
                 <dt class="text-foreground-secondary">ISBN</dt>
 
-                <dd class="font-medium mt-1">978-0132350884</dd>
+                <dd class="font-medium mt-1">{{ itemDetails.isbn ?? 'Not available' }}</dd>
               </div>
 
               <div>
                 <dt class="text-foreground-secondary">Call Number</dt>
 
-                <dd class="font-medium mt-1">QA76.76.C672 M37</dd>
+                <dd class="font-medium mt-1">{{ opac.currentData?.call_number ?? 'Not available' }}</dd>
               </div>
 
               <div>
                 <dt class="text-foreground-secondary">Accession Number</dt>
 
-                <dd class="font-medium mt-1">ISU-2026-000184</dd>
+                <dd class="font-medium mt-1">{{ opac.currentData?.item_id ?? 'Not available' }}</dd>
               </div>
 
               <div>
                 <dt class="text-foreground-secondary">Classification</dt>
 
-                <dd class="font-medium mt-1">Computer Science</dd>
+                <dd class="font-medium mt-1">{{ opac.currentData?.item_type_category ?? 'Not available' }}</dd>
               </div>
 
               <div>
                 <dt class="text-foreground-secondary">Material Type</dt>
 
-                <dd class="font-medium mt-1">Printed Book</dd>
+                <dd class="font-medium mt-1">{{ opac.currentData?.item_type ?? 'Not available' }}</dd>
               </div>
 
               <div>
                 <dt class="text-foreground-secondary">Collection</dt>
 
-                <dd class="font-medium mt-1">General Collection</dd>
+                <dd class="font-medium mt-1">{{ opac.currentData?.branch ?? 'Not available' }}</dd>
               </div>
             </dl>
           </div>
@@ -241,7 +212,7 @@
           <div>
             <p class="font-medium text-sm">Need help finding this item?</p>
 
-            <p class="text-sm text-foreground-secondary mt-1">Ask a librarian at the Main Campus Library for assistance locating this material.</p>
+            <p class="text-sm text-foreground-secondary mt-1">Ask a librarian at {{ opac.currentData?.branch ?? 'the library' }} for assistance locating this material.</p>
           </div>
         </div>
       </div>
@@ -251,6 +222,27 @@
 
 <script setup lang="ts">
 import default_book from '@/assets/images/default_book.png'
+
+const opac = useOpacStore()
+
+const route = useRoute()
+
+const itemDetails = computed(() => {
+  const data = opac.currentData
+  const details = data?.book ?? data?.academic ?? data?.serial ?? {}
+
+  return {
+    isbn: details.isbn,
+    pages: details.pages ?? details.page_count,
+    publisher: details.publisher ?? details.institution,
+  }
+})
+
+onMounted(() => {
+  if (route.params.id) {
+    opac.show(route.params.id)
+  }
+})
 
 const pages = ref([
   { name: 'Details', path: '' },

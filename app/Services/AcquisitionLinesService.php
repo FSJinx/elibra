@@ -20,9 +20,6 @@ class AcquisitionLinesService
 
             $quantity = isset($data['quantity']) ? (float) $data['quantity'] : null;
             $unitPrice = isset($data['unit_price']) ? (float) $data['unit_price'] : null;
-            $discount = isset($data['discount']) ? (float) $data['discount'] : 0.0;
-
-            $data['net_price'] = $this->calculateNetPrice($quantity, $unitPrice, $discount);
 
             /*
              * Get item and category.
@@ -47,8 +44,6 @@ class AcquisitionLinesService
                 Arr::only($data, [
                     'quantity',
                     'unit_price',
-                    'discount',
-                    'net_price',
                     'item_id',
                     'acquisition_id',
                 ])
@@ -96,12 +91,6 @@ class AcquisitionLinesService
 
         $acquisitionLine = DB::transaction(function () use ($acquisitionLine, $data) {
 
-            $quantity = array_key_exists('quantity', $data) ? (float) $data['quantity'] : $acquisitionLine->quantity;
-            $unitPrice = array_key_exists('unit_price', $data) ? (float) $data['unit_price'] : $acquisitionLine->unit_price;
-            $discount = array_key_exists('discount', $data) ? (float) $data['discount'] : ($acquisitionLine->discount ?? 0.0);
-
-            $data['net_price'] = $this->calculateNetPrice($quantity, $unitPrice, $discount);
-
             $oldQuantity = (int) $acquisitionLine->quantity;
             $newQuantity = array_key_exists('quantity', $data)
                 ? (int) $data['quantity']
@@ -120,8 +109,6 @@ class AcquisitionLinesService
                 Arr::only($data, [
                     'quantity',
                     'unit_price',
-                    'discount',
-                    'net_price',
                     'item_id',
                     'acquisition_id',
                 ])
@@ -279,18 +266,6 @@ class AcquisitionLinesService
         }
 
         return $deleted;
-    }
-
-    private function calculateNetPrice(int $quantity, float $unitPrice, float $discount = 0.0): ?float
-    {
-        if ($quantity === null || $unitPrice === null) {
-            return null;
-        }
-
-        $grossTotal = (float) $quantity * (float) $unitPrice;
-        $discountAmount = $discount === null ? 0.0 : (float) $discount;
-
-        return $grossTotal - $discountAmount;
     }
 
     /**

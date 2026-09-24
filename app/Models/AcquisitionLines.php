@@ -14,17 +14,12 @@ class AcquisitionLines extends Model
     protected $fillable = [
         'quantity',
         'unit_price',
-        'discount',
-        'net_price',
         'item_id',
         'acquisition_id',
     ];
 
     protected $casts = [
         'quantity' => 'integer',
-        'unit_price' => 'float',
-        'discount' => 'float',
-        'net_price' => 'float',
     ];
 
     public function items()
