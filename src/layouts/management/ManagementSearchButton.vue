@@ -13,7 +13,7 @@
   </Button>
 
   <!-- Search Modal -->
-  <Modal ref="searchModal" position="top" size="normal">
+  <Modal ref="searchModal" position="top" size="normal" disable-close-btn>
     <!-- Search Input -->
     <div class="border-b border-border/70 px-4">
       <Input id="system-search" ref="searchInput" v-model="searchQuery" focus enable-clear left-icon="search" placeholder="Search anything..." class="w-full border-0 bg-transparent px-1 py-4 text-base focus:ring-0" @keydown.esc="closeModal" />

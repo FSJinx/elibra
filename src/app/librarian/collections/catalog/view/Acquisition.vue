@@ -1,5 +1,5 @@
 <template>
-    Acquisition History
+    <PageConstruction />
 </template>
 
 <script setup lang="ts"></script>

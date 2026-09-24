@@ -18,7 +18,9 @@
     </SectionHeader>
 
     <div class="flex-1 flex flex-col p-5 -mt-5 gap-5">
-      <Table :data-length="25"> </Table>
+      <!-- <Table :data-length="25"> </Table> -->
+
+      <PageConstruction />
     </div>
   </div>
 </template>

@@ -35,7 +35,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     public function getJWTCustomClaims()
     {
         return [
-            'name' => $this->first_name
+            'name' => $this->first_name,
         ];
     }
 
@@ -76,6 +76,18 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     public function campus()
     {
         return $this->belongsTo(Campus::class);
+    }
+
+    public function branch()
+    {
+        return $this->hasOneThrough(
+            Branch::class,
+            Librarian::class,
+            'user_id',
+            'id',
+            'id',
+            'branch_id'
+        );
     }
 
     public function permissions()

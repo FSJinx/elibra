@@ -294,7 +294,7 @@ Route::group([
     Route::group(['prefix' => '/collections'], function () {
         Route::group(['prefix' => '/catalog'], function () {
             Route::get('', [CatalogController::class, 'index']);
-            Route::get('search', [CatalogController::class, 'search']);
+            Route::get('{catalogId}', [CatalogController::class, 'show']);
 
         });
         // Get
