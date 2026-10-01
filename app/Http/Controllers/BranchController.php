@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreBranchRequest;
 use App\Http\Requests\UpdateBranchRequest;
+use App\Http\Requests\UpdateLibraryRequest;
 use App\Models\Branch;
 use App\Services\CacheService;
 use App\Services\QueryService;
@@ -64,17 +65,19 @@ class BranchController extends Controller
                     $query->where('campus_id', $campusId);
                 } elseif ($isGuest) {
 
-                    $query->select([
-                        'id',
-                        'name',
-                        'contact_info',
-                        'email',
-                        'opening_hour',
-                        'closing_hour',
-                        'logo_id',
-                        'branch_head_id',
-                        'campus_id',
-                    ]);
+                    $query->select('*');
+
+                    // $query->select([
+                    //     'id',
+                    //     'name',
+                    //     'contact_info',
+                    //     'email',
+                    //     'opening_hour',
+                    //     'closing_hour',
+                    //     'logo_id',
+                    //     'branch_head_id',
+                    //     'campus_id',
+                    // ]);
 
                 }
 
@@ -148,7 +151,7 @@ class BranchController extends Controller
 
             return $this->response(
                 'success',
-                'Branch created successfully',
+                'Library created successfully',
                 $branch->toArray(),
                 201
             );
@@ -180,7 +183,7 @@ class BranchController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateBranchRequest $request, Branch $branch)
+    public function update(UpdateLibraryRequest $request, Branch $branch)
     {
         DB::beginTransaction();
         try {

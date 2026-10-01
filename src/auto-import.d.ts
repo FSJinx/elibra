@@ -8,9 +8,21 @@ export {}
 declare global {
   const EffectScope: typeof import('vue').EffectScope
   const acceptHMRUpdate: typeof import('pinia').acceptHMRUpdate
-  const adminCampusRoutes: typeof import('./router/admin/campus.route').adminCampusRoutes
+  const admin: typeof import('./router/admin/dashboard.route').admin
+  const adminCampusRoutes: typeof import('./router/admin/organization/campus.route').adminCampusRoutes
+  const adminDashboardRoutes: typeof import('./router/admin/dashboard.route').adminDashboardRoutes
+  const adminItemCategoriesRoutes: typeof import('./router/admin/standard/item_categories.route').adminItemCategoriesRoutes
+  const adminItemTypeRoutes: typeof import('./router/admin/standard/item_types.route').adminItemTypeRoutes
+  const adminLibraryRoutes: typeof import('./router/admin/organization/library.route').adminLibraryRoutes
+  const adminOrganization: typeof import('./router/admin/organization.route').adminOrganization
+  const adminOrganizationRoutes: typeof import('./router/admin/organization.route').adminOrganizationRoutes
+  const adminOverviewRoutes: typeof import('./router/admin/dashboard/overview.route').adminOverviewRoutes
   const adminRoutes: typeof import('./router/adminRoutes').adminRoutes
+  const adminStandardRoutes: typeof import('./router/admin/standards.route').adminStandardRoutes
   const adminUserRoutes: typeof import('./router/admin/users.route').adminUserRoutes
+  const adminVendorRoute: typeof import('./router/admin/organization/vendor.route').adminVendorRoute
+  const adminVendors: typeof import('./router/admin/organization/vendor.route').adminVendors
+  const adminVendorsRoute: typeof import('./router/admin/organization/vendor.route').adminVendorsRoute
   const api: typeof import('./plugins/axios').api
   const asyncComputed: typeof import('@vueuse/core').asyncComputed
   const authRoute: typeof import('./router/authRoute').authRoute
@@ -19,7 +31,7 @@ declare global {
   const autoResetRef: typeof import('@vueuse/core').autoResetRef
   const axios: typeof import('./plugins/axios').default
   const backendRoute: typeof import('./plugins/axios').backendRoute
-  const campusRoute: typeof import('./router/admin/campus.route').default
+  const campusRoute: typeof import('./router/admin/organization/campus.route').default
   const catalogDefaultParams: typeof import('./stores/librarian/catalogStore').catalogDefaultParams
   const computed: typeof import('vue').computed
   const computedAsync: typeof import('@vueuse/core').computedAsync
@@ -166,7 +178,10 @@ declare global {
   const useAcquisitionLinesStore: typeof import('./stores/librarian/acquisitionLinesStore').useAcquisitionLinesStore
   const useAcquisitionStore: typeof import('./stores/librarian/acquisitionStore').useAcquisitionStore
   const useActiveElement: typeof import('@vueuse/core').useActiveElement
+  const useAdmin: typeof import('./stores/admin/adminItemTypeStore').useAdmin
   const useAdminBranchStore: typeof import('./stores/admin/adminBranchStore').useAdminBranchStore
+  const useAdminItemCategoryStore: typeof import('./stores/admin/adminItemCategoryStore').useAdminItemCategoryStore
+  const useAdminItemTypeStore: typeof import('./stores/admin/adminItemTypeStore').useAdminItemTypeStore
   const useAdminUserStore: typeof import('./stores/admin/userStore').useAdminUserStore
   const useAnimate: typeof import('@vueuse/core').useAnimate
   const useArrayDifference: typeof import('@vueuse/core').useArrayDifference
@@ -383,6 +398,12 @@ declare global {
   export type { Variants, Sizes } from './composables/useType'
   import('./composables/useType')
   // @ts-ignore
+  export type { AdminItemCategory } from './stores/admin/adminItemCategoryStore'
+  import('./stores/admin/adminItemCategoryStore')
+  // @ts-ignore
+  export type { AdminItemType } from './stores/admin/adminItemTypeStore'
+  import('./stores/admin/adminItemTypeStore')
+  // @ts-ignore
   export type { User } from './stores/authStore'
   import('./stores/authStore')
   // @ts-ignore
@@ -424,9 +445,16 @@ declare module 'vue' {
   interface ComponentCustomProperties {
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
     readonly acceptHMRUpdate: UnwrapRef<typeof import('pinia')['acceptHMRUpdate']>
-    readonly adminCampusRoutes: UnwrapRef<typeof import('./router/admin/campus.route')['adminCampusRoutes']>
+    readonly adminCampusRoutes: UnwrapRef<typeof import('./router/admin/organization/campus.route')['adminCampusRoutes']>
+    readonly adminItemCategoriesRoutes: UnwrapRef<typeof import('./router/admin/standard/item_categories.route')['adminItemCategoriesRoutes']>
+    readonly adminItemTypeRoutes: UnwrapRef<typeof import('./router/admin/standard/item_types.route')['adminItemTypeRoutes']>
+    readonly adminLibraryRoutes: UnwrapRef<typeof import('./router/admin/organization/library.route')['adminLibraryRoutes']>
+    readonly adminOrganizationRoutes: UnwrapRef<typeof import('./router/admin/organization.route')['adminOrganizationRoutes']>
+    readonly adminOverviewRoutes: UnwrapRef<typeof import('./router/admin/dashboard/overview.route')['adminOverviewRoutes']>
     readonly adminRoutes: UnwrapRef<typeof import('./router/adminRoutes')['adminRoutes']>
+    readonly adminStandardRoutes: UnwrapRef<typeof import('./router/admin/standards.route')['adminStandardRoutes']>
     readonly adminUserRoutes: UnwrapRef<typeof import('./router/admin/users.route')['adminUserRoutes']>
+    readonly adminVendorRoute: UnwrapRef<typeof import('./router/admin/organization/vendor.route')['adminVendorRoute']>
     readonly api: UnwrapRef<typeof import('./plugins/axios')['api']>
     readonly asyncComputed: UnwrapRef<typeof import('@vueuse/core')['asyncComputed']>
     readonly authRoute: UnwrapRef<typeof import('./router/authRoute')['authRoute']>
@@ -435,7 +463,6 @@ declare module 'vue' {
     readonly autoResetRef: UnwrapRef<typeof import('@vueuse/core')['autoResetRef']>
     readonly axios: UnwrapRef<typeof import('./plugins/axios')['default']>
     readonly backendRoute: UnwrapRef<typeof import('./plugins/axios')['backendRoute']>
-    readonly campusRoute: UnwrapRef<typeof import('./router/admin/campus.route')['default']>
     readonly catalogDefaultParams: UnwrapRef<typeof import('./stores/librarian/catalogStore')['catalogDefaultParams']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
     readonly computedAsync: UnwrapRef<typeof import('@vueuse/core')['computedAsync']>
@@ -579,6 +606,8 @@ declare module 'vue' {
     readonly useAcquisitionStore: UnwrapRef<typeof import('./stores/librarian/acquisitionStore')['useAcquisitionStore']>
     readonly useActiveElement: UnwrapRef<typeof import('@vueuse/core')['useActiveElement']>
     readonly useAdminBranchStore: UnwrapRef<typeof import('./stores/admin/adminBranchStore')['useAdminBranchStore']>
+    readonly useAdminItemCategoryStore: UnwrapRef<typeof import('./stores/admin/adminItemCategoryStore')['useAdminItemCategoryStore']>
+    readonly useAdminItemTypeStore: UnwrapRef<typeof import('./stores/admin/adminItemTypeStore')['useAdminItemTypeStore']>
     readonly useAdminUserStore: UnwrapRef<typeof import('./stores/admin/userStore')['useAdminUserStore']>
     readonly useAnimate: UnwrapRef<typeof import('@vueuse/core')['useAnimate']>
     readonly useArrayDifference: UnwrapRef<typeof import('@vueuse/core')['useArrayDifference']>

@@ -2,19 +2,25 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model; 
+use Database\Factories\SubscriptionCredentialFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class SubscriptionCredential extends Model
 {
-    /** @use HasFactory<\Database\Factories\SubscriptionCredentialFactory> */
+    /** @use HasFactory<SubscriptionCredentialFactory> */
     use HasFactory;
 
-    protected $fillable = ['username', 'password', 'subscription_id', 'campus_id'];
+    protected $fillable = [
+        'username',
+        'password',
+        'subscription_id',
+        'campus_id',
+    ];
 
-    //Addes Laravel Encryption (Mutator Method)
-    //For Retrieving and Storing Passwords without exposing them in plain text
+    // Addes Laravel Encryption (Mutator Method)
+    // For Retrieving and Storing Passwords without exposing them in plain text
     protected function password(): Attribute
     {
         return Attribute::make(
@@ -31,13 +37,13 @@ class SubscriptionCredential extends Model
         );
     }
 
-    function subscription()
+    public function subscription()
     {
         return $this->belongsTo(Subscription::class, 'subscription_id');
     }
 
-    function campus()
+    public function campus()
     {
         return $this->belongsTo(Campus::class, 'campus_id');
-    } 
+    }
 }

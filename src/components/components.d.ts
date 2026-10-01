@@ -19,6 +19,7 @@ declare module 'vue' {
     CardFooter: typeof import('./my/CardFooter.vue')['default']
     CardHeader: typeof import('./my/CardHeader.vue')['default']
     CenterSpinner: typeof import('./loaders/CenterSpinner.vue')['default']
+    Checkbox: typeof import('./form/Checkbox.vue')['default']
     Chip: typeof import('./my/Chip.vue')['default']
     CloseButton: typeof import('./my/CloseButton.vue')['default']
     Control: typeof import('./form/Control.vue')['default']

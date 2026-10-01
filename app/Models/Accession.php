@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Accession extends Model
 {
-    /** @use HasFactory<\Database\Factories\AccessionFactory> */
     use HasFactory;
 
     protected $fillable = [

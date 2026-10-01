@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class AcquisitionLines extends Model
 {
-    /** @use HasFactory<AcquisitionLinesFactory> */
     use HasFactory;
 
     protected $fillable = [

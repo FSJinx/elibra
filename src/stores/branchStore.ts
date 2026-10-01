@@ -14,7 +14,7 @@ export interface Branch {
   [key: string]: any
 }
 
-const url = 'branch'
+const url = 'library'
 
 export const useBranchStore = defineStore('branch', {
   state: () => ({

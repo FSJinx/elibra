@@ -18,6 +18,8 @@ class CacheService
 
     public const BRANCHES = 'branches';
 
+    public const LIBRARY = 'libraries';
+
     public const SECTIONS = 'sections';
 
     public const BRANCH_SECTIONS = 'branch_sections';
@@ -29,22 +31,33 @@ class CacheService
     public const MEDIA = 'medias';
 
     public const ITEMS = 'items';
+
     public const ACADEMICS = 'academics';
+
     public const BOOKS = 'books';
+
     public const SERIALS = 'serials';
 
     public const AUTHORS = 'authors';
+
     public const AUTHORSHIPS = 'authorships';
 
     public const OPAC = 'opac';
 
     public const ACQUISITIONS = 'acquisitions';
+
     public const ACQUISITION_REQUESTS = 'acquisition_requests';
+
     public const ACQUISITION_LINES = 'acquisition_lines';
+
     public const PATRONS = 'patrons';
+
     public const LIBRARIANS = 'librarians';
+
     public const ATTENDANCE_LOGS = 'attendance_logs';
+
     public const CIRCULATIONS = 'circulations';
+
     public const FINES_TRANSACTIONS = 'fines_transactions';
 
     public const PATRON_TYPE_LOAN_POLICY = 'patron_type_loan_policy';

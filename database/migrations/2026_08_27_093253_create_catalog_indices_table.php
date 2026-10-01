@@ -19,7 +19,7 @@ return new class extends Migration
             // semantic search -> content
             $table->longText('content');
             $table->unsignedBigInteger('campus_id')->nullable();
-            $table->unsignedBigInteger('branch_id')->nullable();
+            $table->unsignedBigInteger('library_id')->nullable();
             $table->unsignedBigInteger('item_type_id')->nullable();
             $table->unsignedBigInteger('item_type_category_id')->nullable();
             $table->unsignedBigInteger('department_id')->nullable();
@@ -35,14 +35,14 @@ return new class extends Migration
             $table->softDeletes();
 
             $table->index('campus_id');
-            $table->index('branch_id');
+            $table->index('library_id');
             $table->index('item_type_id');
             $table->index('item_type_category_id');
             $table->index('department_id');
             $table->index('publication_year');
             $table->index('language');
 
-            });
+        });
     }
 
     /**

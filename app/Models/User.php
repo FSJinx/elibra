@@ -83,15 +83,15 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         return $this->belongsTo(Campus::class);
     }
 
-    public function branch()
+    public function library()
     {
         return $this->hasOneThrough(
-            Branch::class,
+            Library::class,
             Librarian::class,
             'user_id',
             'id',
             'id',
-            'branch_id'
+            'library_id'
         );
     }
 

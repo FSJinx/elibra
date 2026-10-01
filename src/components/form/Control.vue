@@ -6,6 +6,7 @@
 
 <script setup lang="ts">
 interface Props {
+  id?: string
   direction?: 'row' | 'col'
   required?: boolean
 
@@ -36,6 +37,7 @@ const controlClass = computed(() => {
 
 provide('control', {
   required: props.required,
+  id: props.id,
 })
 </script>
 

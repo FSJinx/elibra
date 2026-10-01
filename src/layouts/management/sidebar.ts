@@ -90,24 +90,61 @@ const librarianMenu = {
 }
 
 export const menus = {
-  super_admin: {
-    general: {
-      name: 'General',
-      children: {
-        dashboard: { path: 'admin.dashboard', name: 'Dashboard', icon: 'grid-1x2' },
-      },
-    },
-
-    management: {
-      name: 'Management',
+  super_admin: [
+    {
+      name: 'Dashboard',
       children: [
-        { path: 'admin.subscriptions', name: 'Subscriptions', icon: 'globe' },
-        { path: 'admin.campus', name: 'Campus', icon: 'buildings' },
-        { path: 'admin.branch', name: 'Branch', icon: 'building' },
-        { path: 'admin.users', name: 'Users', icon: 'people' },
+        { path: 'admin.overview', name: 'Overview', icon: 'speedometer2' },
+        { path: '', name: 'Notifications', icon: 'bell' },
+        { path: '', name: 'Tickets', icon: 'ticket-perforated' },
       ],
     },
-  },
+
+    {
+      name: 'Organization',
+      children: [
+        { path: 'admin.campus', name: 'Campus', icon: 'buildings' },
+        { path: 'admin.libraries', name: 'Libraries', icon: 'bank2' },
+        { path: 'admin.vendors', name: 'Vendors', icon: 'shop' },
+      ],
+    },
+
+    {
+      name: 'Users & Access',
+      children: [
+        { path: '', name: 'Accounts', icon: 'people' },
+        { path: '', name: 'Roles & Permissions', icon: 'person-lock' },
+        { path: '', name: 'Login Activity', icon: 'clock-history' },
+      ],
+    },
+
+    {
+      name: 'Standards',
+      children: [
+        { path: 'admin.item_types', name: 'Item Types', icon: 'tags' },
+        { path: 'admin.item_categories', name: 'Item Categories', icon: 'collection' },
+        { path: '', name: 'Patron Groups', icon: 'people' },
+      ],
+    },
+
+    {
+      name: 'Authority Control',
+      children: [
+        { path: '', name: 'Authors', icon: 'person' },
+        { path: '', name: 'Publishers', icon: 'building' },
+        { path: '', name: 'Languages', icon: 'translate' },
+      ],
+    },
+
+    {
+      name: 'Policies',
+      children: [
+        { path: '', name: 'Circulation Rules', icon: 'arrow-left-right' },
+        { path: '', name: 'Fines & Fees', icon: 'cash-stack' },
+        { path: '', name: 'Calendar', icon: 'calendar3' },
+      ],
+    },
+  ],
 
   admin: librarianMenu,
   librarian: librarianMenu,

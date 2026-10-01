@@ -187,6 +187,11 @@ export function useParser() {
       return rtf.format(-days, 'day')
     },
 
+    /**
+     *
+     * @param value string | null
+     * @returns A date and time that computes the moment that has gone through since the given datetime
+     */
     dateTimeAgo(value: string | null) {
       if (!value) return null
 

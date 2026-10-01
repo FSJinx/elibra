@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Sections extends Model
 {
-    /** @use HasFactory<SectionsFactory> */
     use HasFactory, SoftDeletes, AutoFormatter;
 
     protected $fillable = ['name'];

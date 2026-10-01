@@ -31,8 +31,19 @@ const router = createRouter({
       component: () => import('@/app/Test.vue'),
     },
 
-    // Admin Route
-    ...adminRoutes,
+    // ============== Admin Route ================
+    {
+      path: '/admin',
+      name: 'admin',
+      meta: {
+        breadcrumb: 'Admin',
+        requiresAuth: true,
+        role: 'super_admin',
+      },
+      redirect: { name: 'admin.overview' },
+      component: () => import('@/layouts/management/ManagementLayout.vue'),
+      children: adminRoutes,
+    },
 
     // Librarian Route
     ...librarianRoutes,
