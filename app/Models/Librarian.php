@@ -29,16 +29,3 @@ class Librarian extends Model
     }
 
 }
-
-
-/**
- * Admin God -> lives in ech
- * Echague Campus -> Admin 1
- * Admin 1 -> create University Library (branch), create account for library admin = Library Admin Echague
- * Library Admin Echague -> add sections to branch, create accounts for librarians, assign librarians to section
- * 
- * Angadanan Campus -> Admin 2
- * -> create department, program, branches -> create library admin account, manage users 
- * -> library admin -> manage librarians, branch
- * 
- */

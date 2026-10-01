@@ -33,9 +33,12 @@ class ItemService
                     $query->where('branch_id', $user->librarian?->branch_id);
                 }
 
-                if ($search && $search !== '') {
+                if ($search && $search != '') {
                     $query->where(function ($q) use ($search) {
                         $q->where('title', 'like', "%{$search}%");
+                        $q->orWhere('subtitle', 'like', "%{$search}%");
+                        $q->orWhere('description', 'like', "%{$search}%");
+                        $q->orWhere('keywords', 'like', "%{$search}%");
                     });
                 }
 
@@ -49,5 +52,12 @@ class ItemService
                     );
             }
         );
+    }
+
+    public function show(string $id)
+    {
+        $item = Item::findOrFail($id);
+
+        return $item;
     }
 }

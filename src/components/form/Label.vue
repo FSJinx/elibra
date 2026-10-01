@@ -1,5 +1,5 @@
 <template>
-  <label :for="id" :id="id + 'Label'" class="max-w-max font-medium">
+  <label :for="control.id ?? id" :id="(control.id ?? id) + 'Label'" class="max-w-max font-medium">
     <slot></slot>
     <span v-if="required || control?.required" class="text-danger">*</span>
   </label>
@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 interface Props {
-  id: string
+  id?: string
   required?: boolean
 }
 withDefaults(defineProps<Props>(), {

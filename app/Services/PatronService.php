@@ -38,6 +38,7 @@ class PatronService
                 'account_expiry',
                 'remarks',
                 'patron_type_id',
+                'department_id',
                 'program_id',
             ]);
 

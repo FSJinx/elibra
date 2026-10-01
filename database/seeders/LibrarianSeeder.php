@@ -56,7 +56,7 @@ class LibrarianSeeder extends Seeder
 
             Librarian::create([
                 'user_id' => $librarian->id,
-                'branch_id' => 1,
+                'branch_id' => rand(1, 2),
             ]);
         }
 

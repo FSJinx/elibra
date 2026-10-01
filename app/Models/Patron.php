@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Patron extends Model
 {
-    /** @use HasFactory<PatronFactory> */
     use HasFactory, SoftDeletes;
 
     protected $fillable = ['ebc_number', 'external_organization', 'date_joined', 'account_expiry', 'remarks', 'user_id', 'patron_type_id', 'program_id'];

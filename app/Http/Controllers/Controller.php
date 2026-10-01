@@ -24,7 +24,7 @@ abstract class Controller
         return $this->auth()->user();
     }
 
-    public function response(?string $status = 'success', ?string $message = null, ?array $data = null, int $statusCode = 200)
+    public function response(?string $status = 'success', ?string $message = null, mixed $data = null, int $statusCode = 200)
     {
         return response()->json([
             'status' => $status,

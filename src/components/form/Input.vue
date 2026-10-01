@@ -10,12 +10,12 @@
       <!-- Native Input -->
       <input
         ref="input"
-        :id="id"
-        :name="id"
+        :id="control?.id ?? id"
+        :name="control?.id ?? id"
         v-model="model"
         :type="inputType"
         :placeholder="placeholder"
-        :required="required || control?.required"
+        :required="control?.required || required"
         :disabled="disabled"
         :readonly="readonly"
         :tabindex="tabindex"
@@ -87,7 +87,7 @@ type Autocomplete = 'on' | 'off' | string
 
 interface Props {
   // Base
-  id: string
+  id?: string
   type?: Types
   placeholder?: string
 

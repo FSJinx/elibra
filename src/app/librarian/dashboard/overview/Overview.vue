@@ -24,9 +24,18 @@
 
   <main class="min-h-full bg-slate-50 p-5">
     <div class="mx-auto space-y-6">
-      <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label="Collection summary">
-        <StatCard v-for="metric in metrics" :label="metric.label" :value="Number(metric.value).toLocaleString()" :icon="metric.icon" :variant="metric.iconClass as Variants"></StatCard>
-      </section>
+      <div class="flex flex-col gap-5">
+        <Title :level="4" class="text-widest uppercase text-primary">Collection Metrics</Title>
+        <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label="Collection summary">
+          <StatCard v-for="metric in collectionMetrics" :label="metric.label" :value="Number(metric.value).toLocaleString()" :icon="metric.icon" :variant="metric.iconClass as Variants" :is-loading="metric.isLoading"></StatCard>
+        </section>
+      </div>
+      <div class="flex flex-col gap-5">
+        <Title :level="4" class="text-widest uppercase text-primary">User Metrics</Title>
+        <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label="Collection summary">
+          <StatCard v-for="metric in userMetrics" :label="metric.label" :value="Number(metric.value).toLocaleString()" :icon="metric.icon" :variant="metric.iconClass as Variants" :is-loading="metric.isLoading"></StatCard>
+        </section>
+      </div>
 
       <section class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
         <article class="rounded-lg border border-slate-200 bg-white shadow-sm">
@@ -71,14 +80,21 @@
 <script setup lang="ts">
 const clock = useClock()
 const auth = authStore()
-const parse = useParser()
+const dashboard = useLibrarianDashboardStore()
 
-const metrics = [
-  { label: 'Total collection', value: '230142', note: 'Awaiting collection data', icon: 'library', iconClass: 'bg-emerald-50 text-emerald-600' },
-  { label: 'On loan', value: '2', note: 'Circulation data pending', icon: 'book', iconClass: 'bg-sky-50 text-sky-600' },
-  { label: 'Overdue items', value: '4', note: 'No live data yet', icon: 'clock', iconClass: 'bg-amber-50 text-amber-600' },
-  { label: 'Active patrons', value: '-', note: 'Patron data pending', icon: 'people', iconClass: 'bg-violet-50 text-violet-600' },
-]
+const collectionMetrics = computed(() => [
+  { label: 'Total Collection', value: dashboard.totalCollections, icon: 'library', iconClass: 'bg-emerald-50 text-emerald-600', isLoading: dashboard.loadingTotalCollections },
+  { label: 'Total Books', value: dashboard.totalBooks, icon: 'people', iconClass: 'bg-violet-50 text-violet-600', isLoading: dashboard.loadingTotalBooks },
+  { label: 'Total Academics', value: dashboard.totalAcademics, icon: 'book', iconClass: 'bg-sky-50 text-sky-600', isLoading: dashboard.loadingTotalAcademics },
+  { label: 'Total Serials', value: dashboard.totalSerials, icon: 'clock', iconClass: 'bg-amber-50 text-amber-600', isLoading: dashboard.loadingTotalSerials },
+])
+
+const userMetrics = computed(() => [
+  { label: 'Total Campuses', value: dashboard.totalCampuses, icon: 'building', iconClass: 'bg-amber-50 text-amber-600', isLoading: dashboard.loadingTotalCampuses },
+  { label: 'Total Branches', value: dashboard.totalBranches, icon: 'building', iconClass: 'bg-emerald-50 text-emerald-600', isLoading: dashboard.loadingTotalBranches },
+  { label: 'Total Librarians', value: dashboard.totalLibrarians, icon: 'people', iconClass: 'bg-sky-50 text-sky-600', isLoading: dashboard.loadingTotalLibrarians },
+  { label: 'Total Patrons', value: dashboard.totalPatrons, icon: 'people', iconClass: 'bg-violet-50 text-violet-600', isLoading: dashboard.loadingTotalPatrons },
+])
 
 const activities = [
   { title: 'Collection activity will appear here', description: 'New records, updates, and circulation events will be listed in this feed.', time: 'Soon', icon: 'activity', iconClass: 'bg-emerald-50 text-emerald-600' },
@@ -86,19 +102,8 @@ const activities = [
   { title: 'Reports will be available here', description: 'Track collection health and daily service activity at a glance.', time: 'Soon', icon: 'chart-bar', iconClass: 'bg-violet-50 text-violet-600' },
 ]
 
-const data = ref({
-  total_collections: 0,
-})
-
-onMounted(async () => {
-  try {
-    const res = await get<{ data?: { total_collections: number } }>('/librarian/dashboard/total-collections')
-
-    data.value.total_collections = res.data?.total_collections ?? 0
-  } catch (error) {
-    console.error('Failed to fetch total collections:', error)
-    data.value.total_collections = 0
-  }
+onMounted(() => {
+  dashboard.fetch()
 })
 </script>
 
