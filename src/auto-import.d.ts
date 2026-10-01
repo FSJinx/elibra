@@ -8,21 +8,16 @@ export {}
 declare global {
   const EffectScope: typeof import('vue').EffectScope
   const acceptHMRUpdate: typeof import('pinia').acceptHMRUpdate
-  const admin: typeof import('./router/admin/dashboard.route').admin
   const adminCampusRoutes: typeof import('./router/admin/organization/campus.route').adminCampusRoutes
-  const adminDashboardRoutes: typeof import('./router/admin/dashboard.route').adminDashboardRoutes
   const adminItemCategoriesRoutes: typeof import('./router/admin/standard/item_categories.route').adminItemCategoriesRoutes
   const adminItemTypeRoutes: typeof import('./router/admin/standard/item_types.route').adminItemTypeRoutes
   const adminLibraryRoutes: typeof import('./router/admin/organization/library.route').adminLibraryRoutes
-  const adminOrganization: typeof import('./router/admin/organization.route').adminOrganization
   const adminOrganizationRoutes: typeof import('./router/admin/organization.route').adminOrganizationRoutes
   const adminOverviewRoutes: typeof import('./router/admin/dashboard/overview.route').adminOverviewRoutes
   const adminRoutes: typeof import('./router/adminRoutes').adminRoutes
   const adminStandardRoutes: typeof import('./router/admin/standards.route').adminStandardRoutes
   const adminUserRoutes: typeof import('./router/admin/users.route').adminUserRoutes
   const adminVendorRoute: typeof import('./router/admin/organization/vendor.route').adminVendorRoute
-  const adminVendors: typeof import('./router/admin/organization/vendor.route').adminVendors
-  const adminVendorsRoute: typeof import('./router/admin/organization/vendor.route').adminVendorsRoute
   const api: typeof import('./plugins/axios').api
   const asyncComputed: typeof import('@vueuse/core').asyncComputed
   const authRoute: typeof import('./router/authRoute').authRoute
@@ -31,7 +26,6 @@ declare global {
   const autoResetRef: typeof import('@vueuse/core').autoResetRef
   const axios: typeof import('./plugins/axios').default
   const backendRoute: typeof import('./plugins/axios').backendRoute
-  const campusRoute: typeof import('./router/admin/organization/campus.route').default
   const catalogDefaultParams: typeof import('./stores/librarian/catalogStore').catalogDefaultParams
   const computed: typeof import('vue').computed
   const computedAsync: typeof import('@vueuse/core').computedAsync
@@ -55,13 +49,11 @@ declare global {
   const customRef: typeof import('vue').customRef
   const debouncedRef: typeof import('@vueuse/core').debouncedRef
   const debouncedWatch: typeof import('@vueuse/core').debouncedWatch
-  const defaultParams: typeof import('./stores/librarian/catalogStore').defaultParams
   const defineAsyncComponent: typeof import('vue').defineAsyncComponent
   const defineComponent: typeof import('vue').defineComponent
   const defineStore: typeof import('pinia').defineStore
   const del: typeof import('./composables/data/useApi').del
   const eagerComputed: typeof import('@vueuse/core').eagerComputed
-  const efaultParams: typeof import('./stores/librarian/catalogStore').efaultParams
   const effectScope: typeof import('vue').effectScope
   const errorRoutes: typeof import('./router/errorRoutes').errorRoutes
   const extendRef: typeof import('@vueuse/core').extendRef
@@ -121,7 +113,6 @@ declare global {
   const onUpdated: typeof import('vue').onUpdated
   const onWatcherCleanup: typeof import('vue').onWatcherCleanup
   const opacSearchStore: typeof import('./stores/opac/opacStore').opacSearchStore
-  const params: typeof import('./stores/librarian/catalogStore').params
   const patch: typeof import('./composables/data/useApi').patch
   const patronRoutes: typeof import('./router/patronRoutes').patronRoutes
   const pausableWatch: typeof import('@vueuse/core').pausableWatch
@@ -173,12 +164,10 @@ declare global {
   const unref: typeof import('vue').unref
   const unrefElement: typeof import('@vueuse/core').unrefElement
   const until: typeof import('@vueuse/core').until
-  const url: typeof import('./stores/librarian/catalogStore').url
   const useAccessionStore: typeof import('./stores/librarian/accessionStore').useAccessionStore
   const useAcquisitionLinesStore: typeof import('./stores/librarian/acquisitionLinesStore').useAcquisitionLinesStore
   const useAcquisitionStore: typeof import('./stores/librarian/acquisitionStore').useAcquisitionStore
   const useActiveElement: typeof import('@vueuse/core').useActiveElement
-  const useAdmin: typeof import('./stores/admin/adminItemTypeStore').useAdmin
   const useAdminBranchStore: typeof import('./stores/admin/adminBranchStore').useAdminBranchStore
   const useAdminItemCategoryStore: typeof import('./stores/admin/adminItemCategoryStore').useAdminItemCategoryStore
   const useAdminItemTypeStore: typeof import('./stores/admin/adminItemTypeStore').useAdminItemTypeStore

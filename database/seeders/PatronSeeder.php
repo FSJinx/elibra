@@ -14,7 +14,7 @@ class PatronSeeder extends Seeder
      */
     public function run(): void
     {
-        $students = [
+        collect([
             [
                 'uuid' => Str::uuid()->toString(),
                 'last_name' => 'balico',
@@ -26,7 +26,7 @@ class PatronSeeder extends Seeder
                 'password' => bcrypt('elibra2026'),
             ],
             [
-                'uuid' => Str::uuid()->toString(),                
+                'uuid' => Str::uuid()->toString(),
                 'last_name' => 'mamaril',
                 'first_name' => 'jef',
                 'middle_initial' => 'a',
@@ -45,9 +45,7 @@ class PatronSeeder extends Seeder
                 'email' => 'eugene@isu.edu.ph',
                 'password' => bcrypt('elibra2026'),
             ],
-        ];
-
-        foreach ($students as $student) {
+        ])->each(function ($student) {
             $user = User::create($student);
 
             Patron::create([
@@ -56,6 +54,6 @@ class PatronSeeder extends Seeder
                 'patron_type_id' => 1,
                 'program_id' => 1,
             ]);
-        }
+        });
     }
 }

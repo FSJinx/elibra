@@ -60,7 +60,6 @@ class CampusController extends Controller
                     'name',
                     'code',
                     'address',
-                    'heading',
                     'status',
                 ])->get();
             }
@@ -237,11 +236,11 @@ class CampusController extends Controller
 
             $campus->departments()->each(function ($department) {
                 $department->programs()->delete();
-            });    
+            });
             $campus->departments()->delete();
 
             $campus->branches()->delete();
-            
+
             $campus->delete();
             DB::commit();
 

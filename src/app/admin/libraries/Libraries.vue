@@ -12,8 +12,8 @@
           <tr>
             <th>No.</th>
             <th class="text-left">Name</th>
-            <th class="text-left">Address</th>
             <th>Campus</th>
+            <th>Phone</th>
             <th class="text-left">Email</th>
             <th>Last Modified</th>
             <th>Actions</th>
@@ -23,8 +23,8 @@
           <tr class="hover" v-for="(b, index) in branch.data" :key="index">
             <Td :data="index + 1" />
             <Td class="text-left" :data="b?.name" />
-            <Td class="text-left" :data="b?.address" />
             <Td :data="campus.getCampus(b?.campus_id)?.name ?? null" />
+            <Td :data="b?.phone" />
             <Td :data="b.email ?? null" class="text-left"></Td>
             <Td :data="parse.formatDateAgo(b?.updated_at)" />
             <Td class="space-x-2">
