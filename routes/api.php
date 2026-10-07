@@ -31,6 +31,7 @@ use App\Http\Controllers\OpacSearchController;
 use App\Http\Controllers\PatronController;
 use App\Http\Controllers\PatronTypeLoanPolicyController;
 use App\Http\Controllers\ProgramsController;
+use App\Http\Controllers\PublisherController;
 use App\Http\Controllers\SectionsController;
 use App\Http\Controllers\SerialController;
 use App\Http\Controllers\SubscriptionController;
@@ -85,6 +86,17 @@ Route::group(['prefix' => '/authors'], function () {
     // Update
 
     // Delete
+});
+
+// ============== PUBLISHERS ROUTE ==================
+Route::group(['prefix' => '/publishers'], function () {
+    // Get
+    Route::get('', [PublisherController::class, 'index'])->middleware('throttle:read');
+
+    // Post
+    Route::post('', [PublisherController::class, 'store'])->middleware('throttle:write');
+    Route::post('show', [PublisherController::class, 'show'])->middleware('throttle:write');
+
 });
 
 // ============== AUTHORSHIP ROUTE ==================

@@ -38,6 +38,8 @@ class CacheService
 
     public const SERIALS = 'serials';
 
+    public const PUBLISHERS = 'publishers';
+
     public const AUTHORS = 'authors';
 
     public const AUTHORSHIPS = 'authorships';

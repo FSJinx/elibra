@@ -119,6 +119,15 @@ class AuthorController extends Controller
     {
         $deleted = $this->authorService->delete($author);
 
+        if (! $deleted) {
+            return $this->response(
+                'error',
+                'Unable to delete author at this time.',
+                [],
+                500
+            );
+        }
+
         return $this->response(
             'success',
             'Author deleted successfully',

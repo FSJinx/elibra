@@ -143,7 +143,7 @@ class DashboardController extends Controller
     {
         $user = $this->user();
 
-        $query = Branch::query();
+        $query = Campus::query();
 
         if ($user?->isAdmin()) {
             $query->where('campus_id', $user->campus_id);
