@@ -2,16 +2,53 @@
 
 namespace App\Services;
 
+use App\Jobs\IndexCatalogItemJob;
 use App\Models\Item;
+use App\Models\Media;
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 class ItemService
 {
+    public function __construct(private MediaService $mediaService)
+    {
+    }
+
+    public function create(array $data): Item
+    {
+        return DB::transaction(function () use (&$data): Item {
+            $this->saveElectronicFile($data);
+
+            $item = Item::create(Arr::only($data, [
+                'title',
+                'subtitle',
+                'description',
+                'call_number',
+                'electronic_file',
+                'keywords',
+                'item_type_id',
+                'item_type_category_id',
+                'library_id',
+                'language_id',
+            ]));
+
+            $this->saveCoverImage($item, $data);
+
+            IndexCatalogItemJob::dispatch($item->id);
+
+            CacheService::invalidate(CacheService::ITEMS);
+
+            return $item->fresh(['coverMedia']);
+        });
+    }
+
     public function index(array $filters, User $user)
     {
         $cacheFilters = array_merge($filters, [
             'campus_id' => $user->isAdmin() ? $user->campus_id : null,
-            'branch_id' => $user->isLibrarian() ? $user->librarian?->branch_id : null,
+            'library_id' => $user->isLibrarian() ? $user->librarian?->library_id : null,
         ]);
 
         return CacheService::remember(
@@ -26,11 +63,11 @@ class ItemService
                 $order = $filters['order'];
 
                 if ($user->isAdmin()) {
-                    $query->whereHas('branch', function ($query) use ($user) {
+                    $query->whereHas('library', function ($query) use ($user) {
                         $query->where('campus_id', $user->campus_id);
                     });
                 } elseif ($user->isLibrarian()) {
-                    $query->where('branch_id', $user->librarian?->branch_id);
+                    $query->where('library_id', $user->librarian?->library_id);
                 }
 
                 if ($search && $search != '') {
@@ -59,5 +96,26 @@ class ItemService
         $item = Item::findOrFail($id);
 
         return $item;
+    }
+
+    private function saveCoverImage(Item $item, array $data): void
+    {
+        if (! ($data['cover_image'] ?? null) instanceof UploadedFile) {
+            return;
+        }
+
+        $media = $this->mediaService->store($data['cover_image'], Media::ITEM_COVER);
+        $item->update(['cover_media_id' => $media->id]);
+    }
+
+    private function saveElectronicFile(array &$data): void
+    {
+        if (
+            isset($data['electronic_file']) &&
+            $data['electronic_file'] instanceof UploadedFile
+        ) {
+            $data['electronic_file'] = $data['electronic_file']
+                ->store('item/files', 'public');
+        }
     }
 }

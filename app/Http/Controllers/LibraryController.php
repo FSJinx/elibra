@@ -6,7 +6,6 @@ use App\Http\Requests\StoreLibraryRequest;
 use App\Http\Requests\UpdateLibraryRequest;
 use App\Models\Library;
 use App\Services\CacheService;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -89,8 +88,6 @@ class LibraryController extends Controller
 
             DB::commit();
 
-            CacheService::invalidate(CacheService::BRANCHES);
-
             return $this->response(
                 'success',
                 'Library updated successfully',
@@ -118,8 +115,7 @@ class LibraryController extends Controller
 
             DB::commit();
 
-            CacheService::invalidate(CacheService::BRANCHES);
-            CacheService::invalidate(CacheService::BRANCH_SECTIONS);
+            CacheService::invalidate(CacheService::LIBRARY);
 
             return $this->response(
                 'success',

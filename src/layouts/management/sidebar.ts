@@ -132,7 +132,7 @@ export const menus = {
       children: [
         { path: '', name: 'Authors', icon: 'person' },
         { path: '', name: 'Publishers', icon: 'building' },
-        { path: '', name: 'Languages', icon: 'translate' },
+        { path: 'admin.languages', name: 'Languages', icon: 'translate' },
       ],
     },
 

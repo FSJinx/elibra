@@ -245,7 +245,7 @@ class CampusController extends Controller
             DB::commit();
 
             CacheService::invalidate(CacheService::CAMPUSES);
-            CacheService::invalidate(CacheService::BRANCHES);
+            CacheService::invalidate(CacheService::LIBRARY);
             CacheService::invalidate(CacheService::DEPARTMENTS);
             CacheService::invalidate(CacheService::PROGRAMS);
 

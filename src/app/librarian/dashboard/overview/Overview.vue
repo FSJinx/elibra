@@ -84,14 +84,10 @@ const dashboard = useLibrarianDashboardStore()
 
 const collectionMetrics = computed(() => [
   { label: 'Total Collection', value: dashboard.totalCollections, icon: 'library', iconClass: 'bg-emerald-50 text-emerald-600', isLoading: dashboard.loadingTotalCollections },
-  { label: 'Total Books', value: dashboard.totalBooks, icon: 'people', iconClass: 'bg-violet-50 text-violet-600', isLoading: dashboard.loadingTotalBooks },
-  { label: 'Total Academics', value: dashboard.totalAcademics, icon: 'book', iconClass: 'bg-sky-50 text-sky-600', isLoading: dashboard.loadingTotalAcademics },
-  { label: 'Total Serials', value: dashboard.totalSerials, icon: 'clock', iconClass: 'bg-amber-50 text-amber-600', isLoading: dashboard.loadingTotalSerials },
 ])
 
 const userMetrics = computed(() => [
   { label: 'Total Campuses', value: dashboard.totalCampuses, icon: 'building', iconClass: 'bg-amber-50 text-amber-600', isLoading: dashboard.loadingTotalCampuses },
-  { label: 'Total Branches', value: dashboard.totalBranches, icon: 'building', iconClass: 'bg-emerald-50 text-emerald-600', isLoading: dashboard.loadingTotalBranches },
   { label: 'Total Librarians', value: dashboard.totalLibrarians, icon: 'people', iconClass: 'bg-sky-50 text-sky-600', isLoading: dashboard.loadingTotalLibrarians },
   { label: 'Total Patrons', value: dashboard.totalPatrons, icon: 'people', iconClass: 'bg-violet-50 text-violet-600', isLoading: dashboard.loadingTotalPatrons },
 ])

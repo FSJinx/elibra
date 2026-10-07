@@ -18,8 +18,8 @@
         <Td class="text-left">
           <Title :level="4">{{ item.title }}</Title>
 
-          <p v-if="item.subtitle" class="text-sm text-foreground-secondary">
-            {{ item.subtitle }}
+          <p class="text-sm text-foreground-secondary line-clamp-2">
+            {{ item.subtitle ?? item.description ?? 'This item has no subtitle or description.' }}
           </p>
         </Td>
 

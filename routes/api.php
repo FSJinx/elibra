@@ -215,15 +215,18 @@ Route::group(['prefix' => '/item_type_category'], function () {
 });
 
 // ============== LANGUAGES ROUTE ==================
-Route::group(['prefix' => '/languages'], function () {
+Route::group(['prefix' => '/language'], function () {
     // Get
     Route::get('', [LanguageController::class, 'index'])->middleware('throttle:read');
 
     // Post
+    Route::post('', [LanguageController::class, 'store'])->middleware('throttle:write');
 
     // Update
+    Route::put('{language}', [LanguageController::class, 'update'])->middleware('throttle:write');
 
     // Delete
+    Route::delete('{language}', [LanguageController::class, 'destroy'])->middleware('throttle:delete');
 });
 
 // ============== PROGRAM ROUTE ==================
@@ -285,15 +288,11 @@ Route::group(['prefix' => '/librarian', 'middleware' => ['jwt.auth', 'role:admin
     Route::group(['prefix' => 'dashboard'], function () {
         // Get
         Route::get('total-collections', [DashboardController::class, 'totalCollections']);
-        Route::get('total-academics', [DashboardController::class, 'totalAcademics']);
-        Route::get('total-serials', [DashboardController::class, 'totalSerials']);
-        Route::get('total-books', [DashboardController::class, 'totalBooks']);
 
         Route::get('total-patrons', [DashboardController::class, 'totalPatrons']);
         Route::get('total-librarians', [DashboardController::class, 'totalLibrarians']);
 
         Route::get('total-campuses', [DashboardController::class, 'totalCampuses']);
-        Route::get('total-branches', [DashboardController::class, 'totalBranches']);
 
         // Post
 
@@ -461,6 +460,11 @@ Route::group(['prefix' => '/user-permission'], function () {
 
 // ============== ITEM ROUTES ===============
 Route::group(['prefix' => '/item'], function () {
+
+    Route::get('', [ItemController::class, 'temporaryIndex']);
+    // Route::get('{catalogId}', [CatalogController::class, 'show']);
+    Route::get('{item}', [ItemController::class, 'show']);
+    Route::post('', [ItemController::class, 'store']);
 
     Route::group(['prefix' => '/get'], function () {
         Route::get('', [ItemController::class, 'index'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');

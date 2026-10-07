@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Librarian;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
@@ -13,7 +14,7 @@ class AdminSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
+        $admin = User::create([
             'uuid' => Str::uuid()->toString(),
             'last_name' => 'dela cruz',
             'first_name' => 'mark angelo',
@@ -23,6 +24,11 @@ class AdminSeeder extends Seeder
             'email' => 'angelo@isu.edu.ph',
             'password' => bcrypt('elibra2026'),
             'campus_id' => 1,
+        ]);
+
+        Librarian::create([
+            'user_id' => $admin->id,
+            'library_id' => 1,
         ]);
     }
 }

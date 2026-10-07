@@ -45,6 +45,6 @@ class Campus extends Model
 
     public function items()
     {
-        return $this->hasManyThrough(Item::class, Branch::class);
+        return $this->hasManyThrough(Item::class, Library::class);
     }
 }

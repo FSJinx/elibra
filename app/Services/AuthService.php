@@ -2,16 +2,15 @@
 
 namespace App\Services;
 
-use App\Models\User;
-use App\Models\Branch;
 use App\Models\Campus;
+use App\Models\Library;
 use App\Models\Media;
 use App\Models\Patron;
 use App\Models\PatronType;
-use App\Services\MediaService;
+use App\Models\User;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthService
@@ -28,7 +27,7 @@ class AuthService
         }
 
         $campus = null;
-        $branch = null;
+        $library = null;
 
         $data = [
             ...$user->toArray(),
@@ -43,11 +42,11 @@ class AuthService
                 $librarian = $user->librarian;
 
                 if ($librarian) {
-                    $branch = Branch::where('id', '=', $librarian->branch->id)->first();
-                    $campus = Campus::where('id', '=', $librarian->branch->campus->id)->first();
+                    $library = Library::where('id', '=', $librarian->library->id)->first();
+                    $campus = Campus::where('id', '=', $librarian->library->campus->id)->first();
 
                     // Remove nested relationships before converting user to array
-                    $user->librarian->unsetRelation('branch');
+                    $user->librarian->unsetRelation('library');
                 } else {
                     $campus = Campus::where('id', '=', $user->campus_id)->first();
                 }
@@ -63,7 +62,7 @@ class AuthService
         return [
             ...$data,
             'campus' => $campus,
-            'branch' => $branch,
+            'library' => $library,
         ];
     }
 

@@ -3,7 +3,7 @@
     <!-- Textarea Container -->
     <div class="group relative flex w-full border transition-all duration-150 min-w-20 rounded-md overflow-hidden focus-within:ring-4" :class="[error && error.length > 0 ? 'border-danger focus-within:border-danger focus-within:ring-danger/20' : 'border-border focus-within:ring-success/25 focus-within:border-primary/50', { 'opacity-60 cursor-not-allowed bg-slate-100': disabled }]">
       <!-- Native Textarea -->
-      <textarea ref="textarea" :id="id" :name="id" v-model="model" :placeholder="placeholder" :required="required" :disabled="disabled" :readonly="readonly" :maxlength="maxlength" :spellcheck="spellcheck" :rows="rows" @input="handleInput" class="w-full flex-1 bg-transparent text-slate-900 transition-all duration-150 read-only:border-transparent focus:outline-none disabled:cursor-not-allowed py-2.5 px-4" :class="[sizeConfig.input, resizeClass]" />
+      <textarea ref="textarea" :id="id || control.id" :name="id" v-model="model" :placeholder="placeholder" :required="required" :disabled="disabled" :readonly="readonly" :maxlength="maxlength" :spellcheck="spellcheck" rows="1" @input="handleInput" class="w-full flex-1 bg-transparent text-slate-900 transition-all duration-150 read-only:border-transparent focus:outline-none disabled:cursor-not-allowed py-2.5 px-4" :class="[sizeConfig.input, resizeClass]" />
 
       <!-- Clear Button -->
       <button v-if="enableClear && hasValue && !disabled" type="button" class="absolute top-2 right-2 flex items-center justify-center h-6 w-6 rounded text-slate-500 hover:text-slate-800 hover:bg-slate-100 focus:outline-none transition-colors" aria-label="Clear input" @click="clearInput">
@@ -28,14 +28,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, nextTick, onMounted, watch } from 'vue'
 
 type Sizes = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 type Resize = 'none' | 'vertical' | 'horizontal' | 'both'
 
 interface Props {
   // Base
-  id: string
+  id?: string
   placeholder?: string
   rows?: number
 
@@ -76,6 +76,8 @@ const model = defineModel<any>({ default: '' })
 const textarea = ref<HTMLTextAreaElement | null>(null)
 const charCount = ref(String(model.value ?? '').length)
 
+const control = inject<any>('control')
+
 // Safe value check
 const hasValue = computed(() => String(model.value ?? '').length > 0)
 
@@ -99,17 +101,42 @@ const resizeMap: Record<Resize, string> = {
 
 const resizeClass = computed(() => resizeMap[props.resize] ?? resizeMap.vertical)
 
+const adjustTextareaHeight = () => {
+  const element = textarea.value
+  if (!element) return
+
+  element.style.height = 'auto'
+
+  const styles = getComputedStyle(element)
+  const lineHeight = parseFloat(styles.lineHeight)
+  const verticalPadding = parseFloat(styles.paddingTop) + parseFloat(styles.paddingBottom)
+  const maxRows = Math.min(Math.max(props.rows, 1), 4)
+  const maxHeight = lineHeight * maxRows + verticalPadding
+
+  element.style.maxHeight = `${maxHeight}px`
+  element.style.height = `${Math.min(element.scrollHeight, maxHeight)}px`
+  element.style.overflowY = element.scrollHeight > maxHeight ? 'auto' : 'hidden'
+}
+
 const handleInput = () => {
   charCount.value = String(model.value ?? '').length
+  adjustTextareaHeight()
 }
 
 const clearInput = () => {
   model.value = ''
   charCount.value = 0
+  adjustTextareaHeight()
   textarea.value?.focus()
 }
 
+watch(model, () => {
+  nextTick(adjustTextareaHeight)
+})
+
 onMounted(() => {
+  adjustTextareaHeight()
+
   if (props.autoFocus) {
     textarea.value?.focus()
   }
