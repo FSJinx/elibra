@@ -21,10 +21,10 @@
           <div class="flex-1 min-w-0 flex flex-col justify-between self-stretch">
             <div class="flex items-start justify-between gap-5">
               <div>
-                <div class="flex items-center gap-2" v-if="useBranchStore().data?.find((i) => i.id === item.branch_id)?.name">
+                <div class="flex items-center gap-2" v-if="useLibraryStore().data?.find((i) => i.id === item.branch_id)?.name">
                   <!-- Item Location -->
                   <Icon icon="geo-alt-fill" class="text-danger" />
-                  <span class="text-sm">{{ useBranchStore().data?.find((i) => i.id === item.branch_id)?.name }}</span>
+                  <span class="text-sm">{{ useLibraryStore().data?.find((i) => i.id === item.branch_id)?.name }}</span>
                 </div>
                 <div class="flex items-center justify-between gap-2 mb-1.5">
                   <h2 class="font-bold text-base text-foreground line-clamp-1" :title="item.title">
@@ -77,7 +77,7 @@ export interface LibraryItem {
 // State
 const data = ref<LibraryItem[]>([])
 const loading = ref(true)
-const itemCategories = useItemCategoriesStore()
+const categories = useItemCategoriesStore()
 
 async function fetchNewItems() {
   try {
@@ -92,7 +92,7 @@ async function fetchNewItems() {
 }
 
 const parseCategory = (item_type_category_id: any) => {
-  return itemCategories.categories.find((i) => i.id === item_type_category_id)?.name
+  return categories.data.find((i) => i.id === item_type_category_id)?.name
 }
 
 onMounted(fetchNewItems)

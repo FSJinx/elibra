@@ -3,7 +3,7 @@ export function usePreloader() {
   async function preload() {
     const auth = useAuth()
     const campus = useCampusStore()
-    const branch = useBranchStore()
+    const library = useLibraryStore()
     const item_type = useItemTypeStore()
     const category = useItemCategoriesStore()
     const authorship = authorshipStore()
@@ -12,7 +12,7 @@ export function usePreloader() {
     if (!preloaded.value) {
       try {
         // ======== PUBLIC PRELOAD ===========
-        Promise.all([campus.fetch(), branch.fetch(), item_type.fetch(), category.fetch(), authorship.fetch(), language.fetch()])
+        Promise.all([campus.fetch(), library.fetch(), item_type.fetch(), category.fetch(), authorship.fetch(), language.fetch()])
       } catch (err) {
         throw err
       } finally {

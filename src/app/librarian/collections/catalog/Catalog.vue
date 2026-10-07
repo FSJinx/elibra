@@ -1,15 +1,9 @@
 <template>
   <div class="flex flex-col size-full overflow-hidden">
-    <SectionHeader title="Catalog" description="Browse all item found in your catalog" icon="journals">
-      <div class="flex items-end gap-2 ml-auto">
-        <Button left-icon="plus-lg" variant="primary" as="link" :to="{ name: 'librarian.collections.catalog.add-new' }"> Add New Item </Button>
-        <Button :icon="stats_expanded ? 'arrows-angle-contract' : 'arrows-angle-expand'" :data-title="stats_expanded ? 'Hide stat cards' : 'Show stat cards'" @click="stats_expanded = !stats_expanded"></Button>
-      </div>
-    </SectionHeader>
+    <SectionHeader title="Catalog" description="Browse all item found in your catalog" icon="journals" />
 
     <div class="flex-1 flex flex-col gap-4 p-5 overflow-y-auto scroll">
-      <CatalogCards v-if="stats_expanded" />
-      <Card v-else>
+      <Card>
         <Form @submit="search()" class="grid grid-cols-2 gap-2">
           <div class="flex items-center gap-2">
             <Input id="catalog-query" v-model="items.params.query" placeholder="Search for an item in the catalog..." class="max-w-150" enable-clear />
@@ -19,9 +13,11 @@
 
           <div class="flex items-center justify-end gap-2">
             <Button variant="restore" @click="reset()">Reset</Button>
+            <Button left-icon="plus-lg" variant="primary" as="link" :to="{ name: 'librarian.collections.catalog.new' }"> New Item </Button>
           </div>
         </Form>
       </Card>
+
       <CatalogTable :data="items.data" :loading="loading" />
     </div>
   </div>
@@ -29,22 +25,13 @@
 
 <script setup lang="ts">
 import CatalogFilter from '@/app/librarian/collections/catalog/modals/CatalogFilter.vue'
-import CatalogCards from '@/app/librarian/collections/catalog/sections/CatalogCards.vue'
 import CatalogTable from '@/app/librarian/collections/catalog/sections/CatalogTable.vue'
 
-interface CatalogItem {
-  id: number
-  title: string
-  subtitle?: string | null
-  call_number: string
-  publication_year: number | null
-}
-
-const items = useCatalogStore()
+const items = useItemStore()
 const loading = ref(false)
 const stats_expanded = ref(false)
 
-const params = reactive<Partial<CatalogParams>>(catalogDefaultParams())
+const params = reactive<Partial<ItemParams>>(itemDefaultParams())
 
 const catalog = reactive<{
   category: string
@@ -82,7 +69,7 @@ async function search() {
 }
 
 function reset() {
-  Object.assign(items.params, catalogDefaultParams())
+  Object.assign(items.params, itemDefaultParams())
   nextTick(() => search())
 }
 

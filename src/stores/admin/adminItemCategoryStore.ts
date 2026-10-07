@@ -1,26 +1,16 @@
-export interface AdminItemCategory {
-  id: any
-  name: string
-  code: string
-  item_type_id: any
-  created_at: string
-  updated_at: string
-  [key: string]: any
-}
-
 const url = 'item_type_category'
 
 export const useAdminItemCategoryStore = defineStore('admin.item_category', {
   state: () => ({
-    data: null as AdminItemCategory[] | null,
-    currentData: null as AdminItemCategory | null,
+    data: null as ItemCategory[] | null,
+    currentData: null as ItemCategory | null,
     loading: false as boolean,
   }),
 
   getters: {},
 
   actions: {
-    setData(data: AdminItemCategory[]) {
+    setData(data: ItemCategory[]) {
       this.data = data
     },
 

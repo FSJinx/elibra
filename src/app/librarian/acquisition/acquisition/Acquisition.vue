@@ -1,33 +1,26 @@
 <template>
   <div class="size-full flex flex-col">
-    <SectionHeader title="Acquisitions" description="Manage your library's acquisition record" icon="receipt">
-      <div class="flex items-end justify-end">
-        <AddNewAcquisitionButton />
-      </div>
-    </SectionHeader>
+    <SectionHeader title="Acquisitions" description="Manage your library's acquisition record" icon="receipt"></SectionHeader>
 
     <div class="flex-1 flex flex-col p-5 gap-3 overflow-hidden">
-      <Card>
-        <Form class="flex items-center justify-end gap-2">
-          <Label id="search" class="mr-3">Search</Label>
-          <Input id="search" type="text" class="max-w-100" placeholder="Search donations by ID, donor name, or cause..." enable-clear />
+      <Card class="">
+        <CardBody class="flex items-center gap-2 justify-between">
+          <Form class="flex items-center gap-2">
+            <Input id="search" type="text" placeholder="Search donations by ID, donor name, or cause..." enable-clear />
+            <Button type="submit" variant="info">Search</Button>
+            <Select title="Sort">
+              <Option value="">Sort By</Option>
+            </Select>
+            <Select title="Acquisition Mode">
+              <Option value="" selected disabled>Select acquisition mode</Option>
+              <Option value="purchased">Purchased</Option>
+            </Select>
+          </Form>
 
-          <Select id="type-filter" title="Type" class="max-w-75">
-            <Option value="">All Acquisition Modes</Option>
-            <Option value="purchase">Purchase</Option>
-            <Option value="donation">Donation</Option>
-            <Option value="gift">Gift</Option>
-          </Select>
-
-          <Select id="status-filter" title="Status" class="max-w-50">
-            <Option value="">All Statuses</Option>
-            <Option value="completed">Completed</Option>
-            <Option value="pending">Pending Receipt</Option>
-            <Option value="pledged">Pledged</Option>
-            <Option value="refunded">Refunded</Option>
-          </Select>
-          <Button type="submit" variant="info">Search</Button>
-        </Form>
+          <div class="flex items-center justify-end">
+            <AddNewAcquisitionButton />
+          </div>
+        </CardBody>
       </Card>
       <Table class="" title="Recent Acquisitions" subtitle="These are your library's recent acquisitions.">
         <Thead>

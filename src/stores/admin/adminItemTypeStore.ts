@@ -1,25 +1,18 @@
-export interface AdminItemType {
-  id: any
-  name: string
-  slug: string
-  loanable: boolean
-  created_at: string
-  updated_at: string
-}
+
 
 const url = 'item_types'
 
 export const useAdminItemTypeStore = defineStore('admin.item_type', {
   state: () => ({
-    data: null as AdminItemType[] | null,
-    currentData: null as AdminItemType | null,
+    data: null as ItemType[] | null,
+    currentData: null as ItemType | null,
     loading: false as boolean,
   }),
 
   getters: {},
 
   actions: {
-    setData(data: AdminItemType[]) {
+    setData(data: ItemType[]) {
       this.data = data
     },
 

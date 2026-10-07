@@ -58,10 +58,6 @@
           <label for="">Language</label>
           <p>{{ catalog.getLanguage(item?.language_id)?.name }}</p>
         </Control>
-        <Control direction="col">
-          <label for="">General Location</label>
-          <p>{{ catalog.getBranches(item?.branch_id)?.name }}</p>
-        </Control>
       </div>
     </Card>
 
@@ -99,7 +95,7 @@
 </template>
 
 <script setup lang="ts">
-const catalog = useCatalogStore()
+const catalog = useItemStore()
 const item = catalog.currentData
 </script>
 

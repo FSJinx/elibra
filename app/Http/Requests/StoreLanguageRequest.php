@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Validation\Rule;
 
 class StoreLanguageRequest extends BaseRequest
 {
@@ -11,7 +12,9 @@ class StoreLanguageRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return false;
+        $user = $this->user();
+
+        return $user->isSuperAdmin();
     }
 
     /**
@@ -22,7 +25,8 @@ class StoreLanguageRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'string', 'max:255'],
+            'code' => ['required', 'string', 'max:255', Rule::unique('languages', 'code')],
         ];
     }
 }

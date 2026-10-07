@@ -27,7 +27,7 @@ class AuthorshipSeeder extends Seeder
         ],
 
         [
-            'itemType' => 'academic',
+            'itemType' => 'thesis',
             'authorship' => [
                 'Adviser',
                 'Co-adviser',
@@ -37,7 +37,7 @@ class AuthorshipSeeder extends Seeder
         ],
 
         [
-            'itemType' => 'serial',
+            'itemType' => 'serials',
             'authorship' => [
                 'Author',
                 'Editor',

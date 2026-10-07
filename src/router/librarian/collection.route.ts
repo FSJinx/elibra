@@ -16,7 +16,7 @@ export const librarianCataloging = [
             name: 'librarian.collections.catalog',
             component: () => import('@/app/librarian/collections/catalog/Catalog.vue'),
             beforeEnter: async (to: any) => {
-              const item = useCatalogStore()
+              const item = useItemStore()
               if (!item.data) {
                 pop.load()
                 await item.fetch(true)
@@ -32,10 +32,9 @@ export const librarianCataloging = [
             redirect: { name: 'librarian.collections.catalog.view.overview' },
             component: () => import('@/app/librarian/collections/catalog/ViewCatalog.vue'),
             beforeEnter: async (to: any) => {
-              const item = useCatalogStore()
+              const item = useItemStore()
 
               if (item.currentData?.id != to.params.id) {
-
                 pop.load()
 
                 try {
@@ -61,21 +60,10 @@ export const librarianCataloging = [
             ],
           },
           {
-            path: 'add-new',
-            meta: { title: 'Cataloging', breadcrumb: 'Add New' },
-            name: 'librarian.collections.catalog.add-new',
-            redirect: { name: 'librarian.collections.catalog.add-new.book' },
-            component: () => import('@/app/librarian/collections/catalog/AddCatalog.vue'),
-            children: [
-              { path: 'book', meta: { breadcrumb: 'Book' }, name: 'librarian.collections.catalog.add-new.book', component: () => import('@/app/librarian/collections/catalog/forms/Book.vue') },
-              {
-                path: 'academics',
-                meta: { breadcrumb: 'Academics' },
-                name: 'librarian.collections.catalog.add-new.academics',
-                component: () => import('@/app/librarian/collections/catalog/forms/Academics.vue'),
-              },
-              { path: 'serials', meta: { breadcrumb: 'Serials' }, name: 'librarian.collections.catalog.add-new.serials', component: () => import('@/app/librarian/collections/catalog/forms/Serials.vue') },
-            ],
+            path: 'new',
+            meta: { title: 'Cataloging', breadcrumb: 'New Item' },
+            name: 'librarian.collections.catalog.new',
+            component: () => import('@/app/librarian/collections/catalog/NewAddCatalog.vue'),
           },
         ],
       },

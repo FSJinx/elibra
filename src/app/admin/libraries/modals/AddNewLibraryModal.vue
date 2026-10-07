@@ -29,7 +29,7 @@
           </Control>
         </div>
 
-        <h1 class="text-sm uppercase tracking-wider text-muted-foreground font-medium">Branch Operation Hours</h1>
+        <h1 class="text-sm uppercase tracking-wider text-muted-foreground font-medium">Library Operation Hours</h1>
         <div class="grid grid-cols-2 gap-5">
           <Control col required>
             <Label id="library-opening_hour">Opening Hours</Label>
@@ -54,7 +54,7 @@
 import Form from '@/components/form/Form.vue'
 import Modal from '@/components/my/Modal.vue'
 
-const defaultBranch = (): Partial<Branch> => ({
+const defaultBranch = (): Partial<Library> => ({
   name: '',
   contact_info: '',
   email: '',
@@ -64,7 +64,7 @@ const defaultBranch = (): Partial<Branch> => ({
 })
 
 const modal = ref<typeof Modal | null>(null)
-const library = useBranchStore()
+const library = useLibraryStore()
 const campus = useCampusStore()
 const pop = usePopup()
 const form = reactive(defaultBranch())

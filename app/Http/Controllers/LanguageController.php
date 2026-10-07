@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Language;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreLanguageRequest;
 use App\Http\Requests\UpdateLanguageRequest;
+use App\Models\Language;
+use App\Services\CacheService;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class LanguageController extends Controller
 {
@@ -27,17 +29,34 @@ class LanguageController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        //
-    }
+    public function create() {}
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(StoreLanguageRequest $request)
     {
-        //
+        DB::beginTransaction();
+
+        try {
+            $language = Language::create($request->validated());
+
+            $language->refresh();
+
+            DB::commit();
+
+            CacheService::invalidate(CacheService::LANGUAGES);
+
+            return $this->response(
+                'success',
+                'Language created successfully',
+                $language->toArray(),
+                201
+            );
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 
     /**
@@ -61,14 +80,49 @@ class LanguageController extends Controller
      */
     public function update(UpdateLanguageRequest $request, Language $language)
     {
-        //
+        DB::beginTransaction();
+
+        try {
+            $language->update($request->validated());
+
+            DB::commit();
+            CacheService::invalidate(CacheService::LANGUAGES);
+
+            return $this->response(
+                'success',
+                'Language updated successfully',
+                $language,
+                200
+            );
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    // All under this are for review
+
     public function destroy(Language $language)
     {
-        //
+        // $this->authorize('delete', $language);
+
+        DB::beginTransaction();
+
+        try {
+            $language->delete();
+            DB::commit();
+
+            CacheService::invalidate(CacheService::LANGUAGES);
+
+            return $this->response(
+                'success',
+                'Language deleted successfully',
+                null,
+                200
+            );
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 }

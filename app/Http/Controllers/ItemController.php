@@ -2,13 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreItemRequest;
 use App\Models\Item;
 use App\Services\CacheService;
+use App\Services\ItemService;
 use App\Services\QueryService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class ItemController extends Controller
 {
+    protected ItemService $itemService;
+
+    public function __construct(ItemService $itemService)
+    {
+        $this->itemService = $itemService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -88,66 +99,64 @@ class ItemController extends Controller
         );
     }
 
-    public function temporaryIndex()
+    public function temporaryIndex(Request $request)
     {
-        $user = $this->user();
+        $user = $request->user();
 
-        if ($user->isAdmin()) {
-            $items = $user->campus->items();
-        } elseif ($user->isLibrarian()) {
-            $items = $user->branch->items();
-        }
+        $filters = QueryService::filters($request);
 
-        // Paginate Items
-        $items = $items->paginate(
-            15,
-            ['*'],
-            'page',
-            1
-        );
+        $params = [
+            ...$filters,
+            // 'branch_id' => $request->query('branch_id', ''),
+            // 'campus_id' => $request->query('campus_id', ''),
+        ];
+
+        $catalog = $this->itemService->index($params, $user);
 
         return $this->response(
             'success',
-            'Items retrieved successfully.',
-            $items->toArray(),
+            'Catalog retrieved successfully.',
+            $catalog->toArray(),
             200
         );
+
     }
 
     /**
      * Display the specified item.
      */
-    public function show(Request $request, Item $item)
+    public function show(string $id)
     {
-        $this->authorize('viewAny', Item::class);
+        $item = $this->itemService->show($id);
 
-        $user = $request->user();
+        return $this->response(message: 'Catalog received successfully', data: $item->toArray());
+    }
 
-        if ($user->isAdmin() && $item->branch?->campus_id !== $user->campus_id) {
-            abort(404);
+    public function store(StoreItemRequest $request, Item $item)
+    {
+        DB::beginTransaction();
+
+        $newItem = array_merge($request->validated(), ['library_id' => $this->user()->librarian->id]);
+
+        try {
+            $item = Item::create($newItem);
+
+            $item->refresh();
+
+            DB::commit();
+
+            CacheService::invalidate(CacheService::ITEMS);
+
+            return $this->response(
+                'success',
+                'Item created successfully',
+                $item->toArray(),
+                201
+            );
+        } catch (Throwable $e) {
+            DB::rollBack();
+
+            throw $e;
         }
-
-        if (! $user->isSuperAdmin() && $user->isLibrarian() && $item->branch_id !== $user->librarian?->branch_id) {
-            abort(404);
-        }
-
-        $item->load([
-            'book',
-            'academic',
-            'serial',
-            'authors',
-            'itemType',
-            'itemTypeCategory',
-            'branch',
-            'language',
-            'coverMedia',
-        ]);
-
-        return $this->response(
-            'success',
-            'Item retrieved successfully.',
-            $item->toArray(),
-            200
-        );
     }
 }

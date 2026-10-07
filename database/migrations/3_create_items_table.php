@@ -23,13 +23,14 @@ return new class extends Migration
 
             $table->string('edition')->nullable(); // Books
             $table->string('isbn_issn')->nullable(); // Books, Serials
-            $table->string('copyright_year')->nullable(); // Books
-            $table->string('doi')->nullable()->nullable(); // Theses, Serials
+            $table->string('pages')->nullable(); // Books, Serials
             $table->string('volume')->nullable(); // Serials
             $table->string('issue')->nullable(); // Serials
-            $table->string('pages')->nullable(); // Books, Serials
+            $table->string('doi')->nullable()->nullable(); // Theses, Serials
             $table->unsignedBigInteger('department_id')->nullable(); // Theses
             
+            $table->boolean('released')->default(false);
+
             $table->unsignedBigInteger('item_type_id');
             $table->unsignedBigInteger('item_type_category_id');
             $table->unsignedBigInteger('language_id')->nullable();

@@ -30,18 +30,17 @@
 
 <script setup lang="ts">
 import Modal from '@/components/my/Modal.vue'
-import { AdminItemType } from '@/stores/admin/adminItemTypeStore'
 
 const pop = usePopup()
 const modal = ref<InstanceType<typeof Modal>>()
 const hasInput = computed(() => model.name !== '' || model.slug !== '')
 
-const defaultValue = (): Partial<AdminItemType> => ({
+const defaultValue = (): Partial<ItemType> => ({
   name: '',
   slug: '',
   loanable: false,
 })
-const model = reactive<Partial<AdminItemType>>(defaultValue())
+const model = reactive<Partial<ItemType>>(defaultValue())
 
 async function handleSubmit() {
   alert(Object.values(model))

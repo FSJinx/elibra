@@ -1,5 +1,5 @@
 <template>
-  <Button variant="primary" data-title="Add new acquisition record" @click="modal?.open()">Add New</Button>
+  <Button variant="primary" data-title="Add new acquisition record" @click="modal?.open()" icon="plus-lg">New Acquisition</Button>
 
   <Modal ref="modal" size="xlarge" :has-inputs="hasInputs" enable-close-btn>
     <ModalHeader use-default-layout title="Acquisition Form" subtitle="Create new acquisition transaction" icon="building" />

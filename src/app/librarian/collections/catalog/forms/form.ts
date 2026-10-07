@@ -1,51 +1,35 @@
-type Author = {
-  id?: number
-  last_name: string
-  first_name: string
-  middle_name: string
-  authorship_id?: number | null
-}
-
-export interface BaseField {
-  // Basic Information
-  title: string
-  subtitle: string | null
-  description: string | null
-  call_number: string
-  publication_year: string
-  electronic_file: File[] | null
-  keywords: string[]
-}
-
-export interface ClassficationField {
-  // Classification
-  item_type_category_id: string
-  branch_id: string | number | null
-  language_id: string
-}
-
-export interface AuthorField {
-  // Pivot
+export interface Form extends Item {
+  //   Author
   authors: Author[]
 }
 
-export interface BookField {
-  // Book Fields
-  edition: string
-  isbn_issn: string
-  copyright_year: string
-  doi: string
-}
+const auth = authStore()
 
-export interface AcademicField {
-  doi: string
-  department_id?: any
-}
+export const emptyForm = (): Partial<Form> => ({
+  title: '',
+  subtitle: '',
+  description: '',
+  call_number: '',
+  language_id: '',
+  keywords: [],
+  electronic_file: null,
 
-export interface SerialField {
-  isbn_issn: string
-  volume: string
-  issue: string
-  pages: string
-  doi: string
+  item_type_id: '',
+  item_type_category_id: '',
+  library_id: auth.user?.library?.id ?? '',
+  released: false,
+
+  publication_year: '',
+  edition: '',
+  volume: '',
+  issue: '',
+  pages: '',
+  isbn_issn: '',
+  doi: '',
+  department_id: '',
+  authors: [],
+})
+
+export function getError(arr: any, field: string) {
+  return arr?.[field]?.[0]
 }

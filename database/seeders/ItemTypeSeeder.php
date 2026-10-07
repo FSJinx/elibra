@@ -13,9 +13,9 @@ class ItemTypeSeeder extends Seeder
     public function run(): void
     {
         collect([
-            ['slug' => 'thesis', 'name' => 'Thesis',],
+            ['slug' => 'thesis', 'name' => 'thesis'],
             ['slug' => 'book', 'name' => 'book'],
-            ['slug' => 'multimedia', 'name' => 'AV Material'],
+            ['slug' => 'multimedia', 'name' => 'audio visual'],
             ['slug' => 'serials', 'name' => 'serials'],
         ])->each(function ($type) {
             ItemType::create($type);

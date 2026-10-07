@@ -21,8 +21,8 @@ class DatabaseSeeder extends Seeder
             PatronTypeSeeder::class,
             // SystemSeeder::class,
             // SectionsSeeder::class,
-            // LanguageSeeder::class,
-            // AuthorshipSeeder::class,
+            LanguageSeeder::class,
+            AuthorshipSeeder::class,
 
             // ========= DEVELOPMENT SEEDS =========
 
@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
             DepartmentSeeder::class,
             ProgramsSeeder::class,
             UsersSeeder::class,
-            // AuthorSeeder::class,
+            AuthorSeeder::class,
             // AcquisitionSeeder::class,
             // ItemSeeder::class,
             // AcquisitionLinesSeeder::class,
