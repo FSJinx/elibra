@@ -69,7 +69,7 @@ class AuthorController extends Controller
 
     /**
      * Display the specified resource.
-     */
+    */
     public function show(Request $request)
     {
         $query = trim((string) $request->input('query'));
