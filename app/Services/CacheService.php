@@ -10,17 +10,42 @@ use Illuminate\Support\Facades\Cache;
 class CacheService
 {
     // resources
+
+    // ========= ORGANIZATIONS ==========
     public const CAMPUSES = 'campuses';
 
     public const DEPARTMENTS = 'departments';
 
     public const PROGRAMS = 'programs';
 
-    public const BRANCHES = 'branches';
+    public const LIBRARY = 'libraries';
 
     public const SECTIONS = 'sections';
 
-    public const BRANCH_SECTIONS = 'branch_sections';
+    // ========= USERS, ACCOUNTS, AND PERMISSIONS ==========
+    public const PATRONS = 'patrons';
+
+    public const LIBRARIANS = 'librarians';
+
+    // ========= CATALOGING ==========
+    public const ITEMS = 'items';
+
+    // ========= 4. STANDARDS ==========
+    public const AUTHORSHIPS = 'authorships';
+
+    // ========= AUTHORITY CONTROL ==========
+    public const AUTHORS = 'authors';
+
+    public const LANGUAGES = 'languages';
+
+    // ========= ACQUISITION AND ACCESSION ==========
+    public const ACQUISITIONS = 'acquisitions';
+
+    public const ACQUISITION_REQUESTS = 'acquisition_requests';
+
+    public const ACQUISITION_LINES = 'acquisition_lines';
+
+    public const ACCESSION = 'accession';
 
     public const SUBSCRIPTIONS = 'subscriptions';
 
@@ -28,26 +53,22 @@ class CacheService
 
     public const MEDIA = 'medias';
 
-    public const ITEMS = 'items';
-    public const ACADEMICS = 'academics';
-    public const BOOKS = 'books';
-    public const SERIALS = 'serials';
-
-    public const AUTHORS = 'authors';
-    public const AUTHORSHIPS = 'authorships';
-
-    public const OPAC = 'opac';
-
-    public const ACQUISITIONS = 'acquisitions';
-    public const ACQUISITION_REQUESTS = 'acquisition_requests';
-    public const ACQUISITION_LINES = 'acquisition_lines';
-    public const PATRONS = 'patrons';
-    public const LIBRARIANS = 'librarians';
+    // ========= CIRCULATION ==========
     public const ATTENDANCE_LOGS = 'attendance_logs';
+
     public const CIRCULATIONS = 'circulations';
+
     public const FINES_TRANSACTIONS = 'fines_transactions';
 
     public const PATRON_TYPE_LOAN_POLICY = 'patron_type_loan_policy';
+
+    // public const ACADEMICS = 'academics';
+
+    // public const BOOKS = 'books';
+
+    // public const SERIALS = 'serials';
+
+    public const OPAC = 'opac';
 
     /**
      * Cache a query using a versioned cache key.

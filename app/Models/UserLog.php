@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserLog extends Model
 {
-    /** @use HasFactory<\Database\Factories\UserLogFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        'action',
+        'details',
+    ];
 }

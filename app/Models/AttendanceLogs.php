@@ -11,16 +11,16 @@ class AttendanceLogs extends Model
     /** @use HasFactory<AttendanceLogsFactory> */
     use HasFactory;
 
-    protected $fillable = ['status', 'patron_id', 'branch_id', 'section_id'];
+    protected $fillable = ['status', 'patron_id', 'library_id', 'section_id'];
 
     public function patron()
     {
         return $this->belongsTo(Patron::class, 'patron_id');
     }
 
-    public function branch()
+    public function library()
     {
-        return $this->belongsTo(Branch::class, 'branch_id');
+        return $this->belongsTo(Library::class, 'library_id');
     }
 
     public function section()

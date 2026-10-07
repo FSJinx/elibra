@@ -63,7 +63,7 @@ async function fetchResults() {
 
   try {
     await searchOpac({
-      q: params.search,
+      query: params.search,
       campus_id: params.campus || undefined,
       branch_id: params.branch || undefined,
       item_type_id: params.item_type || undefined,
@@ -117,12 +117,7 @@ watch(
     params.sort = (query.sort as string) ?? ''
     params.order = (query.order as string) ?? 'asc'
 
-    if (params.search.trim()) {
-      await fetchResults()
-    } else {
-      libraryData.value = []
-      total.value = 0
-    }
+    await fetchResults()
   },
   { immediate: true, deep: true },
 )

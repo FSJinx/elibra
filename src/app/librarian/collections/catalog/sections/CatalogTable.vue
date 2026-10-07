@@ -1,6 +1,6 @@
 <template>
   <!-- Catalog Table -->
-  <Table :data-length="data.length" title="Catalog List" subtitle="List of all library materials.">
+  <Table :data-length="data?.length" title="Catalog List" subtitle="List of all library materials.">
     <Thead>
       <tr>
         <Th>No</Th>
@@ -11,15 +11,15 @@
       </tr>
     </Thead>
 
-    <Tbody :cols="4" :loading="loading" :data="data">
+    <Tbody :cols="5" :loading="loading" :data="data">
       <tr class="hover" v-for="(item, index) in data" :key="item.id" @click="view(item.id)">
         <Td :data="(index as number) + 1" />
 
         <Td class="text-left">
           <Title :level="4">{{ item.title }}</Title>
 
-          <p v-if="item.subtitle" class="text-sm text-foreground-secondary">
-            {{ item.subtitle }}
+          <p class="text-sm text-foreground-secondary line-clamp-2">
+            {{ item.subtitle ?? item.description ?? 'This item has no subtitle or description.' }}
           </p>
         </Td>
 

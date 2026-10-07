@@ -10,12 +10,12 @@
       <!-- Native Input -->
       <input
         ref="input"
-        :id="id"
-        :name="id"
+        :id="control?.id ?? id"
+        :name="control?.id ?? id"
         v-model="model"
         :type="inputType"
         :placeholder="placeholder"
-        :required="required || control?.required"
+        :required="control?.required || required"
         :disabled="disabled"
         :readonly="readonly"
         :tabindex="tabindex"
@@ -31,6 +31,7 @@
         @click="checkCapsLock"
         @keydown="checkCapsLock"
         @keyup="checkCapsLock"
+        @focusin="emit('focusin')"
         class="h-full w-full flex-1 bg-background focus:bg-primary-soft/15 text-slate-900 transition-all duration-150 focus:outline-none disabled:cursor-not-allowed autofill:bg-primary"
         :class="[sizeConfig.input, leftIcon ? 'pl-2' : 'pl-4', hasSuffixActions ? 'pr-2' : 'pr-4']"
       />
@@ -87,7 +88,7 @@ type Autocomplete = 'on' | 'off' | string
 
 interface Props {
   // Base
-  id: string
+  id?: string
   type?: Types
   placeholder?: string
 
@@ -135,6 +136,7 @@ const model = defineModel<any>({ default: '' })
 const show = ref(false)
 const isCapsLockOn = ref(false)
 const input = ref<HTMLInputElement | null>(null)
+const emit = defineEmits(['focusin', 'blur'])
 
 // Injections
 const control = inject<any>('control', null)
@@ -177,6 +179,7 @@ const checkCapsLock = (e: Event) => {
 
 const resetCapsLock = () => {
   isCapsLockOn.value = false
+  emit('blur')
 }
 
 onMounted(() => {

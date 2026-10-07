@@ -1,5 +1,5 @@
 <template>
-    Accession To
+    <PageConstruction />
 </template>
 
 <script setup lang="ts">

@@ -15,7 +15,7 @@ class ItemTypeCategorySeeder extends Seeder
     {
         $types = [
             [
-                'name' => 'academic',
+                'name' => 'thesis',
                 'categories' => [
                     ['name' => 'undergraduate thesis', 'code' => 'ut'],
                     ['name' => 'graduate thesis', 'code' => 'gt'],
@@ -70,7 +70,7 @@ class ItemTypeCategorySeeder extends Seeder
         ];
 
         foreach ($types as $type) {
-            $item_type = ItemType::where('name', '=', $type['name'], 'and')->first();
+            $item_type = ItemType::where('slug', '=', $type['name'], 'and')->first();
 
             if ($item_type) {
                 foreach ($type['categories'] as $category) {

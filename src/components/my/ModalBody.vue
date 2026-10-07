@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-const modal = inject<any>('modal')
+const modal = inject<any>('modal', null)
 </script>
 
 <style scoped></style>

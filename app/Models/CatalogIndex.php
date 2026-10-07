@@ -13,12 +13,14 @@ class CatalogIndex extends Model
 
     protected $fillable = [
         'item_id',
+
         'content',
         'campus_id',
-        'branch_id',
+        'library_id',
         'item_type_id',
         'item_type_category_id',
         'department_id',
+
         'publication_year',
         'language',
         'indexed_at',
@@ -40,13 +42,13 @@ class CatalogIndex extends Model
             'authors',
             'itemType',
             'itemTypeCategory',
-            'branch.campus',
+            'library.campus',
             'language',
         ])->first();
 
         // Get branch and campus from the Item relationship
-        $branch = $item?->branch;
-        $campus = $branch?->campus;
+        $library = $item?->library;
+        $campus = $library?->campus;
 
         return [
             'id' => $this->id,
@@ -75,8 +77,8 @@ class CatalogIndex extends Model
             'item_type_category' => $item?->itemTypeCategory?->name,
 
             // Location
-            'branch' => $branch?->name,
-            'branch_id' => $branch?->id,
+            'library' => $library?->name,
+            'library_id' => $library?->id,
 
             'campus' => $campus?->name,
             'campus_id' => $campus?->id,

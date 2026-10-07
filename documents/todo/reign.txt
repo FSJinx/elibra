@@ -1,0 +1,4 @@
+# To Do
+
+Minox fix palang sa controllers, need testing pa. 
+Database seeder partial test complete

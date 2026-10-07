@@ -2,7 +2,7 @@
 import axios from 'axios'
 
 import router from '@/router'
-import { authStore } from '@/stores/authStore'
+import { authStore } from '@/stores/auth.store'
 
 // export const backendRoute = `${(import.meta as any).env.VITE_APP_URL}/api`
 export const backendRoute = `http://localhost:8000/api`
@@ -73,10 +73,10 @@ api.interceptors.response.use(
     //   pop.error(response?.message)
     // }
 
-    if (status === 404) {
-      // pop.unload()
-      pop.error(response?.message)
-    }
+    // if (status === 404) {
+    //   // pop.unload()
+    //   pop.error(response?.message)
+    // }
 
     if (status === 422) {
       // pop.unload()
@@ -88,9 +88,9 @@ api.interceptors.response.use(
       pop.error(firstErrorMessage ?? response?.message)
     }
 
-    // if (status === 500) {
-    //   pop.error('Server error, please try again later.')
-    // }
+    if (status === 500) {
+      pop.error('Server error, please try again later.')
+    }
 
     return Promise.reject(error)
   },

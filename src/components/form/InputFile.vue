@@ -29,7 +29,7 @@
       @drop.prevent="handleDrop"
     >
       <!-- Hidden Native Input -->
-      <input ref="input" :id="id" :name="id" type="file" class="hidden" :accept="accept" :multiple="multiple" :required="required" :disabled="disabled" @change="handleChange" />
+      <input ref="input" :id="id || control.id" :name="id || control.id" type="file" class="hidden" :accept="accept" :multiple="multiple" :required="required" :disabled="disabled" @change="handleChange" />
 
       <span class="flex items-center justify-center shrink-0 text-slate-400 mb-1.5">
         <Icon :icon="leftIcon || 'cloud-upload'" :class="sizeConfig.icon" />
@@ -68,7 +68,7 @@ type Sizes = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 
 interface Props {
   // Base
-  id: string
+  id?: string
   placeholder?: string
   hint?: string
   accept?: string
@@ -100,6 +100,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const model = defineModel<File[] | File | null>({ default: null })
+const control = inject<any>('control')
 
 const input = ref<HTMLInputElement | null>(null)
 const isDragging = ref(false)

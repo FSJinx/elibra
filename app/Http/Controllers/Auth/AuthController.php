@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\UpdateMyProfileRequest;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UpdateOwnProfileRequest;
+use App\Models\Media;
 use App\Services\AuthService;
+use App\Services\MediaService;
+use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthController extends Controller
@@ -18,6 +22,57 @@ class AuthController extends Controller
         }
 
         return $this->response(data: $authService->index());
+    }
+
+    public function updateMe(
+        UpdateMyProfileRequest $request,
+        AuthService $authService,
+        MediaService $mediaService
+    )
+    {
+        $user = $request->user();
+        $data = $request->validated();
+
+        $profilePicture = $data['profile_picture'] ?? null;
+        unset($data['profile_picture']);
+
+        if (isset($data['password'])) {
+            $data['password'] = Hash::make($data['password']);
+        }
+
+        if ($profilePicture) {
+            $profileMedia = $user->profilePicture
+                ? $mediaService->replaceFile($user->profilePicture, $profilePicture)
+                : $mediaService->store($profilePicture, Media::PROFILE);
+
+            $data['profile_picture_id'] = $profileMedia->id;
+        }
+
+        $user->update($data);
+
+        return $this->response(
+            'success',
+            'Profile updated successfully.',
+            $authService->index()
+        );
+    }
+
+    public function registration(RegisterRequest $request, AuthService $authService)
+    {
+        $data = $request->validated();
+
+        $result = $authService->register($data, $request->file('profile_picture'));
+
+        if (empty($result['token'])) {
+            return $this->response('error', 'Unable to register user at this time.', statusCode: 500);
+        }
+
+        return $this->response('success', 'Registration successful.', data: [
+            'token' => $result['token'],
+            'token_type' => 'bearer',
+            'user' => $authService->index(),
+            'patron' => $result['patron']->load(['patronType', 'program.department']),
+        ], statusCode: 201);
     }
 
     public function refresh()
@@ -49,7 +104,7 @@ class AuthController extends Controller
         return $this->response('success', 'Logged out succesfully.');
     }
 
-    public function updateProfile(UpdateOwnProfileRequest $request, AuthService $authService)
+    public function updateProfile(UpdateMyProfileRequest $request, AuthService $authService)
     {
         $this->auth()->user()->update($request->validated());
 

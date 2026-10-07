@@ -14,7 +14,7 @@ class LibrarianSeeder extends Seeder
      */
     public function run(): void
     {
-        $users = [
+        collect([
             [
                 'uuid' => Str::uuid()->toString(),
                 'last_name' => 'tobias',
@@ -49,16 +49,14 @@ class LibrarianSeeder extends Seeder
                 'password' => bcrypt('elibra2026'),
                 'campus_id' => 1,
             ],
-        ];
-
-        foreach ($users as $user) {
+        ])->each(function ($user) {
             $librarian = User::create($user);
 
             Librarian::create([
                 'user_id' => $librarian->id,
-                'branch_id' => 1,
+                'library_id' => rand(1, 2),
             ]);
-        }
+        });
 
     }
 }

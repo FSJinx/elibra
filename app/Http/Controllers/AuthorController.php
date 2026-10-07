@@ -20,9 +20,24 @@ class AuthorController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $authors = Author::all();
+        $query = trim((string) $request->input('query'));
+
+        $authors = Author::query()
+            ->when($query !== '', function ($q) use ($query) {
+                $search = "%{$query}%";
+
+                $q->where(function ($q) use ($search) {
+                    $q->where('first_name', 'LIKE', $search)
+                        ->orWhere('last_name', 'LIKE', $search);
+                });
+            })
+            ->get();
+
+        if ($authors->isEmpty()) {
+            return $this->response('error', 'No matching authors. Try adding one.', []);
+        }
 
         return $this->response(
             'success',

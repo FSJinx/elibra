@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class ItemTypeCategory extends Model
 {
-    /** @use HasFactory<ItemTypeCategoryFactory> */
     use HasFactory, AutoFormatter;
 
     protected $fillable = [
