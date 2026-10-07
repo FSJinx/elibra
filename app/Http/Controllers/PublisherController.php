@@ -6,6 +6,7 @@ use App\Models\Publisher;
 use App\Http\Requests\StorePublisherRequest;
 use App\Http\Requests\UpdatePublisherRequest;
 use App\Services\PublisherService;
+use Illuminate\Support\Facades\Request;
 
 class PublisherController extends Controller
 {
@@ -56,9 +57,33 @@ class PublisherController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Publisher $publisher)
+    public function show(Request $request)
     {
-        //
+        $query = trim((string) $request->input('query'));
+
+        if ($query === '') {
+            return $this->response('error', 'Please enter a publisher name.', [], 422);
+        }
+
+        $publisher = Publisher::query()
+            ->where(function ($publisherQuery) use ($query) {
+                $search = "%{$query}%";
+
+                $publisherQuery
+                    ->where('name', 'LIKE', $search);
+            })
+            ->get();
+
+        if ($publisher->isEmpty()) {
+            return $this->response('error', 'No matching publishers. Try adding one.', [], 404);
+        }
+
+        return $this->response(
+            'success',
+            'Publishers retrieved successfully',
+            $publisher->toArray(),
+            200
+        );
     }
 
     /**
@@ -106,5 +131,6 @@ class PublisherController extends Controller
             [],
             200
         );
+        
     }
 }

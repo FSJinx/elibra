@@ -88,17 +88,6 @@ Route::group(['prefix' => '/authors'], function () {
     // Delete
 });
 
-// ============== PUBLISHERS ROUTE ==================
-Route::group(['prefix' => '/publishers'], function () {
-    // Get
-    Route::get('', [PublisherController::class, 'index'])->middleware('throttle:read');
-
-    // Post
-    Route::post('', [PublisherController::class, 'store'])->middleware('throttle:write');
-    Route::post('show', [PublisherController::class, 'show'])->middleware('throttle:write');
-
-});
-
 // ============== AUTHORSHIP ROUTE ==================
 Route::group(['prefix' => '/authorship'], function () {
     // Get
@@ -242,6 +231,17 @@ Route::group(['prefix' => '/program'], function () {
 
     // Delete
     Route::delete('{program}', [ProgramsController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin', 'throttle:delete');
+});
+
+// ============== PUBLISHERS ROUTE ==================
+Route::group(['prefix' => '/publishers'], function () {
+    // Get
+    Route::get('', [PublisherController::class, 'index'])->middleware('throttle:read');
+
+    // Post
+    Route::post('', [PublisherController::class, 'store'])->middleware('throttle:write');
+    Route::post('show', [PublisherController::class, 'show'])->middleware('throttle:write');
+
 });
 
 // ============== SECTION ROUTE ==================
