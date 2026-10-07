@@ -15,4 +15,14 @@ class ItemPublisher extends Model
         'item_id',
         'publisher_id',
     ];
+
+    public function item()
+    {
+        return $this->belongsTo(Item::class);
+    }
+
+    public function publisher()
+    {
+        return $this->belongsTo(Publisher::class);
+    }
 }

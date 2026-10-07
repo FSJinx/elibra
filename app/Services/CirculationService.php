@@ -20,6 +20,7 @@ class CirculationService
                     'renewal_count',
                     'fine_charged',
                     'notes',
+                    
                     'processed_by',
                     'accession_id',
                     'patron_id',
