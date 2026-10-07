@@ -11,7 +11,7 @@ class UpdatePublisherRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->user()->can('update', $this->route('publisher'));
     }
 
     /**
@@ -22,7 +22,8 @@ class UpdatePublisherRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['sometimes', 'required', 'string', 'max:255'],
+            'address' => ['sometimes', 'nullable', 'string', 'max:255'],
         ];
     }
 }
