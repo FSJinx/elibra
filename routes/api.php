@@ -187,10 +187,13 @@ Route::group(['prefix' => '/item_types'], function () {
     Route::get('', [ItemTypeController::class, 'index'])->middleware('throttle:read');
 
     // Post
+    Route::post('', [ItemTypeController::class, 'store'])->middleware('throttle:write');
 
     // Update
+    Route::put('{itemType}', [ItemTypeController::class, 'update'])->middleware('throttle:write');
 
     // Delete
+    Route::delete('{itemType}', [ItemTypeController::class, 'destroy'])->middleware('throttle:delete');
 });
 
 // ============== ITEM TYPE CATEGORIES ROUTE ==================

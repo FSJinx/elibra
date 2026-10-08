@@ -10,11 +10,11 @@
         <div class="grid grid-cols-3 gap-5">
           <Control id="item_type-name" col required class="col-span-2">
             <Label>Name</Label>
-            <Input type="text" placeholder="e.g. Book" v-model="model.name" />
+            <Input type="text" placeholder="e.g. Book" v-model="model.name" :error="errors?.name?.[0]" />
           </Control>
           <Control id="item_type-code" col required>
             <Label>Code</Label>
-            <Input type="text" placeholder="e.g. Book" v-model="model.slug" />
+            <Input type="text" placeholder="e.g. Book" v-model="model.slug" :error="errors?.slug?.[0]" />
           </Control>
 
           <Checkbox id="item_type-loanable" label="Available for loans" v-model="model.loanable" />
@@ -32,7 +32,9 @@
 import Modal from '@/components/my/Modal.vue'
 
 const pop = usePopup()
+const item_type = useAdminItemTypeStore()
 const modal = ref<InstanceType<typeof Modal>>()
+const errors = ref<Record<string, string[]> | null>(null)
 const hasInput = computed(() => model.name !== '' || model.slug !== '')
 
 const defaultValue = (): Partial<ItemType> => ({
@@ -43,7 +45,20 @@ const defaultValue = (): Partial<ItemType> => ({
 const model = reactive<Partial<ItemType>>(defaultValue())
 
 async function handleSubmit() {
-  alert(Object.values(model))
+  const confirm = await pop.confirm({ text: `Are you sure you want to add ${model.name} to the item types?` })
+  if (!confirm.isConfirmed) return
+
+  pop.load()
+  try {
+    const res = await item_type.create(model)
+    Object.assign(model, defaultValue())
+    errors.value = null
+    nextTick(() => modal.value?.close())
+    pop.success(res.message ?? 'Item type created successfully')
+  } catch (error: any) {
+    pop.unload()
+    errors.value = error?.response?.data?.errors ?? null
+  }
 }
 
 async function close() {
@@ -54,6 +69,7 @@ async function close() {
       return
     }
     Object.assign(model, defaultValue())
+    errors.value = null
   }
   nextTick(() => modal.value?.close())
 }
