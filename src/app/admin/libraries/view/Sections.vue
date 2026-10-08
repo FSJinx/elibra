@@ -17,10 +17,10 @@
           <Th>Name</Th>
         </tr>
       </Thead>
-      <Tbody :data="[]" :loading="false" cols="2">
+      <Tbody :data="sections.data" :loading="sections.loading" cols="2">
         <Tr to="" v-for="(section, index) in sections.data" :key="index">
           <Td>{{ index + 1 }}</Td>
-          <Td>{{ section.nmae }}</Td>
+          <Td>{{ section.name }}</Td>
         </Tr>
       </Tbody>
     </Table>
