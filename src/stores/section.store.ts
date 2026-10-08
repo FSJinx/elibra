@@ -17,8 +17,10 @@ const url = 'section'
 export const sectionStore = defineStore('section', {
   state: () => ({
     data: null as Section[] | null,
+    deletedData: null as Section[] | null,
     currentData: null as Section | null,
     loading: false as true | false,
+    loadedLibraryId: null as number | null,
     params: defaultParams as SectionParams,
 
     pop: usePopup(),
@@ -27,27 +29,30 @@ export const sectionStore = defineStore('section', {
 
   getters: {
     select() {
-      return () => this.data?.sort((a, b) => a.name.localeCompare(b.name))
+      return () => this.data?.slice().sort((a, b) => a.name.localeCompare(b.name))
     },
   },
 
   actions: {
     // =========== SETTERS ============
     pushData(data: Section) {
-      this.data?.push(data)
+      this.data = [...(this.data ?? []), data]
     },
 
     updateData(data: Section) {
-      this.data = (this.data as Section[]).filter((i) => i.id !== data.id)
-      nextTick(() => this.data?.push(data))
+      this.data = (this.data ?? []).map((section) => section.id === data.id ? data : section)
     },
 
     removeData(data: Section) {
-      this.data = (this.data as Section[]).filter((i) => i.id !== data.id)
+      this.data = (this.data ?? []).filter((section) => section.id !== data.id)
     },
 
     setData(data: Section[]) {
       this.data = data
+    },
+
+    setDeletedData(data: Section[]) {
+      this.deletedData = data
     },
 
     setCurrentData(data: Section) {
@@ -55,14 +60,23 @@ export const sectionStore = defineStore('section', {
     },
 
     // =========== ACTIONS ============
-    async fetch(id?: any, forced = false) {
-      if (this.data && !forced) return
+    async fetch(libraryId?: number, forced = false) {
+      if (this.data && this.loadedLibraryId === (libraryId ?? null) && !forced) return
 
       this.loading = true
-      const res = await get(url, { id: id })
-      this.setData(res.data)
-      this.loading = false
+      try {
+        const res = await get(url, { library_id: libraryId })
+        this.setData(res.data)
+        this.loadedLibraryId = libraryId ?? null
+        return res
+      } finally {
+        this.loading = false
+      }
+    },
 
+    async fetchDeleted(libraryId?: number) {
+      const res = await get(`${url}/deleted`, { library_id: libraryId })
+      this.setDeletedData(res.data)
       return res
     },
 
@@ -86,15 +100,20 @@ export const sectionStore = defineStore('section', {
       return res
     },
 
-    async destory(params: Section) {
+    async destroy(params: Section) {
       const res = await del(`${url}/${params?.id}`)
       this.removeData(params)
 
       return res
     },
 
+    async destory(params: Section) {
+      return this.destroy(params)
+    },
+
     async restore(params: Section) {
-      const res = await patch(`${url}/${params?.id}`)
+      const res = await patch(`${url}/${params?.id}/restore`)
+      this.deletedData = (this.deletedData ?? []).filter((section) => section.id !== params.id)
       this.pushData(res.data)
       return res
     },

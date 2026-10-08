@@ -267,8 +267,10 @@ Route::group(['prefix' => '/publishers'], function () {
 
 // ============== SECTION ROUTE ==================
 Route::group(['prefix' => '/section'], function () {
+    Route::get('deleted', [SectionsController::class, 'deleted'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
+
     // Get
-    Route::get('', [SectionsController::class, 'index'])->middleware('throttle:read');
+    Route::get('', [SectionsController::class, 'index'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
 
     // Post
     Route::post('', [SectionsController::class, 'store'])->middleware('jwt.auth', 'role:super_admin', 'throttle:write');
@@ -278,6 +280,9 @@ Route::group(['prefix' => '/section'], function () {
 
     // Delete
     Route::delete('{section}', [SectionsController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin', 'throttle:delete');
+
+    // Restore
+    Route::patch('{section}/restore', [SectionsController::class, 'restore'])->middleware('jwt.auth', 'role:super_admin', 'throttle:write');
 });
 
 Route::group(['prefix' => '/users', 'middleware', ['jwt.auth', 'role:super_admin,admin,librarian']], function () {

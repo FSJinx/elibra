@@ -12,7 +12,7 @@ class Sections extends Model
 {
     use HasFactory, SoftDeletes, AutoFormatter;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'library_id', 'librarian_id'];
 
     protected $formatter =[
         'name' => 'capitalize'
@@ -20,6 +20,16 @@ class Sections extends Model
 
     public function branchSections()
     {
-        return $this->hasMany(BranchSection::class, 'section_id');
+        return $this->hasMany('App\\Models\\BranchSection', 'section_id');
+    }
+
+    public function library()
+    {
+        return $this->belongsTo(Library::class, 'library_id');
+    }
+
+    public function librarian()
+    {
+        return $this->belongsTo(Librarian::class, 'librarian_id');
     }
 }

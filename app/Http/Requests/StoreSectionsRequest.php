@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Sections;
+use App\Models\Library;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -30,7 +31,8 @@ class StoreSectionsRequest extends BaseRequest
                 'string',
                 'max:255',
                 Rule::unique((new Sections)->getTable(), 'name'),
-            ]
+            ],
+            'library_id' => ['required', 'integer', Rule::exists((new Library)->getTable(), 'id')],
         ];
     }
 
@@ -45,6 +47,8 @@ class StoreSectionsRequest extends BaseRequest
         return [
             'name.required' => 'Section name is required',
             'name.unique' => 'Section name has already been taken',
+            'library_id.required' => 'A library is required for this section.',
+            'library_id.exists' => 'The selected library does not exist.',
         ];
     }
 }
