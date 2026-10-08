@@ -14,7 +14,7 @@
           </div>
         </CardBody>
       </Card>
-      <Table title="Branch Table" subtitle="List of branches in ISU">
+      <Table title="Library Table" subtitle="List of libraries in ISU">
         <Thead>
           <tr>
             <th>No.</th>
@@ -26,8 +26,8 @@
             <th>Actions</th>
           </tr>
         </Thead>
-        <Tbody :data="library.data" :loading="library.loading" cols="6">
-          <tr class="hover" v-for="(b, index) in library.data" :key="index">
+        <Tbody :data="library.data" :loading="library.loading" cols="7">
+          <Tr :to="{ name: 'admin.libraries.view', params: { id: b.id } }" v-for="(b, index) in library.data" :key="index">
             <Td :data="index + 1" />
             <Td class="text-left" :data="b?.name" />
             <Td :data="campus.getCampus(b?.campus_id)?.name ?? null" />
@@ -36,9 +36,9 @@
             <Td :data="parse.formatDateAgo(b?.updated_at)" />
             <Td class="space-x-2">
               <EditLibraryModal :data="b" />
-              <Button size="sm" variant="danger" @click="remove(b)">Delete</Button>
+              <Button size="sm" class="hover:text-danger!" @click="remove(b)">Delete</Button>
             </Td>
-          </tr>
+          </Tr>
         </Tbody>
       </Table>
     </div>
@@ -49,7 +49,7 @@
 import AddNewLibraryModal from '@/app/admin/libraries/modals/AddNewLibraryModal.vue'
 import EditLibraryModal from '@/app/admin/libraries/modals/EditLibraryModal.vue'
 
-const library = useLibraryStore()
+const library = libraryStore()
 const campus = useCampusStore()
 const parse = useParser()
 const pop = usePopup()

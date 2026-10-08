@@ -1,51 +1,65 @@
-const url = 'library'
+interface SectionParams {
+  sort: string
+  page: number
+  per_page: number
+  order: 'asc' | 'desc'
+}
 
-export const libraryStore = defineStore('library', {
+const defaultParams: Readonly<SectionParams> = {
+  sort: '',
+  page: 1,
+  per_page: 10,
+  order: 'asc',
+}
+
+const url = 'section'
+
+export const sectionStore = defineStore('section', {
   state: () => ({
-    data: null as Library[] | null,
-    currentData: null as Library | null,
+    data: null as Section[] | null,
+    currentData: null as Section | null,
     loading: false as true | false,
+    params: defaultParams as SectionParams,
+
     pop: usePopup(),
     auth: authStore(),
   }),
 
   getters: {
-    get() {
-      return (id: any) => (this.data as Library[]).find((i) => i.id === id)
+    select() {
+      return () => this.data?.sort((a, b) => a.name.localeCompare(b.name))
     },
-
-    
   },
 
   actions: {
     // =========== SETTERS ============
-    pushData(data: Library) {
+    pushData(data: Section) {
       this.data?.push(data)
     },
 
-    updateData(data: Library) {
-      this.data = (this.data as Library[]).filter((i) => i.id !== data.id)
+    updateData(data: Section) {
+      this.data = (this.data as Section[]).filter((i) => i.id !== data.id)
       nextTick(() => this.data?.push(data))
     },
 
-    removeData(data: Library) {
-      this.data = (this.data as Library[]).filter((i) => i.id !== data.id)
+    removeData(data: Section) {
+      this.data = (this.data as Section[]).filter((i) => i.id !== data.id)
     },
 
-    setData(data: Library[]) {
+    setData(data: Section[]) {
       this.data = data
     },
 
-    setCurrentData(data: Library) {
+    setCurrentData(data: Section) {
       this.currentData = data
     },
 
     // =========== ACTIONS ============
-    async fetch(forced = false) {
+    async fetch(id?: any, forced = false) {
       if (this.data && !forced) return
 
       this.loading = true
-      const res = await get(url)
+      const res = await get(url, { id: id })
       this.setData(res.data)
       this.loading = false
 
@@ -58,27 +72,28 @@ export const libraryStore = defineStore('library', {
       return res
     },
 
-    async create(params: Partial<Library>) {
+    async create(params: Partial<Section>) {
       const res = await post(url, params)
       this.pushData(res.data)
 
       return res
     },
 
-    async update(params: Library) {
+    async update(params: Section) {
       const res = await put(`${url}/${params.id}`, params)
       this.updateData(res.data)
       this.setCurrentData(res.data)
       return res
     },
 
-    async remove(params: Library) {
+    async destory(params: Section) {
       const res = await del(`${url}/${params?.id}`)
       this.removeData(params)
+
       return res
     },
 
-    async restore(params: Library) {
+    async restore(params: Section) {
       const res = await patch(`${url}/${params?.id}`)
       this.pushData(res.data)
       return res

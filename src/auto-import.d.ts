@@ -88,6 +88,7 @@ declare global {
   const librarianRoutes: typeof import('./router/librarian.routes').default
   const librarianSerial: typeof import('./router/librarian/serial.route').librarianSerial
   const librarianSettings: typeof import('./router/librarian/settings.route').librarianSettings
+  const libraryStore: typeof import('./stores/library.store').libraryStore
   const makeDestructurable: typeof import('@vueuse/core').makeDestructurable
   const mapActions: typeof import('pinia').mapActions
   const mapGetters: typeof import('pinia').mapGetters
@@ -142,6 +143,7 @@ declare global {
   const refWithControl: typeof import('@vueuse/core').refWithControl
   const resolveComponent: typeof import('vue').resolveComponent
   const router: typeof import('./router/index').default
+  const sectionStore: typeof import('./stores/section.store').sectionStore
   const setActivePinia: typeof import('pinia').setActivePinia
   const setMapStoreSuffix: typeof import('pinia').setMapStoreSuffix
   const shallowReactive: typeof import('vue').shallowReactive
@@ -321,6 +323,8 @@ declare global {
   const useScroll: typeof import('@vueuse/core').useScroll
   const useScrollLock: typeof import('@vueuse/core').useScrollLock
   const useSearchTyping: typeof import('./composables/data/useSearchTyping').useSearchTyping
+  const useSectionStore: typeof import('./stores/section.store').useSectionStore
+  const useSectionsStore: typeof import('./stores/section.store').useSectionsStore
   const useSessionStorage: typeof import('@vueuse/core').useSessionStorage
   const useShare: typeof import('@vueuse/core').useShare
   const useSlots: typeof import('vue').useSlots
@@ -369,6 +373,7 @@ declare global {
   const useWindowFocus: typeof import('@vueuse/core').useWindowFocus
   const useWindowScroll: typeof import('@vueuse/core').useWindowScroll
   const useWindowSize: typeof import('@vueuse/core').useWindowSize
+  const usedsStore: typeof import('./stores/section.store').usedsStore
   const watch: typeof import('vue').watch
   const watchArray: typeof import('@vueuse/core').watchArray
   const watchAtMost: typeof import('@vueuse/core').watchAtMost
@@ -439,6 +444,9 @@ declare global {
   // @ts-ignore
   export type { Publisher } from './interfaces/publisher'
   import('./interfaces/publisher')
+  // @ts-ignore
+  export type { Section } from './interfaces/section'
+  import('./interfaces/section')
   // @ts-ignore
   export type { User } from './interfaces/user'
   import('./interfaces/user')
@@ -534,6 +542,7 @@ declare module 'vue' {
     readonly librarianRoutes: UnwrapRef<typeof import('./router/librarian.routes')['default']>
     readonly librarianSerial: UnwrapRef<typeof import('./router/librarian/serial.route')['librarianSerial']>
     readonly librarianSettings: UnwrapRef<typeof import('./router/librarian/settings.route')['librarianSettings']>
+    readonly libraryStore: UnwrapRef<typeof import('./stores/library.store')['libraryStore']>
     readonly makeDestructurable: UnwrapRef<typeof import('@vueuse/core')['makeDestructurable']>
     readonly mapActions: UnwrapRef<typeof import('pinia')['mapActions']>
     readonly mapGetters: UnwrapRef<typeof import('pinia')['mapGetters']>
@@ -588,6 +597,7 @@ declare module 'vue' {
     readonly refWithControl: UnwrapRef<typeof import('@vueuse/core')['refWithControl']>
     readonly resolveComponent: UnwrapRef<typeof import('vue')['resolveComponent']>
     readonly router: UnwrapRef<typeof import('./router/index')['default']>
+    readonly sectionStore: UnwrapRef<typeof import('./stores/section.store')['sectionStore']>
     readonly setActivePinia: UnwrapRef<typeof import('pinia')['setActivePinia']>
     readonly setMapStoreSuffix: UnwrapRef<typeof import('pinia')['setMapStoreSuffix']>
     readonly shallowReactive: UnwrapRef<typeof import('vue')['shallowReactive']>
@@ -714,7 +724,6 @@ declare module 'vue' {
     readonly useLanguagesStore: UnwrapRef<typeof import('./stores/languages.store')['useLanguagesStore']>
     readonly useLastChanged: UnwrapRef<typeof import('@vueuse/core')['useLastChanged']>
     readonly useLibrarianDashboardStore: UnwrapRef<typeof import('./stores/librarian/librarian_dashboard.store')['useLibrarianDashboardStore']>
-    readonly useLibraryStore: UnwrapRef<typeof import('./stores/library.store')['useLibraryStore']>
     readonly useLink: UnwrapRef<typeof import('vue-router')['useLink']>
     readonly useLocalStorage: UnwrapRef<typeof import('@vueuse/core')['useLocalStorage']>
     readonly useMagicKeys: UnwrapRef<typeof import('@vueuse/core')['useMagicKeys']>

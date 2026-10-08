@@ -27,7 +27,7 @@ return new class extends Migration
             $table->softDeletes();
 
             $table->unsignedBigInteger('logo_id')->nullable();
-            $table->unsignedBigInteger('branch_head_id')->nullable();
+            $table->unsignedBigInteger('library_head_id')->nullable();
             $table->unsignedBigInteger('campus_id');
         });
     }

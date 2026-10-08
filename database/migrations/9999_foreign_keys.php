@@ -18,7 +18,7 @@ return new class extends Migration
             'name' => 'libraries',
             'foreign_columns' => [
                 ['name' => 'logo_id', 'references' => 'id', 'on' => 'media', 'onDelete' => 'cascade'],
-                ['name' => 'branch_head_id', 'references' => 'id', 'on' => 'librarians', 'onDelete' => 'cascade'],
+                ['name' => 'library_head_id', 'references' => 'id', 'on' => 'librarians', 'onDelete' => 'cascade'],
                 ['name' => 'campus_id', 'references' => 'id', 'on' => 'campuses', 'onDelete' => 'cascade'],
             ],
         ],
@@ -32,6 +32,7 @@ return new class extends Migration
             'name' => 'sections',
             'foreign_columns' => [
                 ['name' => 'librarian_id', 'references' => 'id', 'on' => 'librarians', 'onDelete' => 'cascade'],
+                ['name' => 'library_id', 'references' => 'id', 'on' => 'libraries', 'onDelete' => 'cascade'],
             ],
         ],
 
@@ -103,7 +104,7 @@ return new class extends Migration
             'name' => 'inventories',
             'foreign_columns' => [
                 ['name' => 'librarian_id', 'references' => 'id', 'on' => 'librarians', 'onDelete' => 'cascade'],
-            ]
+            ],
         ],
         [
             'name' => 'inventory__lines',
@@ -111,7 +112,7 @@ return new class extends Migration
                 ['name' => 'inventory_id', 'references' => 'id', 'on' => 'inventories', 'onDelete' => 'cascade'],
                 ['name' => 'accession_id', 'references' => 'id', 'on' => 'accessions', 'onDelete' => 'cascade'],
                 ['name' => 'verified_by', 'references' => 'id', 'on' => 'librarians', 'onDelete' => 'cascade'],
-            ]
+            ],
         ],
 
         //  4. Standards

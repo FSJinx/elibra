@@ -64,7 +64,7 @@ const defaultBranch = (): Partial<Library> => ({
 })
 
 const modal = ref<typeof Modal | null>(null)
-const library = useLibraryStore()
+const library = libraryStore()
 const campus = useCampusStore()
 const pop = usePopup()
 const form = reactive(defaultBranch())

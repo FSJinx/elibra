@@ -11,7 +11,7 @@ class Library extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['name', 'phone', 'email', 'email_verified_at', 'website', 'opening_hour', 'closing_hour', 'heading', 'logo_id', 'branch_head_id', 'campus_id'];
+    protected $fillable = ['name', 'phone', 'email', 'email_verified_at', 'website', 'opening_hour', 'closing_hour', 'heading', 'logo_id', 'library_head_id', 'campus_id'];
 
     #[Override]
     protected static function booted()
@@ -37,5 +37,10 @@ class Library extends Model
     public function items()
     {
         return $this->hasMany(Item::class);
+    }
+
+    public function head()
+    {
+        return $this->hasOne(Librarian::class, 'id', 'library_head_id');
     }
 }
