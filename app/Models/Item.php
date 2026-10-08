@@ -76,6 +76,11 @@ class Item extends Model
         $this->authors()->sync($pivotData);
     }
 
+    public function itemPublishers()
+    {
+        return $this->hasMany(ItemPublisher::class);
+    }
+
     public function itemType()
     {
         return $this->belongsTo(ItemType::class);

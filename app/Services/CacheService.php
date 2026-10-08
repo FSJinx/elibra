@@ -30,7 +30,10 @@ class CacheService
     // ========= CATALOGING ==========
     public const ITEMS = 'items';
 
-    // ========= 4. STANDARDS ==========
+    public const VENDORS = 'vendors';
+
+    public const PUBLISHERS = 'publishers';
+
     public const AUTHORSHIPS = 'authorships';
 
     // ========= AUTHORITY CONTROL ==========
@@ -61,12 +64,6 @@ class CacheService
     public const FINES_TRANSACTIONS = 'fines_transactions';
 
     public const PATRON_TYPE_LOAN_POLICY = 'patron_type_loan_policy';
-
-    // public const ACADEMICS = 'academics';
-
-    // public const BOOKS = 'books';
-
-    // public const SERIALS = 'serials';
 
     public const OPAC = 'opac';
 

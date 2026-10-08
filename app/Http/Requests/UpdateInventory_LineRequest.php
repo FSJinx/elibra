@@ -2,18 +2,16 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Publisher;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Override;
 
-class StorePublisherRequest extends BaseRequest
+class UpdateInventory_LineRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return $this->user()->can('create', Publisher::class);
+        return false;
     }
 
     /**
@@ -24,16 +22,7 @@ class StorePublisherRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'address' => ['nullable', 'string', 'max:255'],
-        ];
-    }
-
-    #[Override]
-    public function messages()
-    {
-        return [
-            'name.required' => 'Name of publisher is required,',
+            //
         ];
     }
 }

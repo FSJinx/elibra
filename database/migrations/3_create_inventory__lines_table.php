@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('vendors', function (Blueprint $table) {
+        Schema::create('inventory__lines', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('address')->nullable();
+            $table->unsignedBigInteger('inventory_id');
+            $table->unsignedBigInteger('accession_id');
+            $table->unsignedBigInteger('verified_by')->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -25,7 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('vendors');
+        Schema::dropIfExists('inventory__lines');
     }
 };
-    

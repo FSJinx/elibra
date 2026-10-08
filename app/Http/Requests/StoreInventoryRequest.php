@@ -2,18 +2,18 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Publisher;
+use App\Models\Librarian;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Override;
+use Illuminate\Validation\Rule;
 
-class StorePublisherRequest extends BaseRequest
+class StoreInventoryRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return $this->user()->can('create', Publisher::class);
+        return true;
     }
 
     /**
@@ -24,16 +24,9 @@ class StorePublisherRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'address' => ['nullable', 'string', 'max:255'],
-        ];
-    }
-
-    #[Override]
-    public function messages()
-    {
-        return [
-            'name.required' => 'Name of publisher is required,',
+            'inventory_code' => ['required', 'string', 'max:255', 'unique:inventories,inventory_code'],
+            'is_completed' => ['required', 'boolean'],
+            'librarian_id' => ['required', 'integer', Rule::exists((new Librarian)->getTable(), 'id')],
         ];
     }
 }

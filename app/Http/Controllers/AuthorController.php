@@ -70,7 +70,7 @@ class AuthorController extends Controller
 
     /**
      * Display the specified resource.
-     */
+    */
     public function show(Request $request)
     {
         $query = trim((string) $request->input('query'));
@@ -137,6 +137,15 @@ class AuthorController extends Controller
     public function destroy(Author $author)
     {
         $deleted = $this->authorService->delete($author);
+
+        if (! $deleted) {
+            return $this->response(
+                'error',
+                'Unable to delete author at this time.',
+                [],
+                500
+            );
+        }
 
         return $this->response(
             'success',

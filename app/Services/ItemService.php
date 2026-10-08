@@ -93,7 +93,14 @@ class ItemService
 
     public function show(string $id)
     {
-        $item = Item::findOrFail($id);
+        $item = Item::with([
+            'authors',
+            'itemType',
+            'itemTypeCategory',
+            'language',
+            'library',
+            'itemPublishers.publisher',
+        ])->findOrFail($id);
 
         return $item;
     }

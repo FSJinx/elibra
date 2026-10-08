@@ -99,6 +99,20 @@ return new class extends Migration
                 ['name' => 'library_id', 'references' => 'id', 'on' => 'libraries', 'onDelete' => 'cascade'],
             ],
         ],
+        [
+            'name' => 'inventories',
+            'foreign_columns' => [
+                ['name' => 'librarian_id', 'references' => 'id', 'on' => 'librarians', 'onDelete' => 'cascade'],
+            ]
+        ],
+        [
+            'name' => 'inventory__lines',
+            'foreign_columns' => [
+                ['name' => 'inventory_id', 'references' => 'id', 'on' => 'inventories', 'onDelete' => 'cascade'],
+                ['name' => 'accession_id', 'references' => 'id', 'on' => 'accessions', 'onDelete' => 'cascade'],
+                ['name' => 'verified_by', 'references' => 'id', 'on' => 'librarians', 'onDelete' => 'cascade'],
+            ]
+        ],
 
         //  4. Standards
         [

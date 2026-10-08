@@ -17,6 +17,8 @@ use App\Http\Controllers\CirculationController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\FinesTransactionController;
 use App\Http\Controllers\HolidaysController;
+use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\InventoryLineController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ItemTypeCategoryController;
 use App\Http\Controllers\ItemTypeController;
@@ -31,6 +33,7 @@ use App\Http\Controllers\OpacSearchController;
 use App\Http\Controllers\PatronController;
 use App\Http\Controllers\PatronTypeLoanPolicyController;
 use App\Http\Controllers\ProgramsController;
+use App\Http\Controllers\PublisherController;
 use App\Http\Controllers\SectionsController;
 use App\Http\Controllers\SerialController;
 use App\Http\Controllers\SubscriptionController;
@@ -232,6 +235,17 @@ Route::group(['prefix' => '/program'], function () {
     Route::delete('{program}', [ProgramsController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin', 'throttle:delete');
 });
 
+// ============== PUBLISHERS ROUTE ==================
+Route::group(['prefix' => '/publishers'], function () {
+    // Get
+    Route::get('', [PublisherController::class, 'index'])->middleware('throttle:read');
+
+    // Post
+    Route::post('', [PublisherController::class, 'store'])->middleware('throttle:write');
+    Route::post('show', [PublisherController::class, 'show'])->middleware('throttle:write');
+
+});
+
 // ============== SECTION ROUTE ==================
 Route::group(['prefix' => '/section'], function () {
     // Get
@@ -334,6 +348,54 @@ Route::group(['prefix' => '/librarian', 'middleware' => ['jwt.auth', 'role:admin
         Route::put('/{acquisitionLie}', [AcquisitionLinesController::class, 'update'])->middleware('throttle:write');
 
         // Delete
+    });
+
+    // ============== ACQUISITION REQUEST ROUTE ==================
+    Route::group(['prefix' => '/acquisition-lines'], function () {
+        // Get
+        Route::get('/', [AcquisitionRequestController::class, 'show']);
+
+        // Post
+        Route::post('request', [AcquisitionRequestController::class, 'store'])->middleware('throttle:write');
+
+        // Update
+        Route::put('/request/{acquisitionRequest}', [AcquisitionRequestController::class, 'update'])->middleware('throttle:write');
+
+        // Delete
+    });
+
+    // ============== INVENTORY ROUTE ==================
+    Route::group(['prefix' => '/inventory'], function () {
+        // Get
+        Route::get('', [InventoryController::class, 'index']);
+        Route::get('{inventory}', [InventoryController::class, 'show']);
+
+        // Post
+        Route::post('', [InventoryController::class, 'store'])->middleware('throttle:write');
+
+        // Update
+        Route::put('{inventory}', [InventoryController::class, 'update'])->middleware('throttle:write');
+
+        // Delete
+        Route::delete('{inventory}', [InventoryController::class, 'destroy'])->middleware('throttle:delete');
+    });
+
+    // ================ INVENTORY LINE ROUTE ==================
+    Route::group(['prefix' => '/inventory-line'], function () {
+        // Get
+        Route::get('', [InventoryLineController::class, 'index']);
+        Route::get('{inventoryLine}', [InventoryLineController::class, 'show']);
+
+        // Post
+        Route::post('', [InventoryLineController::class, 'store'])->middleware('throttle:write');
+
+        // Update
+        Route::put('{inventoryLine}', [InventoryLineController::class, 'update'])->middleware('throttle:write');
+        Route::put('{inventoryLine}/verify', [InventoryLineController::class, 'verify'])->middleware('throttle:write');
+        Route::put('{inventoryLine}/unverify', [InventoryLineController::class, 'unverify'])->middleware('throttle:write');
+
+        // Delete
+        Route::delete('{inventoryLine}', [InventoryLineController::class, 'destroy'])->middleware('throttle:delete');
     });
 
 });
