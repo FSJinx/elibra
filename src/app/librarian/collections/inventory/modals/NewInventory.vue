@@ -5,21 +5,23 @@
     <ModalHeader use-default-layout title="New Inventory" subtitle="Monitor and check your library's stock" icon="boxes" />
 
     <ModalBody>
-        <Form class="p-5" id="new-inventory">
-            <h2 class="uppercase tracking-wide font-semibold mb-5">Select a Section</h2>
-            <Control id="inventory-section" required col>
-                <Label>Section</Label>
-                <Select title="Sections">
-                    <Option value="" selected disabled>Select a section to inventory</Option>
-                    <Option value="" selected disabled>Select a section to inventory</Option>
-
-                </Select>
-            </Control>
-        </Form>
+      <Form class="p-5" id="new-inventory">
+        <h2 class="uppercase tracking-wide font-semibold mb-5">Select a Section</h2>
+        <Control id="inventory-section" required col>
+          <div class="">
+            <Label> Section </Label>
+            <p class="text-muted-foreground text-sm">Please select the section you're going to perform the inventory into</p>
+          </div>
+          <Select title="Sections">
+            <Option value="" selected disabled>Select a section to inventory</Option>
+            <Option value="aca">Academic Section</Option>
+          </Select>
+        </Control>
+      </Form>
     </ModalBody>
-    
+
     <ModalFooter>
-        <Button type="submit" form="new-inventory" variant="primary">Create</Button>
+      <Button type="submit" form="new-inventory" variant="primary">Create</Button>
     </ModalFooter>
   </Modal>
 </template>

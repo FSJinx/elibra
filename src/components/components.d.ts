@@ -73,6 +73,7 @@ declare module 'vue' {
     Title: typeof import('./my/Title.vue')['default']
     Tload: typeof import('./table/Tload.vue')['default']
     Tooltip: typeof import('./my/Tooltip.vue')['default']
+    Tr: typeof import('./table/Tr.vue')['default']
     Version: typeof import('./brand/Version.vue')['default']
   }
 }

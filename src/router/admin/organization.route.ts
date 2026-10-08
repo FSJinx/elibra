@@ -13,14 +13,13 @@ export const adminOrganizationRoutes = [
   },
   {
     path: 'libraries',
-    name: 'admin.libraries',
+    redirect: { name: 'admin.libraries' },
     meta: {
       breadcrumb: 'Libraries',
       title: 'Organizations',
       permission: '',
       maintenance: false,
     },
-    component: () => import('@/app/admin/libraries/Libraries.vue'),
     children: adminLibraryRoutes,
   },
   {

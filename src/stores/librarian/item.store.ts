@@ -19,7 +19,7 @@ export const useItemStore = defineStore('item', {
     item_type: useItemTypeStore(),
     categories: useItemCategoriesStore(),
     languages: useLanguagesStore(),
-    libraries: useLibraryStore(),
+    libraries: libraryStore(),
   }),
 
   getters: {

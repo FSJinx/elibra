@@ -55,13 +55,7 @@ class CampusController extends Controller
                     $query->orderBy('name');
                 }
 
-                return $query->select([
-                    'id',
-                    'name',
-                    'code',
-                    'address',
-                    'status',
-                ])->get();
+                return $query->get();
             }
         );
 

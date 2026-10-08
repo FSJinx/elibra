@@ -1,5 +1,5 @@
 <template>
-  <Button size="sm" variant="warning" @click="open()">Edit</Button>
+  <Button size="sm" class="hover:text-warning" @click="open()">Edit</Button>
 
   <Modal ref="modal" size="xlarge" :has-inputs="hasChanges">
     <ModalHeader use-default-layout :title="data.name" :subtitle="`Currently editing library information of ${data.name}`" icon="building" />
@@ -61,7 +61,7 @@ const form = reactive({ ...props.data })
 const errors = ref<Record<keyof Library, string[]> | null>(null)
 const pop = usePopup()
 const hasChanges = computed(() => JSON.stringify(form) !== JSON.stringify(props.data))
-const library = useLibraryStore()
+const library = libraryStore()
 const campus = useCampusStore()
 
 async function submit() {

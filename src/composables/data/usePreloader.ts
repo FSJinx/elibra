@@ -3,7 +3,7 @@ export function usePreloader() {
   async function preload() {
     const auth = useAuth()
     const campus = useCampusStore()
-    const library = useLibraryStore()
+    const library = libraryStore()
     const item_type = useItemTypeStore()
     const category = useItemCategoriesStore()
     const authorship = authorshipStore()

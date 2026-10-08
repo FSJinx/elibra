@@ -21,10 +21,10 @@
           <div class="flex-1 min-w-0 flex flex-col justify-between self-stretch">
             <div class="flex items-start justify-between gap-5">
               <div>
-                <div class="flex items-center gap-2" v-if="useLibraryStore().data?.find((i) => i.id === item.branch_id)?.name">
+                <div class="flex items-center gap-2" v-if="library.get(item.id)?.name">
                   <!-- Item Location -->
                   <Icon icon="geo-alt-fill" class="text-danger" />
-                  <span class="text-sm">{{ useLibraryStore().data?.find((i) => i.id === item.branch_id)?.name }}</span>
+                  <span class="text-sm">{{ library.get(item.id)?.name }}</span>
                 </div>
                 <div class="flex items-center justify-between gap-2 mb-1.5">
                   <h2 class="font-bold text-base text-foreground line-clamp-1" :title="item.title">
@@ -62,26 +62,15 @@
 <script setup lang="ts">
 import default_book from '@/assets/images/default_book.png'
 
-export interface LibraryItem {
-  id: number
-  title: string
-  subtitle: string | null
-  call_number: string | null
-  publication_year: number | null
-  item_type_id: number | null
-  item_type_category_id: number | null
-  status: string | null
-  [key: string]: any
-}
-
+const library = libraryStore()
 // State
-const data = ref<LibraryItem[]>([])
+const data = ref<Item[]>([])
 const loading = ref(true)
 const categories = useItemCategoriesStore()
 
 async function fetchNewItems() {
   try {
-    const res = await get<{ data: LibraryItem[] }>('/landing/new-items')
+    const res = await get<{ data: Item[] }>('/landing/new-items')
     data.value = res.data ?? []
   } catch (error) {
     console.error('Failed to fetch new items:', error)
@@ -98,7 +87,7 @@ const parseCategory = (item_type_category_id: any) => {
 onMounted(fetchNewItems)
 
 // Badge status color mapping
-const getStatusClass = (status: LibraryItem['status']) => {
+const getStatusClass = (status: Item['status']) => {
   switch (status) {
     case 'available':
       return 'bg-green-100 text-green-700 dark:bg-green-950/60 dark:text-green-400'

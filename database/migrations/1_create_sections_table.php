@@ -17,6 +17,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
+            $table->unsignedBigInteger('library_id'); // Storage for librarian in charge
             $table->unsignedBigInteger('librarian_id'); // Storage for librarian in charge
         });
     }

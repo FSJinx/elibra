@@ -19,11 +19,7 @@ class LibraryController extends Controller
         $library = Library::query();
 
         return $this->response(
-            data: $library->paginate(
-                25,
-                ['*'],
-                'page',
-            )
+            data: $library->get()
         );
     }
 
@@ -66,7 +62,7 @@ class LibraryController extends Controller
      */
     public function show(Library $library)
     {
-        //
+        return $this->response(data: $library->load(['campus', 'head']));
     }
 
     /**
