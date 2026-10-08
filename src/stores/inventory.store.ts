@@ -1,52 +1,54 @@
-interface AcquisitionParams {
+interface InventoryParams {
   sort: string
   page: number
   per_page: number
   order: 'asc' | 'desc'
 }
 
-const defaultParams: Readonly<AcquisitionParams> = {
+const defaultParams: Readonly<InventoryParams> = {
   sort: '',
   page: 1,
   per_page: 10,
   order: 'asc',
 }
 
-const url = 'librarian/acquisition'
+const url = 'inventory'
 
-export const useAcquisitionStore = defineStore('acquisition', {
+export const useInventoryStore = defineStore('inventory', {
   state: () => ({
-    data: null as Acquisition[] | null,
-    currentData: null as Acquisition | null,
+    data: null as Inventory[] | null,
+    currentData: null as Inventory | null,
     loading: false as true | false,
-    params: defaultParams as AcquisitionParams,
+    params: defaultParams as InventoryParams,
 
     pop: usePopup(),
     auth: authStore(),
   }),
 
-  getters: {},
+  getters: {
+    
+  },
 
   actions: {
     // =========== SETTERS ============
-    pushData(data: Acquisition) {
+    pushData(data: Inventory) {
       this.data?.push(data)
     },
 
-    updateData(data: Acquisition) {
-      this.data = (this.data as Acquisition[]).filter((i) => i.id !== data.id)
+    updateData(data: Inventory) {
+      this.data = (this.data as Inventory[]).filter((i) => i.id !== data.id)
       nextTick(() => this.data?.push(data))
     },
 
-    removeData(data: Acquisition) {
-      this.data = (this.data as Acquisition[]).filter((i) => i.id !== data.id)
+    removeData(data: Inventory) {
+      this.data = (this.data as Inventory[]).filter((i) => i.id !== data.id)
     },
 
-    setData(data: Acquisition[]) {
+    setData(data: Inventory[]) {
       this.data = data
     },
 
-    setCurrentData(data: Acquisition) {
+    setCurrentData(data: Inventory) {
       this.currentData = data
     },
 
@@ -55,14 +57,11 @@ export const useAcquisitionStore = defineStore('acquisition', {
       if (this.data && !forced) return
 
       this.loading = true
-      try {
-        const res = await get(url)
-        this.setData(res.data.data)
-        return res
-      } finally {
-        this.loading = false
-      }
+      const res = await get(url)
+      this.setData(res.data)
+      this.loading = false
 
+      return res
     },
 
     async show(id: any) {
@@ -71,28 +70,28 @@ export const useAcquisitionStore = defineStore('acquisition', {
       return res
     },
 
-    async create(params: Partial<Acquisition>) {
+    async create(params: Partial<Inventory>) {
       const res = await post(url, params)
       this.pushData(res.data)
 
       return res
     },
 
-    async update(params: Acquisition) {
+    async update(params: Inventory) {
       const res = await put(`${url}/${params.id}`, params)
       this.updateData(res.data)
       this.setCurrentData(res.data)
       return res
     },
 
-    async destory(params: Acquisition) {
+    async destory(params: Inventory) {
       const res = await del(`${url}/${params?.id}`)
       this.removeData(params)
 
       return res
     },
 
-    async restore(params: Acquisition) {
+    async restore(params: Inventory) {
       const res = await patch(`${url}/${params?.id}`)
       this.pushData(res.data)
       return res

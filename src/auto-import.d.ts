@@ -7,6 +7,7 @@
 export {}
 declare global {
   const EffectScope: typeof import('vue').EffectScope
+  const Store: typeof import('./stores/drafts/draft').Store
   const acceptHMRUpdate: typeof import('pinia').acceptHMRUpdate
   const adminAuthorityRoute: typeof import('./router/admin/authority.route').adminAuthorityRoute
   const adminCampusRoutes: typeof import('./router/admin/organization/campus.route').adminCampusRoutes
@@ -53,6 +54,8 @@ declare global {
   const defineComponent: typeof import('vue').defineComponent
   const defineStore: typeof import('pinia').defineStore
   const del: typeof import('./composables/data/useApi').del
+  const drafStore: typeof import('./stores/drafts/draft').drafStore
+  const draftStore: typeof import('./stores/drafts/draft').draftStore
   const eagerComputed: typeof import('@vueuse/core').eagerComputed
   const effectScope: typeof import('vue').effectScope
   const errorRoutes: typeof import('./router/errorRoutes').errorRoutes
@@ -74,6 +77,7 @@ declare global {
   const isRef: typeof import('vue').isRef
   const isShallow: typeof import('vue').isShallow
   const itemDefaultParams: typeof import('./stores/librarian/item.store').itemDefaultParams
+  const itemDrafStore: typeof import('./stores/drafts/draft').itemDrafStore
   const librarianAcquisition: typeof import('./router/librarian/acquisition.route').librarianAcquisition
   const librarianAdministration: typeof import('./router/librarian/administration.route').librarianAdministration
   const librarianCataloging: typeof import('./router/librarian/collection.route').librarianCataloging
@@ -256,6 +260,7 @@ declare global {
   const useIntersectionObserver: typeof import('@vueuse/core').useIntersectionObserver
   const useInterval: typeof import('@vueuse/core').useInterval
   const useIntervalFn: typeof import('@vueuse/core').useIntervalFn
+  const useInventoryStore: typeof import('./stores/inventory.store').useInventoryStore
   const useItemCategoriesStore: typeof import('./stores/item_categories.store').useItemCategoriesStore
   const useItemStore: typeof import('./stores/librarian/item.store').useItemStore
   const useItemTypeStore: typeof import('./stores/item_type.store').useItemTypeStore
@@ -353,6 +358,7 @@ declare global {
   const useUserMedia: typeof import('@vueuse/core').useUserMedia
   const useVModel: typeof import('@vueuse/core').useVModel
   const useVModels: typeof import('@vueuse/core').useVModels
+  const useVendorStore: typeof import('./stores/vendor.store').useVendorStore
   const useVibrate: typeof import('@vueuse/core').useVibrate
   const useVirtualList: typeof import('@vueuse/core').useVirtualList
   const useWakeLock: typeof import('@vueuse/core').useWakeLock
@@ -413,6 +419,9 @@ declare global {
   export type { Department } from './interfaces/department'
   import('./interfaces/department')
   // @ts-ignore
+  export type { Inventory } from './interfaces/interface'
+  import('./interfaces/interface')
+  // @ts-ignore
   export type { Item } from './interfaces/item'
   import('./interfaces/item')
   // @ts-ignore
@@ -428,8 +437,14 @@ declare global {
   export type { Library } from './interfaces/library'
   import('./interfaces/library')
   // @ts-ignore
+  export type { Publisher } from './interfaces/publisher'
+  import('./interfaces/publisher')
+  // @ts-ignore
   export type { User } from './interfaces/user'
   import('./interfaces/user')
+  // @ts-ignore
+  export type { Vendor } from './interfaces/vendor'
+  import('./interfaces/vendor')
   // @ts-ignore
   export type { BaseParams } from './services/params'
   import('./services/params')
@@ -487,6 +502,7 @@ declare module 'vue' {
     readonly defineComponent: UnwrapRef<typeof import('vue')['defineComponent']>
     readonly defineStore: UnwrapRef<typeof import('pinia')['defineStore']>
     readonly del: UnwrapRef<typeof import('./composables/data/useApi')['del']>
+    readonly draftStore: UnwrapRef<typeof import('./stores/drafts/draft')['draftStore']>
     readonly eagerComputed: UnwrapRef<typeof import('@vueuse/core')['eagerComputed']>
     readonly effectScope: UnwrapRef<typeof import('vue')['effectScope']>
     readonly errorRoutes: UnwrapRef<typeof import('./router/errorRoutes')['errorRoutes']>
@@ -690,6 +706,7 @@ declare module 'vue' {
     readonly useIntersectionObserver: UnwrapRef<typeof import('@vueuse/core')['useIntersectionObserver']>
     readonly useInterval: UnwrapRef<typeof import('@vueuse/core')['useInterval']>
     readonly useIntervalFn: UnwrapRef<typeof import('@vueuse/core')['useIntervalFn']>
+    readonly useInventoryStore: UnwrapRef<typeof import('./stores/inventory.store')['useInventoryStore']>
     readonly useItemCategoriesStore: UnwrapRef<typeof import('./stores/item_categories.store')['useItemCategoriesStore']>
     readonly useItemStore: UnwrapRef<typeof import('./stores/librarian/item.store')['useItemStore']>
     readonly useItemTypeStore: UnwrapRef<typeof import('./stores/item_type.store')['useItemTypeStore']>
@@ -787,6 +804,7 @@ declare module 'vue' {
     readonly useUserMedia: UnwrapRef<typeof import('@vueuse/core')['useUserMedia']>
     readonly useVModel: UnwrapRef<typeof import('@vueuse/core')['useVModel']>
     readonly useVModels: UnwrapRef<typeof import('@vueuse/core')['useVModels']>
+    readonly useVendorStore: UnwrapRef<typeof import('./stores/vendor.store')['useVendorStore']>
     readonly useVibrate: UnwrapRef<typeof import('@vueuse/core')['useVibrate']>
     readonly useVirtualList: UnwrapRef<typeof import('@vueuse/core')['useVirtualList']>
     readonly useWakeLock: UnwrapRef<typeof import('@vueuse/core')['useWakeLock']>

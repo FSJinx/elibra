@@ -3,10 +3,17 @@
     <SectionHeader title="Libraries" description="Manage libraries in the Isabela State University" icon="building" />
 
     <div class="flex-1 flex flex-col gap-3 p-5">
-      <div class="flex items-center justify-end gap-2">
-        <Input id="search-library" class="max-w-100" placeholder="Search by library name" />
-        <AddNewLibraryModal />
-      </div>
+      <Card>
+        <CardBody class="grid grid-cols-2 gap-2">
+          <div class="flex items-center gap-5">
+            <Input id="search-library" class="max-w-100" placeholder="Search by library name" />
+          </div>
+
+          <div class="flex items-center justify-end gap-2">
+            <AddNewLibraryModal />
+          </div>
+        </CardBody>
+      </Card>
       <Table title="Branch Table" subtitle="List of branches in ISU">
         <Thead>
           <tr>

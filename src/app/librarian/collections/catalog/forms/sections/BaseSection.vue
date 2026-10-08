@@ -1,5 +1,5 @@
 <template>
-  <Card class="rounded-none">
+  <Card>
     <CardHeader>
       <h2 class="text-xl font-semibold text-foreground">General Information and Classification</h2>
       <p class="mt-0.5 text-sm text-foreground-secondary">Bibliographic and classification information for this catalog record.</p>
@@ -27,7 +27,7 @@
       <!-- Item Title -->
       <Control id="item-title" required>
         <Label>Title</Label>
-        <Textarea v-model="form.title" type="text" placeholder="Enter item's title here..." required />
+        <Input v-model="form.title" type="text" placeholder="Enter item's title here..." required />
       </Control>
 
       <!-- Item Subtitle -->
@@ -67,7 +67,7 @@
 import { getError, type Form } from '@/app/librarian/collections/catalog/forms/form'
 
 defineProps<{
-  errors: any
+  errors?: any
 }>()
 
 const form = defineModel<Partial<Form>>({ default: {} })

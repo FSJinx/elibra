@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreAuthorRequest;
 use App\Http\Requests\UpdateAuthorRequest;
 use App\Models\Author;
+use App\Models\Item;
 use App\Services\AuthorService;
 use Illuminate\Http\Request;
 
@@ -73,6 +74,9 @@ class AuthorController extends Controller
     public function show(Request $request)
     {
         $query = trim((string) $request->input('query'));
+
+        $item = Item::query();
+        
 
         if ($query === '') {
             return $this->response('error', 'Please enter an author name.', [], 422);

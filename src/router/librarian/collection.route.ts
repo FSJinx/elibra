@@ -63,7 +63,7 @@ export const librarianCataloging = [
             path: 'new',
             meta: { title: 'Cataloging', breadcrumb: 'New Item' },
             name: 'librarian.collections.catalog.new',
-            component: () => import('@/app/librarian/collections/catalog/NewAddCatalog.vue'),
+            component: () => import('@/app/librarian/collections/catalog/AddCatalog.vue'),
           },
         ],
       },

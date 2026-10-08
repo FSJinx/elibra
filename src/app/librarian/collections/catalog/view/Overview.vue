@@ -1,46 +1,48 @@
 <template>
   <div class="flex flex-col w-full max-w-7xl mx-auto gap-5">
-    <Card class="flex items-start justify-between gap-5 p-6!">
-      <div class="">
-        <Title :level="1">{{ item?.title }}</Title>
-        <p class="text-muted-foreground text-sm">
-          <span class="italic">{{ item?.subtitle }}</span>
-          <span class="italic" v-if="item?.subtitle && item.publication_year"> • </span>
-          <span>{{ item?.publication_year }}</span>
-        </p>
-      </div>
+    <div class="flex gap-5">
+      <Card class="flex flex-1 max-w-75 items-start justify-between gap-5 p-6!"> </Card>
 
-      <div class="flex justify-end gap-2">
-        <Button left-icon="pencil-square">Edit</Button>
-      </div>
-    </Card>
+      <Card class="flex-1">
+        <div class="flex items-start">
+          <div class="">
+            <Title :level="1">{{ item?.title }}</Title>
+            <p class="text-muted-foreground text-sm">
+              <span class="italic">{{ item?.subtitle }}</span>
+              <span class="italic" v-if="item?.subtitle && item.publication_year"> • </span>
+              <span>{{ item?.publication_year }}</span>
+            </p>
+          </div>
+          <div class="flex justify-end gap-2">
+            <Button left-icon="pencil-square">Edit</Button>
+          </div>
+        </div>
+        <Title :level="2" class="text-primary">Basic Information</Title>
 
-    <Card>
-      <Title :level="2" class="text-primary">Basic Information</Title>
-
-      <div class="grid grid-cols-2 gap-5">
-        <Control direction="col">
-          <label for="">Title</label>
-          <p>{{ item?.title }}</p>
-        </Control>
-        <Control direction="col">
-          <label for="">Subtitle</label>
-          <p>{{ item?.title }}</p>
-        </Control>
-        <Control direction="col">
-          <label for="">Call Number</label>
-          <p>{{ item?.call_number }}</p>
-        </Control>
-        <Control direction="col">
-          <label for="">Year of Publication</label>
-          <p>{{ item?.publication_year }}</p>
-        </Control>
-        <Control direction="col" class="col-span-2">
-          <label for="">Description</label>
-          <p>{{ item?.title }}</p>
-        </Control>
-      </div>
-    </Card>
+        <div class="grid grid-cols-2 gap-5">
+          <Control direction="col">
+            <label for="">Title</label>
+            <p>{{ item?.title }}</p>
+          </Control>
+          <Control direction="col">
+            <label for="">Subtitle</label>
+            <p>{{ item?.title }}</p>
+          </Control>
+          <Control direction="col">
+            <label for="">Call Number</label>
+            <p>{{ item?.call_number }}</p>
+          </Control>
+          <Control direction="col">
+            <label for="">Year of Publication</label>
+            <p>{{ item?.publication_year }}</p>
+          </Control>
+          <Control direction="col" class="col-span-2">
+            <label for="">Description</label>
+            <p>{{ item?.title }}</p>
+          </Control>
+        </div>
+      </Card>
+    </div>
 
     <Card>
       <Title :level="2" class="text-primary">Classification</Title>
@@ -112,3 +114,11 @@ label {
   font-weight: 500;
 }
 </style>
+
+
+{
+  publisher: {
+    id:,
+    publication_year
+  }
+}

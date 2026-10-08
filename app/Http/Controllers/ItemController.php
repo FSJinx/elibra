@@ -140,8 +140,10 @@ class ItemController extends Controller
 
         try {
             $item = Item::create($newItem);
-
+            
+            $item->syncAuthors($request->input('authors'));
             $item->refresh();
+            
 
             DB::commit();
 

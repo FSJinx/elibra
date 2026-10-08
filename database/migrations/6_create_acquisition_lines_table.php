@@ -13,11 +13,10 @@ return new class extends Migration
     {
         Schema::create('acquisition_lines', function (Blueprint $table) {
             $table->id();
-            $table->integer('quantity');
             $table->float('unit_price')->nullable();
             $table->timestamps();
-            
-            $table->unsignedBigInteger('item_id'); 
+
+            $table->unsignedBigInteger('item_id');
             $table->unsignedBigInteger('acquisition_id');
         });
     }

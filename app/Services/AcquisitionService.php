@@ -65,7 +65,6 @@ class AcquisitionService
         );
     }
 
-
     public function create(array $data): Acquisition
     {
         $acquisition = DB::transaction(function () use ($data) {
@@ -82,13 +81,13 @@ class AcquisitionService
                 ])
             );
 
-            $campusCode = $acquisition->receiver->campus->code;
+            $campusCode = $acquisition->receiver->library?->campus?->code;
             $date = $acquisition->acquisition_date->format('Ymd');
 
             // Get the number of acquisitions for this campus on this date
-            $sequence = Acquisition::whereHas('receiver.campus', function ($query) use ($campusCode) {
-                    $query->where('code', $campusCode);
-                })
+            $sequence = Acquisition::whereHas('receiver.library.campus', function ($query) use ($campusCode) {
+                $query->where('code', $campusCode);
+            })
                 ->whereDate('acquisition_date', $acquisition->acquisition_date)
                 ->count();
 

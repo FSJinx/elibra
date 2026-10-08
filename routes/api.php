@@ -77,10 +77,10 @@ Route::group(['prefix' => '/landing'], function () {
 Route::group(['prefix' => '/authors'], function () {
     // Get
     Route::get('', [AuthorController::class, 'index'])->middleware('throttle:read');
+    Route::get('show', [AuthorController::class, 'show'])->middleware('throttle:write');
 
     // Post
     Route::post('', [AuthorController::class, 'store'])->middleware('throttle:write');
-    Route::post('show', [AuthorController::class, 'show'])->middleware('throttle:write');
 
     // Update
 
@@ -332,20 +332,6 @@ Route::group(['prefix' => '/librarian', 'middleware' => ['jwt.auth', 'role:admin
 
         // Update
         Route::put('/{acquisitionLie}', [AcquisitionLinesController::class, 'update'])->middleware('throttle:write');
-
-        // Delete
-    });
-
-    // ============== ACQUISITION REQUEST ROUTE ==================
-    Route::group(['prefix' => '/acquisition-lines'], function () {
-        // Get
-        Route::get('/', [AcquisitionRequestController::class, 'show']);
-
-        // Post
-        Route::post('request', [AcquisitionRequestController::class, 'store'])->middleware('throttle:write');
-
-        // Update
-        Route::put('/request/{acquisitionRequest}', [AcquisitionRequestController::class, 'update'])->middleware('throttle:write');
 
         // Delete
     });

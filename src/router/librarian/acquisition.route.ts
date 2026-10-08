@@ -12,7 +12,7 @@ export const librarianAcquisition = [
         component: () => import('@/app/librarian/acquisition/acquisition/Acquisition.vue'),
         beforeEnter: async (to: any, from: any) => {
           const acquisition = useAcquisitionStore()
-          if (!acquisition.fetchData) {
+          if (!acquisition.data) {
             acquisition.fetch()
           }
           return true
@@ -21,14 +21,15 @@ export const librarianAcquisition = [
       {
         path: ':id',
         name: 'librarian.acquisition.lines',
-        component: () => import('@/app/librarian/acquisition/acquisition/AcquisitionLines.vue'),
+        component: () => import('@/app/librarian/acquisition/acquisition_line/AcquisitionLines.vue'),
         beforeEnter: async (to: any) => {
           const lines = useAcquisitionLinesStore()
           const acquisition = useAcquisitionStore()
           const breadcrumb = useBreadcrumbStore()
+          const error = useError()
 
           if (!acquisition.currentData) {
-            await acquisition.read(to.params.id)
+            await acquisition.show(to.params.id)
           }
 
           try {

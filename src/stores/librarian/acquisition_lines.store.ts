@@ -30,15 +30,20 @@ export const useAcquisitionLinesStore = defineStore('acquisition_lines', {
     },
 
     async fetch(id: any) {
-      const res = await get(`${this.url}/${id}`)
+      const res = await get(this.url, { id: id })
       this.setFetchData(res.data)
+    },
+
+    async create(params: Partial<AcquisitionLine>) {
+      const res = await post(this.url, params)
+      return res
     },
 
     async read(id: any) {
       pop.load()
 
       try {
-        const res = await get(`${this.url}/${id}`)
+        const res = await get(`${this.url}/show/${id}`)
 
         console.log(res.data)
       } catch (e) {

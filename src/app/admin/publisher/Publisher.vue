@@ -2,7 +2,7 @@
   <!-- <PageConstruction /> -->
 
   <div class="size-full flex flex-col">
-    <SectionHeader title="Vendors" description="Manage partnered and regular vendors of Isabela State University" icon="shop" />
+    <SectionHeader title="Publisher" description="Manage the list of publishers" icon="shop" />
 
     <div class="flex-1 flex flex-col p-5 gap-5">
       <Card>
@@ -21,14 +21,14 @@
             </Select>
           </div>
 
-          <div class="ml-auto">
-            <Button variant="primary" icon="plus-lg">New Vendor</Button>
+          <div class="ml-auto"> 
+            <Button variant="primary" icon="plus-lg">New Publisher</Button>
           </div>
         </CardBody>
       </Card>
 
       <div class="flex-1 flex">
-        <Table title="Vendors Table" subtitle="List of vendors associated with Isabela State University">
+        <Table title="Publisher Table" subtitle="List of publishers">
           <Thead>
             <tr>
               <Th>No.</Th>

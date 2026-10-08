@@ -26,21 +26,14 @@ class AcquisitionController extends Controller
     {
         $filters = QueryService::filters($request);
 
-        $acquisition = $this->acquisitionService->index($filters);
-
-        if ($acquisition->isEmpty()) {
-            return $this->response(
-                'success',
-                'No acquisition record found.',
-                [],
-                200
-            );
-        }
+        $acquisitions = $this->acquisitionService->index($filters);
 
         return $this->response(
             'success',
-            'Acquisitions retrieved successfully.',
-            $acquisition->toArray(),
+            $acquisitions->isEmpty()
+                ? 'No acquisition record found.'
+                : 'Acquisitions retrieved successfully.',
+            $acquisitions->toArray(),
             200
         );
     }
@@ -58,7 +51,11 @@ class AcquisitionController extends Controller
      */
     public function store(StoreAcquisitionRequest $request)
     {
-        $acquisition = $this->acquisitionService->create($request->validated());
+        $data = array_merge($request->validated(), [
+            'receiver_user_id' => $request->input('receiver_user_id') ?? $this->user()->id,
+        ]);
+
+        $acquisition = $this->acquisitionService->create($data);
 
         return $this->response(
             'success',
@@ -76,8 +73,17 @@ class AcquisitionController extends Controller
         $data = Cache::remember(
             "acquisition-show:$id",
             now()->addHour(),
-            fn () => Acquisition::find($id)
+            fn () => Acquisition::with(['receiver', 'acquisitionRequest'])->find($id)
         );
+
+        if (! $data) {
+            return $this->response(
+                'error',
+                'Acquisition not found.',
+                null,
+                404
+            );
+        }
 
         return $this->response(data: $data->toArray());
     }

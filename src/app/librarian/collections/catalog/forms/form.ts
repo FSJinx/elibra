@@ -1,6 +1,7 @@
 export interface Form extends Item {
   //   Author
   authors: Author[]
+  year_published: ''
 }
 
 const auth = authStore()
@@ -19,7 +20,7 @@ export const emptyForm = (): Partial<Form> => ({
   library_id: auth.user?.library?.id ?? '',
   released: false,
 
-  publication_year: '',
+  year_published: '',
   edition: '',
   volume: '',
   issue: '',

@@ -16,7 +16,7 @@ class StoreAcquisitionRequest extends BaseRequest
     {
         $user = $this->user();
 
-        return 
+        return
             $user->hasPermission('acquisition.create') && ($user->isLibrarian() && $user->librarian->branch)
             || $user->isAdmin();
     }
@@ -29,13 +29,13 @@ class StoreAcquisitionRequest extends BaseRequest
     public function rules(): array
     {
         $rules = [
-            'acquisition_id' => [ 'nullable', 'string', 'max:255', 'unique:acquisitions,acquisition_id'],
-            'dealer' => [ 'required', 'string', 'max:255', ], 
-            'acquisition_mode' => [ 'required', Rule::in([ 'purchased', 'donated', 'gift', 'exchange', ]), ], 
-            'acquisition_date' => [ 'required', 'date', ], 
-            'remarks' => [ 'nullable', 'string', 'max:255', ],
+            'acquisition_id' => ['nullable', 'string', 'max:255', 'unique:acquisitions,acquisition_id'],
+            'dealer' => ['required', 'string', 'max:255'],
+            'acquisition_mode' => ['required', Rule::in(['purchase', 'donation', 'gift', 'exchange'])],
+            'acquisition_date' => ['required', 'date'],
+            'remarks' => ['nullable', 'string', 'max:255'],
 
-            'receiver_user_id' => [ 'required', 'integer', Rule::exists((new User)->getTable(), 'id')],
+            'receiver_user_id' => ['sometimes', 'integer', Rule::exists((new User)->getTable(), 'id')],
             'acquisition_request_id' => ['nullable', 'integer', Rule::exists((new AcquisitionRequest)->getTable(), 'id')],
         ];
 
@@ -54,7 +54,7 @@ class StoreAcquisitionRequest extends BaseRequest
             'dealer.max' => 'The dealer may not exceed 255 characters.',
 
             'acquisition_mode.required' => 'The acquisition mode is required.',
-            'acquisition_mode.in' => 'The selected acquisition mode is invalid. Please choose purchased, donated, gift, or exchange.',
+            'acquisition_mode.in' => 'The selected acquisition mode is invalid.',
 
             'acquisition_date.required' => 'The acquisition date is required.',
             'acquisition_date.date' => 'The acquisition date must be a valid date.',

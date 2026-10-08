@@ -18,65 +18,24 @@ class AcquisitionLinesService
     {
         $acquisitionLine = DB::transaction(function () use ($data) {
 
-            $quantity = isset($data['quantity']) ? (float) $data['quantity'] : null;
-            $unitPrice = isset($data['unit_price']) ? (float) $data['unit_price'] : null;
-
-            /*
-             * Get item and category.
-             */
-            $item = Item::with('itemTypeCategory')
-                ->findOrFail($data['item_id']);
-
-            /*
-             * Example:
-             *
-             * Category = GC
-             * Branch   = 1
-             *
-             * Prefix = GC001
-             */
-            $prefix = $this->getAccessionPrefix($item);
-
             /*
              * Create acquisition line.
              */
             $acquisitionLine = AcquisitionLines::create(
                 Arr::only($data, [
-                    'quantity',
                     'unit_price',
                     'item_id',
                     'acquisition_id',
                 ])
             );
 
-            /*
-             * Generate accession numbers.
-             */
-            $accessionNumbers = $this->generateAccessionNumbers(
-                $prefix,
-                $acquisitionLine->quantity
-            );
-
-            /*
-             * Create accessions.
-             */
-            foreach ($accessionNumbers as $accessionNumber) {
-
-                Accession::create([
-                    'accession_number' => $accessionNumber,
-                    'status' => 'available',
-                    'item_id' => $acquisitionLine->item_id,
-                    'branch_section_id' => $data['branch_section_id'],
-                    'acquisition_line_id' => $acquisitionLine->id,
-                ]);
-            }
-
             return $acquisitionLine->fresh([
                 'items',
                 'acquisition',
                 'accessions',
             ]);
-        }, 5);
+        });
+
 
         CacheService::invalidate(CacheService::ACQUISITION_LINES);
 

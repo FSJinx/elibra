@@ -1,5 +1,5 @@
 export interface Acquisition {
-  id?: any
+  id: any
   acquisition_id?: string
   dealer: string
   acquisition_mode: string

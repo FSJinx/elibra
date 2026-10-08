@@ -1,7 +1,7 @@
 <template>
-  <Button variant="primary" data-title="Add new item to this purchase" @click="modal?.open()">Add New Item</Button>
+  <Button variant="primary" data-title="Add an item to this purchase" @click="modal?.open()" left-icon="plus-lg">New Item</Button>
 
-  <Modal ref="modal" size="xlarge" :has-inputs="hasInputs" enable-close-btn @show="handleModalShow">
+  <Modal ref="modal" size="xlarge" :has-inputs="hasInputs" @show="handleModalShow">
     <ModalHeader use-default-layout title="Add New Item" subtitle="Search the catalog or create a new catalog record" icon="journal-plus" />
 
     <ModalBody class="flex flex-col">

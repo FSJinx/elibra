@@ -20,7 +20,7 @@ export interface Item {
 
   item_type_id: any
   item_type_category_id: any
-  branch_id: any
+  library_id: any
   language_id: any
   cover_media_id: any
 

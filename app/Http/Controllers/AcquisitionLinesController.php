@@ -6,6 +6,7 @@ use App\Http\Requests\StoreAcquisitionLinesRequest;
 use App\Http\Requests\UpdateAcquisitionLinesRequest;
 use App\Models\AcquisitionLines;
 use App\Services\AcquisitionLinesService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
 class AcquisitionLinesController extends Controller
@@ -20,9 +21,19 @@ class AcquisitionLinesController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $id = $request->input('id');
+
+        $acquisitionLines = AcquisitionLines::query()
+            ->with(['items'])
+            ->withCount('accessions as quantity');
+
+        if ($id) {
+            $acquisitionLines->where('acquisition_id', $id);
+        }
+
+        return $this->response(data: $acquisitionLines->get());
     }
 
     /**
@@ -39,6 +50,10 @@ class AcquisitionLinesController extends Controller
     public function store(StoreAcquisitionLinesRequest $request)
     {
         $acquisitionLine = $this->acquisitionLineService->create($request->validated());
+
+        if ($request->input('quantity')) {
+            
+        }
 
         return $this->response(
             'success',

@@ -8,6 +8,18 @@ const librarianMenu = {
     },
   },
 
+  circulation: {
+    name: 'Circulation',
+    children: {
+      loans: { path: 'librarian.circulation.loans', name: 'Loans', icon: 'bag-plus' },
+      // returns: { path: 'librarian.circulation.returns', name: 'Returns', icon: 'arrow-return-left' },
+      // renewals: { path: 'librarian.circulation.renewals', name: 'Renewals', icon: 'arrow-repeat' },
+      // holds: { path: 'librarian.circulation.holds', name: 'Holds & Reservations', icon: 'bookmark-check' },
+      // fines: { path: 'librarian.circulation.fines', name: 'Fines & Penalties', icon: 'cash-coin' },
+      attendance: { path: 'librarian.circulation.attendance', name: 'Attendance', icon: 'person-check' },
+    },
+  },
+
   collections: {
     name: 'Collections',
     children: {
@@ -21,18 +33,6 @@ const librarianMenu = {
     children: {
       acquisition: { path: 'librarian.acquisition', name: 'Acquisition', icon: 'receipt' },
       acquisition_request: { path: 'librarian.acquisition-requests', name: 'Acquisition Request', icon: 'box-arrow-in-down' },
-    },
-  },
-
-  circulation: {
-    name: 'Circulation',
-    children: {
-      loans: { path: 'librarian.circulation.loans', name: 'Loans', icon: 'bag-plus' },
-      // returns: { path: 'librarian.circulation.returns', name: 'Returns', icon: 'arrow-return-left' },
-      // renewals: { path: 'librarian.circulation.renewals', name: 'Renewals', icon: 'arrow-repeat' },
-      // holds: { path: 'librarian.circulation.holds', name: 'Holds & Reservations', icon: 'bookmark-check' },
-      // fines: { path: 'librarian.circulation.fines', name: 'Fines & Penalties', icon: 'cash-coin' },
-      attendance: { path: 'librarian.circulation.attendance', name: 'Attendance', icon: 'person-check' },
     },
   },
 
@@ -131,7 +131,7 @@ export const menus = {
       name: 'Authority Control',
       children: [
         { path: '', name: 'Authors', icon: 'person' },
-        { path: '', name: 'Publishers', icon: 'building' },
+        { path: 'admin.publishers', name: 'Publishers', icon: 'building' },
         { path: 'admin.languages', name: 'Languages', icon: 'translate' },
       ],
     },

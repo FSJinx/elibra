@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Database\Factories\AcquisitionLinesFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,7 +10,6 @@ class AcquisitionLines extends Model
     use HasFactory;
 
     protected $fillable = [
-        'quantity',
         'unit_price',
         'item_id',
         'acquisition_id',
@@ -23,7 +21,7 @@ class AcquisitionLines extends Model
 
     public function items()
     {
-        return $this->belongsTo(Item::class);
+        return $this->belongsTo(Item::class, 'item_id', 'id');
     }
 
     public function acquisition()
@@ -33,9 +31,6 @@ class AcquisitionLines extends Model
 
     public function accessions()
     {
-        return $this->hasMany(
-            Accession::class,
-            'acquisition_line_id'
-        );
+        return $this->hasMany(Accession::class, 'acquisition_line_id');
     }
 }

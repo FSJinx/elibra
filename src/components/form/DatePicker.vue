@@ -5,7 +5,7 @@
         <Icon :icon="leftIcon" />
       </span> -->
 
-      <input ref="input" :id="id" :name="id" v-model="model" :type="type" :placeholder="placeholder" :required="required" :disabled="disabled" :readonly="readonly" :min="min" :max="max" :step="step" :autocomplete="autocomplete" class="h-full w-full flex-1 text-slate-900 transition-all duration-150 focus:outline-none disabled:cursor-not-allowed" :class="[sizeConfig.input, 'pl-2', hasSuffixActions ? 'pr-2' : 'pr-4']" @keydown="handleKeydown" />
+      <input ref="input" :id="id ?? control.id" :name="id ?? control.id" v-model="model" :type="type" :placeholder="placeholder" :required="required ?? control.required" :disabled="disabled" :readonly="readonly" :min="min" :max="max" :step="step" :autocomplete="autocomplete" class="h-full w-full flex-1 text-slate-900 transition-all duration-150 focus:outline-none disabled:cursor-not-allowed" :class="[sizeConfig.input, 'pl-2', hasSuffixActions ? 'pr-2' : 'pr-4']" @keydown="handleKeydown" />
 
       <div v-if="hasSuffixActions" class="flex items-center h-full shrink-0">
         <button v-if="enableClear && hasValue && !disabled && !readonly" type="button" class="flex h-full items-center justify-center px-3 text-slate-500 hover:text-slate-800 focus:outline-none border-l border-border transition-colors" aria-label="Clear date" @click="clear">
@@ -37,7 +37,7 @@ type DateType = 'date' | 'datetime-local' | 'month' | 'time' | 'week'
 type Autocomplete = 'on' | 'off' | string
 
 interface Props {
-  id: string
+  id?: string
   type?: DateType
   placeholder?: string
   min?: string
@@ -71,6 +71,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const model = defineModel<string>({ default: '' })
 const input = ref<HTMLInputElement | null>(null)
+const control = inject<any>('control', null)
 
 const hasValue = computed(() => model.value.length > 0)
 const hasSuffixActions = computed(() => props.enableClear && hasValue.value && !props.disabled && !props.readonly)

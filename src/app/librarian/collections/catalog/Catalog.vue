@@ -1,6 +1,10 @@
 <template>
   <div class="flex flex-col size-full overflow-hidden">
-    <SectionHeader title="Catalog" description="Browse all item found in your catalog" icon="journals" />
+    <SectionHeader title="Catalog" description="Browse all item found in your catalog" icon="journals">
+      <div class="flex items-center justify-end gap-2">
+        <Button left-icon="plus-lg" variant="primary" as="link" :to="{ name: 'librarian.collections.catalog.new' }"> New Item </Button>
+      </div>
+    </SectionHeader>
 
     <div class="flex-1 flex flex-col gap-4 p-5 overflow-y-auto scroll">
       <Card>
@@ -9,11 +13,7 @@
             <Input id="catalog-query" v-model="items.params.query" placeholder="Search for an item in the catalog..." class="max-w-150" enable-clear />
             <Button type="submit" icon="search" variant="success">Search</Button>
             <CatalogFilter @filterApplied="filter" />
-          </div>
-
-          <div class="flex items-center justify-end gap-2">
             <Button variant="restore" @click="reset()">Reset</Button>
-            <Button left-icon="plus-lg" variant="primary" as="link" :to="{ name: 'librarian.collections.catalog.new' }"> New Item </Button>
           </div>
         </Form>
       </Card>
@@ -25,6 +25,7 @@
 
 <script setup lang="ts">
 import CatalogFilter from '@/app/librarian/collections/catalog/modals/CatalogFilter.vue'
+import ViewItemDrafts from '@/app/librarian/collections/catalog/modals/ViewItemDrafts.vue'
 import CatalogTable from '@/app/librarian/collections/catalog/sections/CatalogTable.vue'
 
 const items = useItemStore()

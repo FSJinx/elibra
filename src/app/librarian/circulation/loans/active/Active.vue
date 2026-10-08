@@ -9,9 +9,9 @@
       <Option value="overdue">Overdue</Option>
       <Option value="returned">Returned</Option>
     </Select>
-    <Select class="max-w-max" id="loans-branch" title="Branch" v-model="filters.branch">
+    <Select class="max-w-max" id="loans-library" title="Branch" v-model="filters.library">
       <Option value="">All branches</Option>
-      <template v-for="item in branch.branches" :key="item.id">
+      <template v-for="item in library.data" :key="item.id">
         <Option :value="item.id">{{ item.name }}</Option>
       </template>
     </Select>
@@ -51,7 +51,7 @@
           <p class="text-xs text-foreground-secondary">{{ row.borrower_id }}</p>
         </Td>
 
-        <Td class="text-foreground-secondary">{{ row.branch }}</Td>
+        <Td class="text-foreground-secondary">{{ row.library }}</Td>
 
         <Td class="text-foreground-secondary">{{ formatDate(row.borrowed_at) }}</Td>
 
@@ -85,26 +85,26 @@ interface LoanRecord {
   item_sku: string
   borrower_name: string
   borrower_id: string
-  branch: string
+  library: string
   borrowed_at: string
   due_at: string
   returned_at: string | null
 }
 
-const branch = useBranchStore()
+const library = useLibraryStore()
 
 // TODO: replace with real fetch (e.g. useLoans() composable)
 const loans = reactive<LoanRecord[]>([
-  { id: 1, item_title: 'Clean Architecture', item_sku: 'BK-00987', borrower_name: 'Juan Dela Cruz', borrower_id: 'STU-00231', branch: 'Main Branch', borrowed_at: '2026-08-20', due_at: '2026-09-03', returned_at: null },
-  { id: 2, item_title: 'Noli Me Tangere', item_sku: 'BK-01102', borrower_name: 'Maria Santos', borrower_id: 'STU-00456', branch: 'Annex Branch', borrowed_at: '2026-08-25', due_at: '2026-09-08', returned_at: null },
-  { id: 3, item_title: 'Introduction to Algorithms', item_sku: 'BK-00231', borrower_name: 'Pedro Reyes', borrower_id: 'STU-00789', branch: 'Main Branch', borrowed_at: '2026-08-15', due_at: '2026-08-29', returned_at: null },
-  { id: 4, item_title: 'Calculus Vol. 1', item_sku: 'BK-01599', borrower_name: 'Ana Lopez', borrower_id: 'STU-00912', branch: 'Main Branch', borrowed_at: '2026-08-10', due_at: '2026-08-24', returned_at: '2026-08-22' },
+  { id: 1, item_title: 'Clean Architecture', item_sku: 'BK-00987', borrower_name: 'Juan Dela Cruz', borrower_id: 'STU-00231', library: 'Main Branch', borrowed_at: '2026-08-20', due_at: '2026-09-03', returned_at: null },
+  { id: 2, item_title: 'Noli Me Tangere', item_sku: 'BK-01102', borrower_name: 'Maria Santos', borrower_id: 'STU-00456', library: 'Annex Branch', borrowed_at: '2026-08-25', due_at: '2026-09-08', returned_at: null },
+  { id: 3, item_title: 'Introduction to Algorithms', item_sku: 'BK-00231', borrower_name: 'Pedro Reyes', borrower_id: 'STU-00789', library: 'Main Branch', borrowed_at: '2026-08-15', due_at: '2026-08-29', returned_at: null },
+  { id: 4, item_title: 'Calculus Vol. 1', item_sku: 'BK-01599', borrower_name: 'Ana Lopez', borrower_id: 'STU-00912', library: 'Main Branch', borrowed_at: '2026-08-10', due_at: '2026-08-24', returned_at: '2026-08-22' },
 ])
 
 const filters = reactive({
   search: '',
   status: '',
-  branch: '',
+  library: '',
 })
 
 function loanStatus(row: LoanRecord): 'active' | 'overdue' | 'returned' {
@@ -132,7 +132,7 @@ const filteredLoans = computed(() =>
     const matchesSearch = !filters.search || row.item_title.toLowerCase().includes(filters.search.toLowerCase()) || row.borrower_name.toLowerCase().includes(filters.search.toLowerCase())
 
     const matchesStatus = !filters.status || loanStatus(row) === filters.status
-    const matchesBranch = !filters.branch || row.branch === filters.branch
+    const matchesBranch = !filters.library || row.library === filters.library
 
     return matchesSearch && matchesStatus && matchesBranch
   }),
@@ -168,7 +168,7 @@ function renewLoan(row: LoanRecord) {
 function resetFilters() {
   filters.search = ''
   filters.status = ''
-  filters.branch = ''
+  filters.library = ''
 }
 
 function openNewLoan() {

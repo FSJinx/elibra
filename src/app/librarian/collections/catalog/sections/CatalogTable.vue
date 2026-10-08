@@ -4,10 +4,10 @@
     <Thead>
       <tr>
         <Th>No</Th>
-        <Th class="text-left">Title</Th>
+        <Th class="text-left max-w-10">Title</Th>
         <Th>Item Type</Th>
         <Th>Call Number</Th>
-        <Th>Publication Year</Th>
+        <Th>OPAC</Th>
       </tr>
     </Thead>
 
@@ -18,7 +18,7 @@
         <Td class="text-left">
           <Title :level="4">{{ item.title }}</Title>
 
-          <p class="text-sm text-foreground-secondary line-clamp-2">
+          <p class="text-xs text-foreground-secondary line-clamp-1 max-w-150">
             {{ item.subtitle ?? item.description ?? 'This item has no subtitle or description.' }}
           </p>
         </Td>
@@ -26,7 +26,7 @@
         <Td :data="item_type.byId(item.item_type_id)?.name" />
         <Td :data="item.call_number" />
 
-        <Td :data="item.publication_year" />
+        <Td :data="item.released ? 'True' : 'False'" />
       </tr>
     </Tbody>
   </Table>

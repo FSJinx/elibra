@@ -28,7 +28,7 @@ class Acquisition extends Model
 
     public function receiver()
     {
-        return $this->belongsTo(Librarian::class, 'receiver_user_id');
+        return $this->belongsTo(User::class, 'receiver_user_id');
     }
 
     public function acquisitionRequest()

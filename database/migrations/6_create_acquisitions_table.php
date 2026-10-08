@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('acquisition_id')->unique()->nullable(); // ISU-E-2025-MM-DD-ID
             $table->string('dealer');
-            $table->enum('acquisition_mode', ['purchased', 'donated', 'gift', 'exchange']);
+            $table->enum('acquisition_mode', ['purchase', 'donation', 'gift', 'exchange']);
             $table->date('acquisition_date');
             $table->string('remarks')->nullable();
             $table->timestamps();

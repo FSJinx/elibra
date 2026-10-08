@@ -4,6 +4,7 @@ export const adminOrganizationRoutes = [
     name: 'admin.campus',
     meta: {
       breadcrumb: 'Campus',
+      title: 'Organizations',
       permission: '',
       maintenance: false,
     },
@@ -15,6 +16,7 @@ export const adminOrganizationRoutes = [
     name: 'admin.libraries',
     meta: {
       breadcrumb: 'Libraries',
+      title: 'Organizations',
       permission: '',
       maintenance: false,
     },
@@ -26,6 +28,7 @@ export const adminOrganizationRoutes = [
     name: 'admin.vendors',
     meta: {
       breadcrumb: 'Vendors',
+      title: 'Organizations',
       permission: '',
       maintenance: false,
     },

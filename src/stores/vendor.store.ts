@@ -1,52 +1,56 @@
-interface AcquisitionParams {
+interface VendorParams {
   sort: string
   page: number
   per_page: number
   order: 'asc' | 'desc'
 }
 
-const defaultParams: Readonly<AcquisitionParams> = {
+const defaultParams: Readonly<VendorParams> = {
   sort: '',
   page: 1,
   per_page: 10,
   order: 'asc',
 }
 
-const url = 'librarian/acquisition'
+const url = 'vendor'
 
-export const useAcquisitionStore = defineStore('acquisition', {
+export const useVendorStore = defineStore('vendor', {
   state: () => ({
-    data: null as Acquisition[] | null,
-    currentData: null as Acquisition | null,
+    data: null as Vendor[] | null,
+    currentData: null as Vendor | null,
     loading: false as true | false,
-    params: defaultParams as AcquisitionParams,
+    params: defaultParams as VendorParams,
 
     pop: usePopup(),
     auth: authStore(),
   }),
 
-  getters: {},
+  getters: {
+    select() {
+      return () => this.data?.sort((a, b) => a.name.localeCompare(b.name))
+    },
+  },
 
   actions: {
     // =========== SETTERS ============
-    pushData(data: Acquisition) {
+    pushData(data: Vendor) {
       this.data?.push(data)
     },
 
-    updateData(data: Acquisition) {
-      this.data = (this.data as Acquisition[]).filter((i) => i.id !== data.id)
+    updateData(data: Vendor) {
+      this.data = (this.data as Vendor[]).filter((i) => i.id !== data.id)
       nextTick(() => this.data?.push(data))
     },
 
-    removeData(data: Acquisition) {
-      this.data = (this.data as Acquisition[]).filter((i) => i.id !== data.id)
+    removeData(data: Vendor) {
+      this.data = (this.data as Vendor[]).filter((i) => i.id !== data.id)
     },
 
-    setData(data: Acquisition[]) {
+    setData(data: Vendor[]) {
       this.data = data
     },
 
-    setCurrentData(data: Acquisition) {
+    setCurrentData(data: Vendor) {
       this.currentData = data
     },
 
@@ -55,14 +59,11 @@ export const useAcquisitionStore = defineStore('acquisition', {
       if (this.data && !forced) return
 
       this.loading = true
-      try {
-        const res = await get(url)
-        this.setData(res.data.data)
-        return res
-      } finally {
-        this.loading = false
-      }
+      const res = await get(url)
+      this.setData(res.data)
+      this.loading = false
 
+      return res
     },
 
     async show(id: any) {
@@ -71,28 +72,28 @@ export const useAcquisitionStore = defineStore('acquisition', {
       return res
     },
 
-    async create(params: Partial<Acquisition>) {
+    async create(params: Partial<Vendor>) {
       const res = await post(url, params)
       this.pushData(res.data)
 
       return res
     },
 
-    async update(params: Acquisition) {
+    async update(params: Vendor) {
       const res = await put(`${url}/${params.id}`, params)
       this.updateData(res.data)
       this.setCurrentData(res.data)
       return res
     },
 
-    async destory(params: Acquisition) {
+    async destory(params: Vendor) {
       const res = await del(`${url}/${params?.id}`)
       this.removeData(params)
 
       return res
     },
 
-    async restore(params: Acquisition) {
+    async restore(params: Vendor) {
       const res = await patch(`${url}/${params?.id}`)
       this.pushData(res.data)
       return res
