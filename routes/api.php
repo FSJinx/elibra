@@ -202,10 +202,13 @@ Route::group(['prefix' => '/item_type_category'], function () {
     Route::get('', [ItemTypeCategoryController::class, 'index'])->middleware('throttle:read');
 
     // Post
+    Route::post('', [ItemTypeCategoryController::class, 'store'])->middleware('throttle:write');
 
     // Update
+    Route::put('{itemTypeCategory}', [ItemTypeCategoryController::class, 'update'])->middleware('throttle:write');
 
     // Delete
+    Route::delete('{itemTypeCategory}', [ItemTypeCategoryController::class, 'destroy'])->middleware('throttle:delete');
 });
 
 // ============== LANGUAGES ROUTE ==================

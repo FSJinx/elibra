@@ -15,18 +15,36 @@ export const useAdminItemCategoryStore = defineStore('admin.item_category', {
     },
 
     async fetch(forced = false) {
-      if (this.data && !this.loading) return this.data
+      if (this.data && !forced) return this.data
 
       this.loading = true
       try {
         const res = await get(url)
         this.setData(res.data)
-
-        this.loading = false
         return res
-      } catch (e: any) {
-        throw e
+      } finally {
+        this.loading = false
       }
+    },
+
+    async create(params: Partial<ItemCategory>) {
+      const res = await post(url, params)
+      this.data?.push(res.data)
+      return res
+    },
+
+    async update(params: ItemCategory) {
+      const res = await put(`${url}/${params.id}`, params)
+      if (this.data) {
+        this.data = this.data.map((category) => category.id === res.data.id ? res.data : category)
+      }
+      return res
+    },
+
+    async remove(params: ItemCategory) {
+      const res = await del(`${url}/${params.id}`)
+      this.data = this.data?.filter((category) => category.id !== params.id) ?? null
+      return res
     },
   },
 })
