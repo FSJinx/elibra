@@ -1,5 +1,5 @@
 <template>
-  <Button class="text-danger!" left-icon="trash" @click="open">Recently Deleted</Button>
+  <Button class="text-danger!" left-icon="trash" @click="open" data-title="View deleted sections on the record"></Button>
 
   <Modal ref="modal" size="large" :loading="loading">
     <ModalHeader use-default-layout title="Deleted Sections" subtitle="Restore deleted sections for this library" icon="diagram-3" icon-color="danger" />

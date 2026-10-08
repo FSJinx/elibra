@@ -5,8 +5,8 @@
         <Input id="search-section" v-model="search" class="max-w-100" placeholder="Search section by section name" />
 
         <div class="ml-auto flex items-center gap-2">
-          <RecentlyDeletedSectionsModal v-if="library.currentData" :library-id="library.currentData.id" />
           <AddSectionModal v-if="library.currentData" :library-id="library.currentData.id" />
+          <RecentlyDeletedSectionsModal v-if="library.currentData" :library-id="library.currentData.id" />
         </div>
       </CardBody>
     </Card>
