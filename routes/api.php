@@ -2,13 +2,11 @@
 
 use App\Http\Controllers\AcquisitionController;
 use App\Http\Controllers\AcquisitionLinesController;
-use App\Http\Controllers\AcquisitionRequestController;
 use App\Http\Controllers\AttendanceLogsController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\AuthorshipController;
-use App\Http\Controllers\BranchController;
 use App\Http\Controllers\CampusController;
 use App\Http\Controllers\CirculationController;
 use App\Http\Controllers\DepartmentController;
@@ -359,20 +357,6 @@ Route::group(['prefix' => '/librarian', 'middleware' => ['jwt.auth', 'role:admin
 
         // Update
         Route::put('/{acquisitionLie}', [AcquisitionLinesController::class, 'update'])->middleware('throttle:write');
-
-        // Delete
-    });
-
-    // ============== ACQUISITION REQUEST ROUTE ==================
-    Route::group(['prefix' => '/acquisition-lines'], function () {
-        // Get
-        Route::get('/', [AcquisitionRequestController::class, 'show']);
-
-        // Post
-        Route::post('request', [AcquisitionRequestController::class, 'store'])->middleware('throttle:write');
-
-        // Update
-        Route::put('/request/{acquisitionRequest}', [AcquisitionRequestController::class, 'update'])->middleware('throttle:write');
 
         // Delete
     });

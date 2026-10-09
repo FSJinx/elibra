@@ -91,7 +91,7 @@ interface LoanRecord {
   returned_at: string | null
 }
 
-const library = useLibraryStore()
+const library = libraryStore()
 
 // TODO: replace with real fetch (e.g. useLoans() composable)
 const loans = reactive<LoanRecord[]>([

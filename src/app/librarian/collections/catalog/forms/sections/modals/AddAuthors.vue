@@ -78,5 +78,6 @@ async function addAuthor(a: Author) {
   if (confirm.isConfirmed && !selectedAuthors.value.includes(a)) {
     selectedAuthors.value = [...selectedAuthors.value, a]
   }
+  modal.value?.close()
 }
 </script>

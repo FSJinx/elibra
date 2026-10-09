@@ -17,7 +17,7 @@ class UpdateAcquisitionLinesRequest extends BaseRequest
     {
         $user = $this->user();
 
-        return 
+        return
             $user->hasPermission('acquisition.line.create') && ($user->isLibrarian() && $user->librarian->branch)
             || $user->isAdmin();
     }
@@ -30,12 +30,12 @@ class UpdateAcquisitionLinesRequest extends BaseRequest
     public function rules(): array
     {
         $rules = [
-            'quantity' => [ 'sometimes', 'required', 'numeric', 'min:1', ],
-            'unit_price' => [ 'sometimes', 'nullable', 'numeric', 'min:0', ],
+            'quantity' => ['sometimes', 'nullable', 'numeric', 'min:1'],
+            'unit_price' => ['sometimes', 'nullable', 'numeric', 'min:0'],
 
-            'item_id' => [ 'sometimes', 'required', Rule::exists((new Item)->getTable(), 'id')],
-            'acquisition_id' => [ 'sometimes', 'required', Rule::exists((new Acquisition)->getTable(), 'id')],
-            'section_id' => [ 'sometimes', 'nullable', Rule::exists((new Sections)->getTable(), 'id')],
+            'item_id' => ['sometimes', 'required', Rule::exists((new Item)->getTable(), 'id')],
+            'acquisition_id' => ['sometimes', 'required', Rule::exists((new Acquisition)->getTable(), 'id')],
+            'section_id' => ['sometimes', 'nullable', Rule::exists((new Sections)->getTable(), 'id')],
         ];
 
         return $rules;

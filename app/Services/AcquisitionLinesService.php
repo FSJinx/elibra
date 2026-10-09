@@ -29,6 +29,20 @@ class AcquisitionLinesService
                 ])
             );
 
+            $quantity = (int) ($data['quantity'] ?? 1);
+            $item = Item::with('itemTypeCategory')->findOrFail($data['item_id']);
+            $prefix = $this->getAccessionPrefix($item);
+
+            foreach ($this->generateAccessionNumbers($prefix, $quantity) as $accessionNumber) {
+                Accession::create([
+                    'accession_number' => $accessionNumber,
+                    'status' => 'available',
+                    'item_id' => $acquisitionLine->item_id,
+                    'section_id' => $data['section_id'],
+                    'acquisition_line_id' => $acquisitionLine->id,
+                ]);
+            }
+
             return $acquisitionLine->fresh([
                 'items',
                 'acquisition',

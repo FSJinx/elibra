@@ -26,8 +26,8 @@ class AcquisitionLinesController extends Controller
         $id = $request->input('id');
 
         $acquisitionLines = AcquisitionLines::query()
-            ->with(['items'])
-            ->withCount('accessions as quantity');
+            ->with(['items', 'accessions'])
+            ->withCount(['accessions as quantity']);
 
         if ($id) {
             $acquisitionLines->where('acquisition_id', $id);
@@ -52,7 +52,7 @@ class AcquisitionLinesController extends Controller
         $acquisitionLine = $this->acquisitionLineService->create($request->validated());
 
         if ($request->input('quantity')) {
-            
+
         }
 
         return $this->response(

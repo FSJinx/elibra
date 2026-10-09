@@ -23,7 +23,7 @@ const librarianMenu = {
   collections: {
     name: 'Collections',
     children: {
-      catalog: { path: 'librarian.collections.catalog', name: 'Catalog', icon: 'journal-plus' },
+    catalog: { path: 'librarian.collections.catalog', name: 'Catalog', icon: 'journal-plus' },
       inventory: { path: 'librarian.collections.inventory', name: 'Inventory', icon: 'boxes' },
     },
   },
@@ -67,26 +67,26 @@ const librarianMenu = {
   //   },
   // },
 
-  // administration: {
-  //   name: 'Administration',
-  //   children: {
-  //     staff: { path: 'librarian.administration.staff', name: 'Librarians / Staff', icon: 'person-vcard' },
-  //     roles: { path: 'librarian.administration.roles', name: 'Roles & Permissions', icon: 'key' },
-  //     policies: { path: 'librarian.administration.policies', name: 'Library Policies', icon: 'file-text' },
-  //     branches: { path: 'librarian.administration.branches', name: 'Library Branches', icon: 'geo-alt' },
-  //     barcode: { path: 'librarian.administration.barcode', name: 'Barcode Generator', icon: 'upc-scan' },
-  //   },
-  // },
+  administration: {
+    name: 'Administration',
+    children: {
+      staff: { path: 'librarian.administration.staff', name: 'Librarians / Staff', icon: 'person-vcard' },
+      roles: { path: 'librarian.administration.roles', name: 'Roles & Permissions', icon: 'key' },
+      policies: { path: 'librarian.administration.policies', name: 'Library Policies', icon: 'file-text' },
+      branches: { path: 'librarian.administration.branches', name: 'Library Branches', icon: 'geo-alt' },
+      barcode: { path: 'librarian.administration.barcode', name: 'Barcode Generator', icon: 'upc-scan' },
+    },
+  },
 
-  // settings: {
-  //   name: 'Settings',
-  //   children: {
-  //     account: { path: 'librarian.settings.account', name: 'Account', icon: 'person-gear' },
-  //     profile: { path: 'librarian.settings.profile', name: 'Profile', icon: 'person-circle' },
-  //     preferences: { path: 'librarian.settings.preferences', name: 'Preferences', icon: 'sliders' },
-  //     system: { path: 'librarian.settings.system', name: 'System Settings', icon: 'gear' },
-  //   },
-  // },
+  settings: {
+    name: 'Settings',
+    children: {
+      account: { path: 'librarian.settings.account', name: 'Account', icon: 'person-gear' },
+      profile: { path: 'librarian.settings.profile', name: 'Profile', icon: 'person-circle' },
+      preferences: { path: 'librarian.settings.preferences', name: 'Preferences', icon: 'sliders' },
+      system: { path: 'librarian.settings.system', name: 'System Settings', icon: 'gear' },
+    },
+  },
 }
 
 export const menus = {

@@ -35,7 +35,7 @@ class StoreAcquisitionLinesRequest extends BaseRequest
 
             'item_id' => ['required', Rule::exists((new Item)->getTable(), 'id')],
             'acquisition_id' => ['required', Rule::exists((new Acquisition)->getTable(), 'id')],
-            'section_id' => ['nullable', Rule::exists((new Sections)->getTable(), 'id')],
+            'section_id' => ['required', Rule::exists((new Sections)->getTable(), 'id')],
 
         ];
 
@@ -59,7 +59,7 @@ class StoreAcquisitionLinesRequest extends BaseRequest
             'acquisition_id.integer' => 'Acquisition ID must be a valid number.',
             'acquisition_id.exists' => 'The selected acquisition does not exist.',
 
-            // 'section_id.required' => 'Section is required.',
+            'section_id.required' => 'Section is required.',
             'section_id.integer' => 'Section ID must be a valid number.',
             'section_id.exists' => 'The selected section does not exist.',
         ];

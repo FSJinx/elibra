@@ -1,5 +1,5 @@
 <template>
-  <Table title="Author" subtitle="Record the authors and authorship of this material. If authorship is blank, check if you've selected an item type.">
+  <Table title="Author" subtitle="Record the authors and authorship of this material. If authorship is blank, check if you've selected an item type." v-if="form.item_type_id">
     <template #header>
       <AddAuthors v-model="form.authors" />
     </template>
@@ -46,4 +46,11 @@ async function removeAuthor(a: Author) {
     form.value.authors = form.value.authors?.filter((i) => i.id !== a.id)
   }
 }
+
+watch(
+  () => form.value.item_type_id,
+  () => {
+    form.value?.authors?.forEach((i) => (i.authorship_id = null))
+  },
+)
 </script>
