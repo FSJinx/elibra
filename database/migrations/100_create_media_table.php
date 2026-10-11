@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('media', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->string('file_name');
             $table->string('file_path');
             $table->string('mime_type')->nullable();
             $table->unsignedBigInteger('file_size')->nullable();
 
-            $table->enum('image_type', ['profile', 'logo', 'subscription', 'book_cover', 'document', 'banner', 'other']);
+            $table->enum('image_type', ['profile', 'logo', 'subscription', 'book_cover', 'item_cover', 'document', 'banner', 'other']);
             $table->timestamps();
         });
     }
@@ -29,5 +30,5 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('media');
-    }
+    }   
 };
