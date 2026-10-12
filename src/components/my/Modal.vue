@@ -1,7 +1,7 @@
 <template>
   <Teleport to="body">
     <Transition name="fade">
-      <div v-if="isOpen" class="modal-wrapper fixed inset-0 flex items-center justify-center bg-backdrop h-dvh p-5" :class="[hasInputs ? '' : 'cursor-pointer']" @click.self="close">
+      <div v-if="isOpen" class="modal-wrapper fixed inset-0 flex items-center justify-center bg-backdrop h-dvh p-5" :class="[hasInputs ? '' : 'cursor-pointer']">
         <div class="modal relative bg-background rounded-xl shadow-2xl border border-border cursor-default overflow-hidden" :class="[sizeClasses, positionClasses, position]" ref="modalRef">
           <span class="absolute top-3 right-3 p-2 ml-auto text-lg text-foreground/25 hover:text-foreground cursor-pointer transition-all duration-200" @click="close" v-if="!disableCloseBtn">
             <Icon icon="x-lg" style="-webkit-text-stroke: 1px" />

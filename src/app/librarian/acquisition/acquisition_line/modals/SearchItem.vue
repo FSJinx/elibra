@@ -4,26 +4,28 @@
   <Modal ref="modal" size="large">
     <ModalHeader use-default-layout title="Search Catalog" subtitle="Search an item through the catalog and add to this acquisition" icon="search" />
 
-    <ModalBody>
-      <Form id="acquisition-item" class="flex items-center gap-3 p-5" @submit="search">
+    <ModalBody class="flex flex-col p-5 gap-5">
+      <Form id="acquisition-item" class="flex items-center gap-3" @submit="search">
         <Input id="search-catalog" type="text" placeholder="Search item by title or subtitle" v-model="params.query" />
         <Button type="submit" variant="primary">Search</Button>
       </Form>
-    </ModalBody>
 
-    <ModalFooter class="flex flex-col p-5">
-      <div class="flex justify-center" v-if="loading">
-        <Spinner />
-      </div>
+      <p class="font-light" v-if="lastSearch">
+        Results for <span class="font-semibold">"{{ lastSearch }}"</span>
+      </p>
 
-      <div class="flex flex-col" v-else>
-        <div class="" v-if="!items?.length">No result found</div>
+      <Card class="flex flex-col p-0!">
+        <div class="flex justify-center p-5" v-if="loading">
+          <Spinner />
+        </div>
+
+        <div class="p-5" v-else-if="!items?.length">{{ lastSearch ? 'No result found' : 'No items here yet, try searching.' }}</div>
+
         <template v-else>
-          <p class="font-medium mb-3">Results</p>
-          <button v-for="i in items" class="px-5 py-3 text-left rounded-lg cursor-pointer border-transparent border hover:border-primary/50 hover:bg-primary-soft/50 hover:text-primary transition-all duration-200" @click="add(i)">{{ i.title }}</button>
+          <button v-for="i in items" class="p-5 text-left rounded-lg cursor-pointer border-transparent border hover:border-primary/50 hover:bg-primary-soft/50 hover:text-primary transition-all duration-200" @click="add(i)">{{ i.title }}</button>
         </template>
-      </div>
-    </ModalFooter>
+      </Card>
+    </ModalBody>
   </Modal>
 </template>
 
@@ -39,8 +41,11 @@ const loading = ref<boolean>(false)
 const pop = usePopup()
 const route = useRoute()
 
-function open() {
+const lastSearch = ref<string | null>(null)
+
+async function open() {
   params.query = ''
+  lastSearch.value = null
   items.value = null
   modal.value?.open()
 }
@@ -48,6 +53,7 @@ function open() {
 async function search() {
   loading.value = true
   const res = await item.fetch(true)
+  lastSearch.value = params.query
 
   console.log(res)
 

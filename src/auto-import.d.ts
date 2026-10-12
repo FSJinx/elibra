@@ -8,6 +8,7 @@ export {}
 declare global {
   const EffectScope: typeof import('vue').EffectScope
   const acceptHMRUpdate: typeof import('pinia').acceptHMRUpdate
+  const acquisition_modes: typeof import('./constants/acquisition_mode').acquisition_modes
   const adminAuthorityRoute: typeof import('./router/admin/authority.route').adminAuthorityRoute
   const adminCampusRoutes: typeof import('./router/admin/organization/campus.route').adminCampusRoutes
   const adminItemCategoriesRoutes: typeof import('./router/admin/standard/item_categories.route').adminItemCategoriesRoutes
@@ -465,6 +466,7 @@ declare module 'vue' {
   interface ComponentCustomProperties {
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
     readonly acceptHMRUpdate: UnwrapRef<typeof import('pinia')['acceptHMRUpdate']>
+    readonly acquisition_modes: UnwrapRef<typeof import('./constants/acquisition_mode')['acquisition_modes']>
     readonly adminAuthorityRoute: UnwrapRef<typeof import('./router/admin/authority.route')['adminAuthorityRoute']>
     readonly adminCampusRoutes: UnwrapRef<typeof import('./router/admin/organization/campus.route')['adminCampusRoutes']>
     readonly adminItemCategoriesRoutes: UnwrapRef<typeof import('./router/admin/standard/item_categories.route')['adminItemCategoriesRoutes']>

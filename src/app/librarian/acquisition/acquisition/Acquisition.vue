@@ -16,7 +16,10 @@
           </Select>
           <Select title="Acquisition Mode" class="max-w-max">
             <Option value="" selected disabled>Select acquisition mode</Option>
-            <Option value="purchased">Purchased</Option>
+            <Option value="donation">Donation</Option>
+            <Option value="exchange">Exchange</Option>
+            <Option value="gift">Gift</Option>
+            <Option value="purchase">Purchase</Option>
           </Select>
         </CardBody>
       </Card>
