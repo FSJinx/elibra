@@ -224,6 +224,14 @@ return new class extends Migration
             ],
         ],
 
+        // 9. Media
+        [
+            'name' => 'media',
+            'foreign_columns' => [
+                ['name' => 'item_id', 'references' => 'id', 'on' => 'items', 'onDelete' => 'cascade'],
+            ],
+        ],
+
     ];
 
     // ============= LINKS RELATIONSHIPS ===============

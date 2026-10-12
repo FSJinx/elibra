@@ -198,10 +198,13 @@ Route::group(['prefix' => '/item_types'], function () {
     Route::get('', [ItemTypeController::class, 'index'])->middleware('throttle:read');
 
     // Post
+    Route::post('', [ItemTypeController::class, 'store'])->middleware('throttle:write');
 
     // Update
+    Route::put('{itemType}', [ItemTypeController::class, 'update'])->middleware('throttle:write');
 
     // Delete
+    Route::delete('{itemType}', [ItemTypeController::class, 'destroy'])->middleware('throttle:delete');
 });
 
 // ============== ITEM TYPE CATEGORIES ROUTE ==================
@@ -210,10 +213,13 @@ Route::group(['prefix' => '/item_type_category'], function () {
     Route::get('', [ItemTypeCategoryController::class, 'index'])->middleware('throttle:read');
 
     // Post
+    Route::post('', [ItemTypeCategoryController::class, 'store'])->middleware('throttle:write');
 
     // Update
+    Route::put('{itemTypeCategory}', [ItemTypeCategoryController::class, 'update'])->middleware('throttle:write');
 
     // Delete
+    Route::delete('{itemTypeCategory}', [ItemTypeCategoryController::class, 'destroy'])->middleware('throttle:delete');
 });
 
 // ============== LANGUAGES ROUTE ==================
@@ -259,8 +265,10 @@ Route::group(['prefix' => '/publishers'], function () {
 
 // ============== SECTION ROUTE ==================
 Route::group(['prefix' => '/section'], function () {
+    Route::get('deleted', [SectionsController::class, 'deleted'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
+
     // Get
-    Route::get('', [SectionsController::class, 'index'])->middleware('throttle:read');
+    Route::get('', [SectionsController::class, 'index'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
 
     // Post
     Route::post('', [SectionsController::class, 'store'])->middleware('jwt.auth', 'role:super_admin', 'throttle:write');
@@ -270,6 +278,9 @@ Route::group(['prefix' => '/section'], function () {
 
     // Delete
     Route::delete('{section}', [SectionsController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin', 'throttle:delete');
+
+    // Restore
+    Route::patch('{section}/restore', [SectionsController::class, 'restore'])->middleware('jwt.auth', 'role:super_admin', 'throttle:write');
 });
 
 /**

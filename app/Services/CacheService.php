@@ -111,7 +111,9 @@ class CacheService
      */
     public static function invalidate(string $resource): void
     {
-        Cache::increment(self::versionKey($resource));
+        $versionKey = self::versionKey($resource);
+        Cache::add($versionKey, 1);
+        Cache::increment($versionKey);
     }
 
     private static function versionKey(string $resource): string

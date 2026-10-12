@@ -37,7 +37,14 @@ class ItemTypeCategoryController extends Controller
      */
     public function store(StoreItemTypeCategoryRequest $request)
     {
-        //
+        $itemTypeCategory = ItemTypeCategory::create($request->validated());
+
+        return $this->response(
+            'success',
+            'Item category created successfully',
+            $itemTypeCategory->toArray(),
+            201
+        );
     }
 
     /**
@@ -61,7 +68,14 @@ class ItemTypeCategoryController extends Controller
      */
     public function update(UpdateItemTypeCategoryRequest $request, ItemTypeCategory $itemTypeCategory)
     {
-        //
+        $itemTypeCategory->update($request->validated());
+
+        return $this->response(
+            'success',
+            'Item category updated successfully',
+            $itemTypeCategory->refresh()->toArray(),
+            200
+        );
     }
 
     /**
@@ -69,6 +83,13 @@ class ItemTypeCategoryController extends Controller
      */
     public function destroy(ItemTypeCategory $itemTypeCategory)
     {
-        //
+        $itemTypeCategory->delete();
+
+        return $this->response(
+            'success',
+            'Item category deleted successfully',
+            null,
+            200
+        );
     }
 }

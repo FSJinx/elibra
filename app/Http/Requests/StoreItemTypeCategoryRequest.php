@@ -11,7 +11,7 @@ class StoreItemTypeCategoryRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->user()?->isSuperAdmin() ?? false;
     }
 
     /**
@@ -22,7 +22,9 @@ class StoreItemTypeCategoryRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'string', 'max:255'],
+            'code' => ['required', 'string', 'max:255'],
+            'item_type_id' => ['required', 'integer', 'exists:item_types,id'],
         ];
     }
 }
