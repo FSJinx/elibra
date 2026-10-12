@@ -35,7 +35,7 @@ class StoreAcquisitionLinesRequest extends BaseRequest
 
             'item_id' => ['required', Rule::exists((new Item)->getTable(), 'id')],
             'acquisition_id' => ['required', Rule::exists((new Acquisition)->getTable(), 'id')],
-            'section_id' => ['required', Rule::exists((new Sections)->getTable(), 'id')],
+            'section_id' => ['nullable', Rule::exists((new Sections)->getTable(), 'id')],
 
         ];
 

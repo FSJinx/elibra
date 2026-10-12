@@ -101,7 +101,7 @@ class ItemController extends Controller
 
     public function temporaryIndex(Request $request)
     {
-        $user = $request->user();
+        $user = $this->user();
 
         $filters = QueryService::filters($request);
 
@@ -140,10 +140,9 @@ class ItemController extends Controller
 
         try {
             $item = Item::create($newItem);
-            
+
             $item->syncAuthors($request->input('authors'));
             $item->refresh();
-            
 
             DB::commit();
 

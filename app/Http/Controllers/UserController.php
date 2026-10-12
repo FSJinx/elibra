@@ -19,13 +19,15 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $user = $this->user();
-        $users = null;
+        $users = User::query();
 
         if ($user->isSuperAdmin()) {
-            $users = User::all();
+            
+        } else {
+            $users->where('campus_id', '=', $user->campus_id);
         }
 
-        // $users->paginate();
+        
 
         return $this->response(message: 'All users retrieved successfully!', data: $users->toArray());
     }

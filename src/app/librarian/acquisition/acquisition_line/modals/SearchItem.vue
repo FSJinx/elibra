@@ -11,25 +11,33 @@
       </Form>
     </ModalBody>
 
-    <ModalFooter class="flex flex-col">
-      <div class="p-5" v-if="loading">Nothing here, search now.</div>
-      <div class="p-5" v-if="items?.length">Nothing here, search now.</div>
-      <template v-else>
-        <button v-for="i in items">{{ i.title }}</button>
-      </template>
-      {{ items }}
+    <ModalFooter class="flex flex-col p-5">
+      <div class="flex justify-center" v-if="loading">
+        <Spinner />
+      </div>
+
+      <div class="flex flex-col" v-else>
+        <div class="" v-if="!items?.length">No result found</div>
+        <template v-else>
+          <p class="font-medium mb-3">Results</p>
+          <button v-for="i in items" class="px-5 py-3 text-left rounded-lg cursor-pointer border-transparent border hover:border-primary/50 hover:bg-primary-soft/50 hover:text-primary transition-all duration-200" @click="add(i)">{{ i.title }}</button>
+        </template>
+      </div>
     </ModalFooter>
   </Modal>
 </template>
 
 <script setup lang="ts">
 import Modal from '@/components/my/Modal.vue'
+import { usePopup } from '../../../../../composables/ui/usePopup'
 
 const modal = ref<InstanceType<typeof Modal>>()
 const item = useItemStore()
-const items = ref<Item[] | null>()
+const items = ref<Item[] | null>(null)
 const params = item.params
 const loading = ref<boolean>(false)
+const pop = usePopup()
+const route = useRoute()
 
 function open() {
   params.query = ''
@@ -38,9 +46,29 @@ function open() {
 }
 
 async function search() {
+  loading.value = true
   const res = await item.fetch(true)
 
-  items.value = res
+  console.log(res)
+
+  items.value = res?.data?.data
+  loading.value = false
+}
+
+async function add(i: any) {
+  const confirm = await pop.confirm({ text: `Are you sure you want ${i.title}?` })
+
+  if (confirm.isConfirmed) {
+    pop.load()
+    try {
+      const acq = await useAcquisitionLinesStore().create({ item_id: i.id, acquisition_id: route.params.id, quantity: 1 })
+      pop.success(acq.message)
+      close()
+    } catch (e: any) {
+      pop.error(e.response.message)
+      throw e
+    }
+  }
 }
 </script>
 

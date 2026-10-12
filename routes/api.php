@@ -272,10 +272,6 @@ Route::group(['prefix' => '/section'], function () {
     Route::delete('{section}', [SectionsController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin', 'throttle:delete');
 });
 
-Route::group(['prefix' => '/users', 'middleware', ['jwt.auth', 'role:super_admin,admin,librarian']], function () {
-    Route::get('', [UserController::class, 'index']);
-});
-
 /**
  *      Private Routes
  *
@@ -291,6 +287,7 @@ Route::group(['prefix' => '/users', 'middleware', ['jwt.auth', 'role:super_admin
  *      all while as long as they are on the same campus.
  */
 Route::group(['prefix' => '/librarian', 'middleware' => ['jwt.auth', 'role:admin,librarian']], function () {
+
     // ============== LIBRARIAN RESOURCE ROUTE ==================
     Route::get('', [LibrarianController::class, 'index'])->middleware('throttle:read');
     Route::post('', [LibrarianController::class, 'store'])->middleware('throttle:write');
@@ -361,6 +358,13 @@ Route::group(['prefix' => '/librarian', 'middleware' => ['jwt.auth', 'role:admin
         // Delete
     });
 
+});
+
+// User Routes
+Route::group(['prefix' => '/user', 'middleware' => ['jwt.auth', 'role:super_admin,admin']], function () {
+    Route::get('', [UserController::class, 'index'])->middleware('throttle:read');
+    Route::post('', [UserController::class, 'store'])->middleware('throttle:write');
+    Route::put('{user}', [UserController::class, 'update'])->middleware('throttle:write');
 });
 
 Route::group(['prefix' => '/patron'], function () {
@@ -465,17 +469,4 @@ Route::group(['prefix' => '/item'], function () {
     Route::get('{item}', [ItemController::class, 'show']);
 
     Route::post('', [ItemController::class, 'store']);
-});
-
-// User Routes
-Route::group(['prefix' => '/user'], function () {
-
-    Route::group(['prefix' => '/create'], function () {
-        Route::post('', [UserController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin');
-    });
-
-    Route::group(['prefix' => '/update'], function () {
-        Route::put('{user}', [UserController::class, 'update'])->middleware('jwt.auth', 'role:super_admin');
-    });
-
 });

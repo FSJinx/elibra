@@ -30,7 +30,7 @@ export const useItemCategoriesStore = defineStore('item_categories', {
 
     select() {
       return (item_id: any) => {
-        const categories = this.data.sort((a, b) => a.name.localeCompare(b.name)).filter((i) => item_id === i.item_type_id)
+        const categories = this.data.filter((i) => item_id === i.item_type_id).sort((a, b) => a.name.localeCompare(b.name))
         return categories
       }
     },

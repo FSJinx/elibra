@@ -1,5 +1,3 @@
-
-
 const url = 'item_types'
 
 export const useAdminItemTypeStore = defineStore('admin.item_type', {
@@ -21,14 +19,14 @@ export const useAdminItemTypeStore = defineStore('admin.item_type', {
 
       this.loading = true
       try {
-          const res = await get(url)
-          this.setData(res.data)
-          
-          this.loading = false
-          return res
-        } catch (e: any) {
-            throw e
-        }
+        const res = await get(url)
+        this.setData(res.data)
+
+        this.loading = false
+        return res
+      } catch (e: any) {
+        throw e
+      }
     },
   },
 })

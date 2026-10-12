@@ -57,6 +57,7 @@ export const useItemStore = defineStore('item', {
 
       const res = await get(url, this.params)
       this.setData(res.data?.data)
+      return res
     },
 
     async show(id: any) {

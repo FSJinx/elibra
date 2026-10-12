@@ -12,10 +12,8 @@
             <Label id="catalog-types">Item Type</Label>
 
             <Select id="catalog-types" title="Item Types" v-model="filter.item_type">
-              <Option value="">All Item Types</Option>
-              <Option value="books">Books</Option>
-              <Option value="serials">Serials</Option>
-              <Option value="media">Media/DVDs</Option>
+              <Option value="" selected disabled>Select Item Type</Option>
+              <Option :value="type.id" v-for="type in types.select()">{{ type.name }}</Option>
             </Select>
           </Control>
 
@@ -24,10 +22,8 @@
             <Label id="catalog-category">Category</Label>
 
             <Select id="catalog-category" title="Categories" v-model="filter.category">
-              <Option value="">All Categories</Option>
-              <Option value="books">Books</Option>
-              <Option value="periodicals">Periodicals</Option>
-              <Option value="media">Media/DVDs</Option>
+              <Option value="" selected disabled>{{ filter.item_type ? 'Select Category' : 'Please select an item type first' }}</Option>
+              <Option v-for="category in categories.select(filter.item_type)" :key="category.id" :value="category.id">{{ category.name }}</Option>
             </Select>
           </Control>
 
@@ -81,6 +77,9 @@
 <script setup lang="ts">
 import type Modal from '@/components/my/Modal.vue'
 
+const types = useItemTypeStore()
+const categories = useItemCategoriesStore()
+
 const filterBtn = ref<typeof Modal | null>(null)
 const emit = defineEmits(['filterApplied'])
 
@@ -96,6 +95,16 @@ function applyFilter() {
   emit('filterApplied', filter)
   filterBtn.value?.close()
 }
+
+watch(
+  () => filter.item_type,
+  () => {
+    filter.category = ''
+  },
+  {
+    deep: true,
+  },
+)
 </script>
 
 <style scoped></style>

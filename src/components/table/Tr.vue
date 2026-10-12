@@ -1,16 +1,23 @@
 <template>
-  <router-link :to="to" custom v-slot="{ navigate }">
+  <router-link v-if="to" :to="to" custom v-slot="{ navigate }">
     <tr class="hover cursor-pointer" @click="navigate" role="button">
       <slot />
     </tr>
   </router-link>
+  <tr v-else class="hover cursor-pointer" @click="emit('click', $event)" role="button">
+    <slot />
+  </tr>
 </template>
 
 <script setup lang="ts">
-import { RouteLocationRaw } from 'vue-router'
+import type { RouteLocationRaw } from 'vue-router'
 
 defineProps<{
-  to: RouteLocationRaw
+  to?: RouteLocationRaw
+}>()
+
+const emit = defineEmits<{
+  click: [event: MouseEvent]
 }>()
 </script>
 

@@ -13,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('accessions', function (Blueprint $table) {
             $table->id();
-            $table->string('accession_number')->unique()->nullable(); //itemtypecategories-
+            $table->string('accession_number')->unique()->nullable(); // itemtypecategories-
             $table->enum('status', ['available', 'reserved', 'on_load', 'lost', 'missing', 'archived', 'condemned'])->default('available');
             $table->string('remarks')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
             $table->unsignedBigInteger('item_id');
-            $table->unsignedBigInteger('section_id'); // Stores physical / shelf location of the specific copy
-            $table->unsignedBigInteger('acquisition_line_id');
+            $table->unsignedBigInteger('section_id')->nullable(); // Stores physical / shelf location of the specific copy
+            $table->unsignedBigInteger('acquisition_line_id')->nullable();
         });
     }
 

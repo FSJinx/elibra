@@ -12,7 +12,7 @@ export function usePreloader() {
     if (!preloaded.value) {
       try {
         // ======== PUBLIC PRELOAD ===========
-        Promise.all([campus.fetch(), library.fetch(), item_type.fetch(), category.fetch(), authorship.fetch(), language.fetch()])
+        await Promise.all([campus.fetch(), library.fetch(), item_type.fetch(), category.fetch(), authorship.fetch(), language.fetch()])
       } catch (err) {
         throw err
       } finally {

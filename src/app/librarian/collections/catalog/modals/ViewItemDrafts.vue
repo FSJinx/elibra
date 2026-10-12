@@ -30,6 +30,7 @@ import Modal from '@/components/my/Modal.vue'
 
 const drafts = draftStore()
 const parse = useParser()
+const pop = usePopup()
 const modal = ref<InstanceType<typeof Modal>>()
 
 const data = computed(() => drafts.data.filter((i) => i.key === 'item'))
@@ -38,9 +39,19 @@ function open() {
   modal.value?.open()
 }
 
-function openDraft(item: any) {
-  return router.push({ name: 'librarian.collections.catalog.new', query: { draft_id: item.id } })
+function close() {
+  modal.value?.close()
 }
+
+async function openDraft(item: any) {
+  const confirm = await pop.confirm({text: 'Continue editing this item?'})
+
+  if (confirm.isConfirmed) {
+    close()
+    return router.replace({ name: 'librarian.collections.catalog.new', query: { draft_id: item.id } })
+  }
+}
+
 </script>
 
 <style scoped></style>

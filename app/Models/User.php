@@ -23,6 +23,10 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         'middle_initial' => 'uppercase',
     ];
 
+    protected $casts = [
+        'password' => 'hashed',
+    ];
+
     protected $hidden = [
         'password',
     ];

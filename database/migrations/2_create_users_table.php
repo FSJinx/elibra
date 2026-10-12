@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('first_name');
             $table->string('middle_initial', 5)->nullable();
 
-            $table->enum('sex', ['male', 'female']);
+            $table->enum('sex', ['male', 'female'])->nullable();
 
             $table->date('birthdate')->nullable();
 

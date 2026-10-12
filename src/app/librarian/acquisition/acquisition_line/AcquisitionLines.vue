@@ -24,20 +24,23 @@
           <tr>
             <Th class="text-left">Title</Th>
             <Th>Quantity</Th>
-            <Th>Unit Price</Th>
+            <Th v-if="acquisition.currentData?.acquisition_mode === 'purchase'">Unit Price</Th>
             <Th>Actions</Th>
           </tr>
         </Thead>
         <Tbody :data="lines.data" :loading="lines.loading" :cols="4">
-          <tr class="hover" v-for="(item, index) in lines.data" @click="view(item)">
+          <Tr class="hover" v-for="(item, index) in lines.data" @click="view(item)">
             <Td class="text-left">
               <p class="font-medium">{{ item.items?.title }}</p>
               <p class="text-xs text-muted-foreground">{{ item.items?.subtitle }}</p>
             </Td>
             <Td :data="item.quantity" />
-            <Td :data="parse.toMoney(item.unitPrice)" />
-            <Td />
-          </tr>
+            <Td v-if="acquisition.currentData?.acquisition_mode === 'purchase'" :data="parse.toMoney(item.unitPrice)" />
+            <Td class="space-x-2">
+              <Button size="sm">Edit</Button>
+              <Button size="sm">Delete</Button>
+            </Td>
+          </Tr>
         </Tbody>
       </Table>
     </div>
@@ -67,6 +70,7 @@ const parse = useParser()
 
 const { currentData } = useAcquisitionStore()
 const lines = useAcquisitionLinesStore()
+const acquisition = useAcquisitionStore()
 
 const viewModal = ref<typeof Modal | null>(null)
 

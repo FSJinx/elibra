@@ -14,7 +14,7 @@ const defaultParams: Readonly<PublisherParams> = {
 
 const url = 'publisher'
 
-export const useVendorStore = defineStore('vendor', {
+export const usePublisherStore = defineStore('vendor', {
   state: () => ({
     data: null as Publisher[] | null,
     currentData: null as Publisher | null,

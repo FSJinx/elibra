@@ -3,7 +3,7 @@
     <Form class="flex flex-col gap-5" @submit="submit">
       <SectionHeader class="bg-background border border-border rounded-xl pb-5" title="New Item" description="Please fill all required fields and re-check your inputs before submitting.">
         <div class="flex items-center justify-end gap-2">
-          <Button type="button" :disabled="!hasInputs" @click="saveDraft">Save as Draft</Button>
+          <ViewItemDrafts />
         </div>
       </SectionHeader>
 
@@ -24,7 +24,10 @@
 
       <Card class="sticky bottom-0 z-100">
         <CardBody class="flex justify-end gap-2">
-          <Button as="link" :to="{ name: 'librarian.collections.catalog' }" variant="danger" data-title="Return to catalog ">Cancel</Button>
+          <Button class="mr-auto" type="button" :disabled="form.title ? false : true" @click="saveDraft">Save as Draft</Button>
+
+          <!-- <Button as="link" :to="{ name: 'librarian.collections.catalog' }" variant="danger" data-title="Return to catalog ">Cancel</Button> -->
+          <Button @click="router.back()" variant="danger" data-title="Return">Cancel</Button>
           <Button type="submit" variant="primary" :disabled="!hasInputs">Create</Button>
         </CardBody>
       </Card>
@@ -39,6 +42,7 @@ import AuthorSection from '@/app/librarian/collections/catalog/forms/sections/Au
 import BaseSection from '@/app/librarian/collections/catalog/forms/sections/BaseSection.vue'
 import PhysicalDescriptionSection from '@/app/librarian/collections/catalog/forms/sections/PhysicalDescriptionSection.vue'
 import SerialSection from '@/app/librarian/collections/catalog/forms/sections/SerialSection.vue'
+import ViewItemDrafts from '@/app/librarian/collections/catalog/modals/ViewItemDrafts.vue'
 
 const pop = usePopup()
 const item = useItemStore()
@@ -90,6 +94,7 @@ async function submit() {
 
 async function saveDraft() {
   const confirm = await pop.confirm({ text: 'Save your progress to draft' })
+
   if (confirm.isConfirmed) {
     pop.load()
     drafts.saveItem(form)
@@ -99,10 +104,12 @@ async function saveDraft() {
   }
 }
 
-onMounted(() => {
-  if (route.query.draft_id) {
+watch(
+  () => route.query.draft_id,
+  () => {
     const draft = drafts.data.find((i) => i.id === route.query.draft_id)
-    Object.assign(form, draft?.data)
-  }
-})
+    Object.assign(form, emptyForm(), draft?.data)
+  },
+  { deep: true, immediate: true },
+)
 </script>

@@ -21,10 +21,12 @@ class LibrarianController extends Controller
      */
     public function index()
     {
-        return Librarian::with([
+        return $this->response(data: Librarian::with([
             'user',
-            'branch',
-        ])->get();
+            'library',
+        ])->get()
+        );
+
     }
 
     /**

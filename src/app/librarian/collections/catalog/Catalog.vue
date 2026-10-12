@@ -18,21 +18,49 @@
         </Form>
       </Card>
 
-      <CatalogTable :data="items.data" :loading="loading" />
+      <Table :data-length="items.data?.length" title="Catalog List" subtitle="List of all library materials.">
+        <Thead>
+          <tr>
+            <Th>No</Th>
+            <Th class="text-left max-w-10">Title</Th>
+            <Th>Item Type</Th>
+            <Th>Call Number</Th>
+            <Th>Released to OPAC</Th>
+          </tr>
+        </Thead>
+
+        <Tbody :cols="5" :loading="loading" :data="items.data">
+          <Tr v-for="(item, index) in items.data" :key="item.id" :to="{ name: 'librarian.collections.catalog.view', params: { id: item.id } }">
+            <Td :data="(index as number) + 1" />
+
+            <Td class="text-left">
+              <Title :level="4">{{ item.title }}</Title>
+
+              <p class="text-xs text-foreground-secondary line-clamp-1 max-w-150">
+                {{ item.subtitle ?? item.description ?? 'This item has no subtitle or description.' }}
+              </p>
+            </Td>
+
+            <Td :data="item_types.byId(item.item_type_id)?.name" />
+            <Td :data="item.call_number" />
+
+            <Td :data="item.released ? 'True' : 'False'" />
+          </Tr>
+        </Tbody>
+      </Table>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import CatalogFilter from '@/app/librarian/collections/catalog/modals/CatalogFilter.vue'
-import ViewItemDrafts from '@/app/librarian/collections/catalog/modals/ViewItemDrafts.vue'
-import CatalogTable from '@/app/librarian/collections/catalog/sections/CatalogTable.vue'
 
 const items = useItemStore()
-const loading = ref(false)
-const stats_expanded = ref(false)
+const item_types = useItemTypeStore()
 
-const params = reactive<Partial<ItemParams>>(itemDefaultParams())
+const loading = ref(false)
+
+// const params = reactive<Partial<ItemParams>>(itemDefaultParams())
 
 const catalog = reactive<{
   category: string
@@ -75,12 +103,13 @@ function reset() {
 }
 
 watchDebounced(
-  () => params.query,
+  () => items.params.query,
   () => {
     search()
   },
   {
     debounce: 300,
+    immediate: true,
   },
 )
 </script>

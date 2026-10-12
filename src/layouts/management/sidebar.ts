@@ -23,7 +23,7 @@ const librarianMenu = {
   collections: {
     name: 'Collections',
     children: {
-    catalog: { path: 'librarian.collections.catalog', name: 'Catalog', icon: 'journal-plus' },
+      catalog: { path: 'librarian.collections.catalog', name: 'Catalog', icon: 'journal-plus' },
       inventory: { path: 'librarian.collections.inventory', name: 'Inventory', icon: 'boxes' },
     },
   },
@@ -70,11 +70,7 @@ const librarianMenu = {
   administration: {
     name: 'Administration',
     children: {
-      staff: { path: 'librarian.administration.staff', name: 'Librarians / Staff', icon: 'person-vcard' },
-      roles: { path: 'librarian.administration.roles', name: 'Roles & Permissions', icon: 'key' },
-      policies: { path: 'librarian.administration.policies', name: 'Library Policies', icon: 'file-text' },
-      branches: { path: 'librarian.administration.branches', name: 'Library Branches', icon: 'geo-alt' },
-      barcode: { path: 'librarian.administration.barcode', name: 'Barcode Generator', icon: 'upc-scan' },
+      staff: { path: 'librarian.staffs', name: 'Staff', icon: 'person-vcard' },
     },
   },
 

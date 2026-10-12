@@ -55,7 +55,7 @@ export const sectionStore = defineStore('section', {
     },
 
     // =========== ACTIONS ============
-    async fetch(id?: any, forced = false) {
+    async fetch(id: any, forced = false) {
       if (this.data && !forced) return
 
       this.loading = true

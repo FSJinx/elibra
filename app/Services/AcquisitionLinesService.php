@@ -38,7 +38,7 @@ class AcquisitionLinesService
                     'accession_number' => $accessionNumber,
                     'status' => 'available',
                     'item_id' => $acquisitionLine->item_id,
-                    'section_id' => $data['section_id'],
+                    'section_id' => $data['section_id'] ?? null,
                     'acquisition_line_id' => $acquisitionLine->id,
                 ]);
             }
@@ -49,7 +49,6 @@ class AcquisitionLinesService
                 'accessions',
             ]);
         });
-
 
         CacheService::invalidate(CacheService::ACQUISITION_LINES);
 
