@@ -98,6 +98,7 @@ return new class extends Migration
                 ['name' => 'item_type_category_id', 'references' => 'id', 'on' => 'item_type_categories', 'onDelete' => 'cascade'],
                 ['name' => 'language_id', 'references' => 'id', 'on' => 'languages', 'onDelete' => 'cascade'],
                 ['name' => 'library_id', 'references' => 'id', 'on' => 'libraries', 'onDelete' => 'cascade'],
+                ['name' => 'cover_media_id', 'references' => 'id', 'on' => 'media', 'onDelete' => 'cascade'],
             ],
         ],
         [
