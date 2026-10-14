@@ -28,6 +28,13 @@ declare global {
   const autoResetRef: typeof import('@vueuse/core').autoResetRef
   const axios: typeof import('./plugins/axios').default
   const backendRoute: typeof import('./plugins/axios').backendRoute
+  const circulationIssue: typeof import('./router/librarian/circulation/issue.route').circulationIssue
+  const ciruclation: typeof import('./router/librarian/circulation/loans.route').ciruclation
+  const ciruclationLoan: typeof import('./router/librarian/circulation/loans.route').ciruclationLoan
+  const ciruclationLoans: typeof import('./router/librarian/circulation/loans.route').ciruclationLoans
+  const collectionsCatalog: typeof import('./router/librarian/collections/catalog.route').collectionsCatalog
+  const collectionsI: typeof import('./router/librarian/collections/inventory.route').collectionsI
+  const collectionsInventory: typeof import('./router/librarian/collections/inventory.route').collectionsInventory
   const computed: typeof import('vue').computed
   const computedAsync: typeof import('@vueuse/core').computedAsync
   const computedEager: typeof import('@vueuse/core').computedEager
@@ -69,6 +76,7 @@ declare global {
   const ignorableWatch: typeof import('@vueuse/core').ignorableWatch
   const inject: typeof import('vue').inject
   const injectLocal: typeof import('@vueuse/core').injectLocal
+  const inventory: typeof import('./router/librarian/collections/inventory.route').inventory
   const isDefined: typeof import('@vueuse/core').isDefined
   const isProxy: typeof import('vue').isProxy
   const isReactive: typeof import('vue').isReactive
@@ -76,14 +84,17 @@ declare global {
   const isRef: typeof import('vue').isRef
   const isShallow: typeof import('vue').isShallow
   const itemDefaultParams: typeof import('./stores/librarian/item.store').itemDefaultParams
+  const librarian: typeof import('./router/librarian/collections/index.route').librarian
   const librarianAcquisition: typeof import('./router/librarian/acquisition.route').librarianAcquisition
   const librarianAdministration: typeof import('./router/librarian/administration/index.route').librarianAdministration
   const librarianCataloging: typeof import('./router/librarian/collection.route').librarianCataloging
-  const librarianCirculation: typeof import('./router/librarian/circulation.route').librarianCirculation
+  const librarianCirculation: typeof import('./router/librarian/circulation/index.route').librarianCirculation
+  const librarianCollections: typeof import('./router/librarian/collections/index.route').librarianCollections
   const librarianDashboard: typeof import('./router/librarian/dashboard.route').librarianDashboard
   const librarianPatron: typeof import('./router/librarian/patron.route').librarianPatron
   const librarianReport: typeof import('./router/librarian/report.route').librarianReport
   const librarianRoutes: typeof import('./router/librarian.routes').default
+  const librarianSectionRoute: typeof import('./router/librarian/administration/section.route').librarianSectionRoute
   const librarianSerial: typeof import('./router/librarian/serial.route').librarianSerial
   const librarianSettings: typeof import('./router/librarian/settings.route').librarianSettings
   const librarianStaffRoute: typeof import('./router/librarian/administration/staff.route').librarianStaffRoute
@@ -119,6 +130,7 @@ declare global {
   const onUpdated: typeof import('vue').onUpdated
   const onWatcherCleanup: typeof import('vue').onWatcherCleanup
   const opacSearchStore: typeof import('./stores/opac/opacStore').opacSearchStore
+  const optionStore: typeof import('./stores/ui/option.store').optionStore
   const patch: typeof import('./composables/data/useApi').patch
   const patronRoutes: typeof import('./router/patron.routes').patronRoutes
   const pausableWatch: typeof import('@vueuse/core').pausableWatch
@@ -143,6 +155,7 @@ declare global {
   const refWithControl: typeof import('@vueuse/core').refWithControl
   const resolveComponent: typeof import('vue').resolveComponent
   const router: typeof import('./router/index').default
+  const sectionSelectStore: typeof import('./stores/select/section.select.store').sectionSelectStore
   const sectionStore: typeof import('./stores/section.store').sectionStore
   const setActivePinia: typeof import('pinia').setActivePinia
   const setMapStoreSuffix: typeof import('pinia').setMapStoreSuffix
@@ -486,6 +499,10 @@ declare module 'vue' {
     readonly autoResetRef: UnwrapRef<typeof import('@vueuse/core')['autoResetRef']>
     readonly axios: UnwrapRef<typeof import('./plugins/axios')['default']>
     readonly backendRoute: UnwrapRef<typeof import('./plugins/axios')['backendRoute']>
+    readonly circulationIssue: UnwrapRef<typeof import('./router/librarian/circulation/issue.route')['circulationIssue']>
+    readonly ciruclationLoans: UnwrapRef<typeof import('./router/librarian/circulation/loans.route')['ciruclationLoans']>
+    readonly collectionsCatalog: UnwrapRef<typeof import('./router/librarian/collections/catalog.route')['collectionsCatalog']>
+    readonly collectionsInventory: UnwrapRef<typeof import('./router/librarian/collections/inventory.route')['collectionsInventory']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
     readonly computedAsync: UnwrapRef<typeof import('@vueuse/core')['computedAsync']>
     readonly computedEager: UnwrapRef<typeof import('@vueuse/core')['computedEager']>
@@ -536,12 +553,13 @@ declare module 'vue' {
     readonly itemDefaultParams: UnwrapRef<typeof import('./stores/librarian/item.store')['itemDefaultParams']>
     readonly librarianAcquisition: UnwrapRef<typeof import('./router/librarian/acquisition.route')['librarianAcquisition']>
     readonly librarianAdministration: UnwrapRef<typeof import('./router/librarian/administration/index.route')['librarianAdministration']>
-    readonly librarianCataloging: UnwrapRef<typeof import('./router/librarian/collection.route')['librarianCataloging']>
-    readonly librarianCirculation: UnwrapRef<typeof import('./router/librarian/circulation.route')['librarianCirculation']>
+    readonly librarianCirculation: UnwrapRef<typeof import('./router/librarian/circulation/index.route')['librarianCirculation']>
+    readonly librarianCollections: UnwrapRef<typeof import('./router/librarian/collections/index.route')['librarianCollections']>
     readonly librarianDashboard: UnwrapRef<typeof import('./router/librarian/dashboard.route')['librarianDashboard']>
     readonly librarianPatron: UnwrapRef<typeof import('./router/librarian/patron.route')['librarianPatron']>
     readonly librarianReport: UnwrapRef<typeof import('./router/librarian/report.route')['librarianReport']>
     readonly librarianRoutes: UnwrapRef<typeof import('./router/librarian.routes')['default']>
+    readonly librarianSectionRoute: UnwrapRef<typeof import('./router/librarian/administration/section.route')['librarianSectionRoute']>
     readonly librarianSerial: UnwrapRef<typeof import('./router/librarian/serial.route')['librarianSerial']>
     readonly librarianSettings: UnwrapRef<typeof import('./router/librarian/settings.route')['librarianSettings']>
     readonly librarianStaffRoute: UnwrapRef<typeof import('./router/librarian/administration/staff.route')['librarianStaffRoute']>
@@ -577,6 +595,7 @@ declare module 'vue' {
     readonly onUpdated: UnwrapRef<typeof import('vue')['onUpdated']>
     readonly onWatcherCleanup: UnwrapRef<typeof import('vue')['onWatcherCleanup']>
     readonly opacSearchStore: UnwrapRef<typeof import('./stores/opac/opacStore')['opacSearchStore']>
+    readonly optionStore: UnwrapRef<typeof import('./stores/ui/option.store')['optionStore']>
     readonly patch: UnwrapRef<typeof import('./composables/data/useApi')['patch']>
     readonly patronRoutes: UnwrapRef<typeof import('./router/patron.routes')['patronRoutes']>
     readonly pausableWatch: UnwrapRef<typeof import('@vueuse/core')['pausableWatch']>

@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Sections;
-use App\Models\Library;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreSectionsRequest;
 use App\Http\Requests\UpdateSectionsRequest;
+use App\Models\Library;
+use App\Models\Sections;
 use App\Services\CacheService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -20,14 +19,6 @@ class SectionsController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-
-        if (!$user) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Unauthenticated.',
-                'data' => []
-            ], 401);
-        }
 
         $libraryId = $user->isSuperAdmin()
             ? $request->query('library_id', $request->query('id'))
@@ -43,9 +34,31 @@ class SectionsController extends Controller
             function () use ($libraryId) {
                 return Sections::query()
                     ->select(['id', 'name', 'library_id', 'librarian_id', 'created_at', 'updated_at'])
+                    ->with(['library:id,name', 'librarian'])
                     ->where('library_id', $libraryId)
                     ->get();
             }
+        );
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Sections retrieved successfully',
+            'data' => $sections,
+        ], 200);
+    }
+
+    public function temporaryIndex(Request $request)
+    {
+        $library_id = $request->input('library_id');
+
+        $sections = CacheService::remember(
+            CacheService::SECTIONS,
+            ['library_id' => $library_id],
+            now()->addHour(),
+            fn () => Sections::query()
+                ->with(['library', 'librarian']) // or 'library' if it's a belongsTo
+                ->when($library_id, fn ($q) => $q->where('library_id', $library_id))
+                ->get()
         );
 
         return response()->json([
@@ -98,6 +111,7 @@ class SectionsController extends Controller
     public function store(StoreSectionsRequest $request)
     {
         DB::beginTransaction();
+
         try {
             $data = $request->validated();
             $library = Library::findOrFail($data['library_id']);

@@ -7,7 +7,7 @@ const librarianRoutes = [
     component: () => import('@/layouts/management/ManagementLayout.vue'),
     children: [
       ...librarianDashboard, // ======== DASHBOARD ROUTES =========
-      ...librarianCataloging, // ======== CATALOGING ROUTES =========
+      ...librarianCollections, // ======== CATALOGING ROUTES =========
       ...librarianCirculation, // ======== CIRCULATION ROUTES =========
       ...librarianPatron, // ======== PATRON ROUTES =========
       ...librarianAcquisition, // ======== ACQUISITION ROUTES =========

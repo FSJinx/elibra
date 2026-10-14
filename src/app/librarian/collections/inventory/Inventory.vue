@@ -8,9 +8,9 @@
     </SectionHeader>
 
     <div class="flex-1 flex flex-col gap-4 p-5 overflow-y-auto scroll">
-      <Card>
+      <!-- <Card>
         <CardBody> </CardBody>
-      </Card>
+      </Card> -->
 
       <Table title="Recent Inventory Tracking" subtitle="Track your inventory history here." :data-length="inventory.data?.length">
         <Thead>

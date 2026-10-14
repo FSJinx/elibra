@@ -32,8 +32,8 @@ class ItemController extends Controller
 
         $filters = QueryService::filters($request);
 
-        $branchId = $user->isLibrarian()
-            ? $user->librarian?->branch_id
+        $libraryId = $user->isLibrarian()
+            ? $user->librarian?->library_id
             : null;
         $campusId = $user->isAdmin() ? $user->campus_id : null;
 
@@ -41,7 +41,7 @@ class ItemController extends Controller
             $filters,
             [
                 'role' => $user->role,
-                'branch_id' => $branchId,
+                'library_id' => $libraryId,
                 'campus_id' => $campusId,
             ]
         );
@@ -50,7 +50,7 @@ class ItemController extends Controller
             CacheService::ITEMS,
             $parameters,
             now()->addMinutes(10),
-            function () use ($user, $branchId, $campusId, $filters) {
+            function () use ($user, $libraryId, $campusId, $filters) {
 
                 $query = Item::query();
                 $query->with('coverMedia');
@@ -59,11 +59,11 @@ class ItemController extends Controller
                     // Super admins can see every item.
                     $query->withTrashed();
                 } elseif ($user->isAdmin()) {
-                    $query->whereHas('branch', function ($query) use ($campusId) {
+                    $query->whereHas('library', function ($query) use ($campusId) {
                         $query->where('campus_id', $campusId);
                     });
                 } elseif ($user->isLibrarian()) {
-                    $query->where('branch_id', $branchId);
+                    $query->where('library_id', $libraryId);
                 }
 
                 return $query->paginate(
@@ -97,29 +97,6 @@ class ItemController extends Controller
             $items->toArray(),
             200
         );
-    }
-
-    public function temporaryIndex(Request $request)
-    {
-        $user = $this->user();
-
-        $filters = QueryService::filters($request);
-
-        $params = [
-            ...$filters,
-            // 'branch_id' => $request->query('branch_id', ''),
-            // 'campus_id' => $request->query('campus_id', ''),
-        ];
-
-        $catalog = $this->itemService->index($params, $user);
-
-        return $this->response(
-            'success',
-            'Catalog retrieved successfully.',
-            $catalog->toArray(),
-            200
-        );
-
     }
 
     /**

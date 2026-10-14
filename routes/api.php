@@ -31,6 +31,7 @@ use App\Http\Controllers\ProgramsController;
 use App\Http\Controllers\PublisherController;
 use App\Http\Controllers\SectionsController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\UI\OptionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserPermissionController;
 use Illuminate\Support\Facades\Route;
@@ -265,13 +266,12 @@ Route::group(['prefix' => '/publishers'], function () {
 
 // ============== SECTION ROUTE ==================
 Route::group(['prefix' => '/section'], function () {
+    // Get
+    Route::get('', [SectionsController::class, 'index'])->middleware('throttle:read');
     Route::get('deleted', [SectionsController::class, 'deleted'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
 
-    // Get
-    Route::get('', [SectionsController::class, 'index'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
-
     // Post
-    Route::post('', [SectionsController::class, 'store'])->middleware('jwt.auth', 'role:super_admin', 'throttle:write');
+    Route::post('', [SectionsController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin', 'throttle:write');
 
     // Update
     Route::put('{section}', [SectionsController::class, 'update'])->middleware('jwt.auth', 'role:super_admin', 'throttle:write');
@@ -475,9 +475,13 @@ Route::group(['prefix' => '/user-permission'], function () {
 // ============== ITEM ROUTES ===============
 Route::group(['prefix' => '/item'], function () {
 
-    Route::get('', [ItemController::class, 'temporaryIndex']);
+    Route::get('', [ItemController::class, 'index']);
     // Route::get('{catalogId}', [CatalogController::class, 'show']);
     Route::get('{item}', [ItemController::class, 'show']);
 
     Route::post('', [ItemController::class, 'store']);
+});
+
+Route::group(['prefix' => '/option'], function () {
+    Route::get('sections', [OptionController::class, 'sections']);
 });

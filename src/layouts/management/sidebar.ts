@@ -1,39 +1,40 @@
 const librarianMenu = {
   dashboard: {
     name: 'Dashboard',
-    children: {
-      dashboard: { path: 'librarian.dashboard.overview', name: 'Overview', icon: 'grid' },
-      notifications: { path: 'librarian.dashboard.notifications', name: 'Notifications', icon: 'bell' },
-      tickets: { path: 'librarian.dashboard.tickets', name: 'Tickets', icon: 'ticket-perforated' },
-    },
+    children: [
+      { path: 'librarian.dashboard.overview', name: 'Overview', icon: 'grid' },
+      { path: 'librarian.dashboard.notifications', name: 'Notifications', icon: 'bell' },
+      { path: 'librarian.dashboard.tickets', name: 'Tickets', icon: 'ticket-perforated' },
+    ],
   },
 
   circulation: {
     name: 'Circulation',
-    children: {
-      loans: { path: 'librarian.circulation.loans', name: 'Loans', icon: 'bag-plus' },
+    children: [
+      { path: 'librarian.circulation.issue', name: 'Issue', icon: 'ui-checks' },
+      { path: 'librarian.circulation.loans', name: 'Loans', icon: 'bag-plus' },
       // returns: { path: 'librarian.circulation.returns', name: 'Returns', icon: 'arrow-return-left' },
       // renewals: { path: 'librarian.circulation.renewals', name: 'Renewals', icon: 'arrow-repeat' },
       // holds: { path: 'librarian.circulation.holds', name: 'Holds & Reservations', icon: 'bookmark-check' },
       // fines: { path: 'librarian.circulation.fines', name: 'Fines & Penalties', icon: 'cash-coin' },
-      attendance: { path: 'librarian.circulation.attendance', name: 'Attendance', icon: 'person-check' },
-    },
+      { path: 'librarian.circulation.attendance', name: 'Attendance', icon: 'person-check' },
+    ],
   },
 
   collections: {
     name: 'Collections',
-    children: {
-      catalog: { path: 'librarian.collections.catalog', name: 'Catalog', icon: 'journal-plus' },
-      inventory: { path: 'librarian.collections.inventory', name: 'Inventory', icon: 'boxes' },
-    },
+    children: [
+      { path: 'librarian.collections.catalog', name: 'Catalog', icon: 'journal-plus' },
+      { path: 'librarian.collections.inventory', name: 'Inventory', icon: 'boxes' },
+    ],
   },
 
   acquisition: {
     name: 'Acquisitions',
-    children: {
-      acquisition: { path: 'librarian.acquisition', name: 'Acquisition', icon: 'receipt' },
-      acquisition_request: { path: 'librarian.acquisition-requests', name: 'Acquisition Request', icon: 'box-arrow-in-down' },
-    },
+    children: [
+      { path: 'librarian.acquisition', name: 'Acquisition', icon: 'receipt' },
+      { path: 'librarian.acquisition-requests', name: 'Acquisition Request', icon: 'box-arrow-in-down' },
+    ],
   },
 
   // patron: {
@@ -69,19 +70,20 @@ const librarianMenu = {
 
   administration: {
     name: 'Administration',
-    children: {
-      staff: { path: 'librarian.staffs', name: 'Staff', icon: 'person-vcard' },
-    },
+    children: [
+      { path: 'librarian.staffs', name: 'Staff', icon: 'person-vcard' },
+      { path: 'librarian.sections', name: 'Sections', icon: 'building-add' },
+    ],
   },
 
   settings: {
     name: 'Settings',
-    children: {
-      account: { path: 'librarian.settings.account', name: 'Account', icon: 'person-gear' },
-      profile: { path: 'librarian.settings.profile', name: 'Profile', icon: 'person-circle' },
-      preferences: { path: 'librarian.settings.preferences', name: 'Preferences', icon: 'sliders' },
-      system: { path: 'librarian.settings.system', name: 'System Settings', icon: 'gear' },
-    },
+    children: [
+      { path: 'librarian.settings.account', name: 'Account', icon: 'person-gear' },
+      { path: 'librarian.settings.profile', name: 'Profile', icon: 'person-circle' },
+      { path: 'librarian.settings.preferences', name: 'Preferences', icon: 'sliders' },
+      { path: 'librarian.settings.system', name: 'System Settings', icon: 'gear' },
+    ],
   },
 }
 

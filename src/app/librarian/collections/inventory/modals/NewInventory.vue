@@ -6,15 +6,14 @@
 
     <ModalBody>
       <Form class="p-5" id="new-inventory">
-        <h2 class="uppercase tracking-wide font-semibold mb-5">Select a Section</h2>
         <Control id="inventory-section" required col>
           <div class="">
             <Label> Section </Label>
-            <p class="text-muted-foreground text-sm">Please select the section you're going to perform the inventory into</p>
+            <p class="text-muted-foreground text-sm">Select a section to inventory</p>
           </div>
           <Select title="Sections">
             <Option value="" selected disabled>Select a section to inventory</Option>
-            <Option value="aca">Academic Section</Option>
+            <Option :value="section.id" v-for="section in options.sections">{{ section.name }}</Option>
           </Select>
         </Control>
       </Form>
@@ -30,10 +29,14 @@
 import Modal from '@/components/my/Modal.vue'
 
 const modal = ref<InstanceType<typeof Modal>>()
+const options = optionStore()
+const auth = authStore()
 
 function open() {
   modal.value?.open()
 }
+
+onBeforeMount(() => options.fetchSections(auth.user?.library?.id))
 </script>
 
 <style scoped></style>

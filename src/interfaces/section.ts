@@ -8,5 +8,9 @@ export interface Section {
   library: Library
   // librarian: Librarian
 
+  created_at: string
+  updated_at: string
+  deleted_at: string
+
   [key: string]: any
 }
