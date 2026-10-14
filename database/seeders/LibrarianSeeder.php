@@ -14,13 +14,14 @@ class LibrarianSeeder extends Seeder
      */
     public function run(): void
     {
-        $users = [
+        collect([
             [
                 'uuid' => Str::uuid()->toString(),
                 'last_name' => 'tobias',
                 'first_name' => 'eugene_librarian',
                 'middle_initial' => 'd',
                 'username' => 'eugene_pogi',
+                'sex' => 'male',
                 'role' => 'librarian',
                 'email' => 'librarian_eugene@isu.edu.ph',
                 'password' => bcrypt('elibra2026'),
@@ -32,6 +33,7 @@ class LibrarianSeeder extends Seeder
                 'first_name' => 'christian',
                 'middle_initial' => 'd',
                 'username' => 'christian',
+                'sex' => 'male',
                 'role' => 'librarian',
                 'email' => 'christian@isu.edu.ph',
                 'password' => bcrypt('elibra2026'),
@@ -43,22 +45,20 @@ class LibrarianSeeder extends Seeder
                 'first_name' => 'Hyacinth',
                 'middle_initial' => 'd',
                 'username' => 'hyacinth',
-                'role' => 'librarian',
                 'sex' => 'female',
+                'role' => 'librarian',
                 'email' => 'hyacinth@isu.edu.ph',
                 'password' => bcrypt('elibra2026'),
                 'campus_id' => 1,
             ],
-        ];
-
-        foreach ($users as $user) {
+        ])->each(function ($user) {
             $librarian = User::create($user);
 
             Librarian::create([
                 'user_id' => $librarian->id,
-                'branch_id' => 1,
+                'library_id' => rand(1, 2),
             ]);
-        }
+        });
 
     }
 }

@@ -12,27 +12,28 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            // Prod Seeds
-            PermissionSeeder::class,
-            PatronTypeSeeder::class,
-            SystemSeeder::class,
+            // ========= PRODUCTION SEEDS =========
+
             SuperAdminSeeder::class,
-            SectionsSeeder::class,
             ItemTypeSeeder::class,
             ItemTypeCategorySeeder::class,
+            // PermissionSeeder::class,
+            PatronTypeSeeder::class,
+            // SystemSeeder::class,
             LanguageSeeder::class,
             AuthorshipSeeder::class,
 
-            // Dev Seeds
+            // ========= DEVELOPMENT SEEDS =========
+
             CampusSeeder::class,
-            BranchSeeder::class,
+            LibrarySeeder::class,
+            SectionsSeeder::class,
             DepartmentSeeder::class,
-            BranchSectionSeeder::class,
             ProgramsSeeder::class,
             UsersSeeder::class,
             AuthorSeeder::class,
-            AcquisitionSeeder::class,
             ItemSeeder::class,
+            AcquisitionSeeder::class,
             AcquisitionLinesSeeder::class,
         ]);
     }

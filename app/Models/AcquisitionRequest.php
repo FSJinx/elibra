@@ -13,11 +13,6 @@ class AcquisitionRequest extends Model
     protected $table = 'acquisition_requests';
 
     protected $fillable = [
-        'request_id',
-        'requested_by',
-        'item_type_id',
-        'reviewed_by',
-
         // Bibliographic information
         'title',
         'author',
@@ -42,11 +37,16 @@ class AcquisitionRequest extends Model
         'procurement_status',
         'is_closed',
 
+        // Foreign Keys
+        'request_id',
+        'requested_by',
+        'item_type_id',
+        'reviewed_by',
+
         // Review
-        'reviewed_at',
         'closed_remarks',
         'closed_descriptions',
-        // 'closed_description',
+        'reviewed_at',
         'remarks',
     ];
 
@@ -71,6 +71,6 @@ class AcquisitionRequest extends Model
 
     public function reviewedBy(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'reviewed_by');
+        return $this->belongsTo(Librarian::class, 'reviewed_by');
     }
 }

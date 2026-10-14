@@ -18,70 +18,37 @@ class AcquisitionLinesService
     {
         $acquisitionLine = DB::transaction(function () use ($data) {
 
-            $quantity = isset($data['quantity']) ? (float) $data['quantity'] : null;
-            $unitPrice = isset($data['unit_price']) ? (float) $data['unit_price'] : null;
-            $discount = isset($data['discount']) ? (float) $data['discount'] : 0.0;
-
-            $data['net_price'] = $this->calculateNetPrice($quantity, $unitPrice, $discount);
-
-            /*
-             * Get item and category.
-             */
-            $item = Item::with('itemTypeCategory')
-                ->findOrFail($data['item_id']);
-
-            /*
-             * Example:
-             *
-             * Category = GC
-             * Branch   = 1
-             *
-             * Prefix = GC001
-             */
-            $prefix = $this->getAccessionPrefix($item);
-
             /*
              * Create acquisition line.
              */
             $acquisitionLine = AcquisitionLines::create(
                 Arr::only($data, [
-                    'quantity',
                     'unit_price',
-                    'discount',
-                    'net_price',
                     'item_id',
                     'acquisition_id',
                 ])
             );
 
-            /*
-             * Generate accession numbers.
-             */
-            $accessionNumbers = $this->generateAccessionNumbers(
-                $prefix,
-                $acquisitionLine->quantity
-            );
+            $quantity = (int) ($data['quantity'] ?? 1);
+            $item = Item::with('itemTypeCategory')->findOrFail($data['item_id']);
+            $prefix = $this->getAccessionPrefix($item);
 
-            /*
-             * Create accessions.
-             */
-            foreach ($accessionNumbers as $accessionNumber) {
-
+            foreach ($this->generateAccessionNumbers($prefix, $quantity) as $accessionNumber) {
                 Accession::create([
                     'accession_number' => $accessionNumber,
                     'status' => 'available',
                     'item_id' => $acquisitionLine->item_id,
-                    'branch_section_id' => $data['branch_section_id'],
+                    'section_id' => $data['section_id'] ?? null,
                     'acquisition_line_id' => $acquisitionLine->id,
                 ]);
             }
 
             return $acquisitionLine->fresh([
-                'items',
+                'item',
                 'acquisition',
                 'accessions',
             ]);
-        }, 5);
+        });
 
         CacheService::invalidate(CacheService::ACQUISITION_LINES);
 
@@ -95,12 +62,6 @@ class AcquisitionLinesService
     {
 
         $acquisitionLine = DB::transaction(function () use ($acquisitionLine, $data) {
-
-            $quantity = array_key_exists('quantity', $data) ? (float) $data['quantity'] : $acquisitionLine->quantity;
-            $unitPrice = array_key_exists('unit_price', $data) ? (float) $data['unit_price'] : $acquisitionLine->unit_price;
-            $discount = array_key_exists('discount', $data) ? (float) $data['discount'] : ($acquisitionLine->discount ?? 0.0);
-
-            $data['net_price'] = $this->calculateNetPrice($quantity, $unitPrice, $discount);
 
             $oldQuantity = (int) $acquisitionLine->quantity;
             $newQuantity = array_key_exists('quantity', $data)
@@ -120,8 +81,6 @@ class AcquisitionLinesService
                 Arr::only($data, [
                     'quantity',
                     'unit_price',
-                    'discount',
-                    'net_price',
                     'item_id',
                     'acquisition_id',
                 ])
@@ -281,18 +240,6 @@ class AcquisitionLinesService
         return $deleted;
     }
 
-    private function calculateNetPrice(int $quantity, float $unitPrice, float $discount = 0.0): ?float
-    {
-        if ($quantity === null || $unitPrice === null) {
-            return null;
-        }
-
-        $grossTotal = (float) $quantity * (float) $unitPrice;
-        $discountAmount = $discount === null ? 0.0 : (float) $discount;
-
-        return $grossTotal - $discountAmount;
-    }
-
     /**
      * Get accession prefix.
      *
@@ -364,10 +311,8 @@ class AcquisitionLinesService
      * GC0012332
      * GC0012333
      */
-    private function generateAccessionNumbers(
-        string $prefix,
-        int $quantity
-    ): array {
+    private function generateAccessionNumbers(string $prefix, int $quantity): array
+    {
 
         if ($quantity <= 0) {
             return [];

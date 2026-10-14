@@ -13,11 +13,18 @@
       <span class="line-clamp-1 mr-5">{{ selectedOption.label ?? placeholder }}</span>
       <Icon icon="chevron-down" class="ml-auto transition-all duration-300 pointer-events-none" :class="{ '-rotate-180': open }" />
     </div>
+
     <p v-if="error && error.length > 0" class="text-xs font-medium text-danger">
       {{ error }}
     </p>
 
-    <Input :id="`${id}-value`" class="absolute opacity-0 -z-1 pointer-events-none h-full w-full" :required="required" v-model="model" />
+    <!-- Helper Text -->
+    <div v-if="helper" class="flex items-start gap-1.5 mt-1 text-sm text-info">
+      <Icon icon="info-circle" />
+      <span>{{ helper }}</span>
+    </div>
+
+    <Input :id="`${id || control?.id}-value`" class="absolute opacity-0 -z-1 pointer-events-none h-full w-full" :required="required" v-model="model" />
 
     <!-- Teleported dropdown: using hidden / v-show instead of v-if keeps child slots mounted -->
     <Teleport to="body">
@@ -36,12 +43,13 @@ interface SelectedOption {
 }
 
 interface Props {
-  id: string
+  id?: string
   title?: string
   required?: boolean
   disabled?: boolean
   enableTooltip?: boolean
   error?: string | null
+  helper?: string
   placeholder?: string
 }
 
@@ -50,6 +58,7 @@ const dropdownMenuRef = ref<HTMLElement | null>(null)
 const open = ref<boolean>(false)
 const model = defineModel<any>({ default: '' })
 const parse = useParser()
+const control = inject<any>('control', null)
 
 const props = withDefaults(defineProps<Props>(), {
   enableTooltip: false,

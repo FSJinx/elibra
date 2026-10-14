@@ -16,10 +16,12 @@ class Circulation extends Model
         'borrowed_at',
         'due_at',
         'returned_at',
+
         'status',
         'renewal_count',
         'fine_charged',
         'notes',
+
         'processed_by',
         'accession_id',
         'patron_id',
@@ -37,12 +39,12 @@ class Circulation extends Model
 
     public function processedBy(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'processed_by');
+        return $this->belongsTo(Librarian::class, 'processed_by');
     }
 
     public function patron(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'patron_id');
+        return $this->belongsTo(Patron::class, 'patron_id');
     }
 
     public function accession(): BelongsTo
@@ -57,6 +59,6 @@ class Circulation extends Model
 
     public function returnReceivedBy(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'return_received_by');
+        return $this->belongsTo(Librarian::class, 'return_received_by');
     }
 }

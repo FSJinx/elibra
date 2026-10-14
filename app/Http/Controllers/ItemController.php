@@ -2,13 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreItemRequest;
 use App\Models\Item;
 use App\Services\CacheService;
+use App\Services\ItemService;
 use App\Services\QueryService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class ItemController extends Controller
 {
+    protected ItemService $itemService;
+
+    public function __construct(ItemService $itemService)
+    {
+        $this->itemService = $itemService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -16,19 +27,21 @@ class ItemController extends Controller
     {
         $this->authorize('viewAny', Item::class);
 
-        $user = $request->user();
+        // $user = $request->user();
+        $user = $this->user();
 
         $filters = QueryService::filters($request);
 
-        $branchId = $user->isSuperAdmin()
-            ? null
-            : $user->librarian?->branch_id;
+        $libraryId = $user->isLibrarian()
+            ? $user->librarian?->library_id
+            : null;
         $campusId = $user->isAdmin() ? $user->campus_id : null;
 
         $parameters = array_merge(
             $filters,
             [
-                'branch_id' => $branchId,
+                'role' => $user->role,
+                'library_id' => $libraryId,
                 'campus_id' => $campusId,
             ]
         );
@@ -37,29 +50,31 @@ class ItemController extends Controller
             CacheService::ITEMS,
             $parameters,
             now()->addMinutes(10),
-            function () use ($user, $branchId, $campusId, $filters) {
+            function () use ($user, $libraryId, $campusId, $filters) {
 
                 $query = Item::query();
                 $query->with('coverMedia');
 
-                if ($user->isAdmin()) {
-                    $query->whereHas('branch', function ($query) use ($campusId) {
+                if ($user->isSuperAdmin()) {
+                    // Super admins can see every item.
+                    $query->withTrashed();
+                } elseif ($user->isAdmin()) {
+                    $query->whereHas('library', function ($query) use ($campusId) {
                         $query->where('campus_id', $campusId);
                     });
-                } elseif (! $user->isSuperAdmin()) {
-                    $query->where('branch_id', $branchId);
+                } elseif ($user->isLibrarian()) {
+                    $query->where('library_id', $libraryId);
                 }
 
                 return $query->paginate(
                     $filters['per_page'],
                     [
-                        // 'id',
-                        // 'title',
-                        // 'subtitle',
-                        // 'call_number',
-                        // 'publication_year',
-                        // 'item_type_id',
-                        '*',
+                        'id',
+                        'title',
+                        'subtitle',
+                        'call_number',
+                        'item_type_id',
+                        'released',
                     ],
                     'page',
                     $filters['page']
@@ -87,37 +102,39 @@ class ItemController extends Controller
     /**
      * Display the specified item.
      */
-    public function show(Request $request, Item $item)
+    public function show(string $id)
     {
-        $this->authorize('viewAny', Item::class);
+        $item = $this->itemService->show($id);
 
-        $user = $request->user();
+        return $this->response(message: 'Catalog received successfully', data: $item->toArray());
+    }
 
-        if ($user->isAdmin() && $item->branch?->campus_id !== $user->campus_id) {
-            abort(404);
+    public function store(StoreItemRequest $request, Item $item)
+    {
+        DB::beginTransaction();
+
+        $newItem = array_merge($request->validated(), ['library_id' => $this->user()->librarian->id]);
+
+        try {
+            $item = Item::create($newItem);
+
+            $item->syncAuthors($request->input('authors'));
+            $item->refresh();
+
+            DB::commit();
+
+            CacheService::invalidate(CacheService::ITEMS);
+
+            return $this->response(
+                'success',
+                'Item created successfully',
+                $item->toArray(),
+                201
+            );
+        } catch (Throwable $e) {
+            DB::rollBack();
+
+            throw $e;
         }
-
-        if (! $user->isSuperAdmin() && $user->isLibrarian() && $item->branch_id !== $user->librarian?->branch_id) {
-            abort(404);
-        }
-
-        $item->load([
-            'book',
-            'academic',
-            'serial',
-            'authors',
-            'itemType',
-            'itemTypeCategory',
-            'branch',
-            'language',
-            'coverMedia',
-        ]);
-
-        return $this->response(
-            'success',
-            'Item retrieved successfully.',
-            $item->toArray(),
-            200
-        );
     }
 }

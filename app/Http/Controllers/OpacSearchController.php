@@ -34,8 +34,10 @@ class OpacSearchController extends Controller
 
     public function search(CatalogSearchRequest $request): JsonResponse
     {
+        $query = $request->input('query') ?? '';
+
         $results = $this->searchService->search(
-            $request->input('query', ''),
+            $query,
             $request->validated(),
             $request->integer('per_page', 10)
         );
@@ -44,7 +46,7 @@ class OpacSearchController extends Controller
             'status' => 'success',
             'message' => 'Search Results Retrieved Successfully!',
             'data' => [
-                'query' => $request->input('query'),
+                'query' => $query,
                 'results' => $results,
             ],
         ]);

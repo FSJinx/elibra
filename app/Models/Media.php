@@ -25,6 +25,6 @@ class Media extends Model
     public const ITEM_COVER = 'item_cover'; // cover image for books, academics, or serials
     public const DOCUMENT = 'document'; // document (scanned documents)
     public const BANNER = 'banner'; // banner? ewan need feedback
-    public const OTHER = 'other'; 
+    public const OTHER = 'other'; // other
 
 }

@@ -23,18 +23,11 @@
 
             <!-- Menu Children -->
             <div class="space-y-1 px-2">
-              <router-link
-                v-for="child in childrenOf(menu.children)"
-                :key="child.path"
-                :to="{ name: child.path }"
-                class="relative flex items-center gap-3.5 py-3.5 px-5 rounded-xl border font-medium text-[13px] cursor-pointer transition-all duration-200"
-                :class="[isActive(child.path) ? 'text-primary bg-primary-soft/25 hover:bg-primary-soft/25 border-primary/50' : 'border-transparent hover:bg-slate-100 text-foreground-secondary hover:text-foreground']"
-                :aria-current="isActive(child.path) ? 'page' : undefined"
-              >
+              <router-link v-for="child in childrenOf(menu.children)" :key="child.path" :to="{ name: child.path }" class="relative flex items-center gap-3.5 py-2.5 px-5 rounded-md font-medium text-[13px] cursor-pointer transition-all duration-200" :class="[isActive(child.path) ? 'text-primary bg-primary-soft/50 hover:bg-primary-soft/50 ' : 'border-transparent hover:bg-slate-200 text-foreground-secondary hover:text-foreground']" :aria-current="isActive(child.path) ? 'page' : undefined">
                 <!-- Active Indicator Bar -->
-                <div class="absolute left-0 bg-primary h-[50%] rounded-r-full transition-all duration-200" :class="[isActive(child.path) ? 'w-1.5' : 'w-0']" />
+                <div class="absolute left-0 bg-primary h-full rounded-full transition-all duration-200" :class="[isActive(child.path) ? 'w-1.25' : 'w-0']" />
 
-                <Icon :icon="child.icon" class="shrink-0" />
+                <Icon :icon="child.icon" class="shrink-0" v-if="child.icon" />
                 <span class="truncate">{{ child.name }}</span>
               </router-link>
             </div>

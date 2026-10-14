@@ -11,10 +11,12 @@ export function useParser() {
         available: 'success',
         active: 'success',
         admin: 'success',
+        completed: 'success',
+        true: 'success',
+        1: 'success',
 
         // ====== INFO =======
         info: 'info',
-        librarian: 'info',
         reserved: 'info',
         book: 'info',
         male: 'info',
@@ -22,12 +24,17 @@ export function useParser() {
         // ====== WARNING =======
         warning: 'warning',
         serial: 'warning',
+        pending: 'warning',
 
         // ====== ERROR =======
+        librarian: 'danger',
+        error: 'danger',
         danger: 'danger',
         inactive: 'danger',
         borrowed: 'danger',
         female: 'danger',
+        false: 'danger',
+        0: 'danger',
 
         // ====== RESTORE =======
         restore: 'restore',
@@ -37,6 +44,7 @@ export function useParser() {
 
         // ====== DEFAULT =======
         default: 'default',
+        closed: 'default',
       }
 
       return stats[s ? s : 'default']
@@ -187,6 +195,11 @@ export function useParser() {
       return rtf.format(-days, 'day')
     },
 
+    /**
+     *
+     * @param value string | null
+     * @returns A date and time that computes the moment that has gone through since the given datetime
+     */
     dateTimeAgo(value: string | null) {
       if (!value) return null
 

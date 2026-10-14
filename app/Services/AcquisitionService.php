@@ -65,6 +65,20 @@ class AcquisitionService
         );
     }
 
+    public function generateAcquisitionId(Acquisition $acquisition)
+    {
+        $campusCode = $acquisition->receiver->library?->campus?->code;
+        $date = $acquisition->created_at->format('Ymd');
+
+        // Get the number of acquisitions for this campus on this date
+        $sequence = Acquisition::whereHas('receiver.library.campus', function ($query) use ($campusCode) {
+            $query->where('code', $campusCode);
+        })
+            ->whereDate('created_at', $acquisition->created_at)
+            ->count();
+
+        return "ACQ{$campusCode}-{$date}{$sequence}";
+    }
 
     public function create(array $data): Acquisition
     {
@@ -77,23 +91,12 @@ class AcquisitionService
                     'acquisition_date',
                     'remarks',
 
-                    'receiver_user_id',
+                    'receiver_id',
                     'acquisition_request_id',
                 ])
             );
 
-            $campusCode = $acquisition->receiver->campus->code;
-            $date = $acquisition->acquisition_date->format('Ymd');
-
-            // Get the number of acquisitions for this campus on this date
-            $sequence = Acquisition::whereHas('receiver.campus', function ($query) use ($campusCode) {
-                    $query->where('code', $campusCode);
-                })
-                ->whereDate('acquisition_date', $acquisition->acquisition_date)
-                ->count();
-
-            $acquisition->acquisition_id = "{$campusCode}-{$date}{$sequence}";
-
+            $acquisition->acquisition_id = $this->generateAcquisitionId($acquisition);
             $acquisition->save();
 
             return $acquisition->fresh();
@@ -117,7 +120,7 @@ class AcquisitionService
                     'acquisition_date',
                     'remarks',
 
-                    'receiver_user_id',
+                    'receiver_id',
                     'acquisition_request_id',
                 ])
             );

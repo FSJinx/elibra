@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreUsersRequest;
 use App\Http\Requests\UpdateUsersRequest;
 use App\Models\User;
+use App\Services\QueryService;
 use App\Services\UserService;
 use Exception;
 use Illuminate\Http\Request;
@@ -13,21 +14,28 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    protected UserService $service;
+
+    public function __construct(UserService $service)
+    {
+        $this->service = $service;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
         $user = $this->user();
-        $users = null;
+        $filters = QueryService::filters($request);
+        $filters = array_merge(
+            $filters,
+            [
+                'role' => $request->query('role'),
+            ],
+        );
 
-        if ($user->isSuperAdmin()) {
-            $users = User::all();
-        }
-
-        // $users->paginate();
-
-        return $this->response(message: 'All users retrieved successfully!', data: $users->toArray());
+        return $this->response(data: $this->service->index($filters, $user));
     }
 
     /**

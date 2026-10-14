@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Sections;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreSectionsRequest;
 use App\Http\Requests\UpdateSectionsRequest;
+use App\Models\Library;
+use App\Models\Sections;
 use App\Services\CacheService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -20,30 +20,23 @@ class SectionsController extends Controller
     {
         $user = $request->user();
 
-        if (!$user) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Unauthenticated.',
-                'data' => []
-            ], 401);
-        }
+        $libraryId = $user->isSuperAdmin()
+            ? $request->query('library_id', $request->query('id'))
+            : $user->librarian?->library_id;
 
         $sections = CacheService::remember(
             CacheService::SECTIONS,
             [
                 'is_super_admin' => $user->isSuperAdmin(),
+                'library_id' => $libraryId,
             ],
             now()->addHour(),
-            function () use ($user) {
-
-                if ($user->isSuperAdmin()) {
-                    return Sections::all();
-                }
-
-                return Sections::select([
-                    'name',
-                    'created_at',
-                ])->get();
+            function () use ($libraryId) {
+                return Sections::query()
+                    ->select(['id', 'name', 'library_id', 'librarian_id', 'created_at', 'updated_at'])
+                    ->with(['library:id,name', 'librarian'])
+                    ->where('library_id', $libraryId)
+                    ->get();
             }
         );
 
@@ -52,6 +45,56 @@ class SectionsController extends Controller
             'message' => 'Sections retrieved successfully',
             'data' => $sections,
         ], 200);
+    }
+
+    public function temporaryIndex(Request $request)
+    {
+        $library_id = $request->input('library_id');
+
+        $sections = CacheService::remember(
+            CacheService::SECTIONS,
+            ['library_id' => $library_id],
+            now()->addHour(),
+            fn () => Sections::query()
+                ->with(['library', 'librarian']) // or 'library' if it's a belongsTo
+                ->when($library_id, fn ($q) => $q->where('library_id', $library_id))
+                ->get()
+        );
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Sections retrieved successfully',
+            'data' => $sections,
+        ], 200);
+    }
+
+    public function deleted(Request $request)
+    {
+        $user = $request->user();
+        $libraryId = $user->isSuperAdmin()
+            ? $request->query('library_id', $request->query('id'))
+            : $user->librarian?->library_id;
+
+        $sections = CacheService::remember(
+            CacheService::SECTIONS,
+            [
+                'deleted' => true,
+                'is_super_admin' => $user->isSuperAdmin(),
+                'library_id' => $libraryId,
+            ],
+            now()->addHour(),
+            fn () => Sections::onlyTrashed()
+                ->select(['id', 'name', 'library_id', 'librarian_id', 'created_at', 'updated_at', 'deleted_at'])
+                ->where('library_id', $libraryId)
+                ->get()
+        );
+
+        return $this->response(
+            'success',
+            'Deleted sections retrieved successfully',
+            $sections->toArray(),
+            200
+        );
     }
 
     /**
@@ -68,8 +111,12 @@ class SectionsController extends Controller
     public function store(StoreSectionsRequest $request)
     {
         DB::beginTransaction();
+
         try {
-            $section = Sections::create($request->validated());
+            $data = $request->validated();
+            $library = Library::findOrFail($data['library_id']);
+            $data['librarian_id'] = $library->library_head_id;
+            $section = Sections::create($data);
 
             DB::commit();
             CacheService::invalidate(CacheService::SECTIONS);
@@ -154,5 +201,29 @@ class SectionsController extends Controller
             throw $e;
         }
 
+    }
+
+    public function restore(int $section)
+    {
+        $section = Sections::withTrashed()->findOrFail($section);
+        $this->authorize('restore', $section);
+
+        DB::beginTransaction();
+        try {
+            $section->restore();
+
+            DB::commit();
+            CacheService::invalidate(CacheService::SECTIONS);
+
+            return $this->response(
+                'success',
+                'Section restored successfully',
+                $section->toArray(),
+                200
+            );
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 }

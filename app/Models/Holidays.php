@@ -9,4 +9,9 @@ class Holidays extends Model
 {
     /** @use HasFactory<\Database\Factories\HolidaysFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        'date',
+        'name'
+    ];
 }

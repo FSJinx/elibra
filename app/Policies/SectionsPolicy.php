@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use Illuminate\Auth\Access\Response;
 use App\Models\Sections;
 use App\Models\User;
 
@@ -29,7 +28,7 @@ class SectionsPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->isSuperAdmin() || $user->isAdmin();
     }
 
     /**
@@ -37,7 +36,7 @@ class SectionsPolicy
      */
     public function update(User $user, Sections $sections): bool
     {
-        return false;
+        return $user->isSuperAdmin();
     }
 
     /**
@@ -45,7 +44,7 @@ class SectionsPolicy
      */
     public function delete(User $user, Sections $sections): bool
     {
-        return false;
+        return $user->isSuperAdmin();
     }
 
     /**
@@ -53,7 +52,7 @@ class SectionsPolicy
      */
     public function restore(User $user, Sections $sections): bool
     {
-        return false;
+        return $user->isSuperAdmin();
     }
 
     /**

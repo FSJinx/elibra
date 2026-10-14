@@ -10,11 +10,13 @@ use Illuminate\Database\Eloquent\Model;
 class LoanMode extends Model
 {
     /** @use HasFactory<LoanModeFactory> */
-    use HasFactory, AutoFormatter;
+    use AutoFormatter, HasFactory;
 
     protected $fillable = [
         'slug', 'name',
     ];
 
-    protected $formatter = ['name' => 'capitalize'];
+    protected $formatter = [
+        'name' => 'capitalize',
+    ];
 }

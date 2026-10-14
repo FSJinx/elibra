@@ -1,14 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 // import { roleMap } from '@/constants/roleMap'
-import { authStore } from '@/stores/authStore'
+import { authStore } from '@/stores/auth.store'
 
 // Route imports
 import { publicRoute } from '@/router/publicRoutes'
 import { authRoute } from '@/router/authRoute'
-import { adminRoutes } from '@/router/adminRoutes'
-import librarianRoutes from '@/router/librarianRoutes'
-import { patronRoutes } from '@/router/patronRoutes'
+import { adminRoutes } from '@/router/admin.routes'
+import librarianRoutes from '@/router/librarian.routes'
+import { patronRoutes } from '@/router/patron.routes'
 import { errorRoutes } from '@/router/errorRoutes'
 
 const router = createRouter({
@@ -31,8 +31,19 @@ const router = createRouter({
       component: () => import('@/app/Test.vue'),
     },
 
-    // Admin Route
-    ...adminRoutes,
+    // ============== Admin Route ================
+    {
+      path: '/admin',
+      name: 'admin',
+      meta: {
+        breadcrumb: 'Admin',
+        requiresAuth: true,
+        role: 'super_admin',
+      },
+      redirect: { name: 'admin.overview' },
+      component: () => import('@/layouts/management/ManagementLayout.vue'),
+      children: adminRoutes,
+    },
 
     // Librarian Route
     ...librarianRoutes,
@@ -78,11 +89,7 @@ router.beforeEach(async (to, from) => {
   }
 
   // ======== PRELOAD ===========
-  if (!preloader.preloaded) {
-    console.log('nakarating')
-
-    preloader.preload()
-  }
+  preloader.preload()
 
   if (to.name === 'login' && store.isAuthenticated) {
     router.replace({ name: auth.userHomeLink })

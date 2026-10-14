@@ -12,6 +12,8 @@ class Authorship extends Model
     use HasFactory;
 
     protected $fillable = [
+        'slug',
         'name',
+        'item_type_id',
     ];
 }

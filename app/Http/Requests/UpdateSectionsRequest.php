@@ -14,7 +14,7 @@ class UpdateSectionsRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('update', Sections::class);
+        return $this->user()->can('update', $this->route('section'));
     }
 
     /**

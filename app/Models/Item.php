@@ -18,12 +18,23 @@ class Item extends Model
         'subtitle',
         'description',
         'call_number',
-        'publication_year',
-        'keywords',
         'electronic_file',
+        'keywords',
+
+        'edition',
+        'isbn_issn',
+        'copyright_year',
+        'doi',
+        'volume',
+        'issue',
+        'pages',
+        'department_id',
+
+        'released',
+
         'item_type_id',
         'item_type_category_id',
-        'branch_id',
+        'library_id',
         'language_id',
         'cover_media_id',
     ];
@@ -35,21 +46,6 @@ class Item extends Model
     protected $casts = [
         'keywords' => 'array',
     ];
-
-    public function book()
-    {
-        return $this->hasOne(Book::class);
-    }
-
-    public function academic()
-    {
-        return $this->hasOne(Academic::class);
-    }
-
-    public function serial()
-    {
-        return $this->hasOne(Serial::class);
-    }
 
     public function authors()
     {
@@ -80,6 +76,11 @@ class Item extends Model
         $this->authors()->sync($pivotData);
     }
 
+    public function itemPublishers()
+    {
+        return $this->hasMany(ItemPublisher::class);
+    }
+
     public function itemType()
     {
         return $this->belongsTo(ItemType::class);
@@ -90,9 +91,9 @@ class Item extends Model
         return $this->belongsTo(ItemTypeCategory::class);
     }
 
-    public function branch()
+    public function library()
     {
-        return $this->belongsTo(Branch::class);
+        return $this->belongsTo(Library::class);
     }
 
     public function language()

@@ -14,23 +14,28 @@ class ItemTypeCategorySeeder extends Seeder
     public function run(): void
     {
         $types = [
+            // Thesis
             [
-                'name' => 'academic',
+                'name' => 'thesis',
                 'categories' => [
                     ['name' => 'undergraduate thesis', 'code' => 'ut'],
                     ['name' => 'graduate thesis', 'code' => 'gt'],
                 ],
             ],
+            // Book
             [
                 'name' => 'book',
                 'categories' => [
-                    // General Collections
                     ['name' => 'fiction', 'code' => 'gc'],
+                    ['name' => 'textbook', 'code' => 'gc'],
                     ['name' => 'non-fiction', 'code' => 'gc'],
                     ['name' => 'novel', 'code' => 'gc'],
-                    ['name' => 'textbook', 'code' => 'gc'],
-
-                    // Reference Collections
+                ],
+            ],
+            // References
+            [
+                'name' => 'references',
+                'categories' => [
                     ['name' => 'almanac', 'code' => 'rc'],
                     ['name' => 'atlas', 'code' => 'rc'],
                     ['name' => 'bibliography', 'code' => 'rc'],
@@ -39,12 +44,9 @@ class ItemTypeCategorySeeder extends Seeder
                     ['name' => 'encyclopedia', 'code' => 'rc'],
                     ['name' => 'thesaurus', 'code' => 'rc'],
                     ['name' => 'yearbook', 'code' => 'rc'],
-
-                    // Filipiniana Collections
-                    // ['name' => 'filipiniana', 'code' => 'fc'],
-                    ['name' => 'reserved', 'code' => 'rc'],
                 ],
             ],
+            // Multimedia
             [
                 'name' => 'multimedia',
                 'categories' => [
@@ -55,8 +57,9 @@ class ItemTypeCategorySeeder extends Seeder
                     ['name' => 'video', 'code' => 'vid'],
                 ],
             ],
+            // Serials
             [
-                'name' => 'serial',
+                'name' => 'serials',
                 'categories' => [
                     ['name' => 'annual reports', 'code' => 'ar'],
                     ['name' => 'journal', 'code' => 'js'],
@@ -70,7 +73,7 @@ class ItemTypeCategorySeeder extends Seeder
         ];
 
         foreach ($types as $type) {
-            $item_type = ItemType::where('name', '=', $type['name'], 'and')->first();
+            $item_type = ItemType::where('slug', '=', $type['name'], 'and')->first();
 
             if ($item_type) {
                 foreach ($type['categories'] as $category) {

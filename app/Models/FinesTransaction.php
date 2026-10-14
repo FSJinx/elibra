@@ -17,6 +17,7 @@ class FinesTransaction extends Model
         'amount',
         'transaction_type',
         'remarks',
+
         'patron_id',
         'circulation_id',
         'processed_by',
@@ -38,6 +39,6 @@ class FinesTransaction extends Model
 
     public function processedBy(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'processed_by');
+        return $this->belongsTo(Librarian::class, 'processed_by');
     }
 }

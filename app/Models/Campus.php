@@ -13,17 +13,18 @@ class Campus extends Model
     /** @use HasFactory<CampusFactory> */
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['name', 'code', 'address', 'heading', 'status'];
+    protected $fillable = ['name', 'code', 'address', 'status'];
 
     #[Override]
     protected static function booted()
     {
-        static::deleting(function ($campus) {
-            $campus->branches()->delete();
-        });
+        // static::deleting(function ($campus) {
+        //     $campus->branches()->delete();
+        // });
 
         static::restoring(function ($campus) {
             $campus->branches()->withTrashed()->restore();
+            $campus->users()->withTrashed()->restore();
         });
     }
 
@@ -32,8 +33,18 @@ class Campus extends Model
         return $this->hasMany(Department::class);
     }
 
-    public function branches()
+    public function libraries()
     {
-        return $this->hasMany(Branch::class);
+        return $this->hasMany(Library::class);
+    }
+
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
+
+    public function items()
+    {
+        return $this->hasManyThrough(Item::class, Library::class);
     }
 }

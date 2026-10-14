@@ -12,18 +12,13 @@ class ItemTypeSeeder extends Seeder
      */
     public function run(): void
     {
-        $item_types = [
-            ['name' => 'academic'],
-            ['name' => 'book'],
-            ['name' => 'multimedia'],
-            ['name' => 'serial'],
-        ];
-
-        foreach ($item_types as $item_type) {
-            ItemType::create([
-                'slug' => $item_type['name'],
-                'name' => $item_type['name'],
-            ]);
-        }
+        collect([
+            ['slug' => 'thesis', 'name' => 'thesis'],
+            ['slug' => 'book', 'name' => 'book'],
+            ['slug' => 'multimedia', 'name' => 'audio visual'],
+            ['slug' => 'serials', 'name' => 'serials'],
+        ])->each(function ($type) {
+            ItemType::create($type);
+        });
     }
 }

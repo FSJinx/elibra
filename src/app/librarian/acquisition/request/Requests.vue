@@ -1,8 +1,22 @@
 <template>
   <div class="size-full flex flex-col overflow-hidden">
-    <SectionHeader title="Acquisition Requests" description="Manage your library's acquisition requests" icon="box-arrow-in-down" />
+    <SectionHeader title="Acquisition Requests" description="Manage your library's acquisition requests" icon="box-arrow-in-down" >
+      <!-- <div class="flex items-center justify-end">
+        <Button variant="primary">New Acquisition Request</Button>
+      </div> -->
+    </SectionHeader>
 
-    <div class="flex-1 flex p-5 overflow-hidden">
+    <div class="flex-1 flex flex-col gap-3 p-5 overflow-hidden">
+      <Card class="">
+        <CardBody class="flex justify-start gap-2">
+          <Form id="request-form" class="flex-1 flex items-center gap-2" @submit="">
+            <Input id="" type="text" class="max-w-100" placeholder="Search by request id, title, or requester name" enable-clear/>
+            <Button form="request-form" type="submit" variant="info">Search</Button>
+          </Form>
+          <Button form="request-form" type="submit" variant="restore">Filter</Button>
+        </CardBody>
+      </Card>
+
       <Table title="Recent Requests" subtitle="Manage your library's recent acquisition requests">
         <Thead>
           <tr>

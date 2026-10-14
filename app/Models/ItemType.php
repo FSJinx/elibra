@@ -15,9 +15,11 @@ class ItemType extends Model
     protected $fillable = [
         'slug',
         'name',
+        'loanable'
     ];
 
     protected $formatter = [
         'name' => 'capitalize',
+        'slug' => 'lowercase',
     ];
 }

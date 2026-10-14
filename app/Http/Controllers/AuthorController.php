@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreAuthorRequest;
 use App\Http\Requests\UpdateAuthorRequest;
 use App\Models\Author;
+use App\Models\Item;
 use App\Services\AuthorService;
 use Illuminate\Http\Request;
 
@@ -20,9 +21,24 @@ class AuthorController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $authors = Author::all();
+        $query = trim((string) $request->input('query'));
+
+        $authors = Author::query()
+            ->when($query !== '', function ($q) use ($query) {
+                $search = "%{$query}%";
+
+                $q->where(function ($q) use ($search) {
+                    $q->where('first_name', 'LIKE', $search)
+                        ->orWhere('last_name', 'LIKE', $search);
+                });
+            })
+            ->get();
+
+        if ($authors->isEmpty()) {
+            return $this->response('error', 'No matching authors. Try adding one.', []);
+        }
 
         return $this->response(
             'success',
@@ -54,10 +70,13 @@ class AuthorController extends Controller
 
     /**
      * Display the specified resource.
-     */
+    */
     public function show(Request $request)
     {
         $query = trim((string) $request->input('query'));
+
+        $item = Item::query();
+        
 
         if ($query === '') {
             return $this->response('error', 'Please enter an author name.', [], 422);
@@ -118,6 +137,15 @@ class AuthorController extends Controller
     public function destroy(Author $author)
     {
         $deleted = $this->authorService->delete($author);
+
+        if (! $deleted) {
+            return $this->response(
+                'error',
+                'Unable to delete author at this time.',
+                [],
+                500
+            );
+        }
 
         return $this->response(
             'success',

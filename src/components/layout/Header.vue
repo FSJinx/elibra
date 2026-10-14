@@ -12,7 +12,7 @@
       <div class="sm:flex hidden items-center justify-end gap-2">
         <template v-if="!auth.isAuthenticated">
           <Button as="link" :to="{ name: 'login' }" class="hover:bg-primary/10 transition-all duration-300" variant="text">Login</Button>
-          <Button as="link" :to="{ name: '' }" variant="text" class="hover:bg-primary/10 transition-all duration-300">Register</Button>
+          <Button as="link" :to="{ name: 'register' }" variant="text" class="hover:bg-primary/10 transition-all duration-300">Register</Button>
         </template>
 
         <template v-else>

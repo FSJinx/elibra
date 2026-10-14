@@ -23,6 +23,10 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         'middle_initial' => 'uppercase',
     ];
 
+    protected $casts = [
+        'password' => 'hashed',
+    ];
+
     protected $hidden = [
         'password',
     ];
@@ -35,7 +39,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     public function getJWTCustomClaims()
     {
         return [
-            'name' => $this->first_name
+            'name' => $this->first_name,
         ];
     }
 
@@ -58,6 +62,11 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         return $this->hasOne(Librarian::class, 'user_id');
     }
 
+    public function profilePicture()
+    {
+        return $this->belongsTo(Media::class, 'profile_picture_id');
+    }
+
     public function section()
     {
         return $this->belongsTo($this->librarian(), 'section_id');
@@ -76,6 +85,18 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     public function campus()
     {
         return $this->belongsTo(Campus::class);
+    }
+
+    public function library()
+    {
+        return $this->hasOneThrough(
+            Library::class,
+            Librarian::class,
+            'user_id',
+            'id',
+            'id',
+            'library_id'
+        );
     }
 
     public function permissions()

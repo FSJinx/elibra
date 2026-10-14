@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Validation\Rule;
 
 class UpdateItemTypeRequest extends BaseRequest
 {
@@ -11,7 +12,7 @@ class UpdateItemTypeRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->user()?->isSuperAdmin() ?? false;
     }
 
     /**
@@ -22,7 +23,9 @@ class UpdateItemTypeRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'string', 'max:255'],
+            'slug' => ['required', 'string', 'max:255', Rule::unique('item_types', 'slug')->ignore($this->route('itemType'))],
+            'loanable' => ['required', 'boolean'],
         ];
     }
 }

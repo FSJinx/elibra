@@ -22,19 +22,14 @@ class LibrarianService
                 'contact_number',
                 'email',
                 'username',
-                'password',
             ]);
 
-            $userData['role'] = 'librarian';
-            $userData['password'] = Hash::make($userData['password']);
-            $userData['sex'] ??= 'male';
+            $userData['password'] = 'elibra2026';
 
             $user = User::create($userData);
 
             $librarianData = Arr::only($data, [
-                'branch_id',
-                'role',
-                'tools',
+                'library_id',
             ]);
 
             $librarianData['user_id'] = $user->id;

@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Database\Factories\AcquisitionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Acquisition extends Model
 {
-    /** @use HasFactory<\Database\Factories\AcquisitionFactory> */
+    /** @use HasFactory<AcquisitionFactory> */
     use HasFactory;
 
     protected $fillable = [
@@ -17,22 +18,21 @@ class Acquisition extends Model
         'acquisition_date',
         'remarks',
 
-        'receiver_user_id',
-        'acquisition_request_id'
+        'receiver_id',
+        'acquisition_request_id',
     ];
+
     protected $casts = [
         'acquisition_date' => 'date',
     ];
 
     public function receiver()
     {
-        return $this->belongsTo(User::class, 'receiver_user_id');
+        return $this->belongsTo(Librarian::class, 'receiver_id');
     }
 
-    public function acquisitionRequest() {
-
-        return $this->belongsTo(
-            AcquisitionRequest::class, 'acquisition_request_id'
-        );
+    public function acquisitionRequest()
+    {
+        return $this->belongsTo(AcquisitionRequest::class, 'acquisition_request_id');
     }
 }

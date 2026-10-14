@@ -2,7 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Models\AcquisitionLines;
+use App\Models\Item;
+use App\Models\Sections;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Validation\Rule;
 
 class UpdateAccessionRequest extends BaseRequest
 {
@@ -11,7 +15,8 @@ class UpdateAccessionRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->user()->hasPermission('accession.update') && ($this->user()->isLibrarian() && $this->user()->librarian->branch)
+            || $this->user()->isAdmin();
     }
 
     /**
@@ -21,8 +26,16 @@ class UpdateAccessionRequest extends BaseRequest
      */
     public function rules(): array
     {
-        return [
-            //
+        $rules = [
+                'accession_number' => [ 'sometimes', 'nullable', 'string', 'max:255', 'unique:accessions,accession_number,' . $this->route('accession')->id ],
+                'status' => [ 'sometimes', 'required', Rule::in([ 'available', 'reserved', 'on_load', 'lost', 'missing', 'archived', 'condemned' ]), ],
+                'remarks' => [ 'sometimes', 'nullable', 'string', 'max:255' ],  
+
+                'item_id' => [ 'sometimes', 'required', 'integer', Rule::exists((new Item)->getTable(), 'id')],
+                'section_id' => [ 'sometimes', 'required', 'integer', Rule::exists((new Sections)->getTable(), 'id')],
+                'acquisition_line_id' => [ 'sometimes', 'required', 'integer', Rule::exists((new AcquisitionLines)->getTable(), 'id')],
         ];
+
+        return $rules;
     }
 }

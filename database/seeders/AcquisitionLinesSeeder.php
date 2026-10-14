@@ -2,6 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\Acquisition;
+use App\Models\Campus;
+use App\Models\Item;
+use App\Models\Library;
+use App\Services\AccessionService;
 use App\Services\AcquisitionLinesService;
 use Illuminate\Database\Seeder;
 
@@ -10,36 +15,27 @@ class AcquisitionLinesSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(AcquisitionLinesService $lines): void
+    public function run(AcquisitionLinesService $lines, AccessionService $accession): void
     {
-        collect([
-            [
-                'quantity' => 3,
-                'unit_price' => 2500,
-                'discount' => 250,
-                'item_id' => 1,
-                'acquisition_id' => 1,
-                'branch_section_id' => 1,
-            ],
-            [
-                'quantity' => 7,
-                'unit_price' => 750,
-                'discount' => 250,
-                'item_id' => 10,
-                'acquisition_id' => 1,
-                'branch_section_id' => 2,
-            ],
-            [
-                'quantity' => 5,
-                'unit_price' => 1800,
-                'discount' => 500,
-                'item_id' => 2,
-                'acquisition_id' => 2,
-                'branch_section_id' => 1,
-            ],
-        ])->each(function (array $data) use ($lines): void {
-            $data['net_price'] = ($data['quantity'] * $data['unit_price']) - $data['discount'];
-            $lines->create($data);
-        });
+        $campus = Campus::where('code', 'ISU-E')->firstOrFail();
+        $library = Library::where('campus_id', $campus->id)->firstOrFail();
+
+        $items = Item::where('library_id', $library->id)->pluck('id');
+        $acquisitions = Acquisition::query()->whereHas('receiver', fn ($q) => $q->where('library_id', $library->id))->get();
+
+        foreach ($acquisitions as $acq) {
+            for ($i = 0; $i < rand(1, 8); $i++) {
+                $a = $lines->create([
+                    'unit_price' => 0,
+                    'item_id' => $items->random(),
+                    'acquisition_id' => $acq->id,
+                ]);
+
+                $accession->generateCopies(rand(1, 10), $a->item, $a);
+            }
+        }
+
     }
 }
+
+// App\Models\Acquisition::query()->whereHas('receiver', fn ($q) => $q->where('id', 1))->pluck('id')
