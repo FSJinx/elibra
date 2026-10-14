@@ -20,6 +20,7 @@ class AdminSeeder extends Seeder
             'first_name' => 'mark angelo',
             'middle_initial' => 'd',
             'username' => 'angelo',
+            'sex' => 'male',
             'role' => 'admin',
             'email' => 'angelo@isu.edu.ph',
             'password' => bcrypt('elibra2026'),

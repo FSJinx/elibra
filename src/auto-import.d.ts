@@ -22,8 +22,10 @@ declare global {
   const adminStandardRoutes: typeof import('./router/admin/standards.route').adminStandardRoutes
   const adminUserRoutes: typeof import('./router/admin/users.route').adminUserRoutes
   const adminVendorRoute: typeof import('./router/admin/organization/vendor.route').adminVendorRoute
+  const administ: typeof import('./router/librarian/administration/users.route').administ
   const administrationSection: typeof import('./router/librarian/administration/section.route').administrationSection
-  const administrationStaff: typeof import('./router/librarian/administration/staff.route').administrationStaff
+  const administrationStaff: typeof import('./router/librarian/users/staff.route').administrationStaff
+  const administrationUsers: typeof import('./router/librarian/administration/users.route').administrationUsers
   const api: typeof import('./plugins/axios').api
   const asyncComputed: typeof import('@vueuse/core').asyncComputed
   const authRoute: typeof import('./router/authRoute').authRoute
@@ -87,7 +89,7 @@ declare global {
   const librarianAcquisition: typeof import('./router/librarian/acquisition/index.route').librarianAcquisition
   const librarianAdministration: typeof import('./router/librarian/administration/index.route').librarianAdministration
   const librarianAdministrationSection: typeof import('./router/librarian/administration/section.route').librarianAdministrationSection
-  const librarianAdministrationStaff: typeof import('./router/librarian/administration/staff.route').librarianAdministrationStaff
+  const librarianAdministrationStaff: typeof import('./router/librarian/users/staff.route').librarianAdministrationStaff
   const librarianCirculation: typeof import('./router/librarian/circulation/index.route').librarianCirculation
   const librarianCirculationIssue: typeof import('./router/librarian/circulation/issue.route').librarianCirculationIssue
   const librarianCiruclationLoans: typeof import('./router/librarian/circulation/loans.route').librarianCiruclationLoans
@@ -101,8 +103,9 @@ declare global {
   const librarianSectionRoute: typeof import('./router/librarian/administration/section.route').librarianSectionRoute
   const librarianSerial: typeof import('./router/librarian/serial.route').librarianSerial
   const librarianSettings: typeof import('./router/librarian/settings.route').librarianSettings
-  const librarianStaffRoute: typeof import('./router/librarian/administration/staff.route').librarianStaffRoute
-  const librariansStore: typeof import('./stores/librarian.store').librariansStore
+  const librarianStaffRoute: typeof import('./router/librarian/users/staff.route').librarianStaffRoute
+  const librarianUsers: typeof import('./router/librarian/users/index.route').librarianUsers
+  const librariansStore: typeof import('./stores/user.store').librariansStore
   const libraryStore: typeof import('./stores/library.store').libraryStore
   const makeDestructurable: typeof import('@vueuse/core').makeDestructurable
   const mapActions: typeof import('pinia').mapActions
@@ -388,6 +391,12 @@ declare global {
   const useWindowFocus: typeof import('@vueuse/core').useWindowFocus
   const useWindowScroll: typeof import('@vueuse/core').useWindowScroll
   const useWindowSize: typeof import('@vueuse/core').useWindowSize
+  const userPatron: typeof import('./router/librarian/users/patron.route').userPatron
+  const users: typeof import('./router/librarian/users/staff.route').users
+  const usersLibrarian: typeof import('./router/librarian/users/staff.route').usersLibrarian
+  const usersPatron: typeof import('./router/librarian/users/patron.route').usersPatron
+  const usersStaff: typeof import('./router/librarian/users/staff.route').usersStaff
+  const usersStore: typeof import('./stores/user.store').usersStore
   const watch: typeof import('vue').watch
   const watchArray: typeof import('@vueuse/core').watchArray
   const watchAtMost: typeof import('@vueuse/core').watchAtMost
@@ -497,7 +506,7 @@ declare module 'vue' {
     readonly adminUserRoutes: UnwrapRef<typeof import('./router/admin/users.route')['adminUserRoutes']>
     readonly adminVendorRoute: UnwrapRef<typeof import('./router/admin/organization/vendor.route')['adminVendorRoute']>
     readonly administrationSection: UnwrapRef<typeof import('./router/librarian/administration/section.route')['administrationSection']>
-    readonly administrationStaff: UnwrapRef<typeof import('./router/librarian/administration/staff.route')['administrationStaff']>
+    readonly administrationUsers: UnwrapRef<typeof import('./router/librarian/administration/users.route')['administrationUsers']>
     readonly api: UnwrapRef<typeof import('./plugins/axios')['api']>
     readonly asyncComputed: UnwrapRef<typeof import('@vueuse/core')['asyncComputed']>
     readonly authRoute: UnwrapRef<typeof import('./router/authRoute')['authRoute']>
@@ -567,7 +576,6 @@ declare module 'vue' {
     readonly librarianRoutes: UnwrapRef<typeof import('./router/librarian.routes')['default']>
     readonly librarianSerial: UnwrapRef<typeof import('./router/librarian/serial.route')['librarianSerial']>
     readonly librarianSettings: UnwrapRef<typeof import('./router/librarian/settings.route')['librarianSettings']>
-    readonly librariansStore: UnwrapRef<typeof import('./stores/librarian.store')['librariansStore']>
     readonly libraryStore: UnwrapRef<typeof import('./stores/library.store')['libraryStore']>
     readonly makeDestructurable: UnwrapRef<typeof import('@vueuse/core')['makeDestructurable']>
     readonly mapActions: UnwrapRef<typeof import('pinia')['mapActions']>
@@ -853,6 +861,7 @@ declare module 'vue' {
     readonly useWindowFocus: UnwrapRef<typeof import('@vueuse/core')['useWindowFocus']>
     readonly useWindowScroll: UnwrapRef<typeof import('@vueuse/core')['useWindowScroll']>
     readonly useWindowSize: UnwrapRef<typeof import('@vueuse/core')['useWindowSize']>
+    readonly usersStore: UnwrapRef<typeof import('./stores/user.store')['usersStore']>
     readonly watch: UnwrapRef<typeof import('vue')['watch']>
     readonly watchArray: UnwrapRef<typeof import('@vueuse/core')['watchArray']>
     readonly watchAtMost: UnwrapRef<typeof import('@vueuse/core')['watchAtMost']>

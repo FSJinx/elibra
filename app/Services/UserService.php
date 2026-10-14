@@ -2,13 +2,13 @@
 
 namespace App\Services;
 
-use App\Models\User;
 use App\Models\Permission;
+use App\Models\User;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UserService
 {
-    //ENCAPSULATES
+    // ENCAPSULATES
     private const ROLE_PERMISSIONS = [
         'admin' => [
             'user.create',
@@ -26,7 +26,6 @@ class UserService
             'branchSection.update',
             'branchSection.delete',
 
-
             'department.create',
             'department.view',
             'department.update',
@@ -36,7 +35,7 @@ class UserService
             'program.view',
             'program.update',
             'program.delete',
-            
+
             'subscription.credential.create',
             'subscription.credential.view',
             'subscription.credential.update',
@@ -69,9 +68,57 @@ class UserService
         ],
         'patron' => [
             'user.update',
-            'user.view'
+            'user.view',
         ],
     ];
+
+    public function index(array $filters, User $user)
+    {
+        $campusId = $user->isSuperAdmin() ? null : $user->campus_id;
+
+        return CacheService::remember(
+            CacheService::USERS,
+            array_merge($filters, [
+                'campus_id' => $campusId,
+            ]),
+            now()->addHour(),
+            function () use ($filters, $campusId) {
+                $users = User::query();
+
+                $users->when($campusId, function ($u, $campusId) {
+                    $u->where('campus_id', $campusId);
+                });
+
+                $users->when(! empty($filters['query']),
+                    function ($u) use ($filters) {
+                        $query = '%'.$filters['query'].'%';
+
+                        $u->where(function ($q) use ($query) {
+                            $q->where('last_name', 'LIKE', $query)
+                                ->orWhere('first_name', 'LIKE', $query)
+                                ->orWhere('username', 'LIKE', $query)
+                                ->orWhere('email', 'LIKE', $query);
+                        });
+                    }
+                );
+
+                $users->when(! empty($filters['role']),
+                    function ($u) use ($filters) {
+                        $u->where('role', '=', $filters['role']);
+                    }
+                );
+
+                return $users
+                    ->orderBy($filters['sort'], $filters['order'])
+                    ->paginate(
+                        $filters['per_page'] ?? 25,
+                        ['*'],
+                        'page',
+                        $filters['page'] ?? 1
+                    );
+            }
+        );
+    }
 
     public static function assignRoleAndPermissions(User $user, string $role): void
     {
@@ -82,8 +129,8 @@ class UserService
             return;
         }
 
-        //Prevent injecting unknown role
-        if(!array_key_exists($role, self::ROLE_PERMISSIONS)){
+        // Prevent injecting unknown role
+        if (! array_key_exists($role, self::ROLE_PERMISSIONS)) {
             throw new HttpResponseException(
                 response()->json([
                     'status' => 'error',
@@ -102,7 +149,7 @@ class UserService
 
     public static function syncRolePermissions(User $user, string $role): void
     {
-        if(!array_key_exists($role, self::ROLE_PERMISSIONS)){
+        if (! array_key_exists($role, self::ROLE_PERMISSIONS)) {
             throw new HttpResponseException(
                 response()->json([
                     'status' => 'error',
@@ -122,23 +169,23 @@ class UserService
 
         $user->permissions()->sync($permissionIds);
     }
+
     /**
      * syncWithoutDetaching => This will add the provided relationship and will keep
      *                         the existing record to AVOID DUPLICATION
      */
-
     public static function verifyCampus(User $authUser, array &$data): void
     {
-        //Check kung admin
-        if(! $authUser->isAdmin()){
+        // Check kung admin
+        if (! $authUser->isAdmin()) {
             return;
         }
 
-        if(is_null($authUser->campus_id)){
+        if (is_null($authUser->campus_id)) {
             throw new HttpResponseException(
                 response()->json([
                     'status' => 'error',
-                    'message' => 'Admin account has no assigned campus.'
+                    'message' => 'Admin account has no assigned campus.',
                 ])
             );
         }
@@ -146,5 +193,4 @@ class UserService
         $data['campus_id'] = $authUser->campus_id;
 
     }
-
-}   
+}

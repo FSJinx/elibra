@@ -7,7 +7,7 @@
         <div class="flex flex-col items-center justify-center gap-2 text-slate-500">
           <Icon icon="x-circle" class="text-6xl mb-3" />
           <p class="text-lg">No data on the record.</p>
-          <span>Try adding a new record.</span>
+          <span>{{ errorMessage ?? 'Try adding a new record.'}} </span>
         </div>
       </td>
     </tr>
@@ -16,5 +16,5 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{ loading: boolean; cols: any; data: any }>()
+defineProps<{ loading: boolean; cols: any; data: any, errorMessage?: string }>()
 </script>

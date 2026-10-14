@@ -26,4 +26,6 @@ export interface User {
   created_at: string
   updated_at: string
   deleted_at: string
+
+  [key: string]: any
 }

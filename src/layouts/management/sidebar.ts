@@ -1,5 +1,5 @@
-const librarianMenu = {
-  dashboard: {
+const librarianMenu = [
+  {
     name: 'Dashboard',
     children: [
       { path: 'librarian.dashboard.overview', name: 'Overview', icon: 'grid' },
@@ -8,7 +8,7 @@ const librarianMenu = {
     ],
   },
 
-  circulation: {
+  {
     name: 'Circulation',
     children: [
       { path: 'librarian.circulation.issue', name: 'Issue', icon: 'ui-checks' },
@@ -21,7 +21,7 @@ const librarianMenu = {
     ],
   },
 
-  collections: {
+  {
     name: 'Collections',
     children: [
       { path: 'librarian.collections.catalog', name: 'Catalog', icon: 'journal-plus' },
@@ -29,7 +29,7 @@ const librarianMenu = {
     ],
   },
 
-  acquisition: {
+  {
     name: 'Acquisitions',
     children: [
       { path: 'librarian.acquisition', name: 'Acquisition', icon: 'receipt' },
@@ -68,15 +68,15 @@ const librarianMenu = {
   //   },
   // },
 
-  administration: {
+  {
     name: 'Administration',
     children: [
-      { path: 'librarian.staffs', name: 'Staff', icon: 'person-vcard' },
       { path: 'librarian.sections', name: 'Sections', icon: 'building-add' },
+      { path: 'librarian.users', name: 'Users', icon: 'person-square' },
     ],
   },
 
-  settings: {
+  {
     name: 'Settings',
     children: [
       { path: 'librarian.settings.account', name: 'Account', icon: 'person-gear' },
@@ -85,7 +85,7 @@ const librarianMenu = {
       { path: 'librarian.settings.system', name: 'System Settings', icon: 'gear' },
     ],
   },
-}
+]
 
 export const menus = {
   super_admin: [

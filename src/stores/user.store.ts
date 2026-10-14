@@ -1,25 +1,24 @@
-import type { Librarian } from '@/interfaces/user'
+interface UserParams extends BaseParams {}
 
-interface LibrariansParams extends BaseParams {}
-
-const defaultParams: Readonly<Partial<LibrariansParams>> = {
-  sort: '',
+const defaultParams: Readonly<Partial<UserParams>> = {
+  query: '',
+  sort: 'last_name',
   page: 1,
   per_page: 10,
   order: 'asc',
 }
 
-export const librariansStore = defineStore('librarians', {
+export const usersStore = defineStore('users', {
   state: () => ({
-    data: null as Librarian[] | null,
+    data: null as User[] | null,
 
-    url: 'librarian',
-    params: defaultParams as LibrariansParams,
+    url: 'user',
+    params: defaultParams as UserParams,
   }),
 
   getters: {
     getFullName() {
-      return (user: Librarian) => {
+      return (user: User) => {
         if (!user) return ''
 
         const u = user
@@ -29,10 +28,15 @@ export const librariansStore = defineStore('librarians', {
   },
 
   actions: {
+    setData(data: User[]) {
+      this.data = data
+    },
+
     async fetch() {
       try {
         const res = await get(this.url, this.params)
-        return res
+        this.setData(res.data.data)
+        return res.data
       } catch (e: any) {
         return e.response
       }

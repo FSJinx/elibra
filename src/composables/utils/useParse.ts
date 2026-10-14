@@ -17,7 +17,6 @@ export function useParser() {
 
         // ====== INFO =======
         info: 'info',
-        librarian: 'info',
         reserved: 'info',
         book: 'info',
         male: 'info',
@@ -28,6 +27,8 @@ export function useParser() {
         pending: 'warning',
 
         // ====== ERROR =======
+        librarian: 'danger',
+        error: 'danger',
         danger: 'danger',
         inactive: 'danger',
         borrowed: 'danger',

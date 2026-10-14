@@ -23,6 +23,8 @@ class CacheService
     public const SECTIONS = 'sections';
 
     // ========= USERS, ACCOUNTS, AND PERMISSIONS ==========
+    public const USERS = 'users';
+
     public const PATRONS = 'patrons';
 
     public const LIBRARIANS = 'librarians';

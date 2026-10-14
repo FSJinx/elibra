@@ -32,7 +32,7 @@ class StoreUsersRequest extends BaseRequest
             'sex' => ['required', Rule::in(['male', 'female'])],
 
             'birthdate' => ['required', 'date', 'before:today'],
-            'contact_number' => ['required', 'regex:/^09\d{9}$/'],
+            'contact_number' => ['nullable', 'regex:/^09\d{9}$/'],
             'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')],
 
             'username' => ['required', 'string', 'max:255', Rule::unique('users', 'username')],
