@@ -20,7 +20,6 @@ class DatabaseSeeder extends Seeder
             // PermissionSeeder::class,
             PatronTypeSeeder::class,
             // SystemSeeder::class,
-            // SectionsSeeder::class,
             LanguageSeeder::class,
             AuthorshipSeeder::class,
 
@@ -28,13 +27,14 @@ class DatabaseSeeder extends Seeder
 
             CampusSeeder::class,
             LibrarySeeder::class,
+            SectionsSeeder::class,
             DepartmentSeeder::class,
             ProgramsSeeder::class,
             UsersSeeder::class,
             AuthorSeeder::class,
-            // AcquisitionSeeder::class,
-            // ItemSeeder::class,
-            // AcquisitionLinesSeeder::class,
+            ItemSeeder::class,
+            AcquisitionSeeder::class,
+            AcquisitionLinesSeeder::class,
         ]);
     }
 }

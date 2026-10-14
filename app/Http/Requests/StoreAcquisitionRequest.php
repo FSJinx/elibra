@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\AcquisitionRequest;
+use App\Models\Librarian;
 use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Validation\Rule;
@@ -35,7 +36,7 @@ class StoreAcquisitionRequest extends BaseRequest
             'acquisition_date' => ['required', 'date'],
             'remarks' => ['nullable', 'string', 'max:255'],
 
-            'receiver_user_id' => ['sometimes', 'integer', Rule::exists((new User)->getTable(), 'id')],
+            'receiver_id' => ['sometimes', 'integer', Rule::exists((new Librarian)->getTable(), 'id')],
             'acquisition_request_id' => ['nullable', 'integer', Rule::exists((new AcquisitionRequest)->getTable(), 'id')],
         ];
 
@@ -62,9 +63,9 @@ class StoreAcquisitionRequest extends BaseRequest
             'remarks.string' => 'The remarks must be a valid text value.',
             'remarks.max' => 'The remarks may not exceed 255 characters.',
 
-            'receiver_user_id.required' => 'The receiver user is required.',
-            'receiver_user_id.integer' => 'The receiver user ID must be a valid number.',
-            'receiver_user_id.exists' => 'The selected receiver user does not exist.',
+            'receiver_id.required' => 'The receiver user is required.',
+            'receiver_id.integer' => 'The receiver user ID must be a valid number.',
+            'receiver_id.exists' => 'The selected receiver user does not exist.',
 
             'acquisition_request_id.integer' => 'The acquisition request ID must be a valid number.',
             'acquisition_request_id.exists' => 'The selected acquisition request does not exist.',

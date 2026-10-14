@@ -2,7 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Services\BookService;
+use App\Models\Campus;
+use App\Models\ItemType;
+use App\Models\ItemTypeCategory;
+use App\Models\Library;
+use App\Services\ItemService;
 use Illuminate\Database\Seeder;
 
 class BookSeeder extends Seeder
@@ -10,84 +14,87 @@ class BookSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(BookService $bookService): void
+    public function run(ItemService $itemService): void
     {
+        // Gamitin ang firstOrFail para mag-throw ng malinaw na exception kapag kulang ang database seeds
+        $campus = Campus::where('code', 'ISU-E')->firstOrFail();
+        $library = Library::where('campus_id', $campus->id)->firstOrFail();
+
+        $itemType = ItemType::where('slug', 'book')->firstOrFail();
+
+        // Kunin ang lahat ng available category IDs bilang isang Collection
+        $categoryIds = ItemTypeCategory::where('item_type_id', $itemType->id)->pluck('id');
+
         collect([
             [
+                'title' => 'Fundamentals of Database Systems: Design and Implementation',
+                'description' => 'A comprehensive textbook covering relational database management systems, SQL querying, indexing techniques, and distributed database architectures.',
+                'call_number' => '005.74 F85',
+                'keywords' => ['Database Systems', 'SQL', 'Data Modeling', 'Textbook'],
+            ],
+            [
+                'title' => 'To Kill a Mockingbird',
+                'description' => 'A classic novel exploring racial injustice and the loss of innocence in the American South through the eyes of young Scout Finch.',
+                'call_number' => '813.54 L47t',
+                'keywords' => ['Classic Literature', 'Fiction', 'Legal Drama', 'Novel'],
+            ],
+            [
+                'title' => 'Principles of Microeconomics',
+                'description' => 'An introductory economics textbook analyzing market supply and demand, consumer behavior, price elasticity, and market structures.',
+                'call_number' => '338.5 P95',
+                'keywords' => ['Microeconomics', 'Economics', 'Supply and Demand', 'Textbook'],
+            ],
+            [
+                'title' => 'The Great Gatsby',
+                'description' => 'A Jazz Age novel examining wealth, obsession, and the decay of the American Dream in 1920s Long Island.',
+                'call_number' => '813.52 F55g',
+                'keywords' => ['American Literature', 'Fiction', 'Jazz Age', 'Novel'],
+            ],
+            [
+                'title' => 'Human Anatomy and Physiology: A Visual Approach',
+                'description' => 'An essential reference textbook detailing the structure and function of the human body systems with full-color diagrams and clinical correlates.',
+                'call_number' => '612 H91',
+                'keywords' => ['Anatomy', 'Physiology', 'Medicine', 'Textbook'],
+            ],
+            [
+                'title' => '1984',
+                'description' => 'A dystopian novel depicting a totalitarian regime governed by Big Brother, where surveillance and thought control are absolute.',
+                'call_number' => '823.912 O79n',
+                'keywords' => ['Dystopian', 'Science Fiction', 'Totalitarianism', 'Novel'],
+            ],
+            [
                 'title' => 'Clean Code: A Handbook of Agile Software Craftsmanship',
-                'subtitle' => 'How to Structure Readable and Maintainable Codebases',
-                'description' => 'Even bad code can function. But if code isn\'t clean, it can bring a development organization to its knees. Every year, countless hours and significant resources are lost because of poorly written code.',
-                'call_number' => '005.1 M114c',
-                'publication_year' => '2008',
-                'item_type_id' => 2, // Book
-                'item_type_category_id' => 13, // Reference Book
-                'language_id' => 1,
-                'branch_id' => 1,
-                'keywords' => ['Clean Code', 'Agile', 'Software Architecture', 'Refactoring'],
-                'edition' => '1st Edition',
-                'isbn_issn' => '978-0132350884',
-                'copyright_year' => '2026'
+                'description' => 'A practical guide for software engineers on writing readable, maintainable, and efficient code through refactoring and best practices.',
+                'call_number' => '005.1 M37c',
+                'keywords' => ['Software Engineering', 'Programming', 'Clean Code', 'Non-Fiction'],
             ],
             [
-                'title' => 'Designing Data-Intensive Applications',
-                'subtitle' => 'The Big Ideas Behind Reliable, Scalable, and Maintainable Systems',
-                'description' => 'Data is at the center of many economic and technological challenges today. This book guides developers through the pros and cons of various technologies for processing and storing data.',
-                'call_number' => '005.74 K64d',
-                'publication_year' => '2017',
-                'item_type_id' => 2,
-                'item_type_category_id' => 13,
-                'language_id' => 1,
-                'branch_id' => 1,
-                'keywords' => ['Data Systems', 'Distributed Systems', 'NoSQL', 'Scalability', 'Kafka'],
-                'edition' => '1st Edition',
-                'isbn_issn' => '978-1449373320',
-                'copyright_year' => '2026'
+                'title' => 'The Catcher in the Rye',
+                'description' => 'A coming-of-age novel following teenager Holden Caulfield as he wanders New York City, dealing with alienation and identity.',
+                'call_number' => '813.54 S16c',
+                'keywords' => ['Coming-of-Age', 'Fiction', 'Youth Culture', 'Novel'],
             ],
             [
-                'title' => 'Artificial Intelligence: A Modern Approach',
-                'subtitle' => 'The Standard Textbook in AI',
-                'description' => 'The long-anticipated revision offers the most comprehensive and up-to-date introduction to the theory and practice of artificial intelligence.',
-                'call_number' => '006.3 R961a',
-                'publication_year' => '2020',
-                'item_type_id' => 2,
-                'item_type_category_id' => 13, // Textbook
-                'language_id' => 1,
-                'branch_id' => 1,
-                'keywords' => ['Artificial Intelligence', 'Machine Learning', 'Search Algorithms', 'Robotics'],
-                'edition' => '4th Edition',
-                'isbn_issn' => '978-0134610993',
-                'copyright_year' => '2026'
+                'title' => 'Organic Chemistry: Structure and Function',
+                'description' => 'A foundational chemistry textbook focusing on reaction mechanisms, molecular structure, synthesis, and organic functional groups.',
+                'call_number' => '547 O68',
+                'keywords' => ['Organic Chemistry', 'Chemical Reactions', 'Science', 'Textbook'],
             ],
             [
-                'title' => 'Domain-Driven Design: Tackling Complexity in the Heart of Software',
-                'subtitle' => 'Aligning Software Code with Business Models',
-                'description' => 'Domain-Driven Design provides a systematic approach to technical architectures based on complex domain models and ubiquitous language principles.',
-                'call_number' => '005.11 E92d',
-                'publication_year' => '2003',
-                'item_type_id' => 2,
-                'item_type_category_id' => 13,
-                'language_id' => 1,
-                'branch_id' => 1,
-                'keywords' => ['DDD', 'Software Design', 'OOP', 'System Architecture'],
-                'edition' => '1st Edition',
-                'isbn_issn' => '978-0321125217',
-                'copyright_year' => '2026'
+                'title' => 'Dune',
+                'description' => 'An epic science fiction novel set on the desert planet Arrakis, exploring politics, religion, ecology, and power dynamics.',
+                'call_number' => '813.54 H53d',
+                'keywords' => ['Science Fiction', 'Epic Fantasy', 'Space Opera', 'Novel'],
             ],
-            [
-                'title' => 'Modern Operating Systems',
-                'subtitle' => 'Concepts, Processes, and Hardware Interfacing',
-                'description' => 'Covers modern developments in operating systems design, including memory management, virtualization, containers, multi-core processing, and security mechanisms.',
-                'call_number' => '005.43 T161m',
-                'publication_year' => '2022',
-                'item_type_id' => 2,
-                'item_type_category_id' => 13,
+        ])->each(function ($item) use ($itemService, $itemType, $categoryIds, $library) {
+            $itemService->create([
+                ...$item,
+                'subtitle' => "Book material for {$library->name}",
+                'item_type_id' => $itemType->id,
+                'item_type_category_id' => $categoryIds->random(), // <- Kukuha nang tama at random mula sa Collection
+                'library_id' => $library->id,
                 'language_id' => 1,
-                'branch_id' => 1,
-                'keywords' => ['Operating Systems', 'Linux', 'Kernel', 'Memory Management', 'Virtualization'],
-                'edition' => '5th Edition',
-                'isbn_issn' => '978-0133591620',
-                'copyright_year' => '2026'
-            ],
-        ])->each(fn ($item) => $bookService->create($item));
+            ]);
+        });
     }
 }

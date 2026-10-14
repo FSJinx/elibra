@@ -6,7 +6,7 @@
 
     <ModalBody class="flex flex-col p-5 gap-5">
       <Form id="acquisition-item" class="flex items-center gap-3" @submit="search">
-        <Input id="search-catalog" type="text" placeholder="Search item by title or subtitle" v-model="params.query" />
+        <Input id="search-catalog" type="text" placeholder="Search item by title or subtitle" v-model="params.query" auto-focus />
         <Button type="submit" variant="primary">Search</Button>
       </Form>
 
@@ -14,16 +14,14 @@
         Results for <span class="font-semibold">"{{ lastSearch }}"</span>
       </p>
 
-      <Card class="flex flex-col p-0!">
+      <Card class="flex flex-col p-0! divide-y divide-border gap-0!">
         <div class="flex justify-center p-5" v-if="loading">
           <Spinner />
         </div>
 
         <div class="p-5" v-else-if="!items?.length">{{ lastSearch ? 'No result found' : 'No items here yet, try searching.' }}</div>
 
-        <template v-else>
-          <button v-for="i in items" class="p-5 text-left rounded-lg cursor-pointer border-transparent border hover:border-primary/50 hover:bg-primary-soft/50 hover:text-primary transition-all duration-200" @click="add(i)">{{ i.title }}</button>
-        </template>
+        <button v-else v-for="(i, index) in items" class="p-5 text-left cursor-pointer hover:bg-slate-100 transition-all duration-200" @click="add(i)">{{ index + 1 }}. {{ i.title }}</button>
       </Card>
     </ModalBody>
   </Modal>

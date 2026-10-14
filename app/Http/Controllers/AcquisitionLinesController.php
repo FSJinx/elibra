@@ -26,7 +26,7 @@ class AcquisitionLinesController extends Controller
         $id = $request->input('id');
 
         $acquisitionLines = AcquisitionLines::query()
-            ->with(['items', 'accessions'])
+            ->with(['item:id,title,subtitle'])
             ->withCount(['accessions as quantity']);
 
         if ($id) {

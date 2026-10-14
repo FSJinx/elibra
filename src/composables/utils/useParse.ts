@@ -12,6 +12,8 @@ export function useParser() {
         active: 'success',
         admin: 'success',
         completed: 'success',
+        true: 'success',
+        1: 'success',
 
         // ====== INFO =======
         info: 'info',
@@ -30,6 +32,8 @@ export function useParser() {
         inactive: 'danger',
         borrowed: 'danger',
         female: 'danger',
+        false: 'danger',
+        0: 'danger',
 
         // ====== RESTORE =======
         restore: 'restore',

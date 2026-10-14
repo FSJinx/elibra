@@ -5,5 +5,7 @@ export interface AcquisitionLine {
 
   item_id: any
   acquisition_id: any
+
+  item: Item
   [key: string]: any
 }

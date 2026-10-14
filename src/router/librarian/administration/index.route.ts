@@ -2,11 +2,11 @@ export const librarianAdministration = [
   // ======== Staffs Route =========
   {
     path: 'staffs',
-    children: librarianStaffRoute,
+    children: administrationStaff,
   },
   // ======== Sections Route =========
   {
     path: 'sections',
-    children: librarianSectionRoute,
+    children: administrationSection,
   },
 ]

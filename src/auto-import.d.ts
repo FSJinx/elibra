@@ -8,6 +8,8 @@ export {}
 declare global {
   const EffectScope: typeof import('vue').EffectScope
   const acceptHMRUpdate: typeof import('pinia').acceptHMRUpdate
+  const acquisitionAcquisition: typeof import('./router/librarian/acquisition/acquisition.route').acquisitionAcquisition
+  const acquisitionRequest: typeof import('./router/librarian/acquisition/request.route').acquisitionRequest
   const acquisition_modes: typeof import('./constants/acquisition_mode').acquisition_modes
   const adminAuthorityRoute: typeof import('./router/admin/authority.route').adminAuthorityRoute
   const adminCampusRoutes: typeof import('./router/admin/organization/campus.route').adminCampusRoutes
@@ -20,6 +22,8 @@ declare global {
   const adminStandardRoutes: typeof import('./router/admin/standards.route').adminStandardRoutes
   const adminUserRoutes: typeof import('./router/admin/users.route').adminUserRoutes
   const adminVendorRoute: typeof import('./router/admin/organization/vendor.route').adminVendorRoute
+  const administrationSection: typeof import('./router/librarian/administration/section.route').administrationSection
+  const administrationStaff: typeof import('./router/librarian/administration/staff.route').administrationStaff
   const api: typeof import('./plugins/axios').api
   const asyncComputed: typeof import('@vueuse/core').asyncComputed
   const authRoute: typeof import('./router/authRoute').authRoute
@@ -29,11 +33,8 @@ declare global {
   const axios: typeof import('./plugins/axios').default
   const backendRoute: typeof import('./plugins/axios').backendRoute
   const circulationIssue: typeof import('./router/librarian/circulation/issue.route').circulationIssue
-  const ciruclation: typeof import('./router/librarian/circulation/loans.route').ciruclation
-  const ciruclationLoan: typeof import('./router/librarian/circulation/loans.route').ciruclationLoan
   const ciruclationLoans: typeof import('./router/librarian/circulation/loans.route').ciruclationLoans
   const collectionsCatalog: typeof import('./router/librarian/collections/catalog.route').collectionsCatalog
-  const collectionsI: typeof import('./router/librarian/collections/inventory.route').collectionsI
   const collectionsInventory: typeof import('./router/librarian/collections/inventory.route').collectionsInventory
   const computed: typeof import('vue').computed
   const computedAsync: typeof import('@vueuse/core').computedAsync
@@ -76,7 +77,6 @@ declare global {
   const ignorableWatch: typeof import('@vueuse/core').ignorableWatch
   const inject: typeof import('vue').inject
   const injectLocal: typeof import('@vueuse/core').injectLocal
-  const inventory: typeof import('./router/librarian/collections/inventory.route').inventory
   const isDefined: typeof import('@vueuse/core').isDefined
   const isProxy: typeof import('vue').isProxy
   const isReactive: typeof import('vue').isReactive
@@ -84,12 +84,16 @@ declare global {
   const isRef: typeof import('vue').isRef
   const isShallow: typeof import('vue').isShallow
   const itemDefaultParams: typeof import('./stores/librarian/item.store').itemDefaultParams
-  const librarian: typeof import('./router/librarian/collections/index.route').librarian
-  const librarianAcquisition: typeof import('./router/librarian/acquisition.route').librarianAcquisition
+  const librarianAcquisition: typeof import('./router/librarian/acquisition/index.route').librarianAcquisition
   const librarianAdministration: typeof import('./router/librarian/administration/index.route').librarianAdministration
-  const librarianCataloging: typeof import('./router/librarian/collection.route').librarianCataloging
+  const librarianAdministrationSection: typeof import('./router/librarian/administration/section.route').librarianAdministrationSection
+  const librarianAdministrationStaff: typeof import('./router/librarian/administration/staff.route').librarianAdministrationStaff
   const librarianCirculation: typeof import('./router/librarian/circulation/index.route').librarianCirculation
+  const librarianCirculationIssue: typeof import('./router/librarian/circulation/issue.route').librarianCirculationIssue
+  const librarianCiruclationLoans: typeof import('./router/librarian/circulation/loans.route').librarianCiruclationLoans
   const librarianCollections: typeof import('./router/librarian/collections/index.route').librarianCollections
+  const librarianCollectionsCatalog: typeof import('./router/librarian/collections/catalog.route').librarianCollectionsCatalog
+  const librarianCollectionsInventory: typeof import('./router/librarian/collections/inventory.route').librarianCollectionsInventory
   const librarianDashboard: typeof import('./router/librarian/dashboard.route').librarianDashboard
   const librarianPatron: typeof import('./router/librarian/patron.route').librarianPatron
   const librarianReport: typeof import('./router/librarian/report.route').librarianReport
@@ -155,7 +159,6 @@ declare global {
   const refWithControl: typeof import('@vueuse/core').refWithControl
   const resolveComponent: typeof import('vue').resolveComponent
   const router: typeof import('./router/index').default
-  const sectionSelectStore: typeof import('./stores/select/section.select.store').sectionSelectStore
   const sectionStore: typeof import('./stores/section.store').sectionStore
   const setActivePinia: typeof import('pinia').setActivePinia
   const setMapStoreSuffix: typeof import('pinia').setMapStoreSuffix
@@ -479,6 +482,8 @@ declare module 'vue' {
   interface ComponentCustomProperties {
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
     readonly acceptHMRUpdate: UnwrapRef<typeof import('pinia')['acceptHMRUpdate']>
+    readonly acquisitionAcquisition: UnwrapRef<typeof import('./router/librarian/acquisition/acquisition.route')['acquisitionAcquisition']>
+    readonly acquisitionRequest: UnwrapRef<typeof import('./router/librarian/acquisition/request.route')['acquisitionRequest']>
     readonly acquisition_modes: UnwrapRef<typeof import('./constants/acquisition_mode')['acquisition_modes']>
     readonly adminAuthorityRoute: UnwrapRef<typeof import('./router/admin/authority.route')['adminAuthorityRoute']>
     readonly adminCampusRoutes: UnwrapRef<typeof import('./router/admin/organization/campus.route')['adminCampusRoutes']>
@@ -491,6 +496,8 @@ declare module 'vue' {
     readonly adminStandardRoutes: UnwrapRef<typeof import('./router/admin/standards.route')['adminStandardRoutes']>
     readonly adminUserRoutes: UnwrapRef<typeof import('./router/admin/users.route')['adminUserRoutes']>
     readonly adminVendorRoute: UnwrapRef<typeof import('./router/admin/organization/vendor.route')['adminVendorRoute']>
+    readonly administrationSection: UnwrapRef<typeof import('./router/librarian/administration/section.route')['administrationSection']>
+    readonly administrationStaff: UnwrapRef<typeof import('./router/librarian/administration/staff.route')['administrationStaff']>
     readonly api: UnwrapRef<typeof import('./plugins/axios')['api']>
     readonly asyncComputed: UnwrapRef<typeof import('@vueuse/core')['asyncComputed']>
     readonly authRoute: UnwrapRef<typeof import('./router/authRoute')['authRoute']>
@@ -550,8 +557,7 @@ declare module 'vue' {
     readonly isReadonly: UnwrapRef<typeof import('vue')['isReadonly']>
     readonly isRef: UnwrapRef<typeof import('vue')['isRef']>
     readonly isShallow: UnwrapRef<typeof import('vue')['isShallow']>
-    readonly itemDefaultParams: UnwrapRef<typeof import('./stores/librarian/item.store')['itemDefaultParams']>
-    readonly librarianAcquisition: UnwrapRef<typeof import('./router/librarian/acquisition.route')['librarianAcquisition']>
+    readonly librarianAcquisition: UnwrapRef<typeof import('./router/librarian/acquisition/index.route')['librarianAcquisition']>
     readonly librarianAdministration: UnwrapRef<typeof import('./router/librarian/administration/index.route')['librarianAdministration']>
     readonly librarianCirculation: UnwrapRef<typeof import('./router/librarian/circulation/index.route')['librarianCirculation']>
     readonly librarianCollections: UnwrapRef<typeof import('./router/librarian/collections/index.route')['librarianCollections']>
@@ -559,10 +565,8 @@ declare module 'vue' {
     readonly librarianPatron: UnwrapRef<typeof import('./router/librarian/patron.route')['librarianPatron']>
     readonly librarianReport: UnwrapRef<typeof import('./router/librarian/report.route')['librarianReport']>
     readonly librarianRoutes: UnwrapRef<typeof import('./router/librarian.routes')['default']>
-    readonly librarianSectionRoute: UnwrapRef<typeof import('./router/librarian/administration/section.route')['librarianSectionRoute']>
     readonly librarianSerial: UnwrapRef<typeof import('./router/librarian/serial.route')['librarianSerial']>
     readonly librarianSettings: UnwrapRef<typeof import('./router/librarian/settings.route')['librarianSettings']>
-    readonly librarianStaffRoute: UnwrapRef<typeof import('./router/librarian/administration/staff.route')['librarianStaffRoute']>
     readonly librariansStore: UnwrapRef<typeof import('./stores/librarian.store')['librariansStore']>
     readonly libraryStore: UnwrapRef<typeof import('./stores/library.store')['libraryStore']>
     readonly makeDestructurable: UnwrapRef<typeof import('@vueuse/core')['makeDestructurable']>

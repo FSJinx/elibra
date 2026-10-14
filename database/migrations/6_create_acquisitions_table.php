@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('remarks')->nullable();
             $table->timestamps();
 
-            $table->unsignedBigInteger('receiver_user_id');
+            $table->unsignedBigInteger('receiver_id');
             $table->unsignedBigInteger('acquisition_request_id')->nullable(); // If the acquisition came from a request
         });
     }

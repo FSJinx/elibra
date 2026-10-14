@@ -29,14 +29,14 @@
           </tr>
         </Thead>
 
-        <Tbody :cols="5" :loading="loading" :data="items.data">
+        <Tbody cols="5" :loading="loading" :data="items.data">
           <Tr v-for="(item, index) in items.data" :key="item.id" :to="{ name: 'librarian.collections.catalog.view', params: { id: item.id } }">
             <Td :data="(index as number) + 1" />
 
             <Td class="text-left">
               <Title :level="4">{{ item.title }}</Title>
 
-              <p class="text-xs text-foreground-secondary line-clamp-1 max-w-150">
+              <p class="text-foreground-secondary line-clamp-1 max-w-150">
                 {{ item.subtitle ?? item.description ?? 'This item has no subtitle or description.' }}
               </p>
             </Td>
@@ -44,7 +44,9 @@
             <Td :data="item_types.byId(item.item_type_id)?.name" />
             <Td :data="item.call_number" />
 
-            <Td :data="item.released ? 'True' : 'False'" />
+            <Td>
+              <Status :variant="String(item.released)">{{ item.released ? 'True' : 'False' }}</Status>
+            </Td>
           </Tr>
         </Tbody>
       </Table>
@@ -87,9 +89,9 @@ function filter(f: any) {
 }
 
 async function search() {
+  loading.value = true
   try {
-    loading.value = true
-    await items.fetch(true)
+    await items.fetch()
   } catch (e: any) {
     throw e
   } finally {
@@ -104,16 +106,9 @@ function reset() {
 
 watchDebounced(
   () => items.params.query,
-  () => {
-    search()
-  },
-  {
-    debounce: 300,
-    immediate: true,
-  },
+  () => search(),
+  { debounce: 300 },
 )
 
-// onBeforeMount(async () => {
-//   await items.fetch(true)
-// })
+onBeforeMount(async () => await search())
 </script>

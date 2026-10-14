@@ -73,8 +73,8 @@ class ItemController extends Controller
                         'title',
                         'subtitle',
                         'call_number',
-                        'publication_year',
                         'item_type_id',
+                        'released',
                     ],
                     'page',
                     $filters['page']

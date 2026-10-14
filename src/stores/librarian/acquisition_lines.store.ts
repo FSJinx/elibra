@@ -32,6 +32,7 @@ export const useAcquisitionLinesStore = defineStore('acquisition_lines', {
     async fetch(id: any) {
       const res = await get(this.url, { id: id })
       this.setFetchData(res.data)
+      return res
     },
 
     async create(params: Partial<AcquisitionLine>) {

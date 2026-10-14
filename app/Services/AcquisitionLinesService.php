@@ -44,7 +44,7 @@ class AcquisitionLinesService
             }
 
             return $acquisitionLine->fresh([
-                'items',
+                'item',
                 'acquisition',
                 'accessions',
             ]);
@@ -311,10 +311,8 @@ class AcquisitionLinesService
      * GC0012332
      * GC0012333
      */
-    private function generateAccessionNumbers(
-        string $prefix,
-        int $quantity
-    ): array {
+    private function generateAccessionNumbers(string $prefix, int $quantity): array
+    {
 
         if ($quantity <= 0) {
             return [];

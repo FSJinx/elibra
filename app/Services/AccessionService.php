@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\Accession;
+use App\Models\AcquisitionLines;
+use App\Models\Item;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
@@ -60,5 +62,15 @@ class AccessionService
         });
 
         CacheService::invalidate(CacheService::ACCESSION);
+    }
+
+    public function generateCopies(?int $quantity, Item $item, ?AcquisitionLines $acquisition_line)
+    {
+        for ($i = 0; $i < $quantity; $i++) {
+            Accession::create([
+                'item_id' => $item->id,
+                'acquisition_line_id' => $acquisition_line->id ?? null,
+            ]);
+        }
     }
 }

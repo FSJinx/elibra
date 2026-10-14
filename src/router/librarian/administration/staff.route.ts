@@ -1,4 +1,4 @@
-export const librarianStaffRoute = [
+export const administrationStaff = [
   {
     path: '',
     name: 'librarian.staffs',

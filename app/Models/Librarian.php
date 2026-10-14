@@ -12,7 +12,7 @@ class Librarian extends Model
     /** @use HasFactory<LibrarianFactory> */
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['user_id', 'library_id', 'role', 'tools'];
+    protected $fillable = ['user_id', 'library_id'];
 
     protected $casts = [
         'tools' => 'array',
@@ -27,5 +27,4 @@ class Librarian extends Model
     {
         return $this->belongsTo(Library::class, 'library_id');
     }
-
 }

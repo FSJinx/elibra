@@ -1,4 +1,4 @@
-export const librarianSectionRoute = [
+export const administrationSection = [
   {
     path: '',
     name: 'librarian.sections',

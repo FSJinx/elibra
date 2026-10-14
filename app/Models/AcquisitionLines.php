@@ -19,7 +19,7 @@ class AcquisitionLines extends Model
         'quantity' => 'integer',
     ];
 
-    public function items()
+    public function item()
     {
         return $this->belongsTo(Item::class, 'item_id', 'id');
     }

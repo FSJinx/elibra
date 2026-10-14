@@ -1,12 +1,12 @@
 export interface ItemParams extends BaseParams {}
 
-export const itemDefaultParams = (): Partial<ItemParams> => ({
+const defaultParams: Readonly<ItemParams> = {
   query: '',
   order: 'asc',
   sort: 'title',
   page: '',
   per_page: '25',
-})
+}
 
 const url = '/item'
 
@@ -14,7 +14,7 @@ export const useItemStore = defineStore('item', {
   state: () => ({
     data: null as Item[] | null,
     currentData: null as Item | null,
-    params: itemDefaultParams() as ItemParams,
+    params: defaultParams as ItemParams,
 
     item_type: useItemTypeStore(),
     categories: useItemCategoriesStore(),
@@ -52,10 +52,8 @@ export const useItemStore = defineStore('item', {
       return res
     },
 
-    async fetch(forced = false) {
-      if (!forced && this.data) return this.data
-
-      const res = await get(url, this.params)
+    async fetch(params: ItemParams = defaultParams) {
+      const res = await get(url, params)
       this.setData(res.data?.data)
       return res
     },

@@ -158,7 +158,7 @@ return new class extends Migration
         [
             'name' => 'acquisitions',
             'foreign_columns' => [
-                ['name' => 'receiver_user_id', 'references' => 'id', 'on' => 'users', 'onDelete' => 'cascade'],
+                ['name' => 'receiver_id', 'references' => 'id', 'on' => 'librarians', 'onDelete' => 'cascade'],
                 ['name' => 'acquisition_request_id', 'references' => 'id', 'on' => 'acquisition_requests', 'onDelete' => 'cascade'],
             ],
         ],

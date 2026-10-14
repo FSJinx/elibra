@@ -56,7 +56,12 @@ import AddNewAcquisitionButton from '@/app/librarian/acquisition/acquisition/mod
 import SectionHeader from '@/components/my/SectionHeader.vue'
 
 const parse = useParser()
+const pop = usePopup()
 const acquisition = useAcquisitionStore()
+
+onBeforeMount(async () => {
+  acquisition.fetch()
+})
 </script>
 
 <style scoped></style>

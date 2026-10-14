@@ -1,11 +1,11 @@
 <template>
-  <div class="size-full flex flex-col justify-center" v-if="!currentData">Acquisition not found.</div>
+  <div class="size-full flex flex-col justify-center text-center" v-if="!currentData">Acquisition not found.</div>
   <div class="size-full flex flex-col" v-else>
     <div class="flex items-start bg-background p-5 gap-2 border-b border-border">
       <Button variant="text" @click="router.back()" icon="arrow-left" />
       <div class="">
         <H6 class="flex items-center gap-3">
-          Acquisiton ID#: {{ currentData?.acquisition_id }}
+          Acquisiton ID#: {{ currentData.acquisition_id }}
           <span class="font-semibold bg-primary-soft text-primary rounded-lg uppercase tracking-wider text-xs p-2">{{ currentData?.acquisition_mode }}</span>
         </H6>
         <p>Date of Acquisition: {{ parse.formatDate(currentData?.acquisition_date) }}</p>
@@ -19,7 +19,7 @@
     </div>
 
     <div class="flex-1 flex p-5">
-      <Table title="Acquired Items" :subtitle="`Here are the items that is acquired from ${currentData?.dealer} through ${currentData?.acquisition_mode}.`">
+      <Table title="Acquired Items" :subtitle="`Here are the items that is acquired from ${currentData?.dealer} through ${currentData?.acquisition_mode}.`" :dataLength="currentLine?.length">
         <Thead>
           <tr>
             <Th class="text-left">Title</Th>
@@ -31,8 +31,8 @@
         <Tbody :data="lines.data" :loading="lines.loading" :cols="4">
           <Tr class="hover" v-for="(item, index) in lines.data" @click="view(item)">
             <Td class="text-left">
-              <p class="font-medium">{{ item.items?.title }}</p>
-              <p class="text-xs text-muted-foreground">{{ item.items?.subtitle }}</p>
+              <p class="font-medium">{{ item.item.title }}</p>
+              <p class="text-xs text-muted-foreground">{{ item.item.subtitle }}</p>
             </Td>
             <Td :data="item.quantity" />
             <Td v-if="acquisition.currentData?.acquisition_mode === 'purchase'" :data="parse.toMoney(item.unitPrice)" />
@@ -65,12 +65,18 @@
 <script setup lang="ts">
 import SearchItem from '@/app/librarian/acquisition/acquisition_line/modals/SearchItem.vue'
 import Modal from '@/components/my/Modal.vue'
+import { popScopeId } from 'vue'
 
 const parse = useParser()
+const route = useRoute()
+const pop = usePopup()
 
-const { currentData } = useAcquisitionStore()
 const lines = useAcquisitionLinesStore()
 const acquisition = useAcquisitionStore()
+const breadcrumb = useBreadcrumbStore()
+
+const currentData = ref<Acquisition | null>(null)
+const currentLine = ref<AcquisitionLine[] | null>(null)
 
 const viewModal = ref<typeof Modal | null>(null)
 
@@ -79,7 +85,21 @@ function view(item: AcquisitionLine) {
   lines.setCurrentData(item)
 }
 
-onBeforeMount(async () => {})
+onBeforeMount(async () => {
+  pop.load()
+  try {
+    const res = await acquisition.show(route.params.id)
+    currentData.value = res.data
+
+    const resLine = await lines.fetch(route.params.id)
+    currentLine.value = resLine.data
+  } finally {
+    pop.unload()
+
+    const key = `${route.name as string}:${route.params.id}`
+    breadcrumb.set(key, `Viewing Acquisition: ${acquisition.currentData?.acquisition_id}`)
+  }
+})
 </script>
 
 <style scoped></style>
