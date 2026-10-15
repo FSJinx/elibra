@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\UpdateMyProfileRequest;
-use App\Http\Controllers\Controller;
 use App\Models\Media;
 use App\Services\AuthService;
 use App\Services\MediaService;
 use Illuminate\Support\Facades\Hash;
+use Throwable;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthController extends Controller
@@ -24,11 +25,7 @@ class AuthController extends Controller
         return $this->response(data: $authService->index());
     }
 
-    public function updateMe(
-        UpdateMyProfileRequest $request,
-        AuthService $authService,
-        MediaService $mediaService
-    )
+    public function updateMe(UpdateMyProfileRequest $request, AuthService $authService, MediaService $mediaService)
     {
         $user = $request->user();
         $data = $request->validated();
@@ -73,6 +70,17 @@ class AuthController extends Controller
             'user' => $authService->index(),
             'patron' => $result['patron']->load(['patronType', 'program.department']),
         ], statusCode: 201);
+    }
+
+    public function register(RegisterRequest $request, AuthService $authService)
+    {
+        try {
+            $authService->create($request->validated());
+
+            return $this->response(message: 'Account registered successfully. Please wait for approval before logging in or using your account', statusCode: 200);
+        } catch (Throwable $e) {
+            return $this->response('error', $e->getMessage());
+        }
     }
 
     public function refresh()

@@ -1,2 +1,2 @@
 @echo off
-php artisan db:seed --class=Database\Seeders\Permissions\%1
+php artisan db:seed --class=%1

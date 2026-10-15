@@ -19,9 +19,12 @@ export interface User {
   remember_token: any
 
   // RELATIONSHIPS
-  library?: Library
-  department?: Department
-  // program?: Program
+  library?: Partial<Library>
+  campus: Partial<Campus>
+  department?: Partial<Department>
+  // program?: Partial<Program>
+  librarian: Partial<Librarian>
+  patron: Partial<Patron>
 
   created_at: string
   updated_at: string

@@ -5,9 +5,16 @@ namespace App\Services;
 use App\Models\Permission;
 use App\Models\User;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 class UserService
 {
+    public function __construct(
+        private LibrarianService $librarianService,
+        private PatronService $patronService
+    ) {}
+
     // ENCAPSULATES
     private const ROLE_PERMISSIONS = [
         'admin' => [
@@ -71,6 +78,54 @@ class UserService
             'user.view',
         ],
     ];
+
+    public function create(array $data)
+    {
+        return DB::transaction(function () use ($data) {
+            $librarian = null;
+            $patron = null;
+
+            $user = User::create(Arr::only($data, [
+                // Personal Information
+                'last_name',
+                'first_name',
+                'middle_initial',
+                'sex',
+                'birthdate',
+
+                //  Account Info
+                'role',
+                'contact_number',
+                'email',
+                'email_verified_at',
+                'username',
+                'password',
+
+                //  States
+                'status',
+                'login_attempts',
+                'registration',
+
+                //  Foreign Keys
+                'profile_picture_id',
+                'campus_id',
+            ]));
+
+            if ($user->role === 'admin' || $user->role === 'librarian') {
+                $librarian = $this->librarianService->store($user, $data);
+            } elseif ($user->role === 'patron') {
+                $patron = $this->patronService->store($user, $data);
+            }
+
+            CacheService::invalidate(CacheService::USERS);
+
+            return [
+                'user' => $user,
+                'librarian' => $librarian,
+                'patron' => $patron,
+            ];
+        });
+    }
 
     public function index(array $filters, User $user)
     {

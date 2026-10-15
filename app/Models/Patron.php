@@ -20,7 +20,6 @@ class Patron extends Model
          */
         'ebc_number', 
 
-
         'external_organization',
         'date_joined',
         'account_expiry',

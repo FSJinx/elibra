@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Patron;
+use App\Models\PatronType;
 use App\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -10,6 +11,49 @@ use Illuminate\Support\Facades\Hash;
 
 class PatronService
 {
+    public function generateEBC(Patron $patron)
+    {
+        if (! $patron->user_id || ! $patron->patron_type_id)  {
+            return null;
+        }
+
+        $patronKey = strtoupper($patron->patronType->key . now()->format('Y'));
+        $lastCode = Patron::query()
+            ->where('ebc_number', 'LIKE', $patronKey.'%')
+            ->lockForUpdate()
+            ->pluck('ebc_number')
+            ->map(fn (string $ebc) => (int) str_replace($patronKey, '', $ebc))
+            ->max() ?? 0;
+
+        return $patronKey.str_pad((string) ($lastCode + 1), 6, '0', STR_PAD_LEFT);
+    }
+
+    public function store(User $user, array $data): Patron
+    {
+        return DB::transaction(function () use ($user, $data) {
+            $patron = Patron::create([
+                'ebc_number' => null,
+
+                'external_organization' => $data['external_organization'] ?? null,
+                'date_joined' => $data['date_joined'] ?? now() ?? null,
+                'account_expiry' => null,
+                'remarks' => $data['remarks'] ?? null,
+                'user_id' => $user->id,
+                'patron_type_id' => $data['patron_type_id'] ?? null,
+                'program_id' => $data['program_id'] ?? null,
+            ]);
+
+            $type = PatronType::find($data['patron_type_id']);
+
+            $patron->update([
+                'ebc_number' => $this->generateEBC($patron),
+                'account_expiry' => now()->addYears($type->validity_period),
+            ]);
+
+            return $patron;
+        });
+    }
+
     public function create(array $data): array
     {
         return DB::transaction(function () use ($data) {

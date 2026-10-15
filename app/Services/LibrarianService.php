@@ -10,6 +10,16 @@ use Illuminate\Support\Facades\Hash;
 
 class LibrarianService
 {
+    public function store(User $user, array $data)
+    {
+        return DB::transaction(function () use ($user, $data) {
+            return Librarian::create([
+                'user_id' => $user->id,
+                'library_id' => $data['library_id'] ?? null,
+            ]);
+        });
+    }
+
     public function create(array $data): array
     {
         return DB::transaction(function () use ($data) {

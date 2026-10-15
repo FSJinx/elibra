@@ -10,108 +10,71 @@
         <p class="text-muted-foreground text-sm">Create an account and start enjoying patron-exclusive features</p>
       </div>
 
-      <Alert v-if="error.message" variant="danger" class="mb-5">{{ error.message }}</Alert>
+      <Alert v-if="errorMessage" variant="danger" class="mb-5">{{ errorMessage }}</Alert>
       <!-- Form -->
-      <Form id="" @submit="" class="flex flex-col gap-5">
-        <h5 class="uppercase font-medium text-muted-foreground">Personal Information</h5>
-        <div class="grid grid-cols-5 gap-3">
-          <Control id="form-last_name" class="col-span-3" col required>
-            <Label>Last Name</Label>
-            <Input type="text" placeholder="e.g. Dela Cruz" />
-          </Control>
-          <Control id="form-last_name" class="col-span-2" col nullable>
-            <Label>Middle Initial</Label>
-            <Input type="text" placeholder="e.g. A" />
-          </Control>
-          <Control id="form-first_name" class="col-span-5" col required>
-            <Label>First Name</Label>
-            <Input type="text" placeholder="e.g. Dela Cruz" auto-focus />
-          </Control>
-          <Control id="form-last_name" class="col-span-2" col>
-            <Label>Sex</Label>
-            <Select required>
-              <Option value="" selected disabled>Select a sex</Option>
-              <Option value="male">Male</Option>
-              <Option value="female">Female</Option>
-            </Select>
-          </Control>
-          <Control id="form-last_name" class="col-span-3" col>
-            <Label>Campus</Label>
-            <Select required>
-              <Option value="">No campus (Patrons who do not belong to ISU)</Option>
-              <Option :value="campus.id" v-for="campus in campuses.data">{{ campus.name }}</Option>
-            </Select>
-          </Control>
-        </div>
-
-        <h5 class="uppercase font-medium text-muted-foreground">Account Information</h5>
-        <div class="grid grid-cols-5 gap-3">
-          <Control id="form-first_name" class="col-span-3" col required>
-            <Label>Email</Label>
-            <Input type="text" placeholder="e.g. Dela Cruz" auto-focus />
-          </Control>
-          <Control id="form-last_name" class="col-span-2" col required>
-            <Label>Username</Label>
-            <Input type="text" placeholder="e.g. Dela Cruz" />
-          </Control>
-          <Control id="form-last_name" class="col-span-5" col required>
-            <Label>Password</Label>
-            <Input type="password" placeholder="Enter your password" />
-          </Control>
-          <Control id="form-last_name" class="col-span-5" col required>
-            <Label>Confirm Password</Label>
-            <Input type="password" placeholder="Confirm your password" />
-          </Control>
-        </div>
+      <Form id="registration-form" @submit="submit" class="flex flex-col gap-5">
+        <PersonalInformation :form="form" :errors="errors" />
+        <AccountInformation :form="form" :errors="errors" />
+        <Button form="registration-form" type="submit" variant="primary">Create</Button>
       </Form>
-      <Button form="" type="submit" variant="primary">Create</Button>
-      <span class="text-sm text-center mt-5">Already have an account? <router-link :to="{ name: 'login', replace: true }" class="text-primary">Login.</router-link></span>
+      <span class="text-sm text-center mt-5">Already have an account? <router-link :to="{ name: 'login', replace: true }" class="text-primary">Login</router-link></span>
     </Card>
   </div>
 </template>
 
 <script setup lang="ts">
+import AccountInformation from '@/app/auth/register/sections/AccountInformation.vue'
+import PersonalInformation from '@/app/auth/register/sections/PersonalInformation.vue'
+
 const store = authStore()
 const auth = useAuth()
 const router = useRouter()
-const campuses = useCampusStore()
+const pop = usePopup()
 
-const error = reactive({
-  status: null,
-  message: null,
-  username: null,
-  password: null,
-})
-
-const credentials = reactive({
+const emptyForm = (): Partial<User> => ({
+  last_name: '',
+  first_name: '',
+  middle_initial: '',
+  sex: '',
+  campus_id: '',
+  email: '',
   username: '',
   password: '',
+  password_confirmation: '',
+
+  patron_type_id: '',
 })
 
-async function handleSubmit() {
-  Object.assign(error, {
-    status: null,
-    message: null,
-    username: null,
-    password: null,
-  })
+const form = reactive(emptyForm())
+const errors = reactive(emptyForm())
+const errorMessage = ref()
 
-  const res = await auth.login({ username: credentials.username, password: credentials.password })
+async function submit() {
+  const confirm = await pop.confirm({ text: 'Upon submission of your registration, it will be pending for approval. Are you sure you want to submit your registration now?' })
 
-  console.log(res)
-
-  if (!res.success) {
-    Object.assign(error, {
-      status: res.data?.status,
-      message: res.data?.message ?? '',
-      username: res.data?.data?.username ?? null,
-      password: res.data?.data?.password ?? null,
-    })
-    console.log(error)
-  } else {
-    return router.push({ name: res.reroute })
+  if (confirm.isConfirmed) {
+    pop.load()
+    try {
+      const res = await auth.register(form)
+      if (res.status === 'success') {
+        router.replace({ name: 'home' })
+        pop.success(res.message ?? 'Register successful')
+      }
+    } catch (e: any) {
+      const data = e.response.data
+      console.log(data)
+      errors.value = data.errors
+    }
   }
 }
+
+watch([() => form.password_confirmation, () => form.password], () => {
+  if (form.password != form.password_confirmation) {
+    errors.password_confirmation = 'Passwords do not match, please re-check.'
+  } else {
+    errors.password_confirmation = ''
+  }
+})
 </script>
 
 <style scoped></style>

@@ -33,6 +33,7 @@ return new class extends Migration
 
             $table->enum('role', ['super_admin', 'admin', 'librarian', 'patron']);
             $table->enum('status', ['active', 'inactive', 'suspended', 'expired'])->default('active');
+            $table->enum('registration', ['approved', 'pending', 'rejected'])->nullable();
 
             $table->unsignedTinyInteger('login_attempts')->default(0);
 

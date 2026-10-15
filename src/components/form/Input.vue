@@ -39,12 +39,12 @@
       <!-- Suffix Actions Container -->
       <div v-if="hasSuffixActions" class="flex items-center h-full shrink-0">
         <!-- Toggle Password Button -->
-        <button v-if="type === 'password' && !disabled" type="button" class="flex h-full items-center justify-center px-3 text-slate-500 hover:text-slate-800 focus:outline-none border-l border-border transition-colors" :aria-label="show ? 'Hide password' : 'Show password'" @click="show = !show">
+        <button tabindex="-1" v-if="type === 'password' && !disabled" type="button" class="flex h-full items-center justify-center px-3 text-slate-500 hover:text-slate-800 focus:outline-none border-l border-border transition-colors" :aria-label="show ? 'Hide password' : 'Show password'" @click="show = !show">
           <Icon variant="default-hover" :icon="show ? 'eye' : 'eye-slash'" :name="show ? 'Hide Password' : 'Show Password'" />
         </button>
 
         <!-- Clear Button -->
-        <button v-if="enableClear && hasValue && !disabled" type="button" class="flex h-full items-center justify-center px-3 text-slate-500 hover:text-slate-800 focus:outline-none border-l border-border transition-colors" aria-label="Clear input" @click="model = ''">
+        <button tabindex="-1" v-if="enableClear && hasValue && !disabled" type="button" class="flex h-full items-center justify-center px-3 text-slate-500 hover:text-slate-800 focus:outline-none border-l border-border transition-colors" aria-label="Clear input" @click="model = ''">
           <Icon icon="x" name="Clear Input" />
         </button>
 

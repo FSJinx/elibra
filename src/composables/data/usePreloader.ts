@@ -9,10 +9,26 @@ export function usePreloader() {
     const authorship = authorshipStore()
     const language = useLanguagesStore()
 
+    const { fetchPatronTypes, fetchSections } = optionStore()
+
     if (!preloaded.value) {
       try {
         // ======== PUBLIC PRELOAD ===========
-        await Promise.all([campus.fetch(), library.fetch(), item_type.fetch(), category.fetch(), authorship.fetch(), language.fetch()])
+        await Promise.all([
+          // ======== ORGANIZATION WIDE PRELOAD ===========
+          campus.fetch(),
+          library.fetch(),
+          fetchSections(),
+
+          // ======== USER WIDE PRELOAD ===========
+          fetchPatronTypes(),
+
+          // ======== ITEM WIDE PRELOAD ===========
+          item_type.fetch(),
+          category.fetch(),
+          authorship.fetch(),
+          language.fetch(),
+        ])
       } catch (err) {
         throw err
       } finally {

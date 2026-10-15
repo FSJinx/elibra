@@ -468,6 +468,12 @@ declare global {
   export type { Library } from './interfaces/library'
   import('./interfaces/library')
   // @ts-ignore
+  export type { Patron } from './interfaces/patron'
+  import('./interfaces/patron')
+  // @ts-ignore
+  export type { PatronType } from './interfaces/patron_type'
+  import('./interfaces/patron_type')
+  // @ts-ignore
   export type { Publisher } from './interfaces/publisher'
   import('./interfaces/publisher')
   // @ts-ignore

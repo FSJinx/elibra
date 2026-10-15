@@ -65,6 +65,11 @@ export function useAuth() {
     }
   }
 
+  async function register(params: Partial<User>) {
+    const res = await post(`auth/register`, params)
+    return res
+  }
+
   // ================ LOGOUT FUNCTION =================
   async function logout() {
     const result = await pop.confirm({
@@ -101,5 +106,6 @@ export function useAuth() {
     getUser,
     login,
     logout,
+    register,
   }
 }

@@ -44,7 +44,7 @@ use Illuminate\Support\Facades\Route;
  */
 Route::group(['prefix' => '/auth'], function () {
     Route::post('/login', [LoginController::class, 'index'])->middleware('throttle:login');
-    Route::post('/registration', [AuthController::class, 'registration']);
+    Route::post('/register', [AuthController::class, 'register']);
     Route::post('/refresh', [AuthController::class, 'refresh'])->middleware('jwt.refresh');
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('jwt.auth');
 
@@ -484,4 +484,5 @@ Route::group(['prefix' => '/item'], function () {
 
 Route::group(['prefix' => '/option'], function () {
     Route::get('sections', [OptionController::class, 'sections']);
+    Route::get('patron-types', [OptionController::class, 'patronTypes']);
 });
