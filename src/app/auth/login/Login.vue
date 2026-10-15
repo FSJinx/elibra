@@ -4,7 +4,7 @@
       <!-- Logo Header -->
       <div class="flex flex-col items-center text-primary gap-1 mb-5">
         <Button as="link" :to="{ name: 'home' }" variant="text" class="mx-auto my-3">
-          <Logo class="text-4xl" />
+          <Logo class="text-5xl" />
         </Button>
         <h1 class="font-bold text-2xl">Welcome Back!</h1>
         <p class="text-muted-foreground text-sm">Login now and continue where we left off</p>

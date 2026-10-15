@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\UI;
 
 use App\Http\Controllers\Controller;
+use App\Models\PatronType;
 use App\Models\Sections;
-use Illuminate\Http\Request;
 
 class OptionController extends Controller
 {
@@ -13,5 +13,12 @@ class OptionController extends Controller
         $sections = Sections::query()->select(['id', 'name', 'library_id'])->get();
 
         return $this->response(data: $sections);
+    }
+
+    public function patronTypes()
+    {
+        $types = PatronType::query()->select(['id', 'key', 'name'])->get();
+
+        return $this->response(data: $types);
     }
 }

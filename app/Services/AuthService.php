@@ -15,6 +15,10 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthService
 {
+    public function __construct(
+        private UserService $userService
+    ) {}
+
     /**
      * Returns User Information
      */
@@ -66,7 +70,17 @@ class AuthService
         ];
     }
 
-    public function register(array $data, UploadedFile $profilePicture): array
+    public function create(array $data)
+    {
+        $data = array_merge($data, [
+            'role' => 'patron',
+            'registration' => 'pending',
+        ]);
+
+        $user = $this->userService->create($data);
+    }
+
+    public function register(array $data, ?UploadedFile $profilePicture): array
     {
         return DB::transaction(function () use ($data, $profilePicture) {
             $credentials = [
@@ -92,8 +106,10 @@ class AuthService
                 'campus_id' => $campus->id,
             ]);
 
-            $profileMedia = app(MediaService::class)->store($profilePicture, Media::PROFILE);
-            $user->update(['profile_picture_id' => $profileMedia->id]);
+            if (! empty($profilePicture)) {
+                $profileMedia = app(MediaService::class)->store($profilePicture, Media::PROFILE);
+                $user->update(['profile_picture_id' => $profileMedia->id]);
+            }
 
             $patron = Patron::create([
                 'user_id' => $user->id,
@@ -102,12 +118,12 @@ class AuthService
                 'ebc_number' => $this->generateEbcNumber($campus->code, $patronType->key),
             ]);
 
-            UserService::assignRoleAndPermissions($user, 'patron');
+            // UserService::assignRoleAndPermissions($user, 'patron');
 
-            $token = JWTAuth::attempt($credentials);
+            // $token = JWTAuth::attempt($credentials);
 
             return [
-                'token' => $token,
+                // 'token' => $token,
                 'user' => $user->fresh(),
                 'patron' => $patron->fresh(),
             ];

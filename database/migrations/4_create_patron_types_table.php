@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('description')->nullable();
 
+            $table->integer('validity_period'); // This is saved in years
+
             $table->timestamps();
             $table->softDeletes();
         });

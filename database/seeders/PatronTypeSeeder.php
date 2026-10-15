@@ -13,9 +13,9 @@ class PatronTypeSeeder extends Seeder
     public function run(): void
     {
         $patron_types = [
-            ['key' => 'sp', 'name' => 'Student', 'description' => 'A student patron type.'],
-            ['key' => 'fp', 'name' => 'Faculty', 'description' => 'A faculty patron type.'],
-            ['key' => 'gp', 'name' => 'Guest', 'description' => 'A guest patron type.'],
+            ['key' => 'sp', 'name' => 'Student', 'description' => 'A student patron type.', 'validity_period' => 4],
+            ['key' => 'fp', 'name' => 'Faculty', 'description' => 'A faculty patron type.', 'validity_period' => 10],
+            ['key' => 'gp', 'name' => 'Guest', 'description' => 'A guest patron type.', 'validity_period' => 1],
         ];
 
         foreach ($patron_types as $type) {
