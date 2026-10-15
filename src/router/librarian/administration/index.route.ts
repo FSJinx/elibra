@@ -2,14 +2,14 @@ export const librarianAdministration = [
   // ======== Sections Route =========
   {
     path: 'sections',
-    meta: { breadcrumbs: 'Sections', title: 'Administration' },
+    meta: { breadcrumb: 'Sections', title: 'Administration' },
     children: administrationSection,
   },
 
   // ======== Users Route =========
   {
     path: 'users',
-    meta: { breadcrumbs: 'Users', title: 'Administration' },
+    meta: { breadcrumb: 'Users', title: 'Administration' },
     children: administrationUsers,
   },
 ]

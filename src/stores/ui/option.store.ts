@@ -10,6 +10,7 @@ interface Option {
 
 export const optionStore = defineStore('option', {
   state: () => ({
+    campuses: null as Option[] | null,
     sections: null as Option[] | null,
     patron_types: null as Option[] | null,
 
@@ -17,6 +18,11 @@ export const optionStore = defineStore('option', {
   }),
 
   actions: {
+    async fetchCampuses() {
+      const res = await get(`${this.url}/campuses`)
+      this.campuses = res.data
+    },
+
     async fetchSections(id?: any) {
       const res = await get(`${this.url}/sections`, { library_id: id })
       this.sections = res.data

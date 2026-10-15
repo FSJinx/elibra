@@ -9,7 +9,7 @@ export function usePreloader() {
     const authorship = authorshipStore()
     const language = useLanguagesStore()
 
-    const { fetchPatronTypes, fetchSections } = optionStore()
+    const options = optionStore()
 
     if (!preloaded.value) {
       try {
@@ -18,10 +18,11 @@ export function usePreloader() {
           // ======== ORGANIZATION WIDE PRELOAD ===========
           campus.fetch(),
           library.fetch(),
-          fetchSections(),
+          options.fetchCampuses(),
+          options.fetchSections(),
 
           // ======== USER WIDE PRELOAD ===========
-          fetchPatronTypes(),
+          options.fetchPatronTypes(),
 
           // ======== ITEM WIDE PRELOAD ===========
           item_type.fetch(),

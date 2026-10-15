@@ -5,6 +5,7 @@ use App\Http\Controllers\AcquisitionLinesController;
 use App\Http\Controllers\AttendanceLogsController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\AuthorshipController;
 use App\Http\Controllers\CampusController;
@@ -44,7 +45,7 @@ use Illuminate\Support\Facades\Route;
  */
 Route::group(['prefix' => '/auth'], function () {
     Route::post('/login', [LoginController::class, 'index'])->middleware('throttle:login');
-    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/register', [RegisterController::class, 'index']);
     Route::post('/refresh', [AuthController::class, 'refresh'])->middleware('jwt.refresh');
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('jwt.auth');
 
@@ -374,7 +375,7 @@ Route::group(['prefix' => '/librarian', 'middleware' => ['jwt.auth', 'role:admin
 // User Routes
 Route::group(['prefix' => '/user', 'middleware' => ['jwt.auth', 'role:super_admin,admin']], function () {
     Route::get('', [UserController::class, 'index'])->middleware('throttle:read');
-    Route::post('', [UserController::class, 'store'])->middleware('throttle:write');
+    Route::post('', [UserController::class, 'create'])->middleware('throttle:write');
     Route::put('{user}', [UserController::class, 'update'])->middleware('throttle:write');
 });
 
@@ -483,6 +484,7 @@ Route::group(['prefix' => '/item'], function () {
 });
 
 Route::group(['prefix' => '/option'], function () {
+    Route::get('campuses', [OptionController::class, 'campuses']);
     Route::get('sections', [OptionController::class, 'sections']);
     Route::get('patron-types', [OptionController::class, 'patronTypes']);
 });

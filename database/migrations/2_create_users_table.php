@@ -18,16 +18,13 @@ return new class extends Migration
             $table->string('last_name')->nullable();
             $table->string('first_name');
             $table->string('middle_initial', 5)->nullable();
-
             $table->enum('sex', ['male', 'female'])->nullable();
-
             $table->date('birthdate')->nullable();
 
+            
             $table->string('contact_number')->nullable();
-
             $table->string('email')->nullable()->unique();
             $table->timestamp('email_verified_at')->nullable();
-
             $table->string('username')->nullable()->unique();
             $table->string('password');
 
