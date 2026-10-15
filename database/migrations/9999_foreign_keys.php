@@ -199,7 +199,7 @@ return new class extends Migration
             ],
         ],
 
-        //  8. Subscription
+        //  8. Serial Management
         [
             'name' => 'subscription_credentials',
             'foreign_columns' => [
@@ -229,7 +229,7 @@ return new class extends Migration
         [
             'name' => 'media',
             'foreign_columns' => [
-                ['name' => 'item_id', 'references' => 'id', 'on' => 'items', 'onDelete' => 'cascade'],
+                // ['name' => 'item_id', 'references' => 'id', 'on' => 'items', 'onDelete' => 'cascade'],
             ],
         ],
 

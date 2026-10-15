@@ -112,4 +112,8 @@ watchDebounced(
     immediate: true,
   },
 )
+
+// onBeforeMount(async () => {
+//   await items.fetch(true)
+// })
 </script>

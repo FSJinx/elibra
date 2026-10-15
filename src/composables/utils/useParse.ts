@@ -11,6 +11,7 @@ export function useParser() {
         available: 'success',
         active: 'success',
         admin: 'success',
+        completed: 'success',
 
         // ====== INFO =======
         info: 'info',
@@ -22,6 +23,7 @@ export function useParser() {
         // ====== WARNING =======
         warning: 'warning',
         serial: 'warning',
+        pending: 'warning',
 
         // ====== ERROR =======
         danger: 'danger',
@@ -37,6 +39,7 @@ export function useParser() {
 
         // ====== DEFAULT =======
         default: 'default',
+        closed: 'default',
       }
 
       return stats[s ? s : 'default']

@@ -1,15 +1,15 @@
-interface SectionParams {
-  sort: string
-  page: number
-  per_page: number
-  order: 'asc' | 'desc'
+interface SectionParams extends BaseParams {
+  library_id: any
 }
 
 const defaultParams: Readonly<SectionParams> = {
+  query: '',
   sort: '',
   page: 1,
   per_page: 10,
   order: 'asc',
+
+  library_id: '',
 }
 
 const url = 'section'
@@ -21,7 +21,8 @@ export const sectionStore = defineStore('section', {
     currentData: null as Section | null,
     loading: false as true | false,
     loadedLibraryId: null as number | null,
-    params: defaultParams as SectionParams,
+    params: { ...defaultParams } as SectionParams,
+    defaultParams: defaultParams as SectionParams,
 
     pop: usePopup(),
     auth: authStore(),
@@ -40,7 +41,7 @@ export const sectionStore = defineStore('section', {
     },
 
     updateData(data: Section) {
-      this.data = (this.data ?? []).map((section) => section.id === data.id ? data : section)
+      this.data = (this.data ?? []).map((section) => (section.id === data.id ? data : section))
     },
 
     removeData(data: Section) {
@@ -60,14 +61,12 @@ export const sectionStore = defineStore('section', {
     },
 
     // =========== ACTIONS ============
-    async fetch(id: any, forced = false) {
-      if (this.data && !forced) return
-
+    async fetch(params: SectionParams = defaultParams) {
+      // if (this.data && !forced) return
       this.loading = true
       try {
-        const res = await get(url, { library_id: libraryId })
+        const res = await get(url, params)
         this.setData(res.data)
-        this.loadedLibraryId = libraryId ?? null
         return res
       } finally {
         this.loading = false
