@@ -6,19 +6,21 @@
       <Card class="w-150 shrink-0">
         <CardHeader>Loan Form</CardHeader>
         <CardBody>
-          <Form class="flex flex-col gap-5" id="issue-form" @submit="">
+          <Form class="flex flex-col gap-5" id="issue-form" @submit="checkPreview">
             <Control id="patron-id" col required>
               <Label>Patron</Label>
-              <Input type="text" placeholder="Enter patron's ID Number or EBC" auto-focus />
+              <Input v-model="patronIdentifier" type="text" placeholder="Enter patron's ID Number or EBC" auto-focus required />
             </Control>
             <Control id="item-accession" col required>
               <Label>Item</Label>
-              <Input type="text" placeholder="Enter item's accession code or barcode number" />
+              <Input v-model="accessionNumber" type="text" placeholder="Enter item's accession code or barcode number" required />
             </Control>
           </Form>
         </CardBody>
         <CardFooter class="flex justify-end gap-2">
-          <Button form="issue-form" type="submit" variant="success">Check</Button>
+          <Button form="issue-form" type="submit" variant="success" :disabled="loading">
+            {{ loading ? 'Checking...' : 'Check' }}
+          </Button>
         </CardFooter>
       </Card>
 
@@ -29,7 +31,10 @@
         </CardHeader>
 
         <CardBody v-if="!preview">
-          <div class="text-center p-5">No item on the preview.</div>
+          <div class="text-center p-5">
+            <p v-if="errorMessage" class="mb-2 text-danger">{{ errorMessage }}</p>
+            No item on the preview.
+          </div>
         </CardBody>
 
         <CardBody class="flex flex-col gap-5" v-else>
@@ -43,11 +48,12 @@
             </div>
             <!-- Patron's Information -->
             <div class="flex flex-col p-2">
-              <Title :level="2" class="mb-2">Juan Dela Cruz</Title>
+              <Title :level="2" class="mb-2">{{ patronName }}</Title>
 
-              <p><span class="font-semibold">Patron Type:</span> Student</p>
-              <p><span class="font-semibold">Department:</span> CCSICT</p>
-              <p><span class="font-semibold">Program:</span> College of Computing Studies, Information, and Communication Technology</p>
+              <p><span class="font-semibold">Patron Type:</span> {{ preview.patron.patron_type?.name ?? '—' }}</p>
+              <p><span class="font-semibold">Department:</span> {{ preview.patron.program?.department?.name ?? '—' }}</p>
+              <p><span class="font-semibold">Program:</span> {{ preview.patron.program?.name ?? '—' }}</p>
+              <p><span class="font-semibold">EBC:</span> {{ preview.patron.ebc_number ?? '—' }}</p>
             </div>
           </div>
 
@@ -59,17 +65,14 @@
             </div>
             <!-- Item's Information -->
             <div class="flex flex-col p-2">
-              <Title :level="2">e-Libra: A Centralized Web-based Library Management and Resource Monitoring System for the Isabela State University</Title>
-              <p>Patron Type: Student</p>
-              <p>Department: CCSICT</p>
-              <p>Program: College of Computing Studies, Information, and Communication Technology</p>
+              <Title :level="2">{{ preview.accession.item.title }}</Title>
+              <p v-if="preview.accession.item.subtitle">{{ preview.accession.item.subtitle }}</p>
+              <p><span class="font-semibold">Accession:</span> {{ preview.accession.accession_number }}</p>
+              <p><span class="font-semibold">Call Number:</span> {{ preview.accession.item.call_number ?? '—' }}</p>
+              <p><span class="font-semibold">Status:</span> {{ preview.accession.status }}</p>
             </div>
           </div>
         </CardBody>
-        <CardFooter class="flex items-center justify-end gap-2" v-if="preview">
-          <Button form="" type="submit" variant="danger">Cancel</Button>
-          <Button form="" type="submit" variant="success" @click="confirmLoan">Confirm</Button>
-        </CardFooter>
       </Card>
     </div>
   </div>
@@ -78,22 +81,81 @@
 <script setup lang="ts">
 import book from '@/assets/images/default_book.png'
 import user from '@/assets/images/user.png'
+import axios from 'axios'
+import { api } from '@/plugins/axios'
 
-const pop = usePopup()
+interface PatronPreview {
+  ebc_number: string | null
+  user: {
+    first_name: string
+    middle_initial: string | null
+    last_name: string | null
+  }
+  patron_type: { name: string } | null
+  program: { name: string; department: { name: string } | null } | null
+}
 
-const preview = ref(null)
-
-async function confirmLoan() {
-  const confirm = await pop.confirm({ text: 'Are you sure you want to proceed with the loan?' })
-
-  if (confirm.isConfirmed) {
+interface AccessionPreview {
+  accession_number: string | null
+  status: string
+  item: {
+    title: string
+    subtitle: string | null
+    call_number: string | null
   }
 }
 
-async function cancelLoan() {
-  const confirm = await pop.confirm({ text: 'Are you sure you want to cancel the loan?' })
+interface CirculationPreview {
+  patron: PatronPreview
+  accession: AccessionPreview
+}
 
-  if (confirm.isConfirmed) {
+interface ApiResponse {
+  message: string
+  data: CirculationPreview
+}
+
+const patronIdentifier = ref('')
+const accessionNumber = ref('')
+const preview = ref<CirculationPreview | null>(null)
+const loading = ref(false)
+const errorMessage = ref('')
+
+const patronName = computed(() => {
+  if (!preview.value) return ''
+
+  return [
+    preview.value.patron.user.first_name,
+    preview.value.patron.user.middle_initial,
+    preview.value.patron.user.last_name,
+  ].filter(Boolean).join(' ')
+})
+
+async function checkPreview() {
+  const patron = patronIdentifier.value.trim()
+  const accession = accessionNumber.value.trim()
+
+  if (!patron || !accession) return
+
+  loading.value = true
+  errorMessage.value = ''
+  preview.value = null
+
+  try {
+    const response = await api.post<ApiResponse>('circulation/preview', {
+      patron_identifier: patron,
+      accession_number: accession,
+    })
+
+    preview.value = response.data.data
+  } catch (error) {
+    if (axios.isAxiosError<ApiResponse>(error)) {
+      errorMessage.value = error.response?.data?.message ?? 'Unable to check this patron and item.'
+    } else {
+      errorMessage.value = 'Unable to check this patron and item.'
+    }
+  } finally {
+    loading.value = false
   }
 }
 </script>
