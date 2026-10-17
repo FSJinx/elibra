@@ -33,7 +33,7 @@ class UserController extends Controller
             ],
         );
 
-        return $this->response(message: 'All users retrieved successfully!', data: $users   ->toArray());
+        return $this->response(data: $this->service->index($filters, $user));
     }
 
     /**

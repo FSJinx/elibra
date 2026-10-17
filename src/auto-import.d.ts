@@ -34,6 +34,7 @@ declare global {
   const autoResetRef: typeof import('@vueuse/core').autoResetRef
   const axios: typeof import('./plugins/axios').default
   const backendRoute: typeof import('./plugins/axios').backendRoute
+  const circulationCheckOut: typeof import('./router/librarian/circulation/check_out.route').circulationCheckOut
   const circulationIssue: typeof import('./router/librarian/circulation/issue.route').circulationIssue
   const ciruclationLoans: typeof import('./router/librarian/circulation/loans.route').ciruclationLoans
   const collectionsCatalog: typeof import('./router/librarian/collections/catalog.route').collectionsCatalog
@@ -107,6 +108,7 @@ declare global {
   const librarianUsers: typeof import('./router/librarian/users/index.route').librarianUsers
   const librariansStore: typeof import('./stores/user.store').librariansStore
   const libraryStore: typeof import('./stores/library.store').libraryStore
+  const loanStore: typeof import('./stores/loan.store').loanStore
   const makeDestructurable: typeof import('@vueuse/core').makeDestructurable
   const mapActions: typeof import('pinia').mapActions
   const mapGetters: typeof import('pinia').mapGetters
@@ -190,6 +192,7 @@ declare global {
   const unref: typeof import('vue').unref
   const unrefElement: typeof import('@vueuse/core').unrefElement
   const until: typeof import('@vueuse/core').until
+  const use: typeof import('./composables/api/useLoan').use
   const useAccessionStore: typeof import('./stores/librarian/accession.store').useAccessionStore
   const useAcquisitionLinesStore: typeof import('./stores/librarian/acquisition_lines.store').useAcquisitionLinesStore
   const useAcquisitionStore: typeof import('./stores/librarian/acquisition.store').useAcquisitionStore
@@ -291,6 +294,7 @@ declare global {
   const useLastChanged: typeof import('@vueuse/core').useLastChanged
   const useLibrarianDashboardStore: typeof import('./stores/librarian/librarian_dashboard.store').useLibrarianDashboardStore
   const useLink: typeof import('vue-router').useLink
+  const useLoan: typeof import('./composables/api/useLoan').useLoan
   const useLocalStorage: typeof import('@vueuse/core').useLocalStorage
   const useMagicKeys: typeof import('@vueuse/core').useMagicKeys
   const useManualRefHistory: typeof import('@vueuse/core').useManualRefHistory
@@ -521,7 +525,7 @@ declare module 'vue' {
     readonly autoResetRef: UnwrapRef<typeof import('@vueuse/core')['autoResetRef']>
     readonly axios: UnwrapRef<typeof import('./plugins/axios')['default']>
     readonly backendRoute: UnwrapRef<typeof import('./plugins/axios')['backendRoute']>
-    readonly circulationIssue: UnwrapRef<typeof import('./router/librarian/circulation/issue.route')['circulationIssue']>
+    readonly circulationCheckOut: UnwrapRef<typeof import('./router/librarian/circulation/check_out.route')['circulationCheckOut']>
     readonly ciruclationLoans: UnwrapRef<typeof import('./router/librarian/circulation/loans.route')['ciruclationLoans']>
     readonly collectionsCatalog: UnwrapRef<typeof import('./router/librarian/collections/catalog.route')['collectionsCatalog']>
     readonly collectionsInventory: UnwrapRef<typeof import('./router/librarian/collections/inventory.route')['collectionsInventory']>
@@ -583,6 +587,7 @@ declare module 'vue' {
     readonly librarianSerial: UnwrapRef<typeof import('./router/librarian/serial.route')['librarianSerial']>
     readonly librarianSettings: UnwrapRef<typeof import('./router/librarian/settings.route')['librarianSettings']>
     readonly libraryStore: UnwrapRef<typeof import('./stores/library.store')['libraryStore']>
+    readonly loanStore: UnwrapRef<typeof import('./stores/loan.store')['loanStore']>
     readonly makeDestructurable: UnwrapRef<typeof import('@vueuse/core')['makeDestructurable']>
     readonly mapActions: UnwrapRef<typeof import('pinia')['mapActions']>
     readonly mapGetters: UnwrapRef<typeof import('pinia')['mapGetters']>

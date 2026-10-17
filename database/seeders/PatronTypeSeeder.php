@@ -12,14 +12,42 @@ class PatronTypeSeeder extends Seeder
      */
     public function run(): void
     {
-        $patron_types = [
-            ['key' => 'sp', 'name' => 'Student', 'description' => 'A student patron type.', 'validity_period' => 4],
-            ['key' => 'fp', 'name' => 'Faculty', 'description' => 'A faculty patron type.', 'validity_period' => 10],
-            ['key' => 'gp', 'name' => 'Guest', 'description' => 'A guest patron type.', 'validity_period' => 1],
-        ];
-
-        foreach ($patron_types as $type) {
-            PatronType::create($type);
-        }
+        collect([
+            [
+                'key' => 'sp',
+                'name' => 'Student',
+                'description' => 'A student patron type.',
+                'validity_period' => 4,
+                'has_campus' => false,
+                'has_department' => false,
+                'has_program' => false,
+            ],
+            [
+                'key' => 'fp',
+                'name' => 'Faculty',
+                'description' => 'A faculty patron type.',
+                'validity_period' => 10,
+                'has_campus' => false,
+                'has_department' => false,
+                'has_program' => false,
+            ],
+            [
+                'key' => 'gp',
+                'name' => 'Guest',
+                'description' => 'A guest patron type.',
+                'validity_period' => 1,
+                'has_campus' => false,
+                'has_department' => false,
+                'has_program' => false,
+            ],
+        ])->each(function ($type) {
+            PatronType::create(
+                $type, [
+                    'has_campus' => $type['has_campus'],
+                    'has_department' => $type['has_campus'] ? $type['has_department'] : false,
+                    'has_program' => $type['has_department'] ? $type['has_program'] : false,
+                ]
+            );
+        });
     }
 }

@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateCirculationRequest;
 use App\Models\Accession;
 use App\Models\Circulation;
 use App\Models\Patron;
+use App\Models\User;
 use App\Services\CirculationService;
 use Illuminate\Http\Request;
 
@@ -40,46 +41,60 @@ class CirculationController extends Controller
     public function preview(Request $request)
     {
         $validated = $request->validate([
-            'patron_identifier' => ['required', 'string', 'max:255'],
-            'accession_number' => ['required', 'string', 'max:255'],
+            'patron' => ['required', 'string', 'max:255'],
+            'accession' => ['required', 'string', 'max:255'],
         ]);
 
-        $patronIdentifier = trim($validated['patron_identifier']);
-        $accessionNumber = trim($validated['accession_number']);
+        $params = [
+            'patron' => $validated['patron'],
+            'accession' => trim($validated['accession']),
+        ];
 
-        $patron = Patron::query()
-            ->select(['id', 'ebc_number', 'user_id', 'patron_type_id', 'program_id'])
-            ->with([
-                'user:id,first_name,middle_initial,last_name,username',
-                'patronType:id,name',
-                'program:id,name,department_id',
-                'program.department:id,name',
-            ])
-            ->where(function ($query) use ($patronIdentifier) {
-                $query->where('ebc_number', $patronIdentifier);
-
-                if (ctype_digit($patronIdentifier)) {
-                    $query->orWhere('id', (int) $patronIdentifier);
-                }
-
-                $query->orWhereHas('user', function ($userQuery) use ($patronIdentifier) {
-                    $userQuery->where('username', $patronIdentifier);
-
-                    if (ctype_digit($patronIdentifier)) {
-                        $userQuery->orWhere('id', (int) $patronIdentifier);
-                    }
-                });
+        $patron = User::query()
+            ->where('role', 'patron')
+            ->where(function ($q) use ($params) {
+                $q->where('username', $params['patron'])
+                    ->orWhereHas('patron', function ($p) use ($params) {
+                        $p->where('ebc_number', $params['patron']);
+                    });
             })
+            ->select(['id', 'last_name', 'first_name', 'username', 'middle_initial', 'email'])
+            ->with(['patron:id,user_id,patron_type_id,ebc_number', 'patron.patronType:id,name'])
             ->first();
 
-        if (! $patron || ! $patron->user) {
+        // $patron = Patron::query()
+        //     ->select(['id', 'ebc_number', 'user_id', 'patron_type_id', 'program_id'])
+        //     ->with([
+        //         'user:id,first_name,middle_initial,last_name,username',
+        //         'patronType:id,name',
+        //         'program:id,name,department_id',
+        //         'program.department:id,name',
+        //     ])
+        //     ->where(function ($query) use ($patronIdentifier) {
+        //         $query->where('ebc_number', $patronIdentifier);
+
+        //         if (ctype_digit($patronIdentifier)) {
+        //             $query->orWhere('id', (int) $patronIdentifier);
+        //         }
+
+        //         $query->orWhereHas('user', function ($userQuery) use ($patronIdentifier) {
+        //             $userQuery->where('username', $patronIdentifier);
+
+        //             if (ctype_digit($patronIdentifier)) {
+        //                 $userQuery->orWhere('id', (int) $patronIdentifier);
+        //             }
+        //         });
+        //     })
+        //     ->first();
+
+        if (! $patron) {
             return $this->response('error', 'Patron not found.', null, 404);
         }
 
         $accession = Accession::query()
             ->select(['id', 'accession_number', 'status', 'item_id'])
             ->with(['item:id,title,subtitle,call_number'])
-            ->where('accession_number', $accessionNumber)
+            ->where('accession_number', $params['accession'])
             ->first();
 
         if (! $accession || ! $accession->item) {

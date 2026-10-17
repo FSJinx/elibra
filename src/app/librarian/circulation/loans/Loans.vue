@@ -1,32 +1,22 @@
 <template>
   <div class="size-full flex flex-col overflow-hidden">
-    <SectionHeader title="Loans" description="Manage your library's loans and overdues" icon="bag-plus" />
+    <SectionHeader title="Loans" description="Manage patrons' loans and returns." icon="laptop">
+      <div class="flex items-center justify-end gap-2 text-sm">
+        <router-link :to="{ name: link.path }" v-for="link in links" class="px-4 py-1 rounded-md border border-transparent transition-all duration-150" exact-active-class="bg-primary-soft/25 text-primary border-primary/50!">
+          {{ link.name }}
+        </router-link>
+      </div>
+    </SectionHeader>
 
     <div class="flex-1 flex flex-col p-5 gap-3">
-      <Card class="">
-        <Form class="flex-1 flex items-center gap-2" id="search-form" @submit="">
-          <Input id="" class="max-w-125" type="text" placeholder="Search by patron name, item's accession code or title" />
-          <Button form="search-form" type="submit" variant="info">Search</Button>
-        </Form>
-      </Card>
-
-      <Table title="Loan List" subtitle="Browse your library's recent loans" data-length="">
-        <Thead>
-          <tr>
-            <Th>No</Th>
-            <Th>Accession</Th>
-            <Th>Item</Th>
-            <Th>Patron</Th>
-            <Th>Date Loaned</Th>
-            <Th>Due Date</Th>
-            <Th>Issued By</Th>
-          </tr>
-        </Thead>
-      </Table>
+      <router-view />
     </div>
   </div>
 </template>
 
-<script setup lang="ts"></script>
-
-<style scoped></style>
+<script setup lang="ts">
+const links = [
+  { name: 'Issue', path: 'librarian.circulation.loans' },
+  { name: 'Recent', path: 'librarian.circulation.loans.recent' },
+]
+</script>
