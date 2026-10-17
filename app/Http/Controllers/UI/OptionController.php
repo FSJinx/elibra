@@ -25,7 +25,7 @@ class OptionController extends Controller
 
     public function patronTypes()
     {
-        $types = PatronType::query()->select(['id', 'key', 'name'])->get();
+        $types = PatronType::query()->select(['id', 'key', 'name', 'has_campus', 'has_department', 'has_program'])->get();
 
         return $this->response(data: $types);
     }

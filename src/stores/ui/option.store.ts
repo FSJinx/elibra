@@ -19,19 +19,23 @@ export const optionStore = defineStore('option', {
 
   actions: {
     async fetchCampuses() {
+      if (this.campuses) return
+
       const res = await get(`${this.url}/campuses`)
       this.campuses = res.data
     },
 
     async fetchSections(id?: any) {
+      if (this.sections) return
+
       const res = await get(`${this.url}/sections`, { library_id: id })
       this.sections = res.data
     },
 
     async fetchPatronTypes() {
-      const res = await get(`${this.url}/patron-types`)
-      console.log(res.data)
+      if (this.patron_types) return
 
+      const res = await get(`${this.url}/patron-types`)
       this.patron_types = res.data
     },
   },

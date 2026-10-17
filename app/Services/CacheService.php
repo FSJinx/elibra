@@ -28,7 +28,11 @@ class CacheService
     public const PATRONS = 'patrons';
 
     public const LIBRARIANS = 'librarians';
+    
+    // ========= CATALOGING ==========
+    public const PATRON_TYPES = 'patron_types';
 
+    
     // ========= CATALOGING ==========
     public const ITEMS = 'items';
 

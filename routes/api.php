@@ -27,6 +27,7 @@ use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\OpacSearchController;
 use App\Http\Controllers\PatronController;
+use App\Http\Controllers\PatronTypeController;
 use App\Http\Controllers\PatronTypeLoanPolicyController;
 use App\Http\Controllers\ProgramsController;
 use App\Http\Controllers\PublisherController;
@@ -237,6 +238,21 @@ Route::group(['prefix' => '/language'], function () {
 
     // Delete
     Route::delete('{language}', [LanguageController::class, 'destroy'])->middleware('throttle:delete');
+});
+
+// ============== PATRON TYPE ROUTE ==================
+Route::group(['prefix' => '/patron-type', 'middleware' => ['jwt.auth']], function () {
+    // Get
+    Route::get('', [PatronTypeController::class, 'index'])->middleware('throttle:read');
+
+    // Post
+    Route::post('', [PatronTypeController::class, 'store'])->middleware('role:super_admin', 'throttle:write');
+
+    // Update
+    Route::put('{patron-type}', [PatronTypeController::class, 'update'])->middleware('role:super_admin', 'throttle:write');
+
+    // Delete
+    Route::delete('{patron-type}', [PatronTypeController::class, 'destroy'])->middleware('role:super_admin', 'throttle:delete');
 });
 
 // ============== PROGRAM ROUTE ==================

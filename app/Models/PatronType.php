@@ -20,4 +20,10 @@ class PatronType extends Model
         'has_program',
         'has_department',
     ];
+
+    protected $casts = [
+        'has_campus' => 'boolean',
+        'has_program' => 'boolean',
+        'has_department' => 'boolean',
+    ];
 }

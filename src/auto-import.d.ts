@@ -19,7 +19,8 @@ declare global {
   const adminOrganizationRoutes: typeof import('./router/admin/organization.route').adminOrganizationRoutes
   const adminOverviewRoutes: typeof import('./router/admin/dashboard/overview.route').adminOverviewRoutes
   const adminRoutes: typeof import('./router/admin.routes').adminRoutes
-  const adminStandardRoutes: typeof import('./router/admin/standards.route').adminStandardRoutes
+  const adminStandard: typeof import('./router/admin/standard/index.route').adminStandard
+  const adminStandardRoutes: typeof import('./router/admin/standard/index.route').adminStandardRoutes
   const adminUserRoutes: typeof import('./router/admin/users.route').adminUserRoutes
   const adminVendorRoute: typeof import('./router/admin/organization/vendor.route').adminVendorRoute
   const administ: typeof import('./router/librarian/administration/users.route').administ
@@ -61,6 +62,7 @@ declare global {
   const customRef: typeof import('vue').customRef
   const debouncedRef: typeof import('@vueuse/core').debouncedRef
   const debouncedWatch: typeof import('@vueuse/core').debouncedWatch
+  const defaultParams: typeof import('./stores/patron_type.store').defaultParams
   const defineAsyncComponent: typeof import('vue').defineAsyncComponent
   const defineComponent: typeof import('vue').defineComponent
   const defineStore: typeof import('pinia').defineStore
@@ -142,6 +144,7 @@ declare global {
   const optionStore: typeof import('./stores/ui/option.store').optionStore
   const patch: typeof import('./composables/data/useApi').patch
   const patronRoutes: typeof import('./router/patron.routes').patronRoutes
+  const patronTypeStore: typeof import('./stores/patron_type.store').patronTypeStore
   const pausableWatch: typeof import('@vueuse/core').pausableWatch
   const post: typeof import('./composables/data/useApi').post
   const provide: typeof import('vue').provide
@@ -171,6 +174,10 @@ declare global {
   const shallowReadonly: typeof import('vue').shallowReadonly
   const shallowRef: typeof import('vue').shallowRef
   const sizes: typeof import('./composables/useType').sizes
+  const standard: typeof import('./router/admin/standard/item_categories.route').standard
+  const standardCategory: typeof import('./router/admin/standard/item_categories.route').standardCategory
+  const standardItemType: typeof import('./router/admin/standard/item_types.route').standardItemType
+  const standardPatronType: typeof import('./router/admin/standard/patron_type.route').standardPatronType
   const storeToRefs: typeof import('pinia').storeToRefs
   const syncRef: typeof import('@vueuse/core').syncRef
   const syncRefs: typeof import('@vueuse/core').syncRefs
@@ -506,13 +513,11 @@ declare module 'vue' {
     readonly acquisition_modes: UnwrapRef<typeof import('./constants/acquisition_mode')['acquisition_modes']>
     readonly adminAuthorityRoute: UnwrapRef<typeof import('./router/admin/authority.route')['adminAuthorityRoute']>
     readonly adminCampusRoutes: UnwrapRef<typeof import('./router/admin/organization/campus.route')['adminCampusRoutes']>
-    readonly adminItemCategoriesRoutes: UnwrapRef<typeof import('./router/admin/standard/item_categories.route')['adminItemCategoriesRoutes']>
-    readonly adminItemTypeRoutes: UnwrapRef<typeof import('./router/admin/standard/item_types.route')['adminItemTypeRoutes']>
     readonly adminLibraryRoutes: UnwrapRef<typeof import('./router/admin/organization/library.route')['adminLibraryRoutes']>
     readonly adminOrganizationRoutes: UnwrapRef<typeof import('./router/admin/organization.route')['adminOrganizationRoutes']>
     readonly adminOverviewRoutes: UnwrapRef<typeof import('./router/admin/dashboard/overview.route')['adminOverviewRoutes']>
     readonly adminRoutes: UnwrapRef<typeof import('./router/admin.routes')['adminRoutes']>
-    readonly adminStandardRoutes: UnwrapRef<typeof import('./router/admin/standards.route')['adminStandardRoutes']>
+    readonly adminStandard: UnwrapRef<typeof import('./router/admin/standard/index.route')['adminStandard']>
     readonly adminUserRoutes: UnwrapRef<typeof import('./router/admin/users.route')['adminUserRoutes']>
     readonly adminVendorRoute: UnwrapRef<typeof import('./router/admin/organization/vendor.route')['adminVendorRoute']>
     readonly administrationSection: UnwrapRef<typeof import('./router/librarian/administration/section.route')['administrationSection']>
@@ -621,6 +626,7 @@ declare module 'vue' {
     readonly optionStore: UnwrapRef<typeof import('./stores/ui/option.store')['optionStore']>
     readonly patch: UnwrapRef<typeof import('./composables/data/useApi')['patch']>
     readonly patronRoutes: UnwrapRef<typeof import('./router/patron.routes')['patronRoutes']>
+    readonly patronTypeStore: UnwrapRef<typeof import('./stores/patron_type.store')['patronTypeStore']>
     readonly pausableWatch: UnwrapRef<typeof import('@vueuse/core')['pausableWatch']>
     readonly post: UnwrapRef<typeof import('./composables/data/useApi')['post']>
     readonly provide: UnwrapRef<typeof import('vue')['provide']>
@@ -650,6 +656,9 @@ declare module 'vue' {
     readonly shallowReadonly: UnwrapRef<typeof import('vue')['shallowReadonly']>
     readonly shallowRef: UnwrapRef<typeof import('vue')['shallowRef']>
     readonly sizes: UnwrapRef<typeof import('./composables/useType')['sizes']>
+    readonly standardCategory: UnwrapRef<typeof import('./router/admin/standard/item_categories.route')['standardCategory']>
+    readonly standardItemType: UnwrapRef<typeof import('./router/admin/standard/item_types.route')['standardItemType']>
+    readonly standardPatronType: UnwrapRef<typeof import('./router/admin/standard/patron_type.route')['standardPatronType']>
     readonly storeToRefs: UnwrapRef<typeof import('pinia')['storeToRefs']>
     readonly syncRef: UnwrapRef<typeof import('@vueuse/core')['syncRef']>
     readonly syncRefs: UnwrapRef<typeof import('@vueuse/core')['syncRefs']>

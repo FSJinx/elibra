@@ -30,7 +30,7 @@ const statusIndicator = computed(() => {
     default: 'bg-default/25 ',
   }
 
-  return shades[parse.status(props?.variant) ?? 'default']
+  return shades[parse.status(String(props?.variant)) ?? 'default']
 })
 </script>
 
