@@ -16,7 +16,7 @@ class PatronTypeSeeder extends Seeder
             [
                 'key' => 'sp',
                 'name' => 'Student',
-                'description' => 'A student patron type.',
+                'description' => 'A student of Isabela State University.',
                 'validity_period' => 4,
                 'has_campus' => true,
                 'has_department' => true,
@@ -25,7 +25,7 @@ class PatronTypeSeeder extends Seeder
             [
                 'key' => 'fp',
                 'name' => 'Faculty',
-                'description' => 'A faculty patron type.',
+                'description' => 'A faculty of Isabela State University.',
                 'validity_period' => 10,
                 'has_campus' => true,
                 'has_department' => true,
@@ -34,7 +34,7 @@ class PatronTypeSeeder extends Seeder
             [
                 'key' => 'gp',
                 'name' => 'Guest',
-                'description' => 'A guest patron type.',
+                'description' => 'A guest patron that is not enrolled in any ISU Campus.',
                 'validity_period' => 1,
                 'has_campus' => false,
                 'has_department' => false,

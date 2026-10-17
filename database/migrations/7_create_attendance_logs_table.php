@@ -16,7 +16,7 @@ return new class extends Migration
             $table->enum('status', ['in', 'out']);
             $table->timestamps();
 
-            $table->unsignedBigInteger('patron_id');
+            $table->unsignedBigInteger('patron_id')->nullable();
             $table->unsignedBigInteger('library_id');
             $table->unsignedBigInteger('section_id')->nullable();
         });
