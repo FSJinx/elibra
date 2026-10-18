@@ -3,6 +3,7 @@
 use App\Http\Controllers\AcquisitionController;
 use App\Http\Controllers\AcquisitionLinesController;
 use App\Http\Controllers\AttendanceLogsController;
+use App\Http\Controllers\AcaRepoController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -401,6 +402,8 @@ Route::group(['prefix' => '/patron'], function () {
     Route::put('{patron}', [PatronController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
     Route::delete('{patron}', [PatronController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:delete');
 });
+
+Route::post('/aca-repo', [AcaRepoController::class, 'store'])->middleware('jwt.auth', 'throttle:write');
 
 Route::group(['prefix' => '/patron-type-loan-policy'], function () {
     Route::get('', [PatronTypeLoanPolicyController::class, 'index'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');

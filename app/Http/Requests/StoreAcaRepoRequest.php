@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Language;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Validation\Rule;
 
 class StoreAcaRepoRequest extends BaseRequest
 {
@@ -11,7 +13,11 @@ class StoreAcaRepoRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return false;
+        $user = $this->user();
+
+        return $user !== null
+            && $user->isPatron()
+            && $user->patron()->exists();
     }
 
     /**
@@ -22,7 +28,13 @@ class StoreAcaRepoRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => ['required', 'string', 'max:255'],
+            'category' => ['required', Rule::in(['ut', 'gt'])],
+            'description' => ['required', 'string'],
+            'doi' => ['nullable', 'string', 'max:255'],
+            'keywords' => ['required', 'array'],
+            'keywords.*' => ['string', 'max:255'],
+            'language_id' => ['required', Rule::exists((new Language)->getTable(), 'id')],
         ];
     }
 }
