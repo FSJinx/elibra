@@ -12,7 +12,7 @@ export const optionStore = defineStore('option', {
   state: () => ({
     campuses: null as Option[] | null,
     sections: null as Option[] | null,
-    patron_types: null as Option[] | null,
+    patron_types: null as Partial<PatronType>[] | null,
 
     url: 'option',
   }),
