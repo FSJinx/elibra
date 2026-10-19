@@ -70,12 +70,12 @@ const parse = useParser()
 const defaultParams = (): Readonly<ItemParams> => ({
   query: '',
   order: 'desc',
-  sort: '',
+  sort: 'created_at',
   page: '',
   per_page: '25',
 
   item_type_id: '',
-  item_type_categoy_id: '',
+  item_type_category_id: '',
 })
 
 const data = ref<Item[] | null>(null)

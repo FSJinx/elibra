@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreItemRequest;
+use App\Http\Requests\UpdateItemRequest;
 use App\Models\Item;
 use App\Services\CacheService;
 use App\Services\ItemService;
 use App\Services\QueryService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Throwable;
 
 class ItemController extends Controller
 {
@@ -104,10 +103,8 @@ class ItemController extends Controller
     {
         $filters = QueryService::filters($request);
 
-        // Complete Filter
-        $filters = array_merge($filters, [
-            'item_type_id' => $request->input('item_type_id'),
-        ]);
+        $filters['item_type_id'] = $request->input('item_type_id');
+        $filters['item_type_category_id'] = $request->input('item_type_category_id');
 
         $data = CacheService::remember(
             CacheService::ITEMS,
@@ -118,18 +115,18 @@ class ItemController extends Controller
 
                 // ============== Search ============
                 $item->when($filters['search'], function ($i, $param) {
-                    $i->where('title', 'LIKE', "%$param%")
+                    $i->where(function ($query) use ($param) {
+                        $query->where('title', 'LIKE', "%$param%")
                         ->orWhere('subtitle', 'LIKE', "%$param%");
-                });
-                
-                $item->when($filters['search'], function ($i, $param) {
-                    $i->where('title', 'LIKE', "%$param%")
-                        ->orWhere('subtitle', 'LIKE', "%$param%");
+                    });
                 });
 
-                // ============== Item Type ID ============
                 $item->when($filters['item_type_id'], function ($i, $param) {
                     $i->where('item_type_id', $param);
+                });
+
+                $item->when($filters['item_type_category_id'], function ($i, $param) {
+                    $i->where('item_type_category_id', $param);
                 });
 
                 return $item
@@ -183,32 +180,30 @@ class ItemController extends Controller
         return $this->response(message: 'Catalog received successfully', data: $item->toArray());
     }
 
-    public function store(StoreItemRequest $request, Item $item)
+    public function store(StoreItemRequest $request)
     {
-        DB::beginTransaction();
+        $newItem = array_merge($request->validated(), [
+            'library_id' => $this->user()->librarian?->library_id,
+        ]);
+        $item = $this->itemService->create($newItem);
 
-        $newItem = array_merge($request->validated(), ['library_id' => $this->user()->librarian->id]);
+        return $this->response(
+            'success',
+            'Item created successfully',
+            $item->toArray(),
+            201
+        );
+    }
 
-        try {
-            $item = Item::create($newItem);
+    public function update(UpdateItemRequest $request, Item $item)
+    {
+        $item = $this->itemService->update($item, $request->validated());
 
-            $item->syncAuthors($request->input('authors'));
-            $item->refresh();
-
-            DB::commit();
-
-            CacheService::invalidate(CacheService::ITEMS);
-
-            return $this->response(
-                'success',
-                'Item created successfully',
-                $item->toArray(),
-                201
-            );
-        } catch (Throwable $e) {
-            DB::rollBack();
-
-            throw $e;
-        }
+        return $this->response(
+            'success',
+            'Item updated successfully',
+            $item->toArray(),
+            200
+        );
     }
 }

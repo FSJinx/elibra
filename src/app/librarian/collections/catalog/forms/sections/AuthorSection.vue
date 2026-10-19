@@ -1,7 +1,7 @@
 <template>
-  <Table title="Author" subtitle="Record the authors and authorship of this material. If authorship is blank, check if you've selected an item type." v-if="form.item_type_id">
+  <Table title="Author" subtitle="Record the authors and authorship of this material. If authorship is blank, check if you've selected an item type." v-if="form.item_type_id && (editing || form.authors?.length)">
     <template #header>
-      <AddAuthors v-model="form.authors" />
+      <AddAuthors v-if="editing" v-model="form.authors" />
     </template>
     <Thead>
       <tr>
@@ -16,12 +16,12 @@
         <Td>{{ index + 1 }}</Td>
         <Td class="text-left">{{ item.first_name }} {{ item.last_name }}</Td>
         <Td>
-          <Select :id="`authorship-${item.id ?? index}`" v-model="item.authorship_id" required>
+          <Select :id="`authorship-${item.id ?? index}`" v-model="item.authorship_id" required :disabled="!editing">
             <Option value="" disabled>Select Authorship</Option>
             <Option v-for="i in option.authorships?.filter((i) => i.item_type_id == form.item_type_id)" :key="i.id" :value="i.id">{{ i.name }}</Option>
           </Select>
         </Td>
-        <Td><Button class="text-danger!" icon="trash" @click="removeAuthor(item)" /></Td>
+        <Td><Button v-if="editing" class="text-danger!" icon="trash" @click="removeAuthor(item)" /></Td>
       </tr>
     </Tbody>
   </Table>
@@ -37,7 +37,7 @@ withDefaults(
     errors?: any
   }>(),
   {
-    editing: true,
+    editing: false,
   },
 )
 
