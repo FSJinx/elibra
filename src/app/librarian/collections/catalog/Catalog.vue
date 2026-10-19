@@ -18,7 +18,7 @@
         </Form>
       </Card>
 
-      <Table :data-length="data?.length" title="Catalog List" subtitle="List of all library materials.">
+      <Table :data-length="data?.length" title="Catalog List" subtitle="List of all library materials." :data="pagination" @per_page="apply({ per_page: $event })" @next="apply({ page: $event })" @prev="apply({ page: $event })">
         <Thead>
           <tr>
             <Th>No</Th>
@@ -61,7 +61,6 @@
 
 <script setup lang="ts">
 import CatalogFilter from '@/app/librarian/collections/catalog/modals/CatalogFilter.vue'
-import { ItemParams } from '@/stores/catalog/item.store'
 
 const items = useItemStore()
 const options = optionStore()
@@ -81,10 +80,11 @@ const defaultParams = (): Readonly<ItemParams> => ({
 const data = ref<Item[] | null>(null)
 const loading = ref<boolean>(false)
 const params = reactive<ItemParams>(defaultParams())
+const pagination = ref<Pagination>()
 
 const item_type = computed(() => (id: any) => options.item_types?.find((i) => i.id == id))
 
-function apply(p: ItemParams) {
+function apply(p: Partial<ItemParams>) {
   Object.assign(params, p)
   search()
 }
@@ -97,11 +97,14 @@ function reset() {
 async function search() {
   loading.value = true
   try {
-    const res = await items.fetch({ ...params })
+    const res = await items.fetch(params)
+    pagination.value = res.data
     data.value = res.data.data
   } finally {
     loading.value = false
   }
 }
+
+watchDebounced(() => params.query, search, { debounce: 300 })
 onBeforeMount(async () => await search())
 </script>

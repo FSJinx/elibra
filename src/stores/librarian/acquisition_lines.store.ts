@@ -2,7 +2,7 @@ const pop = usePopup()
 
 export const useAcquisitionLinesStore = defineStore('acquisition_lines', {
   state: () => ({
-    url: 'librarian/acquisition-lines',
+    url: 'acquisition-lines',
 
     fetchData: null as AcquisitionLine[] | null,
     searchData: null as AcquisitionLine[] | null,

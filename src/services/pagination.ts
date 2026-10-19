@@ -1,4 +1,4 @@
-export interface PaginatedResponse {
+export interface Pagination {
   current_page: any
   data: any
   first_page_url: string

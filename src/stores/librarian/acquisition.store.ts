@@ -12,7 +12,7 @@ const defaultParams: Readonly<AcquisitionParams> = {
   order: 'asc',
 }
 
-const url = 'librarian/acquisition'
+const url = 'acquisition'
 
 export const useAcquisitionStore = defineStore('acquisition', {
   state: () => ({
@@ -62,7 +62,6 @@ export const useAcquisitionStore = defineStore('acquisition', {
       } finally {
         this.loading = false
       }
-
     },
 
     async show(id: any) {
