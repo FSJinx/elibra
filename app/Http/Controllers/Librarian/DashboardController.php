@@ -60,7 +60,7 @@ class DashboardController extends Controller
             });
         } elseif ($user?->isLibrarian()) {
             $query->whereHas('user', function (Builder $query) use ($user) {
-                $query->where('branch_id', $user->librarian?->branch_id);
+                $query->where('campus_id', $user->librarian?->library->campus_id);
             });
         }
 
@@ -82,7 +82,7 @@ class DashboardController extends Controller
             });
         } elseif ($user?->isLibrarian()) {
             $query->whereHas('librarian', function (Builder $query) use ($user) {
-                $query->where('branch_id', $user->librarian?->branch_id);
+                $query->where('library_id', $user->librarian?->library_id);
             });
         }
 

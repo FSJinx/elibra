@@ -54,10 +54,16 @@
         <Input v-model="form.isbn_issn" type="text" placeholder="Enter ISBN or ISSN..." :error="getError(errors, 'isbn_issn')" :readonly="!editing" />
       </Control>
 
-      <!-- Item Cover -->
-      <Control id="item-electronic_file" nullable>
-        <Label>Item Cover</Label>
-        <InputFile v-model="form.electronic_file" :readonly="!editing" />
+      <!-- Electronic File -->
+      <Control id="item-electronic_file" required>
+        <Label>Electronic File</Label>
+        <InputFile v-model="form.electronic_file" accept=".pdf,.doc,.docx" required :error="getError(errors, 'electronic_file')" :readonly="!editing" />
+      </Control>
+
+      <!-- Optional Cover Image -->
+      <Control id="item-cover_image" nullable>
+        <Label>Cover Image</Label>
+        <InputFile v-model="form.cover_image" accept=".jpg,.jpeg,.png,.webp" :error="getError(errors, 'cover_image')" :readonly="!editing" />
       </Control>
     </CardBody>
   </Card>

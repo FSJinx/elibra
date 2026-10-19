@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class ItemService
 {
@@ -26,11 +27,22 @@ class ItemService
                 'call_number',
                 'electronic_file',
                 'keywords',
+                'edition',
+                'isbn_issn',
+                'doi',
+                'volume',
+                'issue',
+                'pages',
+                'department_id',
                 'item_type_id',
                 'item_type_category_id',
                 'library_id',
                 'language_id',
             ]));
+
+            if (isset($data['authors'])) {
+                $item->syncAuthors($data['authors']);
+            }
 
             $this->saveCoverImage($item, $data);
 
@@ -40,6 +52,58 @@ class ItemService
 
             return $item->fresh(['coverMedia']);
         });
+    }
+
+    public function update(Item $item, array $data): Item
+    {
+        $oldElectronicFile = $item->electronic_file;
+        $replacingElectronicFile = ($data['electronic_file'] ?? null) instanceof UploadedFile;
+
+        $item = DB::transaction(function () use ($item, &$data): Item {
+            if (($data['electronic_file'] ?? null) instanceof UploadedFile) {
+                $data['electronic_file'] = $data['electronic_file']
+                    ->store('item/files', 'public');
+            } else {
+                unset($data['electronic_file']);
+            }
+
+            $item->update(Arr::only($data, [
+                'title',
+                'subtitle',
+                'description',
+                'call_number',
+                'electronic_file',
+                'keywords',
+                'edition',
+                'isbn_issn',
+                'doi',
+                'volume',
+                'issue',
+                'pages',
+                'department_id',
+                'item_type_id',
+                'item_type_category_id',
+                'language_id',
+            ]));
+
+            if (array_key_exists('authors', $data) || array_key_exists('authors_present', $data)) {
+                $item->syncAuthors($data['authors'] ?? []);
+            }
+
+            $this->saveCoverImage($item, $data);
+
+            IndexCatalogItemJob::dispatch($item->id)->afterCommit();
+
+            return $item->fresh(['coverMedia', 'authors']);
+        });
+
+        if ($replacingElectronicFile && $oldElectronicFile) {
+            Storage::disk('public')->delete($oldElectronicFile);
+        }
+
+        CacheService::invalidate(CacheService::ITEMS);
+
+        return $item;
     }
 
     public function index(array $filters, User $user)
@@ -92,7 +156,7 @@ class ItemService
     public function show(string $id)
     {
         $item = Item::query()
-            // ->with(['authors', 'itemType', 'itemTypeCategory', 'language', 'library', 'itemPublishers.publisher'])
+            ->with(['authors', 'coverMedia'])
             ->findOrFail($id);
 
         return $item;
@@ -101,6 +165,12 @@ class ItemService
     private function saveCoverImage(Item $item, array $data): void
     {
         if (! ($data['cover_image'] ?? null) instanceof UploadedFile) {
+            return;
+        }
+
+        if ($item->coverMedia) {
+            $this->mediaService->replaceFile($item->coverMedia, $data['cover_image']);
+
             return;
         }
 

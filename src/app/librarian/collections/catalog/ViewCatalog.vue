@@ -31,7 +31,7 @@
     </div>
 
     <div class="flex-1 p-5 overflow-y-auto">
-      <router-view :data="data" />
+      <router-view :data="data" @updated="data = $event" />
     </div>
   </div>
 </template>

@@ -69,7 +69,7 @@ const parse = useParser()
 const defaultParams = (): Readonly<ItemParams> => ({
   query: '',
   order: 'desc',
-  sort: '',
+  sort: 'created_at',
   page: '',
   per_page: '25',
 
