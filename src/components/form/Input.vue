@@ -121,7 +121,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   type: 'text',
-  placeholder: '',
+  placeholder: 'No data',
   autocomplete: 'off',
   required: false,
   disabled: false,

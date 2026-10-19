@@ -26,7 +26,7 @@ class AcquisitionService
                     $search = $filters['search'];
 
                     $query->where(function ($q) use ($search) {
-                        $q->where('acquisition_id', 'like', "%{$search}%")
+                        $q->where('reference', 'like', "%{$search}%")
                             ->orWhere('dealer', 'like', "%{$search}%")
                             ->orWhere('acquisition_mode', 'like', "%{$search}%")
                             ->orWhere('remarks', 'like', "%{$search}%");
@@ -35,7 +35,7 @@ class AcquisitionService
 
                 $allowedSorts = [
                     'id',
-                    'acquisition_id',
+                    'reference',
                     'dealer',
                     'acquisition_mode',
                     'acquisition_date',
@@ -65,7 +65,7 @@ class AcquisitionService
         );
     }
 
-    public function generateAcquisitionId(Acquisition $acquisition)
+    public function generateReference(Acquisition $acquisition)
     {
         $campusCode = $acquisition->receiver->library?->campus?->code;
         $date = $acquisition->created_at->format('Ymd');
@@ -96,7 +96,7 @@ class AcquisitionService
                 ])
             );
 
-            $acquisition->acquisition_id = $this->generateAcquisitionId($acquisition);
+            $acquisition->reference = $this->generateReference($acquisition);
             $acquisition->save();
 
             return $acquisition->fresh();
@@ -114,7 +114,7 @@ class AcquisitionService
         $acquisition = DB::transaction(function () use (&$acquisition, &$data) {
             $acquisition->update(
                 Arr::only($data, [
-                    'acquisition_id',
+                    'reference',
                     'dealer',
                     'acquisition_mode',
                     'acquisition_date',

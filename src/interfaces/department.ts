@@ -5,6 +5,9 @@ export interface Department {
   address: string
   heading: string
   status: string
+
+  campus_id: any
+
   created_at: any
   updated_at: any
   deleted_at: any

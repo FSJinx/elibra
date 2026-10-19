@@ -47,6 +47,8 @@ import UpdateCampusModal from '@/app/admin/campus/modals/UpdateCampusModal.vue'
 
 const campus = useCampusStore()
 const parse = useParser()
+
+onBeforeMount(campus.fetch)
 </script>
 
 <style scoped></style>

@@ -12,9 +12,7 @@ use Illuminate\Support\Facades\DB;
 
 class ItemService
 {
-    public function __construct(private MediaService $mediaService)
-    {
-    }
+    public function __construct(private MediaService $mediaService) {}
 
     public function create(array $data): Item
     {
@@ -93,14 +91,9 @@ class ItemService
 
     public function show(string $id)
     {
-        $item = Item::with([
-            'authors',
-            'itemType',
-            'itemTypeCategory',
-            'language',
-            'library',
-            'itemPublishers.publisher',
-        ])->findOrFail($id);
+        $item = Item::query()
+            // ->with(['authors', 'itemType', 'itemTypeCategory', 'language', 'library', 'itemPublishers.publisher'])
+            ->findOrFail($id);
 
         return $item;
     }

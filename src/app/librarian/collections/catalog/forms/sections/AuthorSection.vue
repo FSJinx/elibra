@@ -18,7 +18,7 @@
         <Td>
           <Select :id="`authorship-${item.id ?? index}`" v-model="item.authorship_id" required>
             <Option value="" disabled>Select Authorship</Option>
-            <Option v-for="i in authorships.byItemType(form.item_type_id)" :key="i.id" :value="i.id">{{ i.name }}</Option>
+            <Option v-for="i in option.authorships?.filter((i) => i.item_type_id == form.item_type_id)" :key="i.id" :value="i.id">{{ i.name }}</Option>
           </Select>
         </Td>
         <Td><Button class="text-danger!" icon="trash" @click="removeAuthor(item)" /></Td>
@@ -31,12 +31,19 @@
 import { getError, type Form } from '@/app/librarian/collections/catalog/forms/form'
 import AddAuthors from '@/app/librarian/collections/catalog/forms/sections/modals/AddAuthors.vue'
 
-defineProps<{
-  errors: any
-}>()
+withDefaults(
+  defineProps<{
+    editing?: boolean
+    errors?: any
+  }>(),
+  {
+    editing: true,
+  },
+)
 
 const form = defineModel<Partial<Form>>({ default: {} })
-const authorships = authorshipStore()
+// const authorships = authorshipStore()
+const option = optionStore()
 const pop = usePopup()
 
 async function removeAuthor(a: Author) {

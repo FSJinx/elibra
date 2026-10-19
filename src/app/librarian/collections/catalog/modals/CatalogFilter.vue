@@ -1,5 +1,5 @@
 <template>
-  <Button class="max-w-max" left-icon="filter" variant="info" @click="filterBtn?.open()">Filters</Button>
+  <Button class="max-w-max" left-icon="filter" @click="filterBtn?.open()">Filters</Button>
 
   <Modal ref="filterBtn">
     <ModalHeader use-default-layout title="Filter" icon="filter" />
@@ -11,9 +11,9 @@
           <Control direction="col">
             <Label id="catalog-types">Item Type</Label>
 
-            <Select id="catalog-types" title="Item Types" v-model="filter.item_type">
+            <Select id="catalog-types" title="Item Types" v-model="filter.item_type_id">
               <Option value="" selected disabled>Select Item Type</Option>
-              <Option :value="type.id" v-for="type in types.select()">{{ type.name }}</Option>
+              <Option :value="type.id" v-for="type in options.item_types">{{ type.name }}</Option>
             </Select>
           </Control>
 
@@ -21,9 +21,9 @@
           <Control direction="col">
             <Label id="catalog-category">Category</Label>
 
-            <Select id="catalog-category" title="Categories" v-model="filter.category">
-              <Option value="" selected disabled>{{ filter.item_type ? 'Select Category' : 'Please select an item type first' }}</Option>
-              <Option v-for="category in categories.select(filter.item_type)" :key="category.id" :value="category.id">{{ category.name }}</Option>
+            <Select id="catalog-category" title="Categories" v-model="filter.item_type_categoy_id">
+              <Option value="" selected disabled>{{ filter.item_type_id ? 'Select Category' : 'Please select an item type first' }}</Option>
+              <Option v-for="category in options.categories?.filter((i) => i.item_type_id == filter.item_type_id)" :key="category.id" :value="category.id">{{ category.name }}</Option>
             </Select>
           </Control>
 
@@ -34,9 +34,8 @@
             <Select id="catalog-sort" title="Sort" v-model="filter.sort">
               <Option value="">Default</Option>
               <Option value="title">Title</Option>
-              <Option value="item_type">Item Type</Option>
-              <Option value="year_publication">Publication Year</Option>
-              <Option value="status">Status</Option>
+              <Option value="call_number">Call Number</Option>
+              <Option value="updated_at">Date Modified</Option>
             </Select>
           </Control>
 
@@ -47,18 +46,6 @@
             <Select id="catalog-order" title="Order" v-model="filter.order">
               <Option value="asc">Ascending</Option>
               <Option value="desc">Descending</Option>
-            </Select>
-          </Control>
-
-          <!-- STATUS -->
-          <Control direction="col">
-            <Label id="catalog-status">Status</Label>
-
-            <Select id="catalog-status" title="Status" v-model="filter.status">
-              <Option value="">Status</Option>
-              <Option value="available">Available</Option>
-              <Option value="borrowed">Borrowed</Option>
-              <Option value="reserved">Reserved</Option>
             </Select>
           </Control>
         </template>
@@ -76,20 +63,16 @@
 
 <script setup lang="ts">
 import type Modal from '@/components/my/Modal.vue'
+import type { ItemParams } from '@/stores/catalog/item.store'
 
-const types = useItemTypeStore()
-const categories = useItemCategoriesStore()
+const options = optionStore()
+
+const props = defineProps<{ params: ItemParams }>()
 
 const filterBtn = ref<typeof Modal | null>(null)
 const emit = defineEmits(['filterApplied'])
 
-const filter = reactive({
-  item_type: '',
-  category: '',
-  sort: '',
-  order: 'asc',
-  status: '',
-})
+const filter = reactive(props.params)
 
 function applyFilter() {
   emit('filterApplied', filter)
@@ -97,9 +80,9 @@ function applyFilter() {
 }
 
 watch(
-  () => filter.item_type,
+  () => filter.item_type_id,
   () => {
-    filter.category = ''
+    filter.item_type_categoy_id = ''
   },
   {
     deep: true,

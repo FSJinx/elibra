@@ -24,14 +24,14 @@ class AcquisitionLinesSeeder extends Seeder
         $acquisitions = Acquisition::query()->whereHas('receiver', fn ($q) => $q->where('library_id', $library->id))->get();
 
         foreach ($acquisitions as $acq) {
-            for ($i = 0; $i < rand(1, 8); $i++) {
+            for ($i = 0; $i < rand(3, 8); $i++) {
                 $a = $lines->create([
                     'unit_price' => 0,
                     'item_id' => $items->random(),
                     'acquisition_id' => $acq->id,
                 ]);
 
-                $accession->generateCopies(rand(1, 10), $a->item, $a);
+                $accession->generateCopies(rand(3, 10), $a->item, $a);
             }
         }
 

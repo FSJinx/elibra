@@ -26,7 +26,7 @@
       <Table class="" title="Recent Acquisitions" subtitle="These are your library's recent acquisitions.">
         <Thead>
           <tr>
-            <Th>Acquisition ID</Th>
+            <Th>Reference No.</Th>
             <Th class="text-left">Dealer</Th>
             <Th>Mode of Acquisition</Th>
             <Th>Date Acquired</Th>
@@ -37,7 +37,7 @@
         <Tbody :data="acquisition.data" :loading="acquisition.loading" cols="6">
           <router-link v-for="a in acquisition.data" :to="{ name: 'librarian.acquisition.lines', params: { id: a.id } }" custom v-slot="{ navigate }">
             <tr class="hover cursor-pointer" @click="navigate" role="button">
-              <Td :data="a.acquisition_id"></Td>
+              <Td :data="a.reference"></Td>
               <Td class="text-left" :data="a.dealer"></Td>
               <Td class="capitalize" :data="a.acquisition_mode"></Td>
               <Td :data="parse.formatDate(a.acquisition_date)"></Td>

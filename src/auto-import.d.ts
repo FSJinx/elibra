@@ -11,6 +11,7 @@ declare global {
   const acquisitionAcquisition: typeof import('./router/librarian/acquisition/acquisition.route').acquisitionAcquisition
   const acquisitionRequest: typeof import('./router/librarian/acquisition/request.route').acquisitionRequest
   const acquisition_modes: typeof import('./constants/acquisition_mode').acquisition_modes
+  const actions: typeof import('./stores/ui/option.store').actions
   const adminAuthorityRoute: typeof import('./router/admin/authority.route').adminAuthorityRoute
   const adminCampusRoutes: typeof import('./router/admin/organization/campus.route').adminCampusRoutes
   const adminItemCategoriesRoutes: typeof import('./router/admin/standard/item_categories.route').adminItemCategoriesRoutes
@@ -88,7 +89,7 @@ declare global {
   const isReadonly: typeof import('vue').isReadonly
   const isRef: typeof import('vue').isRef
   const isShallow: typeof import('vue').isShallow
-  const itemDefaultParams: typeof import('./stores/librarian/item.store').itemDefaultParams
+  const itemDefaultParams: typeof import('./stores/catalog/item.store').itemDefaultParams
   const librarianAcquisition: typeof import('./router/librarian/acquisition/index.route').librarianAcquisition
   const librarianAdministration: typeof import('./router/librarian/administration/index.route').librarianAdministration
   const librarianAdministrationSection: typeof import('./router/librarian/administration/section.route').librarianAdministrationSection
@@ -294,7 +295,7 @@ declare global {
   const useIntervalFn: typeof import('@vueuse/core').useIntervalFn
   const useInventoryStore: typeof import('./stores/inventory.store').useInventoryStore
   const useItemCategoriesStore: typeof import('./stores/item_categories.store').useItemCategoriesStore
-  const useItemStore: typeof import('./stores/librarian/item.store').useItemStore
+  const useItemStore: typeof import('./stores/catalog/item.store').useItemStore
   const useItemTypeStore: typeof import('./stores/item_type.store').useItemTypeStore
   const useKeyModifier: typeof import('@vueuse/core').useKeyModifier
   const useLanguagesStore: typeof import('./stores/languages.store').useLanguagesStore
@@ -434,8 +435,8 @@ declare global {
   export type { Variants, Sizes } from './composables/useType'
   import('./composables/useType')
   // @ts-ignore
-  export type { ItemParams } from './stores/librarian/item.store'
-  import('./stores/librarian/item.store')
+  export type { ItemParams } from './stores/catalog/item.store'
+  import('./stores/catalog/item.store')
   // @ts-ignore
   export type { Opac } from './stores/opac/opacStore2'
   import('./stores/opac/opacStore2')
@@ -485,6 +486,9 @@ declare global {
   export type { PatronType } from './interfaces/patron_type'
   import('./interfaces/patron_type')
   // @ts-ignore
+  export type { Program } from './interfaces/program'
+  import('./interfaces/program')
+  // @ts-ignore
   export type { Publisher } from './interfaces/publisher'
   import('./interfaces/publisher')
   // @ts-ignore
@@ -511,6 +515,7 @@ declare module 'vue' {
     readonly acquisitionAcquisition: UnwrapRef<typeof import('./router/librarian/acquisition/acquisition.route')['acquisitionAcquisition']>
     readonly acquisitionRequest: UnwrapRef<typeof import('./router/librarian/acquisition/request.route')['acquisitionRequest']>
     readonly acquisition_modes: UnwrapRef<typeof import('./constants/acquisition_mode')['acquisition_modes']>
+    readonly actions: UnwrapRef<typeof import('./stores/ui/option.store')['actions']>
     readonly adminAuthorityRoute: UnwrapRef<typeof import('./router/admin/authority.route')['adminAuthorityRoute']>
     readonly adminCampusRoutes: UnwrapRef<typeof import('./router/admin/organization/campus.route')['adminCampusRoutes']>
     readonly adminLibraryRoutes: UnwrapRef<typeof import('./router/admin/organization/library.route')['adminLibraryRoutes']>
@@ -774,7 +779,7 @@ declare module 'vue' {
     readonly useIntervalFn: UnwrapRef<typeof import('@vueuse/core')['useIntervalFn']>
     readonly useInventoryStore: UnwrapRef<typeof import('./stores/inventory.store')['useInventoryStore']>
     readonly useItemCategoriesStore: UnwrapRef<typeof import('./stores/item_categories.store')['useItemCategoriesStore']>
-    readonly useItemStore: UnwrapRef<typeof import('./stores/librarian/item.store')['useItemStore']>
+    readonly useItemStore: UnwrapRef<typeof import('./stores/catalog/item.store')['useItemStore']>
     readonly useItemTypeStore: UnwrapRef<typeof import('./stores/item_type.store')['useItemTypeStore']>
     readonly useKeyModifier: UnwrapRef<typeof import('@vueuse/core')['useKeyModifier']>
     readonly useLanguagesStore: UnwrapRef<typeof import('./stores/languages.store')['useLanguagesStore']>

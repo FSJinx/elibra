@@ -1,42 +1,39 @@
-interface Option {
-  id: any
-  key?: string
-  code?: string
-  slug?: string
-  name: string
+type Key = Exclude<keyof ReturnType<typeof state>, 'url'>
 
-  [key: string]: any
-}
+const state = () => ({
+  // ======> ORGANIZATIONS
+  campuses: null as Partial<Campus>[] | null,
+  departments: null as Partial<Department>[] | null,
+  libraries: null as Partial<Library>[] | null,
+  programs: null as Partial<Program>[] | null,
+  sections: null as Partial<Section>[] | null,
 
+  // ======> STANDARDS
+  authorships: null as Partial<Authorship>[] | null,
+  categories: null as Partial<ItemCategory>[] | null,
+  item_types: null as Partial<ItemType>[] | null,
+  patron_types: null as Partial<PatronType>[] | null,
+
+  // ======> AUTHORITY CONTROL
+  languages: null as Partial<Language>[] | null,
+
+  url: 'option',
+})
 export const optionStore = defineStore('option', {
-  state: () => ({
-    campuses: null as Option[] | null,
-    sections: null as Option[] | null,
-    patron_types: null as Partial<PatronType>[] | null,
-
-    url: 'option',
-  }),
+  state,
 
   actions: {
-    async fetchCampuses() {
-      if (this.campuses) return
-
-      const res = await get(`${this.url}/campuses`)
-      this.campuses = res.data
+    async fetch(key: Key) {
+      if (this[key]) return
+      this[key] = (await get(`${this.url}/${key}`)).data
     },
 
-    async fetchSections(id?: any) {
-      if (this.sections) return
-
-      const res = await get(`${this.url}/sections`, { library_id: id })
-      this.sections = res.data
-    },
-
-    async fetchPatronTypes() {
-      if (this.patron_types) return
-
-      const res = await get(`${this.url}/patron-types`)
-      this.patron_types = res.data
+    async preload() {
+      await Promise.all(
+        Object.keys(state())
+          .filter((k) => k !== 'url')
+          .map((k) => this.fetch(k as Key)),
+      )
     },
   },
 })

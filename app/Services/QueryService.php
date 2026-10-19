@@ -17,8 +17,8 @@ class QueryService
 
         return [
             'search' => trim($request->query('query', '')),
-            'sort' => $request->query('sort', 'id'),
-            'order' => strtolower($request->query('order', 'asc')),
+            'sort' => $request->query('sort', 'created_at'),
+            'order' => strtolower($request->query('order', 'desc')),
             'page' => $request->integer('page', 1),
             'per_page' => $perPage,
         ];

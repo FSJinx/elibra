@@ -66,19 +66,20 @@ class ItemController extends Controller
                     $query->where('library_id', $libraryId);
                 }
 
-                return $query->paginate(
-                    $filters['per_page'],
-                    [
-                        'id',
-                        'title',
-                        'subtitle',
-                        'call_number',
-                        'item_type_id',
-                        'released',
-                    ],
-                    'page',
-                    $filters['page']
-                );
+                return $query->orderBy('created_at', 'desc')
+                    ->paginate(
+                        $filters['per_page'],
+                        [
+                            'id',
+                            'title',
+                            'subtitle',
+                            'call_number',
+                            'item_type_id',
+                            'released',
+                        ],
+                        'page',
+                        $filters['page']
+                    );
             }
         );
 
@@ -94,9 +95,82 @@ class ItemController extends Controller
         return $this->response(
             'success',
             'Items retrieved successfully.',
-            $items->toArray(),
+            $items,
             200
         );
+    }
+
+    public function indexV2(Request $request)
+    {
+        $filters = QueryService::filters($request);
+
+        // Complete Filter
+        $filters = array_merge($filters, [
+            'item_type_id' => $request->input('item_type_id'),
+        ]);
+
+        $data = CacheService::remember(
+            CacheService::ITEMS,
+            $filters,
+            now()->addHour(),
+            function () use ($filters) {
+                $item = Item::query();
+
+                // ============== Search ============
+                $item->when($filters['search'], function ($i, $param) {
+                    $i->where('title', 'LIKE', "%$param%")
+                        ->orWhere('subtitle', 'LIKE', "%$param%");
+                });
+                
+                $item->when($filters['search'], function ($i, $param) {
+                    $i->where('title', 'LIKE', "%$param%")
+                        ->orWhere('subtitle', 'LIKE', "%$param%");
+                });
+
+                // ============== Item Type ID ============
+                $item->when($filters['item_type_id'], function ($i, $param) {
+                    $i->where('item_type_id', $param);
+                });
+
+                return $item
+                    ->orderBy($filters['sort'], $filters['order'])
+                    ->paginate(
+                        $filters['per_page'],
+                        [
+                            '*',
+                        ],
+                        'page',
+                        $filters['page']
+                    );
+            }
+
+        );
+
+        return $this->response(data: $data);
+    }
+
+    public function authors(Item $item)
+    {
+        $data = $item->authors()->get();
+
+        return $this->response(data: $data);
+    }
+
+    public function accessions(Item $item)
+    {
+        $data = $item->accessions()->get();
+
+        return $this->response(data: $data);
+    }
+
+    public function acquisitions(Item $item)
+    {
+        $data = $item->acquisitions()->with([
+            'receiver:last_name,first_name',
+            'acquisition_lines' => fn ($q) => $q->where('item_id', $item->id)->withCount('accessions as quantity'),
+        ])->get()->makeHidden('pivot');
+
+        return $this->response(data: $data);
     }
 
     /**

@@ -1,10 +1,21 @@
 <template>
-  <div class="size-full flex flex-col overflow-hidden">
+  <!-- Loading -->
+  <div class="size-full flex flex-col justify-center items-center" v-if="loading">
+    <Spinner class="text-xl mb-5" />
+    <p>Loading, please wait...</p>
+  </div>
+
+  <!-- No Data -->
+  <div class="size-full flex flex-col justify-center items-center" v-else-if="!data">
+    <Spinner />
+  </div>
+
+  <div class="size-full flex flex-col overflow-hidden" v-else>
     <div class="border-b border-border/70 bg-background shadow-sm">
       <!-- Back Navigation -->
       <div class="px-5 pt-3">
         <Button :to="{ name: 'librarian.collections.catalog' }" as="link" variant="text" class="gap-3" icon="arrow-left">
-          <span>Back to catalog</span>
+          <span>{{ data.title }}</span>
         </Button>
       </div>
 
@@ -20,22 +31,37 @@
     </div>
 
     <div class="flex-1 p-5 overflow-y-auto">
-      <router-view />
+      <router-view :data="data" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 const route = useRoute()
+const item = useItemStore()
+const pop = usePopup()
+
+const loading = ref<boolean>(false)
+const data = ref<Item | null>(null)
 
 const routes = [
   { name: 'Overview', path: 'librarian.collections.catalog.view.overview' },
   { name: 'Authors', path: 'librarian.collections.catalog.view.authors' },
   { name: 'Accession', path: 'librarian.collections.catalog.view.accession' },
-  { name: 'Acquisition History', path: 'librarian.collections.catalog.view.acquisition' },
+  { name: 'Acquisition', path: 'librarian.collections.catalog.view.acquisition' },
 ]
 
 const active = (path: string) => {
   return route.name === path
 }
+
+onBeforeMount(async () => {
+  loading.value = true
+  try {
+    const res = await item.show(route.params.id)
+    data.value = res.data
+  } finally {
+    loading.value = false
+  }
+})
 </script>

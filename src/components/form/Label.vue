@@ -1,5 +1,5 @@
 <template>
-  <label :for="id ?? control.id" :id="(id ?? control.id) + 'Label'" class="Label max-w-max font-medium">
+  <label :for="control?.id ?? id" :id="(control?.id ?? id) + 'Label'" class="Label max-w-max font-medium">
     <span>
       <slot></slot>
     </span>

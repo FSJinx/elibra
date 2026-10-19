@@ -61,9 +61,26 @@ Route::group(['prefix' => '/auth'], function () {
  *      Public Routes
  *
  *      This routes are either generic or static in nature.
- *      They provide all the data in the database are usually
+ *      They provide all the data in the database that are usually
  *      used as static data for selects.
  */
+Route::group(['prefix' => '/option'], function () {
+    // ================== ORGANIZATIONS ====================
+    Route::get('campuses', [OptionController::class, 'campuses']);
+    Route::get('departments', [OptionController::class, 'departments']);
+    Route::get('libraries', [OptionController::class, 'libraries']);
+    Route::get('programs', [OptionController::class, 'programs']);
+    Route::get('sections', [OptionController::class, 'sections']);
+
+    // ================== STANDARDS ====================
+    Route::get('authorships', [OptionController::class, 'authorships']);
+    Route::get('categories', [OptionController::class, 'categories']);
+    Route::get('item_types', [OptionController::class, 'item_types']);
+    Route::get('patron_types', [OptionController::class, 'patronTypes']);
+
+    // ============== AUTHORITY CONTROL ================
+    Route::get('languages', [OptionController::class, 'languages']);
+});
 
 // ============== LANDING ROUTE ==================
 Route::group(['prefix' => '/landing'], function () {
@@ -193,6 +210,20 @@ Route::group(['prefix' => '/inventory-line'], function () {
 
     // Delete
     Route::delete('{inventoryLine}', [InventoryLineController::class, 'destroy'])->middleware('throttle:delete');
+});
+
+// ============== ITEM ROUTES ===============
+Route::group(['prefix' => '/items'], function () {
+
+    Route::get('', [ItemController::class, 'indexV2']);
+
+    // Route::get('{catalogId}', [CatalogController::class, 'show']);
+    Route::get('{item}', [ItemController::class, 'show']);
+    Route::get('{item}/accessions', [ItemController::class, 'accessions']);
+    Route::get('{item}/authors', [ItemController::class, 'authors']);
+    Route::get('{item}/acquisitions', [ItemController::class, 'acquisitions']);
+
+    Route::post('', [ItemController::class, 'store']);
 });
 
 // ============== ITEM TYPE ROUTE ==================
@@ -488,20 +519,4 @@ Route::group(['prefix' => '/user-permission'], function () {
         Route::delete('/{user_permission}', [UserPermissionController::class, 'destroy'])->middleware('jwt.auth', 'throttle:delete');
     });
 
-});
-
-// ============== ITEM ROUTES ===============
-Route::group(['prefix' => '/item'], function () {
-
-    Route::get('', [ItemController::class, 'index']);
-    // Route::get('{catalogId}', [CatalogController::class, 'show']);
-    Route::get('{item}', [ItemController::class, 'show']);
-
-    Route::post('', [ItemController::class, 'store']);
-});
-
-Route::group(['prefix' => '/option'], function () {
-    Route::get('campuses', [OptionController::class, 'campuses']);
-    Route::get('sections', [OptionController::class, 'sections']);
-    Route::get('patron-types', [OptionController::class, 'patronTypes']);
 });

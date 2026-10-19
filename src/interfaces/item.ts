@@ -24,6 +24,10 @@ export interface Item {
   language_id: any
   cover_media_id: any
 
+  created_at: string
+  updated_at: string
+  deleted_at: string
+
   [key: string]: any
 
 }

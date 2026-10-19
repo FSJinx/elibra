@@ -1,124 +1,114 @@
 <template>
-  <div class="flex flex-col w-full max-w-7xl mx-auto gap-5">
-    <div class="flex gap-5">
-      <Card class="flex flex-1 max-w-75 items-start justify-between gap-5 p-6!"> </Card>
+  <div class="relative w-full max-w-375 flex items-start gap-5 mx-auto">
+    <Card class="shrink-0 sticky top-0">
+      <CardBody class="w-60 border border-border rounded-lg overflow-hidden">
+        <img :src="book" alt="" class="w-full h-auto" />
+      </CardBody>
+    </Card>
 
-      <Card class="flex-1">
-        <div class="flex items-start">
+    <Form class="flex-1 flex flex-col gap-3" @submit="submit">
+      <!-- Preview Card -->
+      <Card class="flex-1 sticky top-0 z-20 shadow-md">
+        <div class="flex items-start justify-between gap-5">
           <div class="">
-            <Title :level="1">{{ item?.title }}</Title>
-            <p class="text-muted-foreground text-sm">
-              <span class="italic">{{ item?.subtitle }}</span>
-              <span class="italic" v-if="item?.subtitle && item.publication_year"> • </span>
-              <span>{{ item?.publication_year }}</span>
-            </p>
+            <p class="text-sm uppercase font-semibold text-muted-foreground">{{ item_type?.name }}</p>
+            <Title :level="1">{{ props.data?.title }}</Title>
+            <p class="text-muted-foreground text-sm italic">{{ data?.subtitle ?? 'No additional information or subtitle for this material.' }}</p>
           </div>
-          <div class="flex justify-end gap-2">
-            <Button left-icon="pencil-square">Edit</Button>
-          </div>
-        </div>
-        <Title :level="2" class="text-primary">Basic Information</Title>
 
-        <div class="grid grid-cols-2 gap-5">
-          <Control direction="col">
-            <label for="">Title</label>
-            <p>{{ item?.title }}</p>
-          </Control>
-          <Control direction="col">
-            <label for="">Subtitle</label>
-            <p>{{ item?.title }}</p>
-          </Control>
-          <Control direction="col">
-            <label for="">Call Number</label>
-            <p>{{ item?.call_number }}</p>
-          </Control>
-          <Control direction="col">
-            <label for="">Year of Publication</label>
-            <p>{{ item?.publication_year }}</p>
-          </Control>
-          <Control direction="col" class="col-span-2">
-            <label for="">Description</label>
-            <p>{{ item?.title }}</p>
-          </Control>
+          <div class="action-buttons flex justify-end gap-2">
+            <Button variant="danger" v-if="editing" @click="cancelEdit">Cancel</Button>
+            <Button left-icon="pencil-square" v-else @click="toggleEdit">Edit</Button>
+            <Button variant="success" v-if="editing" type="submit" left-icon="save">Save</Button>
+          </div>
         </div>
       </Card>
-    </div>
 
-    <Card>
-      <Title :level="2" class="text-primary">Classification</Title>
+      <!-- BASIC INFORMATION -->
+      <BaseSection v-model="form" :editing="editing" />
 
-      <div class="grid grid-cols-2 gap-5">
-        <Control direction="col">
-          <label for="">Item type</label>
-          <p>{{ catalog?.getItemType(item?.item_type_id)?.name }}</p>
-        </Control>
-        <Control direction="col">
-          <label for="">Category</label>
-          <p>{{ catalog.getCategory(item?.item_type_category_id)?.name }}</p>
-        </Control>
-        <Control direction="col">
-          <label for="">Language</label>
-          <p>{{ catalog.getLanguage(item?.language_id)?.name }}</p>
-        </Control>
-      </div>
-    </Card>
+      <!-- PHYSICAL DESCRIPTION INFORMATION -->
+      <PhysicalDescriptionSection v-model="form" :editing="editing" />
 
-    <Card v-if="item?.item_type?.slug === 'academic'">
-      <Title :level="2" class="text-primary">Academic Information</Title>
+      <!-- PHYSICAL DESCRIPTION INFORMATION -->
+      <SerialSection v-model="form" :editing="editing" />
 
-      <div class="grid grid-cols-2 gap-5">
-        spre
-        <Control direction="col">
-          <label for="">DOI</label>
-          <p>
-            <template v-if="item?.academic?.doi">
-              <a :href="item?.academic?.doi" class="hover:text-primary underline">{{ item?.academic?.doi }}</a>
-            </template>
-            <template v-else>
-              <span>Null</span>
-            </template>
-          </p>
-        </Control>
-        <Control direction="col">
-          <label for="">Related Department</label>
-          <p>{{ item?.department?.name ?? 'None' }}</p>
-        </Control>
-      </div>
-    </Card>
+      <!-- AUTHOR CONTROL INFORMATION -->
+      <AuthorityControlSection v-model="form" :editing="editing" />
 
-    <Card>
-      <Title :level="2" class="text-primary">Subjects</Title>
+      <!-- Subject / Keywords -->
+      <Card class="" v-if="!editing">
+        <CardHeader>
+          <Title :level="2" class="text-primary">Subjects / Topic / Keywords</Title>
+          <p class="text-sm">The keywords that can help for searching this material</p>
+        </CardHeader>
 
-      <div class="flex items-center gap-2">
-        <Chip v-for="tag in item?.keywords">{{ tag }}</Chip>
-      </div>
-    </Card>
+        <CardBody class="flex flex-wrap gap-3">
+          <p class="p-5 text-center w-full text-muted-foreground" v-if="!form.keywords.length">No keywords for this.</p>
+          <Chip v-for="tag in props.data.keywords" v-else>{{ tag }}</Chip>
+        </CardBody>
+      </Card>
+    </Form>
   </div>
 </template>
 
 <script setup lang="ts">
-const catalog = useItemStore()
-const item = catalog.currentData
+import AuthorityControlSection from '@/app/librarian/collections/catalog/forms/sections/AuthorityControlSection.vue'
+import BaseSection from '@/app/librarian/collections/catalog/forms/sections/BaseSection.vue'
+import PhysicalDescriptionSection from '@/app/librarian/collections/catalog/forms/sections/PhysicalDescriptionSection.vue'
+import SerialSection from '@/app/librarian/collections/catalog/forms/sections/SerialSection.vue'
+import book from '@/assets/images/default_book.png'
+
+const props = defineProps<{ data: Item }>()
+const option = optionStore()
+const pop = usePopup()
+
+const item_type = computed(() => option.item_types?.find((a) => a.id === props.data.item_type_id) ?? null)
+
+const editing = ref<boolean>(false)
+const form = ref<Item>({} as Item)
+const hasChanges = computed(() => JSON.stringify(form.value) !== JSON.stringify(props.data))
+
+function toggleEdit() {
+  editing.value = true
+}
+
+async function cancelEdit() {
+  if (hasChanges.value) {
+    const confirm = await pop.confirm({ text: 'You have unsaved changes, are you sure you want to cancel editing?' })
+
+    if (!confirm.isConfirmed) {
+      return
+    }
+  }
+  defaultForm()
+  editing.value = false
+}
+
+function defaultForm() {
+  form.value = structuredClone(toRaw(props.data))
+}
+
+async function submit() {
+  const confirm = await pop.confirm({ text: 'Are you sure you want to update this item?' })
+
+  if (confirm.isConfirmed) {
+    // Logic for update here...
+
+    editing.value = false
+  }
+}
+
+watch(() => props.data, defaultForm, {
+  immediate: true,
+})
 </script>
 
 <style scoped>
 label {
-  color: var(--color-muted-foreground);
-  font-size: smaller;
-  font-weight: 500;
-  /* letter-spacing: 0.015rem; */
-  text-transform: uppercase;
+  margin-top: 0.55rem;
 }
-
 .control p {
   font-weight: 500;
 }
 </style>
-
-
-{
-  publisher: {
-    id:,
-    publication_year
-  }
-}

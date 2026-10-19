@@ -14,7 +14,7 @@
 
     <!-- Table Body -->
     <div class="relative flex-1 shrink-0 overflow-y-auto bg-background">
-      <table class="relative w-full text-left table-auto text-[12.5px] border-collapse">
+      <table class="relative w-full text-left table-auto text-[12.5px] border-collapse" :class="[layout]">
         <slot />
       </table>
     </div>
@@ -26,9 +26,20 @@ interface Props {
   dataLength?: string | number | undefined
   title?: string
   subtitle?: string
+  layout?: 'auto' | 'fixed'
 }
 
 const props = withDefaults(defineProps<Props>(), {
   dataLength: 0,
+  layout: 'auto',
+})
+
+const layout = computed(() => {
+  const layouts: Record<NonNullable<Props['layout']>, string> = {
+    auto: 'table-auto',
+    fixed: 'table-fixed',
+  }
+
+  return layouts[props.layout]
 })
 </script>

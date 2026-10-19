@@ -21,10 +21,10 @@
           <div class="flex-1 min-w-0 flex flex-col justify-between self-stretch">
             <div class="flex items-start justify-between gap-5">
               <div>
-                <div class="flex items-center gap-2" v-if="library.get(item.id)?.name">
+                <div class="flex items-center gap-2" v-if="library(item.id)?.name">
                   <!-- Item Location -->
                   <Icon icon="geo-alt-fill" class="text-danger" />
-                  <span class="text-sm">{{ library.get(item.id)?.name }}</span>
+                  <span class="text-sm">{{ library(item.id)?.name }}</span>
                 </div>
                 <div class="flex items-center justify-between gap-2 mb-1.5">
                   <h2 class="font-bold text-base text-foreground line-clamp-1" :title="item.title">
@@ -37,7 +37,7 @@
                 </p>
               </div>
               <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-primary/10 text-primary shrink-0">
-                {{ parseCategory(item.item_type_category_id) ?? 'Library material' }}
+                {{ category(item.item_type_category_id)?.name ?? 'Library material' }}
               </span>
             </div>
 
@@ -62,11 +62,16 @@
 <script setup lang="ts">
 import default_book from '@/assets/images/default_book.png'
 
-const library = libraryStore()
+const options = optionStore()
+
 // State
 const data = ref<Item[]>([])
 const loading = ref(true)
-const categories = useItemCategoriesStore()
+// const categories = useItemCategoriesStore()
+
+// Parser
+const library = computed(() => (id: any) => options.libraries?.find((i) => (i.id = id)))
+const category = computed(() => (id: any) => options.categories?.find((i) => (i.id = id)))
 
 async function fetchNewItems() {
   try {
@@ -78,10 +83,6 @@ async function fetchNewItems() {
   } finally {
     loading.value = false
   }
-}
-
-const parseCategory = (item_type_category_id: any) => {
-  return categories.data.find((i) => i.id === item_type_category_id)?.name
 }
 
 onMounted(fetchNewItems)

@@ -12,7 +12,7 @@ class Acquisition extends Model
     use HasFactory;
 
     protected $fillable = [
-        'acquisition_id',
+        'reference',
         'dealer',
         'acquisition_mode',
         'acquisition_date',
@@ -28,11 +28,17 @@ class Acquisition extends Model
 
     public function receiver()
     {
-        return $this->belongsTo(Librarian::class, 'receiver_id');
+        // return $this->belongsTo(Librarian::class, 'receiver_id');
+        return $this->hasOneThrough(User::class, Librarian::class, 'id', 'id', 'receiver_id', 'user_id');
     }
 
     public function acquisitionRequest()
     {
         return $this->belongsTo(AcquisitionRequest::class, 'acquisition_request_id');
+    }
+
+    public function acquisition_lines()
+    {
+        return $this->hasOne(AcquisitionLines::class);
     }
 }
