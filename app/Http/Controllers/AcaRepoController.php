@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AcaRepo;
 use App\Http\Requests\StoreAcaRepoRequest;
 use App\Http\Requests\UpdateAcaRepoRequest;
+use App\Models\AcaRepo;
+use App\Services\AcaRepoService;
 
 class AcaRepoController extends Controller
 {
+    public function __construct(private AcaRepoService $acaRepoService)
+    {
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -29,7 +34,17 @@ class AcaRepoController extends Controller
      */
     public function store(StoreAcaRepoRequest $request)
     {
-        //
+        $acaRepo = $this->acaRepoService->submitAcaRepo([
+            ...$request->validated(),
+            'program_id' => $request->user()->patron->program_id,
+        ]);
+
+        return $this->response(
+            'success',
+            'Academic repository submission created successfully.',
+            $acaRepo->toArray(),
+            201,
+        );
     }
 
     /**
