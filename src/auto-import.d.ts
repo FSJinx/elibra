@@ -501,6 +501,9 @@ declare global {
   export type { Vendor } from './interfaces/vendor'
   import('./interfaces/vendor')
   // @ts-ignore
+  export type { PaginatedResponse } from './services/pagination'
+  import('./services/pagination')
+  // @ts-ignore
   export type { BaseParams } from './services/params'
   import('./services/params')
 }

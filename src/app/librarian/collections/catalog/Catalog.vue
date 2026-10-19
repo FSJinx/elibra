@@ -75,7 +75,7 @@ const defaultParams = (): Readonly<ItemParams> => ({
   per_page: '25',
 
   item_type_id: '',
-  item_type_categoy_id: '',
+  item_type_category_id: '',
 })
 
 const data = ref<Item[] | null>(null)

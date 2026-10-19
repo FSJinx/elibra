@@ -1,6 +1,6 @@
 export interface ItemParams extends BaseParams {
   item_type_id: any
-  item_type_categoy_id: any
+  item_type_category_id: any
 }
 
 export const useItemStore = defineStore('item', {

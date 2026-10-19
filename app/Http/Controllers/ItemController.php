@@ -106,7 +106,9 @@ class ItemController extends Controller
 
         // Complete Filter
         $filters = array_merge($filters, [
+            'search' => trim($filters['search'], '-'),
             'item_type_id' => $request->input('item_type_id'),
+            'item_type_category_id' => $request->input('item_type_category_id'),
         ]);
 
         $data = CacheService::remember(
@@ -117,19 +119,16 @@ class ItemController extends Controller
                 $item = Item::query();
 
                 // ============== Search ============
-                $item->when($filters['search'], function ($i, $param) {
-                    $i->where('title', 'LIKE', "%$param%")
-                        ->orWhere('subtitle', 'LIKE', "%$param%");
-                });
-                
-                $item->when($filters['search'], function ($i, $param) {
-                    $i->where('title', 'LIKE', "%$param%")
-                        ->orWhere('subtitle', 'LIKE', "%$param%");
+                $item->when($filters['search'] ?? null, fn ($q, $s) => $q->where(fn ($w) => $w->where('title', 'LIKE', "%$s%")->orWhere('subtitle', 'LIKE', "%$s%")));
+
+                // ============== Item Type ============
+                $item->when($filters['item_type_id'] ?? null, function ($i, $param) {
+                    $i->where('item_type_id', $param);
                 });
 
-                // ============== Item Type ID ============
-                $item->when($filters['item_type_id'], function ($i, $param) {
-                    $i->where('item_type_id', $param);
+                // ============== Item Category ============
+                $item->when($filters['item_type_category_id'] ?? null, function ($i, $param) {
+                    $i->where('item_type_category_id', $param);
                 });
 
                 return $item

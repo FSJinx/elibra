@@ -21,7 +21,7 @@
           <Control direction="col">
             <Label id="catalog-category">Category</Label>
 
-            <Select id="catalog-category" title="Categories" v-model="filter.item_type_categoy_id">
+            <Select id="catalog-category" title="Categories" v-model="filter.item_type_category_id">
               <Option value="" selected disabled>{{ filter.item_type_id ? 'Select Category' : 'Please select an item type first' }}</Option>
               <Option v-for="category in options.categories?.filter((i) => i.item_type_id == filter.item_type_id)" :key="category.id" :value="category.id">{{ category.name }}</Option>
             </Select>
@@ -53,7 +53,7 @@
     </ModalBody>
 
     <ModalFooter>
-      <div class="flex items-center justify-end gap-1">
+      <div class="flex items-center justify-end gap-2">
         <Button variant="danger" @click="filterBtn?.close()">Cancel</Button>
         <Button variant="success" @click="applyFilter">Apply</Button>
       </div>
@@ -82,7 +82,7 @@ function applyFilter() {
 watch(
   () => filter.item_type_id,
   () => {
-    filter.item_type_categoy_id = ''
+    filter.item_type_category_id = ''
   },
   {
     deep: true,

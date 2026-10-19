@@ -14,7 +14,7 @@
 
     <!-- Table Body -->
     <div class="relative flex-1 shrink-0 overflow-y-auto bg-background">
-      <table class="relative w-full text-left table-auto text-[12.5px] border-collapse" :class="[layout]">
+      <table class="relative w-full has-data-empty:h-full text-left text-[12.5px] border-collapse" :class="[layout]">
         <slot />
       </table>
     </div>
