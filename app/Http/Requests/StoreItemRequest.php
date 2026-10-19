@@ -37,7 +37,7 @@ class StoreItemRequest extends BaseRequest
             'call_number' => ['nullable', 'string', 'max:255'],
             'keywords' => ['nullable', 'array'],
             'language_id' => ['required', Rule::exists((new Language)->getTable(), 'id')],
-            'electronic_file' => ['required', 'file', 'mimes:pdf,doc,docx'],
+            'electronic_file' => ['nullable', 'file', 'mimes:pdf,doc,docx'],
             'cover_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'item_type_id' => ['required', Rule::exists((new ItemType)->getTable(), 'id')],
             'item_type_category_id' => ['required', Rule::exists((new ItemTypeCategory)->getTable(), 'id')],
@@ -57,7 +57,7 @@ class StoreItemRequest extends BaseRequest
     public function messages(): array
     {
         return [
-            'electronic_file.required' => 'An electronic file is required.',
+            // 'electronic_file.required' => 'An electronic file is required.',
             'electronic_file.file' => 'The electronic file must be a valid file.',
             'electronic_file.mimes' => 'The electronic file must be a PDF, DOC, or DOCX file.',
         ];

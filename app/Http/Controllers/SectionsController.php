@@ -20,7 +20,7 @@ class SectionsController extends Controller
     {
         $user = $request->user();
 
-        $libraryId = $user->isSuperAdmin()
+        $libraryId = $user->isSuperAdmin() || $user->isAdmin()
             ? $request->query('library_id', $request->query('id'))
             : $user->librarian?->library_id;
 
@@ -28,14 +28,20 @@ class SectionsController extends Controller
             CacheService::SECTIONS,
             [
                 'is_super_admin' => $user->isSuperAdmin(),
+                'is_admin' => $user->isAdmin(),
+                'campus_id' => $user->isAdmin() ? $user->campus_id : null,
                 'library_id' => $libraryId,
             ],
             now()->addHour(),
-            function () use ($libraryId) {
+            function () use ($user, $libraryId) {
                 return Sections::query()
                     ->select(['id', 'name', 'library_id', 'librarian_id', 'created_at', 'updated_at'])
-                    ->with(['library:id,name', 'librarian'])
-                    ->where('library_id', $libraryId)
+                    ->with(['library:id,name', 'librarian.user'])
+                    ->when($libraryId, fn ($query) => $query->where('library_id', $libraryId))
+                    ->when($user->isAdmin(), fn ($query) => $query->whereHas(
+                        'library',
+                        fn ($libraryQuery) => $libraryQuery->where('campus_id', $user->campus_id)
+                    ))
                     ->get();
             }
         );
@@ -115,8 +121,8 @@ class SectionsController extends Controller
         try {
             $data = $request->validated();
             $library = Library::findOrFail($data['library_id']);
-            $data['librarian_id'] = $library->library_head_id;
-            $section = Sections::create($data);
+            $data['librarian_id'] = $data['librarian_id'] ?? $library->library_head_id;
+            $section = Sections::create($data)->load('librarian.user');
 
             DB::commit();
             CacheService::invalidate(CacheService::SECTIONS);
@@ -158,6 +164,7 @@ class SectionsController extends Controller
         DB::beginTransaction();
         try {
             $section->update($request->validated());
+            $section->load('librarian.user');
 
             DB::commit();
             CacheService::invalidate(CacheService::SECTIONS);

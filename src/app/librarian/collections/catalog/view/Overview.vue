@@ -74,7 +74,7 @@ const form = ref<Item>({} as Item)
 const hasChanges = computed(() => JSON.stringify(form.value) !== JSON.stringify(props.data))
 const items = useItemStore()
 const coverImage = computed(() => {
-  const path = props.data.coverMedia?.file_path
+  const path = props.data.cover_media?.file_path
   return path ? `${backendRoute.replace(/\/api\/?$/, '')}/storage/${path}` : book
 })
 

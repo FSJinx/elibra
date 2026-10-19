@@ -1,5 +1,5 @@
 <template>
-  <component :is="buttonAs" :type="type" class="relative shrink-0 inline-flex items-center font-medium rounded-md gap-3 min-w-max transition-all duration-100 outline-none tracking-tight select-none leading-0" :class="[btnClass, sizeClass]" :disabled="disabled" @mouseup="($event.currentTarget as HTMLButtonElement).blur()" @click="$emit('click')">
+  <component :is="buttonAs" :type="type" class="relative shrink-0 inline-flex items-center font-medium rounded-md gap-3 min-w-max transition-all duration-100 outline-none tracking-tight select-none leading-0" :class="[btnClass, sizeClass]" :disabled="disabled" @mouseup="($event.currentTarget as HTMLButtonElement).blur()" @click="emit('click', $event)">
     <Spinner class="absolute" v-if="loading" />
 
     <Icon :icon="leftIcon" v-if="leftIcon && leftIcon.length > 0" :class="[loading && 'invisible']" />
@@ -95,7 +95,9 @@ const btnClass = computed(() => {
   return [focus[props.variant], design, disabled, border, align[props.align]]
 })
 
-defineEmits(['click'])
+const emit = defineEmits<{
+  click: [event: MouseEvent]
+}>()
 </script>
 
 <style scoped></style>
