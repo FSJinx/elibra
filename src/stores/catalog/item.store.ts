@@ -30,6 +30,16 @@ export const useItemStore = defineStore('item', {
   }),
 
   actions: {
+    async fetch(params: ItemParams) {
+      const res = await get(this.url, params)
+      return res
+    },
+
+    async show(id: any) {
+      const res = await get(`${this.url}/${id}`)
+      return res
+    },
+
     async create(params: Partial<Item>) {
       const formData = new FormData()
       Object.entries(params).forEach(([key, value]) => appendFormData(formData, key, value))
@@ -40,26 +50,7 @@ export const useItemStore = defineStore('item', {
 
     async update(id: string | number, params: Partial<Item>) {
       const formData = new FormData()
-      const fields = [
-        'title',
-        'subtitle',
-        'description',
-        'call_number',
-        'electronic_file',
-        'cover_image',
-        'keywords',
-        'edition',
-        'isbn_issn',
-        'doi',
-        'volume',
-        'issue',
-        'pages',
-        'department_id',
-        'item_type_id',
-        'item_type_category_id',
-        'language_id',
-        'authors',
-      ]
+      const fields = ['title', 'subtitle', 'description', 'call_number', 'electronic_file', 'cover_image', 'keywords', 'edition', 'isbn_issn', 'doi', 'volume', 'issue', 'pages', 'department_id', 'item_type_id', 'item_type_category_id', 'language_id', 'authors']
 
       fields.forEach((field) => {
         const value = params[field]
@@ -78,16 +69,6 @@ export const useItemStore = defineStore('item', {
       formData.append('_method', 'PUT')
 
       return await post(`${this.url}/${id}`, formData)
-    },
-
-    async fetch(params: ItemParams) {
-      const res = await get(this.url, params)
-      return res
-    },
-
-    async show(id: any) {
-      const res = await get(`${this.url}/${id}`)
-      return res
     },
 
     /**
