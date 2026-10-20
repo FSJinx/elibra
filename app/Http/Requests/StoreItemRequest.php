@@ -37,7 +37,15 @@ class StoreItemRequest extends BaseRequest
             'call_number' => ['nullable', 'string', 'max:255'],
             'keywords' => ['nullable', 'array'],
             'language_id' => ['required', Rule::exists((new Language)->getTable(), 'id')],
-            'electronic_file' => ['nullable', 'file', 'mimes:pdf,doc,docx'],
+            'electronic_file' => [
+                Rule::prohibitedIf(fn (): bool => ! ItemType::query()
+                    ->whereKey($this->input('item_type_id'))
+                    ->whereIn('slug', ['book', 'thesis'])
+                    ->exists()),
+                'nullable',
+                'file',
+                'mimes:pdf,doc,docx',
+            ],
             'cover_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'item_type_id' => ['required', Rule::exists((new ItemType)->getTable(), 'id')],
             'item_type_category_id' => ['required', Rule::exists((new ItemTypeCategory)->getTable(), 'id')],
@@ -57,7 +65,7 @@ class StoreItemRequest extends BaseRequest
     public function messages(): array
     {
         return [
-            // 'electronic_file.required' => 'An electronic file is required.',
+            'electronic_file.prohibited' => 'An electronic file is only allowed for books and theses.',
             'electronic_file.file' => 'The electronic file must be a valid file.',
             'electronic_file.mimes' => 'The electronic file must be a PDF, DOC, or DOCX file.',
         ];
