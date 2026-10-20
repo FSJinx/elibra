@@ -55,9 +55,9 @@
       </Control>
 
       <!-- Electronic File -->
-      <Control id="item-electronic_file" required>
+      <Control id="item-electronic_file" nullable v-if="item_type?.has_electronic_file">
         <Label>Electronic File</Label>
-        <InputFile v-model="form.electronic_file" accept=".pdf,.doc,.docx" required :error="getError(errors, 'electronic_file')" :readonly="!editing" />
+        <InputFile v-model="form.electronic_file" accept=".pdf,.doc,.docx" :error="getError(errors, 'electronic_file')" :readonly="!editing" />
       </Control>
 
       <!-- Optional Cover Image -->
@@ -84,8 +84,7 @@ withDefaults(
 
 const form = defineModel<Partial<Form>>({ default: {} })
 const options = optionStore()
-const item_types = useItemTypeStore()
-const categories = useItemCategoriesStore()
+const item_type = computed(() => options.item_types?.find((i) => i.id == form.value?.item_type_id) ?? null)
 
 watch(
   () => form.value.item_type_id,

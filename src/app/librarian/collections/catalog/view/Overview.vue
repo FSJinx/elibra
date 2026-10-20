@@ -1,8 +1,8 @@
 <template>
   <div class="relative w-full max-w-375 flex items-start gap-5 mx-auto">
-    <Card class="shrink-0 sticky top-0">
+    <Card class="shrink-0 sticky top-0 shadow-lg p-3!">
       <CardBody class="w-60 border border-border rounded-lg overflow-hidden">
-        <img :src="coverImage" alt="Item cover" class="w-full h-auto" />
+        <img :src="coverImage" alt="Item cover" class="w-full h-auto" loading="lazy" />
       </CardBody>
     </Card>
 
@@ -11,9 +11,9 @@
       <Card class="flex-1 sticky top-0 z-20 shadow-md">
         <div class="flex items-start justify-between gap-5">
           <div class="">
-            <p class="text-sm uppercase font-semibold text-muted-foreground">{{ item_type?.name }}</p>
-            <Title :level="1">{{ props.data?.title }}</Title>
-            <p class="text-muted-foreground text-sm italic">{{ props.data.subtitle ?? 'No additional information or subtitle for this material.' }}</p>
+            <p class="text-sm uppercase font-medium tracking-wider text-muted-foreground">{{ item_type?.name }}</p>
+            <Title :level="1" class="my-2">{{ props.data?.title }}</Title>
+            <p class="text-sm">{{ props.data.description ?? 'No description or abstract provided for this material.' }}</p>
           </div>
 
           <div class="action-buttons flex justify-end gap-2">
@@ -74,8 +74,10 @@ const form = ref<Item>({} as Item)
 const hasChanges = computed(() => JSON.stringify(form.value) !== JSON.stringify(props.data))
 const items = useItemStore()
 const coverImage = computed(() => {
-  const path = props.data.coverMedia?.file_path
-  return path ? `${backendRoute.replace(/\/api\/?$/, '')}/storage/${path}` : book
+  const path = props.data.cover_media?.file_path
+  console.log(path)
+
+  return path ? `${storageRoute}/${path}` : book
 })
 
 function toggleEdit() {

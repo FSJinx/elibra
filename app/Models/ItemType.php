@@ -15,11 +15,15 @@ class ItemType extends Model
     protected $fillable = [
         'slug',
         'name',
-        'loanable'
+        'loanable',
     ];
 
     protected $formatter = [
         'name' => 'capitalize',
         'slug' => 'lowercase',
+    ];
+
+    protected $casts = [
+        'has_electronic_file' => 'boolean',
     ];
 }

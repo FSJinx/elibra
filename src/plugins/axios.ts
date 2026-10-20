@@ -5,7 +5,9 @@ import router from '@/router'
 import { authStore } from '@/stores/auth.store'
 
 // export const backendRoute = `${(import.meta as any).env.VITE_APP_URL}/api`
-export const backendRoute = `http://localhost:8000/api`
+const apiRoute = 'http://localhost:8000'
+export const backendRoute = `${apiRoute}/api`
+export const storageRoute = `${apiRoute}/storage`
 
 const pending = new Map<string, AbortController>()
 const keyOf = (c: AxiosRequestConfig) => `${c.method}:${c.baseURL ?? ''}${c.url?.split('?')[0]}`

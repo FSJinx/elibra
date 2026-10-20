@@ -179,6 +179,7 @@ declare global {
   const standardCategory: typeof import('./router/admin/standard/item_categories.route').standardCategory
   const standardItemType: typeof import('./router/admin/standard/item_types.route').standardItemType
   const standardPatronType: typeof import('./router/admin/standard/patron_type.route').standardPatronType
+  const storageRoute: typeof import('./plugins/axios').storageRoute
   const storeToRefs: typeof import('pinia').storeToRefs
   const syncRef: typeof import('@vueuse/core').syncRef
   const syncRefs: typeof import('@vueuse/core').syncRefs
@@ -667,6 +668,7 @@ declare module 'vue' {
     readonly standardCategory: UnwrapRef<typeof import('./router/admin/standard/item_categories.route')['standardCategory']>
     readonly standardItemType: UnwrapRef<typeof import('./router/admin/standard/item_types.route')['standardItemType']>
     readonly standardPatronType: UnwrapRef<typeof import('./router/admin/standard/patron_type.route')['standardPatronType']>
+    readonly storageRoute: UnwrapRef<typeof import('./plugins/axios')['storageRoute']>
     readonly storeToRefs: UnwrapRef<typeof import('pinia')['storeToRefs']>
     readonly syncRef: UnwrapRef<typeof import('@vueuse/core')['syncRef']>
     readonly syncRefs: UnwrapRef<typeof import('@vueuse/core')['syncRefs']>
