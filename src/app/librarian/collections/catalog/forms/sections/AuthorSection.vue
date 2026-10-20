@@ -1,5 +1,5 @@
 <template>
-  <Table title="Author" subtitle="Record the authors and authorship of this material. If authorship is blank, check if you've selected an item type." v-if="form.item_type_id && (editing || form.authors?.length)">
+  <Table title="Author" subtitle="Record the authors and authorship of this material. If authorship is blank, check if you've selected an item type." v-if="form.item_type_id && (editing || form.authors?.length)" :data="{ data: form?.authors } as Pagination">
     <template #header>
       <AddAuthors v-if="editing" v-model="form.authors" />
     </template>
@@ -30,6 +30,7 @@
 <script setup lang="ts">
 import { getError, type Form } from '@/app/librarian/collections/catalog/forms/form'
 import AddAuthors from '@/app/librarian/collections/catalog/forms/sections/modals/AddAuthors.vue'
+import type { Pagination } from '@/services/pagination'
 
 withDefaults(
   defineProps<{
@@ -37,7 +38,7 @@ withDefaults(
     errors?: any
   }>(),
   {
-    editing: false,
+    editing: true,
   },
 )
 

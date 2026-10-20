@@ -61,7 +61,6 @@ import BaseSection from '@/app/librarian/collections/catalog/forms/sections/Base
 import PhysicalDescriptionSection from '@/app/librarian/collections/catalog/forms/sections/PhysicalDescriptionSection.vue'
 import SerialSection from '@/app/librarian/collections/catalog/forms/sections/SerialSection.vue'
 import book from '@/assets/images/default_book.png'
-import { backendRoute } from '@/plugins/axios'
 
 const props = defineProps<{ data: Item }>()
 const option = optionStore()
@@ -75,8 +74,6 @@ const hasChanges = computed(() => JSON.stringify(form.value) !== JSON.stringify(
 const items = useItemStore()
 const coverImage = computed(() => {
   const path = props.data.cover_media?.file_path
-  console.log(path)
-
   return path ? `${storageRoute}/${path}` : book
 })
 
@@ -115,6 +112,7 @@ async function submit() {
     try {
       pop.load()
       const response = await items.update(props.data.id, form.value)
+      pop.success(response.message ?? 'Item updated successfully.')
       const updated = response.data
       form.value = {
         ...updated,
@@ -126,11 +124,11 @@ async function submit() {
       }
       emit('updated', updated)
       editing.value = false
-      pop.success(response.message ?? 'Item updated successfully.')
-    } catch (error) {
+
+      console.log('Update complete')
+    } catch (error: any) {
+      pop.error(error.response.data.message ?? 'Something went wrong, please try again.')
       throw error
-    } finally {
-      pop.unload()
     }
   }
 }
