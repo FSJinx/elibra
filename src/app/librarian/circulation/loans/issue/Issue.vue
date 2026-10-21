@@ -62,10 +62,10 @@
               <dd class="font-medium">{{ preview.patron.patron?.patron_type?.name ?? '—' }}</dd>
 
               <dt class="text-muted-foreground">Department</dt>
-              <dd class="font-medium">{{ preview.patron.patron?.program?.department?.name ?? '—' }}</dd>
+              <dd class="font-medium capitalize">{{ preview.patron.patron?.program?.department?.name ?? '—' }}</dd>
 
               <dt class="text-muted-foreground">Program</dt>
-              <dd class="font-medium">{{ preview.patron.patron?.program?.name ?? '—' }}</dd>
+              <dd class="font-medium capitalize">{{ preview.patron.patron?.program?.name ?? '—' }}</dd>
 
               <dt class="text-muted-foreground">EBC</dt>
               <dd class="font-mono font-medium">{{ preview.patron.patron?.ebc_number ?? '—' }}</dd>
@@ -86,7 +86,7 @@
 
             <div class="min-w-0 text-center sm:text-left pt-2">
               <Title :level="2">{{ preview.accession.item.title }}</Title>
-              <p v-if="preview.accession.item.subtitle" class="text-sm text-muted-foreground">
+              <p v-if="preview.accession.item.description" class="text-sm text-muted-foreground line-clamp-5">
                 {{ preview.accession.item.subtitle }}
               </p>
             </div>
@@ -155,15 +155,13 @@ async function review() {
     const res = await loan.review(form)
     preview.value = res.data
   } catch (e: any) {
-    console.log(e.response.data.message)
-
     errorMessage.value = e.response.data?.message
   } finally {
     loading.value = false
   }
 }
 
-async function continueCheckout () {
+async function continueCheckout() {
   
 }
 

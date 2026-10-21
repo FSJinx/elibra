@@ -60,6 +60,7 @@ const model = defineModel<any>({ default: '' })
 const parse = useParser()
 const control = inject<any>('control', null)
 
+const emit = defineEmits(['onChange'])
 const props = withDefaults(defineProps<Props>(), {
   enableTooltip: false,
   error: '',
@@ -133,6 +134,7 @@ const close = () => {
 const setSelected = (selectedValue: any, selectedLabel: string) => {
   selectedOption.value = selectedValue
   selectedOption.label = selectedLabel
+  emit('onChange', selectedOption.value)
   close()
 }
 

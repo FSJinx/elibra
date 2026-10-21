@@ -16,7 +16,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 {
     use AutoFormatter, HasFactory, Notifiable, SoftDeletes;
 
-    protected $appends = ['full_name'];
+    protected $appends = ['name'];
 
     protected $fillable = [
         // Personal Information
@@ -70,9 +70,12 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         ];
     }
 
-    public function fullName(): Attribute
+    protected function name(): Attribute
     {
-        return Attribute::get(fn () => "{$this->last_name}, {$this->first_name}");
+        return Attribute::get(fn () => (object) [
+            'full' => "{$this->first_name} {$this->last_name}",
+            'formal' => "{$this->last_name}, {$this->first_name}",
+        ]);
     }
 
     protected static function booted()

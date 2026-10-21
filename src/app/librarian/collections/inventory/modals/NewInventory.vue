@@ -13,7 +13,7 @@
           </div>
           <Select title="Sections">
             <Option value="" selected disabled>Select a section to inventory</Option>
-            <Option :value="section.id" v-for="section in options.sections">{{ section.name }}</Option>
+            <Option :value="section.id" v-for="section in options.sections?.filter((i) => i.library_id === auth.user?.library?.id)">{{ section.name }}</Option>
           </Select>
         </Control>
       </Form>
@@ -36,7 +36,7 @@ function open() {
   modal.value?.open()
 }
 
-onBeforeMount(() => options.fetchSections(auth.user?.library?.id))
+onBeforeMount(() => options.fetch('sections'))
 </script>
 
 <style scoped></style>

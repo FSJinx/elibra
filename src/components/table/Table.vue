@@ -41,7 +41,7 @@
 
 <script setup lang="ts">
 interface Props {
-  data: Pagination | undefined
+  data?: Pagination | undefined
   title: string
   subtitle?: string
   layout?: 'auto' | 'fixed'

@@ -1,7 +1,6 @@
 <template>
   <div class="size-full flex flex-col gap-3">
-
-    <Table title="Acquistion History" subtitle="These are the acquisition history of each copies of this material" :data-length="acquisitions?.length">
+    <Table title="Acquistion History" subtitle="These are the acquisition history of each copies of this material">
       <Thead>
         <tr>
           <Th class="max-w-50">No</Th>
@@ -24,8 +23,8 @@
           <Td :data="parse.formatDate(item.acquisition_date)" />
           <Td :data="parse.name(item.receiver).full" />
           <Td :data="item.acquisition_lines.quantity" />
-          <Td :data="item.acquisition_lines.unit_price" />
-          <Td :data="Number(item.acquisition_lines.unit_price) * Number(item.acquisition_lines.quantity)" />
+          <Td :data="parse.toMoney(item.acquisition_lines.unit_price)" />
+          <Td :data="parse.toMoney(Number(item.acquisition_lines.unit_price) * Number(item.acquisition_lines.quantity))" />
         </Tr>
       </Tbody>
     </Table>

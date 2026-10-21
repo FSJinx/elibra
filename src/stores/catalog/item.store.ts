@@ -30,7 +30,7 @@ export const useItemStore = defineStore('item', {
   }),
 
   actions: {
-    async fetch(params: ItemParams) {
+    async fetch(params: Partial<ItemParams>) {
       const res = await get(this.url, params)
       return res
     },

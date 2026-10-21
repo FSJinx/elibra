@@ -30,8 +30,10 @@ export const useAcquisitionLinesStore = defineStore('acquisition_lines', {
     },
 
     async fetch(id: any) {
+      this.loading = true
       const res = await get(this.url, { id: id })
-      this.setFetchData(res.data)
+      this.setFetchData(res.data.data)
+      this.loading = false
       return res
     },
 

@@ -28,9 +28,7 @@
           <Label required>Librarian</Label>
           <Select v-model="form.receiver_id" :error="errors.receiver_id?.[0]" required>
             <Option value="" disabled>Select a librarian</Option>
-            <Option v-for="librarian in librarians" :key="librarian.id" :value="librarian.id">
-              {{ librarian.user?.first_name }} {{ librarian.user?.last_name }}
-            </Option>
+            <Option v-for="librarian in librarians" :key="librarian.id" :value="librarian.id"> {{ librarian.user?.first_name }} {{ librarian.user?.last_name }} </Option>
           </Select>
         </Control>
         <Control id="acquisition-date" required>
@@ -54,7 +52,7 @@
 import Modal from '@/components/my/Modal.vue'
 import { reactive } from 'vue'
 
-const emptyForm = (): Acquisition => ({
+const emptyForm = (): Partial<Acquisition> => ({
   id: null,
   dealer: '',
   acquisition_date: '',
@@ -68,8 +66,8 @@ const modal = ref<typeof Modal | null>()
 const acquisition = useAcquisitionStore()
 const librarians = ref<Librarian[]>([])
 
-const errors = reactive<Acquisition>(emptyForm())
-const form = reactive<Acquisition>(emptyForm())
+const errors = reactive<Partial<Acquisition>>(emptyForm())
+const form = reactive<Partial<Acquisition>>(emptyForm())
 const today = new Date().toISOString().split('T')[0]
 const hasInputs = computed(() => [form.dealer, form.acquisition_date, form.acquisition_mode, form.receiver_id, form.remarks].some((value) => String(value ?? '').trim().length > 0))
 

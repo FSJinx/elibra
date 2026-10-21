@@ -59,7 +59,7 @@ class CirculationController extends Controller
                     });
             })
             ->select(['id', 'last_name', 'first_name', 'username', 'middle_initial', 'email'])
-            ->with(['patron:id,user_id,patron_type_id,ebc_number', 'patron.patronType:id,name'])
+            ->with(['patron.patronType:id,name', 'patron.program:id,name,department_id','patron.program.department:id,name'])
             ->first();
 
         // $patron = Patron::query()
@@ -93,7 +93,7 @@ class CirculationController extends Controller
 
         $accession = Accession::query()
             ->select(['id', 'accession_number', 'status', 'item_id'])
-            ->with(['item:id,title,subtitle,call_number'])
+            ->with(['item:id,title,description,call_number'])
             ->where('accession_number', $params['accession'])
             ->first();
 

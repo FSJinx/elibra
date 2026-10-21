@@ -33,7 +33,9 @@ class AcquisitionLinesController extends Controller
             $acquisitionLines->where('acquisition_id', $id);
         }
 
-        return $this->response(data: $acquisitionLines->get());
+        return $this->response(data: $acquisitionLines->paginate(
+            null, ['*'], 'page', '1'
+        ));
     }
 
     /**
