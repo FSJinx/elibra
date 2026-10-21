@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\AutoFormatter;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -14,6 +15,8 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 {
     use AutoFormatter, HasFactory, Notifiable, SoftDeletes;
+
+    protected $appends = ['full_name'];
 
     protected $fillable = [
         // Personal Information
@@ -65,6 +68,11 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         return [
             'name' => $this->first_name,
         ];
+    }
+
+    public function fullName(): Attribute
+    {
+        return Attribute::get(fn () => "{$this->last_name}, {$this->first_name}");
     }
 
     protected static function booted()

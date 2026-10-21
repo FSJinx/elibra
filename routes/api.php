@@ -431,7 +431,9 @@ Route::group(['prefix' => '/patron-type-loan-policy'], function () {
 Route::group(['prefix' => '/attendance'], function () {
     Route::get('', [AttendanceLogsController::class, 'index'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
     Route::get('{attendanceLogs}', [AttendanceLogsController::class, 'show'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
+    
     Route::post('', [AttendanceLogsController::class, 'store'])->withoutMiddleware(['jwt.auth', 'role:super_admin,admin,librarian'])->middleware('throttle:write');
+
     Route::put('{attendanceLogs}', [AttendanceLogsController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
     Route::delete('{attendanceLogs}', [AttendanceLogsController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:delete');
 });

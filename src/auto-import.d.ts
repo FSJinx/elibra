@@ -30,6 +30,7 @@ declare global {
   const administrationUsers: typeof import('./router/librarian/administration/users.route').administrationUsers
   const api: typeof import('./plugins/axios').api
   const asyncComputed: typeof import('@vueuse/core').asyncComputed
+  const attendanceStore: typeof import('./stores/attendance.store').attendanceStore
   const authRoute: typeof import('./router/authRoute').authRoute
   const authStore: typeof import('./stores/auth.store').authStore
   const authorshipStore: typeof import('./stores/authorship.store').authorshipStore
@@ -451,6 +452,9 @@ declare global {
   export type { AcquisitionLine } from './interfaces/acquisition_line'
   import('./interfaces/acquisition_line')
   // @ts-ignore
+  export type { Attendance } from './interfaces/attendance'
+  import('./interfaces/attendance')
+  // @ts-ignore
   export type { Author } from './interfaces/author'
   import('./interfaces/author')
   // @ts-ignore
@@ -533,6 +537,7 @@ declare module 'vue' {
     readonly administrationUsers: UnwrapRef<typeof import('./router/librarian/administration/users.route')['administrationUsers']>
     readonly api: UnwrapRef<typeof import('./plugins/axios')['api']>
     readonly asyncComputed: UnwrapRef<typeof import('@vueuse/core')['asyncComputed']>
+    readonly attendanceStore: UnwrapRef<typeof import('./stores/attendance.store')['attendanceStore']>
     readonly authRoute: UnwrapRef<typeof import('./router/authRoute')['authRoute']>
     readonly authStore: UnwrapRef<typeof import('./stores/auth.store')['authStore']>
     readonly authorshipStore: UnwrapRef<typeof import('./stores/authorship.store')['authorshipStore']>

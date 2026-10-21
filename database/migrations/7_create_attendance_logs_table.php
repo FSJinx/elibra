@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('attendance_logs', function (Blueprint $table) {
             $table->id();
-            $table->enum('status', ['in', 'out']);
+            $table->enum('status', ['in', 'out'])->default('in');
             $table->timestamps();
 
             $table->unsignedBigInteger('patron_id')->nullable();
