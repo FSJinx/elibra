@@ -1,6 +1,6 @@
 <template>
   <tbody class="z-1">
-    <Tload v-if="loading" :columns="Number(cols)" />
+    <Tload v-if="loading" :columns="Number(cols ?? table.cols)" />
 
     <tr class="" v-else-if="!data || data.length === 0" data-empty>
       <td :colspan="cols">
@@ -12,9 +12,14 @@
       </td>
     </tr>
     <slot v-else />
+    <tr class="" v-if="table?.data?.current_page == table?.data?.last_page">
+      <td :colspan="cols ?? table?.cols">- End -</td>
+    </tr>
   </tbody>
 </template>
 
 <script setup lang="ts">
-defineProps<{ loading: boolean; cols: any; data: any; errorMessage?: string }>()
+defineProps<{ loading: boolean; cols?: any; data: any; errorMessage?: string }>()
+
+const table = inject<any>('table', null)
 </script>

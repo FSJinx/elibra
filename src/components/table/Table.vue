@@ -32,8 +32,8 @@
       </div>
 
       <div class="flex items-center gap-2">
-        <Button class="hover:text-primary" v-if="data?.prev_page_url" @click="emit('prev', data.current_page - 1)">Previous</Button>
-        <Button class="hover:text-primary" v-if="data?.next_page_url" @click="emit('next', data.current_page + 1)">Next</Button>
+        <Button class="not-disabled:hover:text-primary" :disabled="!data?.prev_page_url" @click="emit('prev', data?.current_page - 1)">Previous</Button>
+        <Button class="not-disabled:hover:text-primary" :disabled="!data?.next_page_url" @click="emit('next', data?.current_page + 1)">Next</Button>
       </div>
     </div>
   </section>
@@ -45,6 +45,7 @@ interface Props {
   title: string
   subtitle?: string
   layout?: 'auto' | 'fixed'
+  cols?: any
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -65,4 +66,6 @@ const layout = computed(() => {
 })
 
 watch(per_page, (val) => emit('per_page', val))
+
+provide('table', props)
 </script>
