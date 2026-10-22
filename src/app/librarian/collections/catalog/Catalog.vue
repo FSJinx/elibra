@@ -107,5 +107,5 @@ async function search() {
 }
 
 watchDebounced(() => params.query, search, { debounce: 300 })
-onBeforeMount(async () => await search())
+onBeforeMount(search)
 </script>

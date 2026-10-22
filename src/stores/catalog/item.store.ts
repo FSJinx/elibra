@@ -6,6 +6,11 @@ export interface ItemParams extends BaseParams {
 function appendFormData(formData: FormData, key: string, value: unknown): void {
   if (value == null) return
 
+  if (typeof value === 'boolean') {
+    formData.append(key, value ? '1' : '0')
+    return
+  }
+
   if (value instanceof File) {
     formData.append(key, value)
     return
@@ -50,7 +55,7 @@ export const useItemStore = defineStore('item', {
 
     async update(id: string | number, params: Partial<Item>) {
       const formData = new FormData()
-      const fields = ['title', 'subtitle', 'description', 'call_number', 'electronic_file', 'cover_image', 'keywords', 'edition', 'isbn_issn', 'doi', 'volume', 'issue', 'pages', 'department_id', 'item_type_id', 'item_type_category_id', 'language_id', 'authors']
+      const fields = ['title', 'subtitle', 'description', 'call_number', 'electronic_file', 'cover_image', 'keywords', 'edition', 'isbn_issn', 'doi', 'volume', 'issue', 'pages', 'department_id', 'released', 'item_type_id', 'item_type_category_id', 'language_id', 'authors']
 
       fields.forEach((field) => {
         const value = params[field]
@@ -65,7 +70,6 @@ export const useItemStore = defineStore('item', {
           appendFormData(formData, field, value)
         }
       })
-
       formData.append('_method', 'PUT')
 
       return await post(`${this.url}/${id}`, formData)
