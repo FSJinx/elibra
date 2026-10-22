@@ -12,7 +12,7 @@
       </td>
     </tr>
     <slot v-else />
-    <tr class="" v-if="table?.data?.current_page == table?.data?.last_page">
+    <tr class="bg-secondary" v-if="table?.data?.current_page == table?.data?.last_page">
       <td :colspan="cols ?? table?.cols">- End -</td>
     </tr>
   </tbody>

@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateSectionsRequest;
 use App\Models\Library;
 use App\Models\Sections;
 use App\Services\CacheService;
+use App\Services\QueryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Throwable;
@@ -19,24 +20,39 @@ class SectionsController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
+        $filters = QueryService::filters($request);
 
         $libraryId = $user->isSuperAdmin()
             ? $request->query('library_id', $request->query('id'))
             : $user->librarian?->library_id;
 
+        // Complete Filter
+        $filters = array_merge($filters, [
+            'library_id' => $libraryId,
+        ]);
+
         $sections = CacheService::remember(
             CacheService::SECTIONS,
-            [
-                'is_super_admin' => $user->isSuperAdmin(),
-                'library_id' => $libraryId,
-            ],
+            $filters,
             now()->addHour(),
-            function () use ($libraryId) {
-                return Sections::query()
-                    ->select(['id', 'name', 'library_id', 'librarian_id', 'created_at', 'updated_at'])
-                    ->with(['library:id,name', 'librarian'])
-                    ->where('library_id', $libraryId)
-                    ->get();
+            function () use ($filters) {
+                $section = Sections::query();
+                $section->with(['librarian:id,name']);
+
+                // ============== Search ============
+                $section->when($filters['search'] ?? null, fn ($q, $s) => $q->where(fn ($w) => $w->where('name', 'LIKE', "%$s%")));
+
+                // ============== Search ============
+                $section->when(! empty($filters['library_id']), fn ($q, $f) => $q->where('library_id', $filters['library_id']));
+
+                return $section
+                    ->orderBy($filters['sort'], $filters['order'])
+                    ->paginate(
+                        $filters['per_page'],
+                        ['*'],
+                        'page',
+                        $filters['page']
+                    );
             }
         );
 

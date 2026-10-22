@@ -2,6 +2,8 @@ interface SectionParams extends BaseParams {
   library_id: any
 }
 
+const auth = authStore()
+
 const defaultParams: Readonly<SectionParams> = {
   query: '',
   sort: '',
@@ -9,7 +11,7 @@ const defaultParams: Readonly<SectionParams> = {
   per_page: '25',
   order: 'asc',
 
-  library_id: '',
+  library_id: auth.user?.library?.id ?? null,
 }
 
 const url = 'section'
@@ -66,7 +68,7 @@ export const sectionStore = defineStore('section', {
       this.loading = true
       try {
         const res = await get(url, params)
-        this.setData(res.data)
+        this.setData(res.data.data)
         return res
       } finally {
         this.loading = false
@@ -92,8 +94,8 @@ export const sectionStore = defineStore('section', {
       return res
     },
 
-    async update(params: Section) {
-      const res = await put(`${url}/${params.id}`, params)
+    async update(id: any, params: Section) {
+      const res = await put(`${url}/${id}`, params)
       this.updateData(res.data)
       this.setCurrentData(res.data)
       return res
