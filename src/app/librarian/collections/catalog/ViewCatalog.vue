@@ -6,9 +6,7 @@
   </div>
 
   <!-- No Data -->
-  <div class="size-full flex flex-col justify-center items-center" v-else-if="!data">
-    <Spinner />
-  </div>
+  <div class="size-full flex flex-col justify-center items-center" v-else-if="!data">Item not found</div>
 
   <div class="size-full flex flex-col overflow-hidden" v-else>
     <div class="border-b border-border/70 bg-background shadow-sm">

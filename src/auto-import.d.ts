@@ -30,6 +30,7 @@ declare global {
   const administrationUsers: typeof import('./router/librarian/administration/users.route').administrationUsers
   const api: typeof import('./plugins/axios').api
   const asyncComputed: typeof import('@vueuse/core').asyncComputed
+  const attendanceStore: typeof import('./stores/attendance.store').attendanceStore
   const authRoute: typeof import('./router/authRoute').authRoute
   const authStore: typeof import('./stores/auth.store').authStore
   const authorshipStore: typeof import('./stores/authorship.store').authorshipStore
@@ -179,6 +180,7 @@ declare global {
   const standardCategory: typeof import('./router/admin/standard/item_categories.route').standardCategory
   const standardItemType: typeof import('./router/admin/standard/item_types.route').standardItemType
   const standardPatronType: typeof import('./router/admin/standard/patron_type.route').standardPatronType
+  const storageRoute: typeof import('./plugins/axios').storageRoute
   const storeToRefs: typeof import('pinia').storeToRefs
   const syncRef: typeof import('@vueuse/core').syncRef
   const syncRefs: typeof import('@vueuse/core').syncRefs
@@ -450,6 +452,9 @@ declare global {
   export type { AcquisitionLine } from './interfaces/acquisition_line'
   import('./interfaces/acquisition_line')
   // @ts-ignore
+  export type { Attendance } from './interfaces/attendance'
+  import('./interfaces/attendance')
+  // @ts-ignore
   export type { Author } from './interfaces/author'
   import('./interfaces/author')
   // @ts-ignore
@@ -532,6 +537,7 @@ declare module 'vue' {
     readonly administrationUsers: UnwrapRef<typeof import('./router/librarian/administration/users.route')['administrationUsers']>
     readonly api: UnwrapRef<typeof import('./plugins/axios')['api']>
     readonly asyncComputed: UnwrapRef<typeof import('@vueuse/core')['asyncComputed']>
+    readonly attendanceStore: UnwrapRef<typeof import('./stores/attendance.store')['attendanceStore']>
     readonly authRoute: UnwrapRef<typeof import('./router/authRoute')['authRoute']>
     readonly authStore: UnwrapRef<typeof import('./stores/auth.store')['authStore']>
     readonly authorshipStore: UnwrapRef<typeof import('./stores/authorship.store')['authorshipStore']>
@@ -667,6 +673,7 @@ declare module 'vue' {
     readonly standardCategory: UnwrapRef<typeof import('./router/admin/standard/item_categories.route')['standardCategory']>
     readonly standardItemType: UnwrapRef<typeof import('./router/admin/standard/item_types.route')['standardItemType']>
     readonly standardPatronType: UnwrapRef<typeof import('./router/admin/standard/patron_type.route')['standardPatronType']>
+    readonly storageRoute: UnwrapRef<typeof import('./plugins/axios')['storageRoute']>
     readonly storeToRefs: UnwrapRef<typeof import('pinia')['storeToRefs']>
     readonly syncRef: UnwrapRef<typeof import('@vueuse/core')['syncRef']>
     readonly syncRefs: UnwrapRef<typeof import('@vueuse/core')['syncRefs']>

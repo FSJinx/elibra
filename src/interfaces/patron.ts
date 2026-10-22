@@ -11,6 +11,5 @@ export interface Patron {
 
   user: User
   patron_type: Partial<PatronType>
-  program: any
-  // program: Partial<Program>
+  program: Partial<Program>
 }

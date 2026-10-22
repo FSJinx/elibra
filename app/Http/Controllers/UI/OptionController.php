@@ -75,7 +75,7 @@ class OptionController extends Controller
 
     public function item_types()
     {
-        $data = ItemType::query()->select(['id', 'slug', 'name'])->get();
+        $data = ItemType::query()->select(['id', 'slug', 'name', 'has_electronic_file'])->get();
 
         return $this->response(data: $data);
     }

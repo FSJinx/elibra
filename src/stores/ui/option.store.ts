@@ -19,6 +19,7 @@ const state = () => ({
 
   url: 'option',
 })
+
 export const optionStore = defineStore('option', {
   state,
 

@@ -8,8 +8,8 @@
         <p class="mt-1 text-sm text-foreground-secondary" v-if="subtitle">{{ subtitle }}</p>
       </div>
 
-      <slot name="header" v-if="$slots.header" />
       <p class="text-muted-foreground text-sm">Showing {{ data?.to ?? 0 }} {{ data?.to > 1 ? `records out of ${data?.total ?? 0}` : 'record' }}</p>
+      <slot name="header" v-if="$slots.header" />
     </div>
 
     <!-- Table Body -->
@@ -20,7 +20,7 @@
     </div>
 
     <!-- Table Footer -->
-    <div class="flex items-center justify-between w-full sticky bottom-0 bg-background px-5 py-4 border-t border-border">
+    <div class="flex items-center justify-between w-full sticky bottom-0 bg-background px-5 py-4 border-t border-border" v-if="$slots.footer">
       <div class="flex items-center justify-end gap-3 text-sm">
         <span>Show</span>
         <Select class="max-w-max" title="Per Page" v-model="per_page">
@@ -41,7 +41,7 @@
 
 <script setup lang="ts">
 interface Props {
-  data: Pagination | undefined
+  data?: Pagination | undefined
   title: string
   subtitle?: string
   layout?: 'auto' | 'fixed'

@@ -7,7 +7,7 @@
 
     <CardBody class="space-y-5">
       <!-- Item Language -->
-      <Control id="item-language_id">
+      <Control id="item-language_id" required>
         <Label>Language</Label>
         <Select id="item-language_id" v-model="form.language_id" :error="getError(errors, 'language_id')" :disabled="!editing">
           <Option value="" disabled>Select a language</Option>

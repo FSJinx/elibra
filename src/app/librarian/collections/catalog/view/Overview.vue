@@ -1,8 +1,8 @@
 <template>
   <div class="relative w-full max-w-375 flex items-start gap-5 mx-auto">
-    <Card class="shrink-0 sticky top-0">
+    <Card class="shrink-0 sticky top-0 shadow-lg p-3!">
       <CardBody class="w-60 border border-border rounded-lg overflow-hidden">
-        <img :src="coverImage" alt="Item cover" class="w-full h-auto" />
+        <img :src="coverImage" alt="Item cover" class="w-full h-auto" loading="lazy" />
       </CardBody>
     </Card>
 
@@ -11,9 +11,9 @@
       <Card class="flex-1 sticky top-0 z-20 shadow-md">
         <div class="flex items-start justify-between gap-5">
           <div class="">
-            <p class="text-sm uppercase font-semibold text-muted-foreground">{{ item_type?.name }}</p>
-            <Title :level="1">{{ props.data?.title }}</Title>
-            <p class="text-muted-foreground text-sm italic">{{ props.data.subtitle ?? 'No additional information or subtitle for this material.' }}</p>
+            <p class="text-sm uppercase font-medium tracking-wider text-muted-foreground">{{ item_type?.name }}</p>
+            <Title :level="1" class="my-2">{{ props.data?.title }}</Title>
+            <p class="text-sm">{{ props.data.description ?? 'No description or abstract provided for this material.' }}</p>
           </div>
 
           <div class="action-buttons flex justify-end gap-2">
@@ -61,7 +61,6 @@ import BaseSection from '@/app/librarian/collections/catalog/forms/sections/Base
 import PhysicalDescriptionSection from '@/app/librarian/collections/catalog/forms/sections/PhysicalDescriptionSection.vue'
 import SerialSection from '@/app/librarian/collections/catalog/forms/sections/SerialSection.vue'
 import book from '@/assets/images/default_book.png'
-import { backendRoute } from '@/plugins/axios'
 
 const props = defineProps<{ data: Item }>()
 const option = optionStore()
@@ -75,7 +74,7 @@ const hasChanges = computed(() => JSON.stringify(form.value) !== JSON.stringify(
 const items = useItemStore()
 const coverImage = computed(() => {
   const path = props.data.cover_media?.file_path
-  return path ? `${backendRoute.replace(/\/api\/?$/, '')}/storage/${path}` : book
+  return path ? `${storageRoute}/${path}` : book
 })
 
 function toggleEdit() {
@@ -113,6 +112,7 @@ async function submit() {
     try {
       pop.load()
       const response = await items.update(props.data.id, form.value)
+      pop.success(response.message ?? 'Item updated successfully.')
       const updated = response.data
       form.value = {
         ...updated,
@@ -124,11 +124,11 @@ async function submit() {
       }
       emit('updated', updated)
       editing.value = false
-      pop.success(response.message ?? 'Item updated successfully.')
-    } catch (error) {
+
+      console.log('Update complete')
+    } catch (error: any) {
+      pop.error(error.response.data.message ?? 'Something went wrong, please try again.')
       throw error
-    } finally {
-      pop.unload()
     }
   }
 }

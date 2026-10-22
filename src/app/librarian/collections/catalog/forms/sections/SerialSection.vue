@@ -27,7 +27,7 @@ import { getError, type Form } from '@/app/librarian/collections/catalog/forms/f
 
 withDefaults(
   defineProps<{
-    editing: boolean
+    editing?: boolean
     errors?: any
   }>(),
   {

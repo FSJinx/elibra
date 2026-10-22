@@ -33,6 +33,10 @@ class AcquisitionService
                     });
                 }
 
+                if (! empty($filters['acquisition_mode'])) {
+                    $query->where('acquisition_mode', $filters['acquisition_mode']);
+                }
+
                 $allowedSorts = [
                     'id',
                     'reference',

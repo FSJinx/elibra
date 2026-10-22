@@ -1,7 +1,8 @@
 async function handleRequest<T = any>(promise: Promise<any>, method: string, url: string): Promise<T> {
   try {
-    const response = await promise
-    return response.data as T
+    // const response = await promise
+    // return response.data as T
+    return (await promise).data as T
   } catch (e) {
     console.error(`Request failed [${method.toUpperCase()} ${url}]:`, e)
     throw e
