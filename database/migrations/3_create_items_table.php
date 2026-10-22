@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('items', function (Blueprint $table) {
             $table->id();
 
-            $table->string('title');
+            $table->string('title')->index();
             $table->string('subtitle')->nullable();
             $table->text('description')->nullable();
             $table->string('call_number')->nullable();
@@ -35,6 +35,7 @@ return new class extends Migration
             $table->unsignedBigInteger('item_type_category_id');
             $table->unsignedBigInteger('language_id')->nullable();
             $table->unsignedBigInteger('library_id');
+            $table->unsignedBigInteger('cover_media_id')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

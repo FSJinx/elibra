@@ -1,10 +1,5 @@
 export const librarianCirculation = [
   {
-    path: 'issue',
-    meta: { breadcrumb: 'Issue', title: 'Circulation' },
-    children: circulationIssue,
-  },
-  {
     path: 'loans',
     meta: { breadcrumb: 'Loans', title: 'Circulation' },
     children: ciruclationLoans,

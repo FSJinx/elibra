@@ -47,6 +47,11 @@ class Item extends Model
         'keywords' => 'array',
     ];
 
+    public function accessions()
+    {
+        return $this->hasMany(Accession::class, 'item_id', 'id');
+    }
+
     public function authors()
     {
         return $this->belongsToMany(
@@ -54,7 +59,8 @@ class Item extends Model
             'item_authors',
             'item_id',
             'author_id',
-        )->withPivot('authorship_id');
+        )->withPivot('authorship_id')
+            ->as('authorship');
     }
 
     public function syncAuthors(array $authors): void
@@ -101,7 +107,18 @@ class Item extends Model
         return $this->belongsTo(Language::class);
     }
 
-    public function acquisition_lines() {
+    public function acquisitions()
+    {
+        return $this->belongsToMany(
+            Acquisition::class,
+            'acquisition_lines',
+            'item_id',
+            'acquisition_id',
+        );
+    }
+
+    public function acquisition_lines()
+    {
         return $this->hasMany(AcquisitionLines::class);
     }
 
@@ -110,5 +127,4 @@ class Item extends Model
         return $this->belongsTo(Media::class, 'cover_media_id')
             ->where('image_type', Media::ITEM_COVER);
     }
-
 }

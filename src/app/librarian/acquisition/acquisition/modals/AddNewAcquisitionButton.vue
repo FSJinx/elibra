@@ -24,6 +24,13 @@
             <Option value="purchase">Purchase</Option>
           </Select>
         </Control>
+        <Control id="acquisition-receiver" required>
+          <Label required>Librarian</Label>
+          <Select v-model="form.receiver_id" :error="errors.receiver_id?.[0]" required>
+            <Option value="" disabled>Select a librarian</Option>
+            <Option v-for="librarian in librarians" :key="librarian.id" :value="librarian.id"> {{ librarian.user?.first_name }} {{ librarian.user?.last_name }} </Option>
+          </Select>
+        </Control>
         <Control id="acquisition-date" required>
           <Label>Date of Acquisition</Label>
           <DatePicker v-model="form.acquisition_date" :max="today" :error="errors.acquisition_date?.[0]" />
@@ -45,22 +52,35 @@
 import Modal from '@/components/my/Modal.vue'
 import { reactive } from 'vue'
 
-const emptyForm = (): Acquisition => ({
+const emptyForm = (): Partial<Acquisition> => ({
   id: null,
   dealer: '',
   acquisition_date: '',
   acquisition_mode: '',
   remarks: '',
+  receiver_id: '',
 })
 
 const pop = usePopup()
 const modal = ref<typeof Modal | null>()
 const acquisition = useAcquisitionStore()
+const librarians = ref<Librarian[]>([])
 
-const errors = reactive<Acquisition>(emptyForm())
-const form = reactive<Acquisition>(emptyForm())
+const errors = reactive<Partial<Acquisition>>(emptyForm())
+const form = reactive<Partial<Acquisition>>(emptyForm())
 const today = new Date().toISOString().split('T')[0]
-const hasInputs = computed(() => [form.dealer, form.acquisition_date, form.acquisition_mode, form.remarks].some((value) => String(value ?? '').trim().length > 0))
+const hasInputs = computed(() => [form.dealer, form.acquisition_date, form.acquisition_mode, form.receiver_id, form.remarks].some((value) => String(value ?? '').trim().length > 0))
+
+onMounted(async () => {
+  const response = await get('librarian')
+  librarians.value = response.data
+  const currentLibrarianId = authStore().user?.librarian?.id
+  if (currentLibrarianId && librarians.value.some((librarian) => librarian.id === currentLibrarianId)) {
+    form.receiver_id = currentLibrarianId
+  } else if (librarians.value.length === 1) {
+    form.receiver_id = librarians.value[0].id
+  }
+})
 
 const clearForm = async () => {
   if (!hasInputs.value) {

@@ -7,9 +7,9 @@
         <Icon :icon="icon" v-if="icon" class="text-xl m-auto" />
       </div>
       <div class="flex flex-col">
-        <h1 class="font-semibold text-xl">{{ title }}</h1>
+        <h1 class="font-semibold text-xl line-clamp-1">{{ title }}</h1>
 
-        <p class="text-sm text-muted-foreground font-lighter" v-if="$slots.subtitle || subtitle">
+        <p class="text-sm text-muted-foreground font-lighter line-clamp-1" v-if="$slots.subtitle || subtitle">
           <slot v-if="$slots.subtitle" name="subtitle" />
           <span v-else>{{ subtitle }}</span>
         </p>

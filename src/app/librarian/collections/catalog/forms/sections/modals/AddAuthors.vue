@@ -6,7 +6,7 @@
 
     <ModalBody class="flex flex-col gap-5 p-5 overflow-hidden!">
       <Form class="flex items-center justify-end gap-3" @submit="search">
-        <Input id="search-author" class="w-full max-w-100" type="text" placeholder="Search for author by last name or first name..." required v-model="query" :disabled="loading" />
+        <Input id="search-author" class="w-full" type="text" placeholder="Search for author by last name or first name..." required v-model="query" :disabled="loading" />
         <Button type="submit" variant="primary" :loading="loading">Search</Button>
       </Form>
 
@@ -35,6 +35,7 @@ import type Modal from '@/components/my/Modal.vue'
 
 const modal = ref<InstanceType<typeof Modal>>()
 const selectedAuthors = defineModel<Author[]>({ default: () => [] })
+
 const query = ref()
 const searchQuery = ref()
 const loading = ref<boolean>(false)

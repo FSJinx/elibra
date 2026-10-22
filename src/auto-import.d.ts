@@ -11,6 +11,7 @@ declare global {
   const acquisitionAcquisition: typeof import('./router/librarian/acquisition/acquisition.route').acquisitionAcquisition
   const acquisitionRequest: typeof import('./router/librarian/acquisition/request.route').acquisitionRequest
   const acquisition_modes: typeof import('./constants/acquisition_mode').acquisition_modes
+  const actions: typeof import('./stores/ui/option.store').actions
   const adminAuthorityRoute: typeof import('./router/admin/authority.route').adminAuthorityRoute
   const adminCampusRoutes: typeof import('./router/admin/organization/campus.route').adminCampusRoutes
   const adminItemCategoriesRoutes: typeof import('./router/admin/standard/item_categories.route').adminItemCategoriesRoutes
@@ -19,7 +20,8 @@ declare global {
   const adminOrganizationRoutes: typeof import('./router/admin/organization.route').adminOrganizationRoutes
   const adminOverviewRoutes: typeof import('./router/admin/dashboard/overview.route').adminOverviewRoutes
   const adminRoutes: typeof import('./router/admin.routes').adminRoutes
-  const adminStandardRoutes: typeof import('./router/admin/standards.route').adminStandardRoutes
+  const adminStandard: typeof import('./router/admin/standard/index.route').adminStandard
+  const adminStandardRoutes: typeof import('./router/admin/standard/index.route').adminStandardRoutes
   const adminUserRoutes: typeof import('./router/admin/users.route').adminUserRoutes
   const adminVendorRoute: typeof import('./router/admin/organization/vendor.route').adminVendorRoute
   const administ: typeof import('./router/librarian/administration/users.route').administ
@@ -28,12 +30,14 @@ declare global {
   const administrationUsers: typeof import('./router/librarian/administration/users.route').administrationUsers
   const api: typeof import('./plugins/axios').api
   const asyncComputed: typeof import('@vueuse/core').asyncComputed
+  const attendanceStore: typeof import('./stores/attendance.store').attendanceStore
   const authRoute: typeof import('./router/authRoute').authRoute
   const authStore: typeof import('./stores/auth.store').authStore
   const authorshipStore: typeof import('./stores/authorship.store').authorshipStore
   const autoResetRef: typeof import('@vueuse/core').autoResetRef
   const axios: typeof import('./plugins/axios').default
   const backendRoute: typeof import('./plugins/axios').backendRoute
+  const circulationCheckOut: typeof import('./router/librarian/circulation/check_out.route').circulationCheckOut
   const circulationIssue: typeof import('./router/librarian/circulation/issue.route').circulationIssue
   const ciruclationLoans: typeof import('./router/librarian/circulation/loans.route').ciruclationLoans
   const collectionsCatalog: typeof import('./router/librarian/collections/catalog.route').collectionsCatalog
@@ -60,6 +64,7 @@ declare global {
   const customRef: typeof import('vue').customRef
   const debouncedRef: typeof import('@vueuse/core').debouncedRef
   const debouncedWatch: typeof import('@vueuse/core').debouncedWatch
+  const defaultParams: typeof import('./stores/patron_type.store').defaultParams
   const defineAsyncComponent: typeof import('vue').defineAsyncComponent
   const defineComponent: typeof import('vue').defineComponent
   const defineStore: typeof import('pinia').defineStore
@@ -85,7 +90,7 @@ declare global {
   const isReadonly: typeof import('vue').isReadonly
   const isRef: typeof import('vue').isRef
   const isShallow: typeof import('vue').isShallow
-  const itemDefaultParams: typeof import('./stores/librarian/item.store').itemDefaultParams
+  const itemDefaultParams: typeof import('./stores/catalog/item.store').itemDefaultParams
   const librarianAcquisition: typeof import('./router/librarian/acquisition/index.route').librarianAcquisition
   const librarianAdministration: typeof import('./router/librarian/administration/index.route').librarianAdministration
   const librarianAdministrationSection: typeof import('./router/librarian/administration/section.route').librarianAdministrationSection
@@ -107,6 +112,7 @@ declare global {
   const librarianUsers: typeof import('./router/librarian/users/index.route').librarianUsers
   const librariansStore: typeof import('./stores/user.store').librariansStore
   const libraryStore: typeof import('./stores/library.store').libraryStore
+  const loanStore: typeof import('./stores/loan.store').loanStore
   const makeDestructurable: typeof import('@vueuse/core').makeDestructurable
   const mapActions: typeof import('pinia').mapActions
   const mapGetters: typeof import('pinia').mapGetters
@@ -140,6 +146,7 @@ declare global {
   const optionStore: typeof import('./stores/ui/option.store').optionStore
   const patch: typeof import('./composables/data/useApi').patch
   const patronRoutes: typeof import('./router/patron.routes').patronRoutes
+  const patronTypeStore: typeof import('./stores/patron_type.store').patronTypeStore
   const pausableWatch: typeof import('@vueuse/core').pausableWatch
   const post: typeof import('./composables/data/useApi').post
   const provide: typeof import('vue').provide
@@ -169,6 +176,11 @@ declare global {
   const shallowReadonly: typeof import('vue').shallowReadonly
   const shallowRef: typeof import('vue').shallowRef
   const sizes: typeof import('./composables/useType').sizes
+  const standard: typeof import('./router/admin/standard/item_categories.route').standard
+  const standardCategory: typeof import('./router/admin/standard/item_categories.route').standardCategory
+  const standardItemType: typeof import('./router/admin/standard/item_types.route').standardItemType
+  const standardPatronType: typeof import('./router/admin/standard/patron_type.route').standardPatronType
+  const storageRoute: typeof import('./plugins/axios').storageRoute
   const storeToRefs: typeof import('pinia').storeToRefs
   const syncRef: typeof import('@vueuse/core').syncRef
   const syncRefs: typeof import('@vueuse/core').syncRefs
@@ -190,6 +202,7 @@ declare global {
   const unref: typeof import('vue').unref
   const unrefElement: typeof import('@vueuse/core').unrefElement
   const until: typeof import('@vueuse/core').until
+  const use: typeof import('./composables/api/useLoan').use
   const useAccessionStore: typeof import('./stores/librarian/accession.store').useAccessionStore
   const useAcquisitionLinesStore: typeof import('./stores/librarian/acquisition_lines.store').useAcquisitionLinesStore
   const useAcquisitionStore: typeof import('./stores/librarian/acquisition.store').useAcquisitionStore
@@ -284,13 +297,14 @@ declare global {
   const useIntervalFn: typeof import('@vueuse/core').useIntervalFn
   const useInventoryStore: typeof import('./stores/inventory.store').useInventoryStore
   const useItemCategoriesStore: typeof import('./stores/item_categories.store').useItemCategoriesStore
-  const useItemStore: typeof import('./stores/librarian/item.store').useItemStore
+  const useItemStore: typeof import('./stores/catalog/item.store').useItemStore
   const useItemTypeStore: typeof import('./stores/item_type.store').useItemTypeStore
   const useKeyModifier: typeof import('@vueuse/core').useKeyModifier
   const useLanguagesStore: typeof import('./stores/languages.store').useLanguagesStore
   const useLastChanged: typeof import('@vueuse/core').useLastChanged
   const useLibrarianDashboardStore: typeof import('./stores/librarian/librarian_dashboard.store').useLibrarianDashboardStore
   const useLink: typeof import('vue-router').useLink
+  const useLoan: typeof import('./composables/api/useLoan').useLoan
   const useLocalStorage: typeof import('@vueuse/core').useLocalStorage
   const useMagicKeys: typeof import('@vueuse/core').useMagicKeys
   const useManualRefHistory: typeof import('@vueuse/core').useManualRefHistory
@@ -423,8 +437,8 @@ declare global {
   export type { Variants, Sizes } from './composables/useType'
   import('./composables/useType')
   // @ts-ignore
-  export type { ItemParams } from './stores/librarian/item.store'
-  import('./stores/librarian/item.store')
+  export type { ItemParams } from './stores/catalog/item.store'
+  import('./stores/catalog/item.store')
   // @ts-ignore
   export type { Opac } from './stores/opac/opacStore2'
   import('./stores/opac/opacStore2')
@@ -437,6 +451,9 @@ declare global {
   // @ts-ignore
   export type { AcquisitionLine } from './interfaces/acquisition_line'
   import('./interfaces/acquisition_line')
+  // @ts-ignore
+  export type { Attendance } from './interfaces/attendance'
+  import('./interfaces/attendance')
   // @ts-ignore
   export type { Author } from './interfaces/author'
   import('./interfaces/author')
@@ -474,6 +491,9 @@ declare global {
   export type { PatronType } from './interfaces/patron_type'
   import('./interfaces/patron_type')
   // @ts-ignore
+  export type { Program } from './interfaces/program'
+  import('./interfaces/program')
+  // @ts-ignore
   export type { Publisher } from './interfaces/publisher'
   import('./interfaces/publisher')
   // @ts-ignore
@@ -485,6 +505,9 @@ declare global {
   // @ts-ignore
   export type { Vendor } from './interfaces/vendor'
   import('./interfaces/vendor')
+  // @ts-ignore
+  export type { Pagination } from './services/pagination'
+  import('./services/pagination')
   // @ts-ignore
   export type { BaseParams } from './services/params'
   import('./services/params')
@@ -500,28 +523,28 @@ declare module 'vue' {
     readonly acquisitionAcquisition: UnwrapRef<typeof import('./router/librarian/acquisition/acquisition.route')['acquisitionAcquisition']>
     readonly acquisitionRequest: UnwrapRef<typeof import('./router/librarian/acquisition/request.route')['acquisitionRequest']>
     readonly acquisition_modes: UnwrapRef<typeof import('./constants/acquisition_mode')['acquisition_modes']>
+    readonly actions: UnwrapRef<typeof import('./stores/ui/option.store')['actions']>
     readonly adminAuthorityRoute: UnwrapRef<typeof import('./router/admin/authority.route')['adminAuthorityRoute']>
     readonly adminCampusRoutes: UnwrapRef<typeof import('./router/admin/organization/campus.route')['adminCampusRoutes']>
-    readonly adminItemCategoriesRoutes: UnwrapRef<typeof import('./router/admin/standard/item_categories.route')['adminItemCategoriesRoutes']>
-    readonly adminItemTypeRoutes: UnwrapRef<typeof import('./router/admin/standard/item_types.route')['adminItemTypeRoutes']>
     readonly adminLibraryRoutes: UnwrapRef<typeof import('./router/admin/organization/library.route')['adminLibraryRoutes']>
     readonly adminOrganizationRoutes: UnwrapRef<typeof import('./router/admin/organization.route')['adminOrganizationRoutes']>
     readonly adminOverviewRoutes: UnwrapRef<typeof import('./router/admin/dashboard/overview.route')['adminOverviewRoutes']>
     readonly adminRoutes: UnwrapRef<typeof import('./router/admin.routes')['adminRoutes']>
-    readonly adminStandardRoutes: UnwrapRef<typeof import('./router/admin/standards.route')['adminStandardRoutes']>
+    readonly adminStandard: UnwrapRef<typeof import('./router/admin/standard/index.route')['adminStandard']>
     readonly adminUserRoutes: UnwrapRef<typeof import('./router/admin/users.route')['adminUserRoutes']>
     readonly adminVendorRoute: UnwrapRef<typeof import('./router/admin/organization/vendor.route')['adminVendorRoute']>
     readonly administrationSection: UnwrapRef<typeof import('./router/librarian/administration/section.route')['administrationSection']>
     readonly administrationUsers: UnwrapRef<typeof import('./router/librarian/administration/users.route')['administrationUsers']>
     readonly api: UnwrapRef<typeof import('./plugins/axios')['api']>
     readonly asyncComputed: UnwrapRef<typeof import('@vueuse/core')['asyncComputed']>
+    readonly attendanceStore: UnwrapRef<typeof import('./stores/attendance.store')['attendanceStore']>
     readonly authRoute: UnwrapRef<typeof import('./router/authRoute')['authRoute']>
     readonly authStore: UnwrapRef<typeof import('./stores/auth.store')['authStore']>
     readonly authorshipStore: UnwrapRef<typeof import('./stores/authorship.store')['authorshipStore']>
     readonly autoResetRef: UnwrapRef<typeof import('@vueuse/core')['autoResetRef']>
     readonly axios: UnwrapRef<typeof import('./plugins/axios')['default']>
     readonly backendRoute: UnwrapRef<typeof import('./plugins/axios')['backendRoute']>
-    readonly circulationIssue: UnwrapRef<typeof import('./router/librarian/circulation/issue.route')['circulationIssue']>
+    readonly circulationCheckOut: UnwrapRef<typeof import('./router/librarian/circulation/check_out.route')['circulationCheckOut']>
     readonly ciruclationLoans: UnwrapRef<typeof import('./router/librarian/circulation/loans.route')['ciruclationLoans']>
     readonly collectionsCatalog: UnwrapRef<typeof import('./router/librarian/collections/catalog.route')['collectionsCatalog']>
     readonly collectionsInventory: UnwrapRef<typeof import('./router/librarian/collections/inventory.route')['collectionsInventory']>
@@ -583,6 +606,7 @@ declare module 'vue' {
     readonly librarianSerial: UnwrapRef<typeof import('./router/librarian/serial.route')['librarianSerial']>
     readonly librarianSettings: UnwrapRef<typeof import('./router/librarian/settings.route')['librarianSettings']>
     readonly libraryStore: UnwrapRef<typeof import('./stores/library.store')['libraryStore']>
+    readonly loanStore: UnwrapRef<typeof import('./stores/loan.store')['loanStore']>
     readonly makeDestructurable: UnwrapRef<typeof import('@vueuse/core')['makeDestructurable']>
     readonly mapActions: UnwrapRef<typeof import('pinia')['mapActions']>
     readonly mapGetters: UnwrapRef<typeof import('pinia')['mapGetters']>
@@ -616,6 +640,7 @@ declare module 'vue' {
     readonly optionStore: UnwrapRef<typeof import('./stores/ui/option.store')['optionStore']>
     readonly patch: UnwrapRef<typeof import('./composables/data/useApi')['patch']>
     readonly patronRoutes: UnwrapRef<typeof import('./router/patron.routes')['patronRoutes']>
+    readonly patronTypeStore: UnwrapRef<typeof import('./stores/patron_type.store')['patronTypeStore']>
     readonly pausableWatch: UnwrapRef<typeof import('@vueuse/core')['pausableWatch']>
     readonly post: UnwrapRef<typeof import('./composables/data/useApi')['post']>
     readonly provide: UnwrapRef<typeof import('vue')['provide']>
@@ -645,6 +670,10 @@ declare module 'vue' {
     readonly shallowReadonly: UnwrapRef<typeof import('vue')['shallowReadonly']>
     readonly shallowRef: UnwrapRef<typeof import('vue')['shallowRef']>
     readonly sizes: UnwrapRef<typeof import('./composables/useType')['sizes']>
+    readonly standardCategory: UnwrapRef<typeof import('./router/admin/standard/item_categories.route')['standardCategory']>
+    readonly standardItemType: UnwrapRef<typeof import('./router/admin/standard/item_types.route')['standardItemType']>
+    readonly standardPatronType: UnwrapRef<typeof import('./router/admin/standard/patron_type.route')['standardPatronType']>
+    readonly storageRoute: UnwrapRef<typeof import('./plugins/axios')['storageRoute']>
     readonly storeToRefs: UnwrapRef<typeof import('pinia')['storeToRefs']>
     readonly syncRef: UnwrapRef<typeof import('@vueuse/core')['syncRef']>
     readonly syncRefs: UnwrapRef<typeof import('@vueuse/core')['syncRefs']>
@@ -760,7 +789,7 @@ declare module 'vue' {
     readonly useIntervalFn: UnwrapRef<typeof import('@vueuse/core')['useIntervalFn']>
     readonly useInventoryStore: UnwrapRef<typeof import('./stores/inventory.store')['useInventoryStore']>
     readonly useItemCategoriesStore: UnwrapRef<typeof import('./stores/item_categories.store')['useItemCategoriesStore']>
-    readonly useItemStore: UnwrapRef<typeof import('./stores/librarian/item.store')['useItemStore']>
+    readonly useItemStore: UnwrapRef<typeof import('./stores/catalog/item.store')['useItemStore']>
     readonly useItemTypeStore: UnwrapRef<typeof import('./stores/item_type.store')['useItemTypeStore']>
     readonly useKeyModifier: UnwrapRef<typeof import('@vueuse/core')['useKeyModifier']>
     readonly useLanguagesStore: UnwrapRef<typeof import('./stores/languages.store')['useLanguagesStore']>

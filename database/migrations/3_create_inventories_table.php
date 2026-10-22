@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('inventory_code')->unique();
             $table->enum('status', ['completed', 'pending', 'closed']);
 
-            $table->unsignedBigInteger('librarian_id');
+            $table->unsignedBigInteger('librarian_id')->nullable();
             $table->unsignedBigInteger('section_id');
             $table->json('logs');
             $table->timestamps();

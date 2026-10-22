@@ -14,6 +14,7 @@ export const emptyForm = (): Partial<Form> => ({
   language_id: '',
   keywords: [],
   electronic_file: null,
+  cover_image: null,
 
   item_type_id: '',
   item_type_category_id: '',

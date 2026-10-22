@@ -33,6 +33,10 @@ class LoginController extends Controller
             return $this->response('error', 'You reached that maximum failed login attempts. Please contact your administrator to resolve this issue.', statusCode: 423);
         }
 
+        if ($user->registration && $user->registration === 'pending') {
+            return $this->response('error', "Your registration is still pending, please wait until approval or go to your campus' library to check with admin. If you are not a student of ISU, visit the nearest ISU campus.", statusCode: 423);
+        }
+
         // Successfully logs in user
         if ($user && $token = $this->auth()->attempt($credentials)) {
             $user->login_attempts = 0;
@@ -40,6 +44,7 @@ class LoginController extends Controller
 
             return $this->respondWithToken($token);
         }
+
         // Incorrect password
         else {
             if ($user->role !== 'admin') {

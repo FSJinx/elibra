@@ -6,7 +6,7 @@ const defaultParams: Readonly<SectionParams> = {
   query: '',
   sort: '',
   page: 1,
-  per_page: 10,
+  per_page: '25',
   order: 'asc',
 
   library_id: '',
@@ -61,7 +61,7 @@ export const sectionStore = defineStore('section', {
     },
 
     // =========== ACTIONS ============
-    async fetch(params: SectionParams = defaultParams) {
+    async fetch(params: Partial<SectionParams> = defaultParams) {
       // if (this.data && !forced) return
       this.loading = true
       try {

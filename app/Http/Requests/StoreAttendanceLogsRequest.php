@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Branch;
+use App\Models\Library;
 use App\Models\Patron;
 use App\Models\Sections;
 use App\Models\User;
@@ -27,10 +27,11 @@ class StoreAttendanceLogsRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'status' => ['required', Rule::in(['in', 'out'])],
-            'patron_id' => ['sometimes', 'nullable', Rule::exists((new Patron)->getTable(), 'id')],
-            'username' => ['sometimes', 'nullable', 'string', Rule::exists((new User)->getTable(), 'username')],
-            'branch_id' => ['required', Rule::exists((new Branch)->getTable(), 'id')],
+            'status' => ['nullable', Rule::in(['in', 'out'])],
+            'patron' => ['sometimes', fn ($attr, $value, $fail) => User::where('username', $value)->exists() || Patron::where('ebc_number', $value)->exists() || $fail('The selected patron is not found.')],
+            // 'patron_id' => ['sometimes', 'nullable', Rule::exists((new Patron)->getTable(), 'id')],
+            // 'username' => ['sometimes', 'nullable', 'string', Rule::exists((new User)->getTable(), 'username')],
+            'library_id' => ['required', Rule::exists((new Library)->getTable(), 'id')],
             'section_id' => ['nullable', Rule::exists((new Sections)->getTable(), 'id')],
         ];
     }
@@ -40,26 +41,27 @@ class StoreAttendanceLogsRequest extends BaseRequest
         return [
             'status.required' => 'Status is required.',
             'status.in' => 'Status must be either in or out.',
-            'patron_id.exists' => 'Selected patron does not exist.',
-            'username.exists' => 'This username is not registered as a patron.',
-            'branch_id.required' => 'Branch is required.',
-            'branch_id.exists' => 'Selected branch does not exist.',
+            // 'patron_id.exists' => 'Selected patron does not exist.',
+            // 'username.exists' => 'This username is not registered as a patron.',
+            // 'branch_id.required' => 'Branch is required.',
+            // 'branch_id.exists' => 'Selected branch does not exist.',
+            'patron.exist' => 'Patron not found',
             'section_id.exists' => 'Selected section does not exist.',
         ];
     }
 
-    public function after(): array
-    {
-        return [
-            function ($validator) {
-                $hasPatronId = filled($this->input('patron_id'));
-                $hasUsername = filled($this->input('username'));
+    // public function after(): array
+    // {
+    //     return [
+    //         function ($validator) {
+    //             $hasPatronId = filled($this->input('patron_id'));
+    //             $hasUsername = filled($this->input('username'));
 
-                if (! $hasPatronId && ! $hasUsername) {
-                    $validator->errors()->add('patron_id', 'Patron is required.');
-                    $validator->errors()->add('username', 'Username is required.');
-                }
-            },
-        ];
-    }
+    //             if (! $hasPatronId && ! $hasUsername) {
+    //                 $validator->errors()->add('patron_id', 'Patron is required.');
+    //                 $validator->errors()->add('username', 'Username is required.');
+    //             }
+    //         },
+    //     ];
+    // }
 }

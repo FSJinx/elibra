@@ -5,7 +5,7 @@
 
   th,
   td {
-    @apply text-center px-5 py-4 text-sm;
+    @apply text-center px-5 py-4 text-sm align-middle;
   }
 
   th {
@@ -13,7 +13,7 @@
   }
 
   td {
-    @apply text-slate-600;
+    @apply text-slate-600 truncate;
   }
 
   tbody {

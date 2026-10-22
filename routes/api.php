@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\AcaRepoController;
 use App\Http\Controllers\AcquisitionController;
 use App\Http\Controllers\AcquisitionLinesController;
 use App\Http\Controllers\AttendanceLogsController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\AuthorshipController;
 use App\Http\Controllers\CampusController;
@@ -26,6 +28,7 @@ use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\OpacSearchController;
 use App\Http\Controllers\PatronController;
+use App\Http\Controllers\PatronTypeController;
 use App\Http\Controllers\PatronTypeLoanPolicyController;
 use App\Http\Controllers\ProgramsController;
 use App\Http\Controllers\PublisherController;
@@ -44,7 +47,7 @@ use Illuminate\Support\Facades\Route;
  */
 Route::group(['prefix' => '/auth'], function () {
     Route::post('/login', [LoginController::class, 'index'])->middleware('throttle:login');
-    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/register', [RegisterController::class, 'index']);
     Route::post('/refresh', [AuthController::class, 'refresh'])->middleware('jwt.refresh');
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('jwt.auth');
 
@@ -59,14 +62,62 @@ Route::group(['prefix' => '/auth'], function () {
  *      Public Routes
  *
  *      This routes are either generic or static in nature.
- *      They provide all the data in the database are usually
+ *      They provide all the data in the database that are usually
  *      used as static data for selects.
  */
+Route::group(['prefix' => '/option'], function () {
+    // ================== ORGANIZATIONS ====================
+    Route::get('campuses', [OptionController::class, 'campuses']);
+    Route::get('departments', [OptionController::class, 'departments']);
+    Route::get('libraries', [OptionController::class, 'libraries']);
+    Route::get('programs', [OptionController::class, 'programs']);
+    Route::get('sections', [OptionController::class, 'sections']);
+
+    // ================== STANDARDS ====================
+    Route::get('authorships', [OptionController::class, 'authorships']);
+    Route::get('categories', [OptionController::class, 'categories']);
+    Route::get('item_types', [OptionController::class, 'item_types']);
+    Route::get('patron_types', [OptionController::class, 'patronTypes']);
+
+    // ============== AUTHORITY CONTROL ================
+    Route::get('languages', [OptionController::class, 'languages']);
+});
 
 // ============== LANDING ROUTE ==================
 Route::group(['prefix' => '/landing'], function () {
     Route::get('new-items', [LandingController::class, 'newItems']);
     Route::get('discover', [LandingController::class, 'discover']);
+});
+
+// ============== ACQUISITION ROUTE ==================
+Route::group(['prefix' => '/acquisition'], function () {
+    // Get
+    Route::get('', [AcquisitionController::class, 'index']);
+    Route::get('/{id}', [AcquisitionController::class, 'show']);
+
+    // Post
+    Route::post('', [AcquisitionController::class, 'store'])->middleware('throttle:write');
+
+    // Update
+    Route::put('/{acquisition}', [AcquisitionController::class, 'update'])->middleware('throttle:write');
+
+    // Delete
+    Route::delete('/{acquisition}', [AcquisitionController::class, 'destroy'])->middleware('throttle:delete');
+});
+
+// ============== ACQUISITION LINES ROUTE ==================
+Route::group(['prefix' => '/acquisition-lines'], function () {
+    // Get
+    Route::get('/', [AcquisitionLinesController::class, 'index']);
+    Route::get('/{id}', [AcquisitionLinesController::class, 'show']);
+
+    // Post
+    Route::post('', [AcquisitionLinesController::class, 'store'])->middleware('throttle:write');
+
+    // Update
+    Route::put('/{acquisitionLie}', [AcquisitionLinesController::class, 'update'])->middleware('throttle:write');
+
+    // Delete
 });
 
 // ============== AUTHORS ROUTE ==================
@@ -193,6 +244,21 @@ Route::group(['prefix' => '/inventory-line'], function () {
     Route::delete('{inventoryLine}', [InventoryLineController::class, 'destroy'])->middleware('throttle:delete');
 });
 
+// ============== ITEM ROUTES ===============
+Route::group(['prefix' => '/items'], function () {
+
+    Route::get('', [ItemController::class, 'indexV2']);
+
+    // Route::get('{catalogId}', [CatalogController::class, 'show']);
+    Route::get('{item}', [ItemController::class, 'show']);
+    Route::get('{item}/accessions', [ItemController::class, 'accessions']);
+    Route::get('{item}/authors', [ItemController::class, 'authors']);
+    Route::get('{item}/acquisitions', [ItemController::class, 'acquisitions']);
+
+    Route::post('', [ItemController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin,librarian');
+    Route::put('{item}', [ItemController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin,librarian');
+});
+
 // ============== ITEM TYPE ROUTE ==================
 Route::group(['prefix' => '/item_types'], function () {
     // Get
@@ -238,6 +304,21 @@ Route::group(['prefix' => '/language'], function () {
     Route::delete('{language}', [LanguageController::class, 'destroy'])->middleware('throttle:delete');
 });
 
+// ============== PATRON TYPE ROUTE ==================
+Route::group(['prefix' => '/patron-type', 'middleware' => ['jwt.auth']], function () {
+    // Get
+    Route::get('', [PatronTypeController::class, 'index'])->middleware('throttle:read');
+
+    // Post
+    Route::post('', [PatronTypeController::class, 'store'])->middleware('role:super_admin', 'throttle:write');
+
+    // Update
+    Route::put('{patron-type}', [PatronTypeController::class, 'update'])->middleware('role:super_admin', 'throttle:write');
+
+    // Delete
+    Route::delete('{patron-type}', [PatronTypeController::class, 'destroy'])->middleware('role:super_admin', 'throttle:delete');
+});
+
 // ============== PROGRAM ROUTE ==================
 Route::group(['prefix' => '/program'], function () {
     // Get
@@ -265,22 +346,22 @@ Route::group(['prefix' => '/publishers'], function () {
 });
 
 // ============== SECTION ROUTE ==================
-Route::group(['prefix' => '/section'], function () {
+Route::group(['prefix' => '/section', 'middleware' => 'jwt.auth'], function () {
     // Get
-    Route::get('', [SectionsController::class, 'index'])->middleware('throttle:read');
-    Route::get('deleted', [SectionsController::class, 'deleted'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
+    Route::get('', [SectionsController::class, 'index'])->middleware('role:super_admin,admin,librarian', 'throttle:read');
+    Route::get('deleted', [SectionsController::class, 'deleted'])->middleware('role:super_admin,admin,librarian', 'throttle:read');
 
     // Post
-    Route::post('', [SectionsController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin', 'throttle:write');
+    Route::post('', [SectionsController::class, 'store'])->middleware('role:super_admin,admin,librarian', 'throttle:write');
 
     // Update
-    Route::put('{section}', [SectionsController::class, 'update'])->middleware('jwt.auth', 'role:super_admin', 'throttle:write');
+    Route::put('{section}', [SectionsController::class, 'update'])->middleware('role:super_admin,admin', 'throttle:write');
 
     // Delete
-    Route::delete('{section}', [SectionsController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin', 'throttle:delete');
+    Route::delete('{section}', [SectionsController::class, 'destroy'])->middleware('role:super_admin,admin', 'throttle:delete');
 
     // Restore
-    Route::patch('{section}/restore', [SectionsController::class, 'restore'])->middleware('jwt.auth', 'role:super_admin', 'throttle:write');
+    Route::patch('{section}/restore', [SectionsController::class, 'restore'])->middleware('role:super_admin', 'throttle:write');
 });
 
 /**
@@ -321,60 +402,12 @@ Route::group(['prefix' => '/librarian', 'middleware' => ['jwt.auth', 'role:admin
 
         // Delete
     });
-
-    // ============== COLLECTIONS ROUTE ==================
-    Route::group(['prefix' => '/collections'], function () {
-        Route::group(['prefix' => '/catalog'], function () {
-            Route::get('', [CatalogController::class, 'index']);
-            Route::get('{catalogId}', [CatalogController::class, 'show']);
-
-        });
-        // Get
-
-        // Post
-
-        // Update
-
-        // Delete
-    });
-
-    // ============== ACQUISITION ROUTE ==================
-    Route::group(['prefix' => '/acquisition'], function () {
-        // Get
-        Route::get('', [AcquisitionController::class, 'index']);
-        Route::get('/{id}', [AcquisitionController::class, 'show']);
-
-        // Post
-        Route::post('', [AcquisitionController::class, 'store'])->middleware('throttle:write');
-
-        // Update
-        Route::put('/{acquisition}', [AcquisitionController::class, 'update'])->middleware('throttle:write');
-
-        // Delete
-        Route::delete('/{acquisition}', [AcquisitionController::class, 'destroy'])->middleware('throttle:delete');
-    });
-
-    // ============== ACQUISITION LINES ROUTE ==================
-    Route::group(['prefix' => '/acquisition-lines'], function () {
-        // Get
-        Route::get('/', [AcquisitionLinesController::class, 'index']);
-        Route::get('/{id}', [AcquisitionLinesController::class, 'show']);
-
-        // Post
-        Route::post('', [AcquisitionLinesController::class, 'store'])->middleware('throttle:write');
-
-        // Update
-        Route::put('/{acquisitionLie}', [AcquisitionLinesController::class, 'update'])->middleware('throttle:write');
-
-        // Delete
-    });
-
 });
 
 // User Routes
 Route::group(['prefix' => '/user', 'middleware' => ['jwt.auth', 'role:super_admin,admin']], function () {
     Route::get('', [UserController::class, 'index'])->middleware('throttle:read');
-    Route::post('', [UserController::class, 'store'])->middleware('throttle:write');
+    Route::post('', [UserController::class, 'create'])->middleware('throttle:write');
     Route::put('{user}', [UserController::class, 'update'])->middleware('throttle:write');
 });
 
@@ -384,6 +417,8 @@ Route::group(['prefix' => '/patron'], function () {
     Route::put('{patron}', [PatronController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
     Route::delete('{patron}', [PatronController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:delete');
 });
+
+Route::post('/aca-repo', [AcaRepoController::class, 'store'])->middleware('jwt.auth', 'throttle:write');
 
 Route::group(['prefix' => '/patron-type-loan-policy'], function () {
     Route::get('', [PatronTypeLoanPolicyController::class, 'index'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
@@ -396,16 +431,22 @@ Route::group(['prefix' => '/patron-type-loan-policy'], function () {
 Route::group(['prefix' => '/attendance'], function () {
     Route::get('', [AttendanceLogsController::class, 'index'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
     Route::get('{attendanceLogs}', [AttendanceLogsController::class, 'show'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
+    
     Route::post('', [AttendanceLogsController::class, 'store'])->withoutMiddleware(['jwt.auth', 'role:super_admin,admin,librarian'])->middleware('throttle:write');
+
     Route::put('{attendanceLogs}', [AttendanceLogsController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
     Route::delete('{attendanceLogs}', [AttendanceLogsController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:delete');
 });
 
-Route::group(['prefix' => '/circulation'], function () {
+Route::group(['prefix' => '/loan'], function () {
     Route::get('', [CirculationController::class, 'index'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
+    Route::get('review', [CirculationController::class, 'preview'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
     Route::get('{circulation}', [CirculationController::class, 'show'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
+
     Route::post('', [CirculationController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
+
     Route::put('{circulation}', [CirculationController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
+    
     Route::delete('{circulation}', [CirculationController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:delete');
 });
 
@@ -470,19 +511,4 @@ Route::group(['prefix' => '/user-permission'], function () {
         Route::delete('/{user_permission}', [UserPermissionController::class, 'destroy'])->middleware('jwt.auth', 'throttle:delete');
     });
 
-});
-
-// ============== ITEM ROUTES ===============
-Route::group(['prefix' => '/item'], function () {
-
-    Route::get('', [ItemController::class, 'index']);
-    // Route::get('{catalogId}', [CatalogController::class, 'show']);
-    Route::get('{item}', [ItemController::class, 'show']);
-
-    Route::post('', [ItemController::class, 'store']);
-});
-
-Route::group(['prefix' => '/option'], function () {
-    Route::get('sections', [OptionController::class, 'sections']);
-    Route::get('patron-types', [OptionController::class, 'patronTypes']);
 });

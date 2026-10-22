@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('name');
 
             $table->boolean('loanable')->default(false);
+            $table->boolean('has_electronic_file')->default(false);
+
             $table->timestamps();
         });
     }

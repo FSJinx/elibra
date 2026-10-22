@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Author;
+use App\Models\Authorship;
 use App\Models\Campus;
 use App\Models\ItemType;
 use App\Models\ItemTypeCategory;
@@ -75,14 +77,27 @@ class AcademicSeeder extends Seeder
                 'keywords' => ['Legal Research', 'Information Access', 'Criminal Justice', 'Academic Research'],
             ],
         ])->each(function ($item) use ($itemService, $itemType, $categoryIds, $library) {
-            $itemService->create([
+            $item = $itemService->create([
                 ...$item,
-                'subtitle' => "Academic resource for {$library->name}",
+                'subtitle' => "{$itemType->name} for {$library->name}",
                 'item_type_id' => $itemType->id,
                 'item_type_category_id' => $categoryIds->random(), // <- Kukuha nang tama at random mula sa Collection
                 'library_id' => $library->id,
                 'language_id' => 1,
             ]);
+
+            $authorIds = Author::pluck('id');
+            $authorshipIds = Authorship::query()->where('item_type_id', $itemType->id)->pluck('id');
+
+            $picked = $authorIds
+                ->random(rand(1, min(3, $authorIds->count())))
+                ->map(fn ($id) => [
+                    'id' => $id,
+                    'authorship_id' => $authorshipIds->random(),
+                ])
+                ->all();
+
+            $item->syncAuthors($picked);
         });
     }
 }

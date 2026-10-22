@@ -1,8 +1,8 @@
 <template>
   <div class="size-full flex flex-col overflow-hidden">
-    <SectionHeader title="Library Staffs" description="Manage admins, librarians, staffs, and other in this library." icon="person-vcard">
+    <SectionHeader title="Users" description="Manage admins, librarians, staffs, and other in this library." icon="person-vcard">
       <div class="flex items-center justify-end">
-        <NewUser />
+        <Button as="link" :to="{ name: 'librarian.users.new' }" variant="primary" left-icon="plus-lg">New User</Button>
       </div>
     </SectionHeader>
 
@@ -45,13 +45,12 @@
           </Tr>
         </Tbody>
       </Table>
+
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import NewUser from '@/app/librarian/administration/users/modals/NewUser.vue'
-
 const loading = ref<boolean>(false)
 const users = usersStore()
 const pop = usePopup()

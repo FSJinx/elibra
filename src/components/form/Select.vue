@@ -1,16 +1,16 @@
 <template>
-  <div ref="dropdownRef" class="relative inline-flex flex-col gap-2 min-w-40 w-full">
+  <div ref="dropdownRef" class="relative isolate inline-flex flex-col gap-2 min-w-40 w-full">
     <div
       type="button"
       @click="toggle"
       class="flex items-center h-11 text-left px-4 text-foreground w-full bg-background rounded-md border outline-none focus-visible:ring-4 ring-primary/20 focus-visible:border-success cursor-pointer disabled:cursor-not-allowed transition-all duration-200"
-      :class="[open ? 'ring-4 border-success' : 'border-border']"
+      :class="[open ? 'ring-4 border-success' : 'border-border', { 'pointer-events-none! cursor-not-allowed!': disabled }]"
       :disabled="disabled"
       :aria-expanded="open"
       aria-haspopup="listbox"
       :data-title="enableTooltip ? `${parse.toCapital(title as string)}: ${selectedOption.label}` : ''"
     >
-      <span class="line-clamp-1 mr-5">{{ selectedOption.label ?? placeholder }}</span>
+      <span class="line-clamp-1 mr-5">{{ placeholder ?? selectedOption.label }}</span>
       <Icon icon="chevron-down" class="ml-auto transition-all duration-300 pointer-events-none" :class="{ '-rotate-180': open }" />
     </div>
 
@@ -60,15 +60,13 @@ const model = defineModel<any>({ default: '' })
 const parse = useParser()
 const control = inject<any>('control', null)
 
+const emit = defineEmits(['onChange'])
 const props = withDefaults(defineProps<Props>(), {
   enableTooltip: false,
   error: '',
 })
 
-const selectedOption = reactive<SelectedOption>({
-  value: model.value,
-  label: '',
-})
+const selectedOption = reactive<SelectedOption>({ value: model.value ?? '', label: '' })
 
 const dropdownStyle = ref({
   top: '0px',
@@ -136,6 +134,7 @@ const close = () => {
 const setSelected = (selectedValue: any, selectedLabel: string) => {
   selectedOption.value = selectedValue
   selectedOption.label = selectedLabel
+  emit('onChange', selectedOption.value)
   close()
 }
 

@@ -12,24 +12,32 @@
           <p class="text-xs text-slate-500">{{ formatFileSize(file.size) }}</p>
         </div>
 
-        <button type="button" class="shrink-0 text-slate-500 hover:text-danger focus:outline-none transition-colors" aria-label="Remove file" :disabled="disabled" @click.stop="removeFile(index)">
+        <button type="button" class="shrink-0 text-slate-500 hover:text-danger focus:outline-none transition-colors" aria-label="Remove file" :disabled="isDisabled" @click.stop="removeFile(index)">
           <Icon icon="x" />
         </button>
       </div>
     </div>
 
+    <div v-if="existingFilePath" class="flex items-center gap-3 px-3 py-2 border border-border rounded-md bg-background">
+      <Icon icon="file-earmark" class="text-slate-400" />
+      <a class="flex-1 min-w-0 truncate text-sm font-medium text-primary hover:underline" :href="existingFileUrl" target="_blank" rel="noopener noreferrer">
+        {{ existingFileName }}
+      </a>
+      <span class="text-xs text-slate-500">Current file</span>
+    </div>
+
     <!-- Dropzone Container -->
     <div
-      v-else
+      v-if="fileList.length === 0 && (!existingFilePath || !isDisabled)"
       class="group relative flex w-full flex-col items-center justify-center border-2 border-dashed transition-all duration-150 rounded-md overflow-hidden cursor-pointer"
-      :class="[sizeConfig.container, isDragging ? 'border-primary bg-primary/5' : hasError ? 'border-danger' : 'border-border hover:border-primary/50', { 'opacity-60 cursor-not-allowed bg-slate-100': disabled }]"
-      @click="!disabled && triggerBrowse()"
-      @dragover.prevent="!disabled && (isDragging = true)"
+      :class="[sizeConfig.container, isDragging ? 'border-primary bg-primary/5' : hasError ? 'border-danger' : 'border-border hover:border-primary/50', { 'opacity-60 cursor-not-allowed bg-slate-100': isDisabled }]"
+      @click="!isDisabled && triggerBrowse()"
+      @dragover.prevent="!isDisabled && (isDragging = true)"
       @dragleave.prevent="isDragging = false"
       @drop.prevent="handleDrop"
     >
       <!-- Hidden Native Input -->
-      <input ref="input" :id="id || control.id" :name="id || control.id" type="file" class="hidden" :accept="accept" :multiple="multiple" :required="required" :disabled="disabled" @change="handleChange" />
+      <input ref="input" :id="id || control.id" :name="id || control.id" type="file" class="hidden" :accept="accept" :multiple="multiple" :required="required && !existingFilePath" :disabled="isDisabled" @change="handleChange" />
 
       <span class="flex items-center justify-center shrink-0 text-slate-400 mb-1.5">
         <Icon :icon="leftIcon || 'cloud-upload'" :class="sizeConfig.icon" />
@@ -37,7 +45,7 @@
 
       <p class="text-sm text-slate-600">
         <span class="font-medium text-primary">{{ placeholder || 'Click to upload' }}</span>
-        <span v-if="!disabled"> or drag and drop</span>
+        <span v-if="!isDisabled"> or drag and drop</span>
       </p>
 
       <p v-if="hint" class="mt-0.5 text-xs text-slate-400">{{ hint }}</p>
@@ -63,6 +71,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { backendRoute } from '@/plugins/axios'
 
 type Sizes = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 
@@ -81,6 +90,7 @@ interface Props {
 
   // Behavior
   disabled?: boolean
+  readonly?: boolean
 
   // Display
   leftIcon?: string
@@ -99,16 +109,23 @@ const props = withDefaults(defineProps<Props>(), {
   size: 'md',
 })
 
-const model = defineModel<File[] | File | null>({ default: null })
+const model = defineModel<File[] | File | string | null>({ default: null })
 const control = inject<any>('control')
 
 const input = ref<HTMLInputElement | null>(null)
 const isDragging = ref(false)
 const internalError = ref('')
+const isDisabled = computed(() => props.disabled || props.readonly)
+const existingFilePath = computed(() => (typeof model.value === 'string' ? model.value : ''))
+const existingFileName = computed(() => existingFilePath.value.split(/[\\/]/).pop() || existingFilePath.value)
+const existingFileUrl = computed(() => {
+  const baseUrl = backendRoute.replace(/\/api\/?$/, '')
+  return `${baseUrl}/storage/${existingFilePath.value.replace(/^\/+/, '')}`
+})
 
 // Normalize model into a flat array for internal rendering, regardless of single/multiple mode
 const fileList = computed<File[]>(() => {
-  if (!model.value) return []
+  if (!model.value || typeof model.value === 'string') return []
   return Array.isArray(model.value) ? model.value : [model.value]
 })
 
@@ -166,7 +183,7 @@ function handleChange(e: Event) {
 
 function handleDrop(e: DragEvent) {
   isDragging.value = false
-  if (props.disabled || !e.dataTransfer?.files) return
+  if (isDisabled.value || !e.dataTransfer?.files) return
 
   validateAndAssign(Array.from(e.dataTransfer.files))
 }

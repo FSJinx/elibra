@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Library;
 use App\Models\Sections;
 use App\Models\User;
 
@@ -28,7 +29,9 @@ class SectionsPolicy
      */
     public function create(User $user): bool
     {
-        return $user->isSuperAdmin() || $user->isAdmin();
+        return $user->isSuperAdmin()
+            || $user->isAdmin()
+            || ($user->isLibrarian() && $user->librarian?->library_id !== null);
     }
 
     /**
@@ -36,7 +39,15 @@ class SectionsPolicy
      */
     public function update(User $user, Sections $sections): bool
     {
-        return $user->isSuperAdmin();
+        if ($user->isSuperAdmin()) {
+            return true;
+        }
+
+        return $user->isAdmin()
+            && Library::query()
+                ->whereKey($sections->library_id)
+                ->where('campus_id', $user->campus_id)
+                ->exists();
     }
 
     /**
@@ -44,7 +55,15 @@ class SectionsPolicy
      */
     public function delete(User $user, Sections $sections): bool
     {
-        return $user->isSuperAdmin();
+        if ($user->isSuperAdmin()) {
+            return true;
+        }
+
+        return $user->isAdmin()
+            && Library::query()
+                ->whereKey($sections->library_id)
+                ->where('campus_id', $user->campus_id)
+                ->exists();
     }
 
     /**

@@ -11,15 +11,13 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Throwable;
 
 class UserController extends Controller
 {
-    protected UserService $service;
-
-    public function __construct(UserService $service)
-    {
-        $this->service = $service;
-    }
+    public function __construct(
+        private UserService $service
+    ) {}
 
     /**
      * Display a listing of the resource.
@@ -41,7 +39,29 @@ class UserController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create() {}
+    public function create(StoreUsersRequest $request)
+    {
+        $user = $this->user();
+
+        try {
+            $data = $request->validated();
+
+            if ($user->isAdmin() || $user->isLibrarian()) {
+                $data = array_merge($request->all(), [
+                    'campus_id' => $user->campus_id,
+                    'library_id' => $user->librarian->library_id,
+                ]);
+            }
+
+            $data = array_merge($data, [
+                'password' => 'elibra2026',
+            ]);
+
+            return $this->response(message: 'User added succesfully!', data: $this->service->create($data), statusCode: 200);
+        } catch (Throwable $e) {
+            throw $e;
+        }
+    }
 
     /**
      * Store a newly created resource in storage.

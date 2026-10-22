@@ -20,7 +20,7 @@
       <AuthorityControlSection v-model="form" :errors="errors" />
 
       <!-- AUTHOR CONTROL INFORMATION -->
-      <AuthorSection v-model="form" :errors="errors" />
+      <AuthorSection v-model="form" :editing="true" :errors="errors" />
 
       <Card class="sticky bottom-0 z-100">
         <CardBody class="flex justify-end gap-2">
@@ -106,9 +106,16 @@ async function saveDraft() {
 
 watch(
   () => route.query.draft_id,
-  () => {
-    const draft = drafts.data.find((i) => i.id === route.query.draft_id)
-    Object.assign(form, emptyForm(), draft?.data)
+  (val) => {
+    if (val) {
+      const draft = drafts.data.find((i) => i.id === route.query.draft_id)
+      if (!draft) {
+        pop.error('Draft not found.')
+        router.push({ name: 'librarian.collections.catalog.new' })
+      } else {
+        Object.assign(form, emptyForm(), { ...draft?.data, cover_image: null })
+      }
+    }
   },
   { deep: true, immediate: true },
 )

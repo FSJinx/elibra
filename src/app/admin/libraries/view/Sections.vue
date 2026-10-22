@@ -16,16 +16,18 @@
         <tr>
           <Th>No</Th>
           <Th>Name</Th>
+          <Th>Section Head</Th>
           <Th>Actions</Th>
         </tr>
       </Thead>
-      <Tbody :data="filteredSections" :loading="sections.loading" cols="3">
+      <Tbody :data="filteredSections" :loading="sections.loading" cols="4">
         <Tr v-for="(section, index) in filteredSections" :key="section.id">
           <Td>{{ index + 1 }}</Td>
           <Td>{{ section.name }}</Td>
+          <Td>{{ sectionHeadName(section) }}</Td>
           <Td class="space-x-2">
-            <EditSectionModal :data="section" />
-            <Button size="sm" class="hover:text-danger" @click="remove(section)">Delete</Button>
+            <EditSectionModal :data="section" @refresh="refreshSections" />
+            <Button size="sm" class="hover:text-danger" @click.stop="remove(section)">Delete</Button>
           </Td>
         </Tr>
       </Tbody>
@@ -47,6 +49,21 @@ const filteredSections = computed(() => {
   return (sections.data ?? []).filter((section) => section.name.toLocaleLowerCase().includes(query))
 })
 
+async function refreshSections() {
+  const libraryId = library.currentData?.id
+  if (!libraryId) return
+
+  await sections.fetch({
+    ...sections.defaultParams,
+    library_id: libraryId,
+  })
+}
+
+function sectionHeadName(section: Section): string {
+  const user = section.librarian?.user
+  return user ? `${user.first_name} ${user.last_name}`.trim() : 'Unassigned'
+}
+
 async function remove(section: Section) {
   const confirmation = await pop.confirm({ text: `Are you sure you want to delete ${section.name}?` })
   if (!confirmation.isConfirmed) return
@@ -59,12 +76,19 @@ async function remove(section: Section) {
   } catch (error: any) {
     pop.unload()
     await pop.error(error?.response?.data?.message ?? 'Unable to delete the section. Please try again.')
+    return
+  }
+
+  try {
+    await refreshSections()
+  } catch (error: any) {
+    await pop.error(error?.response?.data?.message ?? 'The section was deleted, but the section list could not be refreshed.')
   }
 }
 
 onBeforeMount(async () => {
   try {
-    await sections.fetch(library.currentData?.id, true)
+    await refreshSections()
   } catch (error: any) {
     await pop.error(error?.response?.data?.message ?? 'Unable to load sections. Please try again.')
   }

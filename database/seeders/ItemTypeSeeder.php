@@ -13,10 +13,10 @@ class ItemTypeSeeder extends Seeder
     public function run(): void
     {
         collect([
-            ['slug' => 'thesis', 'name' => 'thesis'],
-            ['slug' => 'book', 'name' => 'book'],
-            ['slug' => 'multimedia', 'name' => 'audio visual'],
-            ['slug' => 'serials', 'name' => 'serials'],
+            ['slug' => 'thesis', 'name' => 'thesis', 'has_electronic_file' => true],
+            ['slug' => 'book', 'name' => 'book', 'has_electronic_file' => true],
+            ['slug' => 'multimedia', 'name' => 'audio visual', 'has_electronic_file' => true],
+            ['slug' => 'serials', 'name' => 'serials', 'has_electronic_file' => false],
         ])->each(function ($type) {
             ItemType::create($type);
         });

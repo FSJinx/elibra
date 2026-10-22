@@ -1,5 +1,21 @@
+interface Name extends Partial<User>, Partial<Author> {}
 export function useParser() {
   return {
+    name(data: Name) {
+      const full = computed(() => [data.first_name, data.middle_name, data.last_name, data.suffix].filter(Boolean).join(' '))
+      const formal = computed(() => [data.last_name, [data.first_name, data.middle_name].filter(Boolean).join(' ')].filter(Boolean).join(', '))
+      const initials = computed(() => ((data.first_name?.[0] ?? '') + (data.last_name?.[0] ?? '')).toUpperCase())
+      const authorInitial = computed(
+        () =>
+          `${data.last_name}, ${[data.first_name, data.middle_name]
+            .filter(Boolean)
+            .map((n) => n![0].toUpperCase() + '.')
+            .join(' ')}`,
+      )
+
+      return { full, formal, initials, authorInitial }
+    },
+
     toCapital(text: string | null) {
       return text ? text?.charAt(0).toUpperCase() + text.slice(1) : ''
     },
