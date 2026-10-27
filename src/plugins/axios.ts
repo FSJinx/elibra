@@ -84,23 +84,12 @@ api.interceptors.response.use(
       }
     }
 
-    // if (status === 403) {
-    //   pop.error(response?.message)
-    // }
-
-    // if (status === 404) {
-    //   // pop.unload()
-    //   pop.error(response?.message)
-    // }
-
     if (status === 422) {
       // pop.unload()
 
-      const errors = response.errors
-      const firstErrorMessage = Object.values(errors as object)[0][0]
+      const firstErrorMessage = (Object.values(response?.errors ?? {})[0] as string[] | undefined)?.[0]
       console.log(firstErrorMessage)
-
-      pop.error(firstErrorMessage ?? response?.message)
+      pop.error(firstErrorMessage ?? 'Invalid input, please check your inputs and try again.')
     }
 
     if (status === 500) {

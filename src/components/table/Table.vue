@@ -14,7 +14,7 @@
 
     <!-- Table Body -->
     <div class="relative flex-1 shrink-0 overflow-y-auto bg-background">
-      <table class="relative w-full has-data-empty:h-full text-left text-[12.5px] border-collapse" :class="[layout]">
+      <table ref="table" class="relative w-full has-data-empty:h-full text-left text-[12.5px] border-collapse" :class="[layout]">
         <slot />
       </table>
     </div>
@@ -48,6 +48,10 @@ interface Props {
   cols?: any
 }
 
+const cols = ref(0)
+const table = ref<HTMLTableElement>()
+const count = () => (cols.value = table.value?.querySelectorAll('thead th').length ?? 0)
+
 const props = withDefaults(defineProps<Props>(), {
   dataLength: 0,
   layout: 'auto',
@@ -65,7 +69,17 @@ const layout = computed(() => {
   return layouts[props.layout]
 })
 
+let mo: MutationObserver
+
+onMounted(() => {
+  count()
+  mo = new MutationObserver(count)
+  mo.observe(table.value!, { childList: true, subtree: true })
+})
+
+onBeforeUnmount(() => mo?.disconnect())
+
 watch(per_page, (val) => emit('per_page', val))
 
-provide('table', props)
+provide('table', { props, cols })
 </script>

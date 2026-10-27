@@ -119,6 +119,7 @@ interface LibraryItem {
   authors?: string[]
   publication_year?: string | number
   branch?: string
+  campus?: string
   item_type?: string
   itemType?: string
 }

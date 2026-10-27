@@ -100,4 +100,11 @@ class AuthController extends Controller
 
         return $this->response('success', 'Logged out succesfully.');
     }
+
+    public function updateProfile(UpdateMyProfileRequest $request, AuthService $authService)
+    {
+        $this->auth()->user()->update($request->validated());
+
+        return $this->response('success', 'Profile successfully updated.', $authService->index());
+    }
 }

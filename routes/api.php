@@ -25,6 +25,7 @@ use App\Http\Controllers\Librarian\Collections\CatalogController;
 use App\Http\Controllers\Librarian\DashboardController;
 use App\Http\Controllers\LibrarianController;
 use App\Http\Controllers\LibraryController;
+use App\Http\Controllers\LoanModeController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\OpacSearchController;
 use App\Http\Controllers\PatronController;
@@ -430,17 +431,20 @@ Route::group(['prefix' => '/acarepo', 'middleware' => ['jwt.auth']], function ()
 });
 
 Route::group(['prefix' => '/patron-type-loan-policy'], function () {
-    Route::get('', [PatronTypeLoanPolicyController::class, 'index'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
+    Route::get('', [PatronTypeLoanPolicyController::class, 'index'])->middleware('throttle:read');
     Route::get('{patronTypeLoanPolicy}', [PatronTypeLoanPolicyController::class, 'show'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
+
     Route::post('', [PatronTypeLoanPolicyController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
+
     Route::put('{patronTypeLoanPolicy}', [PatronTypeLoanPolicyController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
+
     Route::delete('{patronTypeLoanPolicy}', [PatronTypeLoanPolicyController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:delete');
 });
 
 Route::group(['prefix' => '/attendance'], function () {
     Route::get('', [AttendanceLogsController::class, 'index'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
     Route::get('{attendanceLogs}', [AttendanceLogsController::class, 'show'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
-    
+
     Route::post('', [AttendanceLogsController::class, 'store'])->withoutMiddleware(['jwt.auth', 'role:super_admin,admin,librarian'])->middleware('throttle:write');
 
     Route::put('{attendanceLogs}', [AttendanceLogsController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
@@ -455,8 +459,28 @@ Route::group(['prefix' => '/loan'], function () {
     Route::post('', [CirculationController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
 
     Route::put('{circulation}', [CirculationController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
-    
+
     Route::delete('{circulation}', [CirculationController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:delete');
+});
+
+// ============== LOAN ROUTE ==================
+Route::group(['prefix' => '/loan-mode'], function () {
+    // Get
+    Route::get('', [LoanModeController::class, 'index'])->middleware('throttle:read');
+    Route::get('{loanMode}', [LoanModeController::class, 'show'])->middleware('throttle:read');
+    Route::get('deleted', [LoanModeController::class, 'deleted'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
+
+    // Post
+    Route::post('', [LoanModeController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin', 'throttle:write');
+
+    // Update
+    Route::put('{loan-mode}', [LoanModeController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin', 'throttle:write');
+
+    // Delete
+    Route::delete('{loan-mode}', [LoanModeController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin', 'throttle:delete');
+
+    // Restore
+    Route::patch('{loan-mode}/restore', [LoanModeController::class, 'restore'])->middleware('jwt.auth', 'role:super_admin', 'throttle:write');
 });
 
 Route::group(['prefix' => '/fines-transaction'], function () {

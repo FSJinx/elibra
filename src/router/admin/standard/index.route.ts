@@ -18,6 +18,11 @@ export const adminStandard = [
         meta: { breadcrumb: 'Patron Types' },
         children: standardPatronType,
       },
+      {
+        path: 'loan_modes',
+        meta: { breadcrumb: 'Loan Modes' },
+        children: loanModes,
+      },
     ],
   },
 ]
