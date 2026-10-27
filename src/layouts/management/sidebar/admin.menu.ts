@@ -32,6 +32,7 @@ export const adminMenu = [
       { path: 'admin.item_types', name: 'Item Types', icon: 'tags' },
       { path: 'admin.item_categories', name: 'Item Categories', icon: 'collection' },
       { path: 'admin.patron_type', name: 'Patron Type', icon: 'people' },
+      { path: 'admin.loan_modes', name: 'Loan Modes', icon: 'cash-coin' },
     ],
   },
 

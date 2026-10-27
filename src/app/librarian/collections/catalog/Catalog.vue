@@ -32,7 +32,7 @@
           </tr>
         </Thead>
 
-        <Tbody cols="8" :loading="loading" :data="data">
+        <Tbody :loading="loading" :data="data">
           <Tr v-for="(item, index) in data" :key="item.id" :to="{ name: 'librarian.collections.catalog.view', params: { id: item.id } }">
             <Td :data="(index as number) + 1" />
 
@@ -63,6 +63,7 @@
             <Td :data="parse.formatTimeAgo(item.updated_at)" />
           </Tr>
         </Tbody>
+        <template #footer />
       </Table>
     </div>
   </div>
@@ -119,5 +120,5 @@ async function search() {
 }
 
 watchDebounced(() => params.query, search, { debounce: 300 })
-onBeforeMount(async () => await search())
+onBeforeMount(search)
 </script>

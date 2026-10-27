@@ -45,6 +45,7 @@ class Item extends Model
 
     protected $casts = [
         'keywords' => 'array',
+        'released' => 'boolean',
     ];
 
     public function accessions()

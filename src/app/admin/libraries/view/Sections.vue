@@ -88,7 +88,7 @@ async function remove(section: Section) {
 
 onBeforeMount(async () => {
   try {
-    await refreshSections()
+    await sections.fetch({ library_id: library.currentData?.id })
   } catch (error: any) {
     await pop.error(error?.response?.data?.message ?? 'Unable to load sections. Please try again.')
   }

@@ -38,6 +38,7 @@ class ItemService
                 'item_type_category_id',
                 'library_id',
                 'language_id',
+                'released'
             ]));
 
             if (isset($data['authors'])) {
@@ -84,6 +85,7 @@ class ItemService
                 'item_type_id',
                 'item_type_category_id',
                 'language_id',
+                'released'
             ]));
 
             if (array_key_exists('authors', $data) || array_key_exists('authors_present', $data)) {

@@ -2,35 +2,59 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\LoanMode;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreLoanModeRequest;
 use App\Http\Requests\UpdateLoanModeRequest;
+use App\Models\LoanMode;
+use App\Services\CacheService;
+use App\Services\QueryService;
+use Illuminate\Http\Request;
 
 class LoanModeController extends Controller
 {
+    public function __construct(
+        protected LoanMode $service
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $filters = QueryService::filters($request);
+
+        return CacheService::remember(
+            CacheService::LOAN_MODES,
+            $filters,
+            now()->addHour(),
+            function () {
+                $modes = LoanMode::query()->paginate();
+
+                return $this->response(
+                    message: $modes->isEmpty() ? 'No loan modes found' : 'Loan modes successfully fetched',
+                    data: $modes
+                );
+            }
+        );
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        //
-    }
+    public function create() {}
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(StoreLoanModeRequest $request)
     {
-        //
+        $data = $request->validated();
+        $mode = $this->service->create($data);
+
+        return $this->response(
+            'success',
+            'Loan mode added succesfully.',
+            $mode
+        );
     }
 
     /**

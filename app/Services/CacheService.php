@@ -69,6 +69,8 @@ class CacheService
 
     public const FINES_TRANSACTIONS = 'fines_transactions';
 
+    public const LOAN_MODES = 'loan_modes';
+
     public const PATRON_TYPE_LOAN_POLICY = 'patron_type_loan_policy';
 
     public const OPAC = 'opac';

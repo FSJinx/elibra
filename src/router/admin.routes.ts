@@ -10,4 +10,7 @@ export const adminRoutes = [
 
   // Authority Control Routes
   ...adminAuthorityRoute,
+
+  // Policies Routes
+  ...adminPolicy,
 ]

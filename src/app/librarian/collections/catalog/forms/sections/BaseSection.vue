@@ -6,6 +6,12 @@
     </CardHeader>
 
     <CardBody class="space-y-5">
+      <!-- Released -->
+      <Control id="item-released">
+        <Label>Release to Opac</Label>
+        <Checkbox :disabled="!editing" v-model="form.released" />
+      </Control>
+
       <!-- Item Type -->
       <Control id="item-item_type_id" required>
         <Label>Item Type</Label>

@@ -27,7 +27,7 @@ class UpdateSectionsRequest extends BaseRequest
     {
         return [
             'name' => ['sometimes', 'required', 'string', 'max:255', Rule::unique((new Sections)->getTable(), 'name')->ignore($this->route('section'))],
-            'librarian_id' => ['sometimes', 'nullable', 'integer', 'exists:librarians,id'],
+            'librarian_id' => ['sometimes'],
         ];
     }
 
