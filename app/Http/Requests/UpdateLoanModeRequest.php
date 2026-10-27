@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Validation\Rule;
 
 class UpdateLoanModeRequest extends BaseRequest
 {
@@ -11,9 +12,10 @@ class UpdateLoanModeRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return false;
-    }
+        $user = $this->user();
 
+        return $user !== null && $user->can('update', $this->route('loanMode'));
+    }
     /**
      * Get the validation rules that apply to the request.
      *
@@ -21,8 +23,12 @@ class UpdateLoanModeRequest extends BaseRequest
      */
     public function rules(): array
     {
+        $loanMode = $this->route('loanMode');
+
         return [
-            //
+            'slug' => ['sometimes', 'required', 'string', 'max:255', Rule::unique('loan_modes', 'slug')->ignore($loanMode)],
+            'name' => ['sometimes', 'required', 'string', 'max:255'],
+            'description' => ['sometimes', 'nullable', 'string', 'max:255'],
         ];
     }
 }

@@ -14,7 +14,7 @@
             <Th>No</Th>
             <Th>Patron Type</Th>
             <Th>Can Reserve</Th>
-            <Th>Reservation Limit</Th>
+            <Th>Reservation Limit</Th>  
             <Th>
               Loan Period
               <p class="text-sm text-muted-foreground font-normal lowercase">(in days)</p>
@@ -46,22 +46,21 @@
 const policy = patronTypeLoanPolicyStore()
 const loan_mode = loanModeStore()
 const route = useRoute()
+const router = useRouter()
 const pop = usePopup()
 
 const paginatedData = ref<Pagination>()
 const loading = ref<boolean>(false)
 
-async function load() {}
-
 onBeforeMount(async () => {
   pop.load()
   try {
-    if (!loan_mode.currentData) {
-      await loan_mode.show({ id: route.params.id })
+    const id = String(route.params.id)
+    if (String(loan_mode.currentData?.id) !== id) {
+      await loan_mode.show(id)
     }
   } finally {
     pop.unload()
-    load()
   }
 })
 </script>

@@ -456,18 +456,19 @@ Route::group(['prefix' => '/loan-mode'], function () {
     // Get
     Route::get('', [LoanModeController::class, 'index'])->middleware('throttle:read');
     Route::get('deleted', [LoanModeController::class, 'deleted'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
+    Route::get('{loanMode}', [LoanModeController::class, 'show'])->middleware('throttle:read');
 
     // Post
     Route::post('', [LoanModeController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin', 'throttle:write');
 
     // Update
-    Route::put('{loan-mode}', [LoanModeController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin', 'throttle:write');
+    Route::put('{loanMode}', [LoanModeController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin', 'throttle:write');
 
     // Delete
-    Route::delete('{loan-mode}', [LoanModeController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin', 'throttle:delete');
+    Route::delete('{loanMode}', [LoanModeController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin', 'throttle:delete');
 
     // Restore
-    Route::patch('{loan-mode}/restore', [LoanModeController::class, 'restore'])->middleware('jwt.auth', 'role:super_admin', 'throttle:write');
+    Route::patch('{loanMode}/restore', [LoanModeController::class, 'restore'])->middleware('jwt.auth', 'role:super_admin', 'throttle:write');
 });
 
 Route::group(['prefix' => '/fines-transaction'], function () {
