@@ -502,7 +502,7 @@ declare global {
   export type { PatronType } from './interfaces/patron_type'
   import('./interfaces/patron_type')
   // @ts-ignore
-  export type { PatronTypeLoanPolicy } from './interfaces/patron_type_loan_policy'
+  export type { PatronTypeLoanPolicy, StorePatronTypeLoanPolicy, UpdatePatronTypeLoanPolicy } from './interfaces/patron_type_loan_policy'
   import('./interfaces/patron_type_loan_policy')
   // @ts-ignore
   export type { Program } from './interfaces/program'

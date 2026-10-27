@@ -62,7 +62,7 @@ class LoanModeController extends Controller
      */
     public function show(LoanMode $loanMode)
     {
-        //
+        return $this->response(data: $loanMode);
     }
 
     /**

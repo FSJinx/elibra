@@ -422,10 +422,13 @@ Route::group(['prefix' => '/patron'], function () {
 Route::post('/aca-repo', [AcaRepoController::class, 'store'])->middleware('jwt.auth', 'throttle:write');
 
 Route::group(['prefix' => '/patron-type-loan-policy'], function () {
-    Route::get('', [PatronTypeLoanPolicyController::class, 'index'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
+    Route::get('', [PatronTypeLoanPolicyController::class, 'index'])->middleware('throttle:read');
     Route::get('{patronTypeLoanPolicy}', [PatronTypeLoanPolicyController::class, 'show'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
+
     Route::post('', [PatronTypeLoanPolicyController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
+
     Route::put('{patronTypeLoanPolicy}', [PatronTypeLoanPolicyController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
+
     Route::delete('{patronTypeLoanPolicy}', [PatronTypeLoanPolicyController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:delete');
 });
 
@@ -455,6 +458,7 @@ Route::group(['prefix' => '/loan'], function () {
 Route::group(['prefix' => '/loan-mode'], function () {
     // Get
     Route::get('', [LoanModeController::class, 'index'])->middleware('throttle:read');
+    Route::get('{loanMode}', [LoanModeController::class, 'show'])->middleware('throttle:read');
     Route::get('deleted', [LoanModeController::class, 'deleted'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
 
     // Post
