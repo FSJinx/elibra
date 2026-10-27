@@ -8,4 +8,8 @@ export interface Patron {
   user_id: any
   patron_type_id: any
   program_id: any
+
+  user: User
+  patron_type: Partial<PatronType>
+  program: Partial<Program>
 }

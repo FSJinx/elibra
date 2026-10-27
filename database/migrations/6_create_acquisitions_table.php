@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('acquisitions', function (Blueprint $table) {
             $table->id();
-            $table->string('acquisition_id')->unique()->nullable(); // ISU-E-2025-MM-DD-ID
+            $table->string('reference')->unique()->nullable(); // ISU-E-2025-MM-DD-ID
             $table->string('dealer');
             $table->enum('acquisition_mode', ['purchase', 'donation', 'gift', 'exchange']);
             $table->date('acquisition_date');
             $table->string('remarks')->nullable();
             $table->timestamps();
 
-            $table->unsignedBigInteger('receiver_id');
+            $table->unsignedBigInteger('receiver_id')->nullable();
             $table->unsignedBigInteger('acquisition_request_id')->nullable(); // If the acquisition came from a request
         });
     }

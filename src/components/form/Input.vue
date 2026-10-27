@@ -121,7 +121,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   type: 'text',
-  placeholder: '',
+  placeholder: 'No data',
   autocomplete: 'off',
   required: false,
   disabled: false,
@@ -132,11 +132,13 @@ const props = withDefaults(defineProps<Props>(), {
   size: 'md',
 })
 
-const model = defineModel<any>({ default: '' })
 const show = ref(false)
 const isCapsLockOn = ref(false)
 const input = ref<HTMLInputElement | null>(null)
+
+const model = defineModel<any>({ default: '' })
 const emit = defineEmits(['focusin', 'blur'])
+defineExpose({ input })
 
 // Injections
 const control = inject<any>('control', null)

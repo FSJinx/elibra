@@ -33,7 +33,7 @@
       </Select>
     </Control>
 
-    <Control id="campus" class="col-span-5" col v-if="!isGuest" required>
+    <Control id="campus" class="col-span-5" col v-if="hasCampus" required>
       <Label>Campus</Label>
       <Select v-model="form.campus_id" :error="errors.campus_id">
         <Option value="" selected disabled>Select campus</Option>
@@ -51,18 +51,6 @@ const props = defineProps<{
 
 const campuses = useCampusStore()
 const options = optionStore()
-const isGuest = ref<boolean>(true)
 
-watch(
-  () => props.form.patron_type_id,
-  (val) => {
-    const type = options.patron_types?.find((i) => i.id === val)
-    if (val === '' || type?.key === 'gp') {
-      isGuest.value = true
-    } else {
-      isGuest.value = false
-    }
-  },
-  { immediate: true },
-)
+const hasCampus = computed(() => options.patron_types?.find((i) => i.id === props.form.patron_type_id)?.has_campus ?? false)
 </script>

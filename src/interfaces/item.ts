@@ -4,7 +4,8 @@ export interface Item {
   subtitle: string
   description: string
   call_number: string
-  electronic_file: File[] | null
+  electronic_file: File | string | null
+  cover_image: File | null
   keywords: string[]
 
   edition: string
@@ -23,6 +24,10 @@ export interface Item {
   library_id: any
   language_id: any
   cover_media_id: any
+
+  created_at: string
+  updated_at: string
+  deleted_at: string
 
   [key: string]: any
 

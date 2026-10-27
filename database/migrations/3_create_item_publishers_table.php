@@ -17,7 +17,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->unsignedBigInteger('item_id');
-            $table->unsignedBigInteger('publisher_id');
+            $table->unsignedBigInteger('publisher_id')->nullable();
         });
     }
 

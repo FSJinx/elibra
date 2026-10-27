@@ -1,9 +1,9 @@
 <template>
   <div class="flex w-full flex-col gap-1.5">
     <div class="flex cursor-pointer items-start gap-2 text-sm text-slate-700" :class="{ 'cursor-not-allowed opacity-60': disabled }">
-      <input :id="inputId" :name="inputId" v-model="model" type="checkbox" :required="control?.required || required" :disabled="disabled" :tabindex="tabindex" class="mt-0.5 shrink-0 rounded border-border text-primary accent-primary transition disabled:cursor-not-allowed" :class="sizeConfig" />
+      <input :id="inputId" :name="inputId" v-model="model" type="checkbox" :required="control?.required || required" :disabled="disabled ?? control?.disabled" :tabindex="tabindex" class="mt-0.5 shrink-0 rounded border-border text-primary accent-primary transition disabled:cursor-not-allowed" :class="sizeConfig" />
 
-      <label :for="inputId" class="mt-0.5 leading-5 select-none">
+      <label :for="inputId" class="mt-0.5 leading-5 select-none" v-if="label">
         <slot>{{ label }}</slot>
         <span v-if="(required || control?.required) && !$slots.default" class="text-danger">*</span>
       </label>

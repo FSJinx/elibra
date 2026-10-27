@@ -1,27 +1,26 @@
 <template>
-  <div class="size-full flex flex-col justify-center text-center" v-if="!currentData">Acquisition not found.</div>
-  <div class="size-full flex flex-col" v-else>
+  <div class="size-full flex flex-col justify-center text-center" v-if="!currentAcq">Acquisition not found.</div>
+  <div class="size-full flex flex-col overflow-hidden" v-else>
     <div class="flex items-start bg-background p-5 gap-2 border-b border-border">
       <Button variant="text" @click="router.back()" icon="arrow-left" />
       <div class="">
         <H6 class="flex items-center gap-3">
-          Acquisiton ID#: {{ currentData.acquisition_id }}
-          <span class="font-semibold bg-primary-soft text-primary rounded-lg uppercase tracking-wider text-xs p-2">{{ currentData?.acquisition_mode }}</span>
+          Acquisiton ID#: {{ currentAcq.reference }}
+          <span class="font-semibold bg-primary-soft text-primary rounded-lg uppercase tracking-wider text-xs p-2">{{ currentAcq?.acquisition_mode }}</span>
         </H6>
-        <p>Date of Acquisition: {{ parse.formatDate(currentData?.acquisition_date) }}</p>
+        <p>Date of Acquisition: {{ parse.formatDate(currentAcq?.acquisition_date) }}</p>
       </div>
       <div class="flex items-center ml-auto gap-2">
-        <SearchItem />
-        <Button variant="primary" as="link" :to="{ name: 'librarian.collections.catalog.new', query: { acquisition: true, acquisition_id: currentData.id } }">New Item</Button>
-
-        <!-- <NewItem /> -->
+        <SearchItem @update:Lines="loadAcquisitionLines" />
+        <Button variant="primary" as="link" :to="{ name: 'librarian.collections.catalog.new', query: { acquisition: true, acquisition_id: currentAcq.id } }">New Item</Button>
       </div>
     </div>
 
-    <div class="flex-1 flex p-5">
-      <Table title="Acquired Items" :subtitle="`Here are the items that is acquired from ${currentData?.dealer} through ${currentData?.acquisition_mode}.`" :dataLength="currentLine?.length">
+    <div class="flex-1 flex overflow-y-auto p-5">
+      <Table title="Acquired Items" :subtitle="`Here are the items that is acquired from ${currentAcq?.dealer} through ${currentAcq?.acquisition_mode}.`" :data="currentLine">
         <Thead>
           <tr>
+            <Th>No</Th>
             <Th class="text-left">Title</Th>
             <Th>Quantity</Th>
             <Th v-if="acquisition.currentData?.acquisition_mode === 'purchase'">Unit Price</Th>
@@ -29,7 +28,8 @@
           </tr>
         </Thead>
         <Tbody :data="lines.data" :loading="lines.loading" :cols="4">
-          <Tr class="hover" v-for="(item, index) in lines.data" @click="view(item)">
+          <Tr class="hover" v-for="(item, index) in lines.data">
+            <Td :data="index + 1" />
             <Td class="text-left">
               <p class="font-medium">{{ item.item.title }}</p>
               <p class="text-xs text-muted-foreground">{{ item.item.subtitle }}</p>
@@ -37,35 +37,20 @@
             <Td :data="item.quantity" />
             <Td v-if="acquisition.currentData?.acquisition_mode === 'purchase'" :data="parse.toMoney(item.unitPrice)" />
             <Td class="space-x-2">
-              <Button size="sm">Edit</Button>
-              <Button size="sm">Delete</Button>
+              <EditItemAcquisition :data="item" />
+              <Button class="hover:text-danger" size="sm" @click="del(item)">Delete</Button>
             </Td>
           </Tr>
         </Tbody>
       </Table>
     </div>
   </div>
-
-  <Modal ref="viewModal" size="2xlarge">
-    <ModalHeader useDefaultLayout :title="lines.currentData?.items?.title" />
-    <ModalBody class="flex flex-col overflow-hidden!">
-      <Form class="p-5 border-b border-border">
-        <div class="flex items-center justify-end gap-1">
-          <Input id="search-accession" type="text" placeholder="Search by accession number..." class="max-w-100" />
-          <Button>Search</Button>
-        </div>
-      </Form>
-      <div class="overflow-y-auto">
-        <div class="h-screen"></div>
-      </div>
-    </ModalBody>
-  </Modal>
 </template>
 
 <script setup lang="ts">
+import EditItemAcquisition from '@/app/librarian/acquisition/acquisition_line/modals/EditItemAcquisition.vue'
 import SearchItem from '@/app/librarian/acquisition/acquisition_line/modals/SearchItem.vue'
-import Modal from '@/components/my/Modal.vue'
-import { popScopeId } from 'vue'
+import type { Pagination } from '@/services/pagination'
 
 const parse = useParser()
 const route = useRoute()
@@ -75,29 +60,35 @@ const lines = useAcquisitionLinesStore()
 const acquisition = useAcquisitionStore()
 const breadcrumb = useBreadcrumbStore()
 
-const currentData = ref<Acquisition | null>(null)
-const currentLine = ref<AcquisitionLine[] | null>(null)
+const currentAcq = ref<Acquisition | null>(null)
+const currentLine = ref<Pagination>()
 
-const viewModal = ref<typeof Modal | null>(null)
+async function loadAcquisitionLines() {
+  const resLine = await lines.fetch(route.params.id)
+  currentLine.value = resLine.data
+}
 
-function view(item: AcquisitionLine) {
-  viewModal.value?.open()
-  lines.setCurrentData(item)
+async function del(l: AcquisitionLine) {
+  console.log(l)
+
+  const confirm = await pop.confirm({ text: `Are you sure you want to delete "${l.item?.title}" from this acquisition?` })
+
+  if (confirm.isConfirmed) {
+    pop.info("Oops, this feature isn't up yet. Please come back later.")
+  }
 }
 
 onBeforeMount(async () => {
   pop.load()
   try {
     const res = await acquisition.show(route.params.id)
-    currentData.value = res.data
-
-    const resLine = await lines.fetch(route.params.id)
-    currentLine.value = resLine.data
+    currentAcq.value = res.data
   } finally {
+    loadAcquisitionLines()
     pop.unload()
 
     const key = `${route.name as string}:${route.params.id}`
-    breadcrumb.set(key, `Viewing Acquisition: ${acquisition.currentData?.acquisition_id}`)
+    breadcrumb.set(key, `Viewing Acquisition: ${currentAcq.value?.reference}`)
   }
 })
 </script>

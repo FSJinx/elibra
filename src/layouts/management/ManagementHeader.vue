@@ -32,26 +32,22 @@ const system = systemStore()
 const parse = useParser()
 
 const subHeading = computed(() => {
-  const branch = ref<string>('')
-  if (auth.user?.branch) {
-    branch.value = auth.user?.branch.name
+  const library = ref<string>('')
+  if (auth.user?.library) {
+    library.value = auth.user?.library?.name as string
   } else {
-    branch.value = 'Not assigned to any branch'
+    library.value = 'Not assigned to any library'
   }
-  return `${branch.value ?? 'Not assigned to a library branch'}, ${parse.toCapital(auth.displayRole || 'Unknown')}`
+  return `${library.value ?? 'Not assigned to a library library'}, ${parse.toCapital(auth.displayRole || 'Unknown')}`
 })
 
 const heading = computed(() => {
   const campus = ref<string>('')
 
-  if (auth.user?.campus) {
-    if (auth.user?.role === 'librarian' || auth.user?.role === 'admin') {
-      campus.value = auth.user?.campus?.name
-    } else if (auth.user?.role === 'super_admin') {
-      campus.value = 'Global'
-    }
-  } else {
-    campus.value = 'Not assigned to a campus'
+  if (auth.user?.role === 'librarian' || auth.user?.role === 'admin') {
+    campus.value = auth.user?.campus?.name as string
+  } else if (auth.user?.role === 'super_admin') {
+    campus.value = 'Global'
   }
 
   return 'Isabela State University - ' + campus.value

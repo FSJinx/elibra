@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreItemRequest;
+use App\Http\Requests\UpdateItemRequest;
 use App\Models\Item;
 use App\Services\CacheService;
 use App\Services\ItemService;
 use App\Services\QueryService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Throwable;
 
 class ItemController extends Controller
 {
@@ -66,19 +65,20 @@ class ItemController extends Controller
                     $query->where('library_id', $libraryId);
                 }
 
-                return $query->paginate(
-                    $filters['per_page'],
-                    [
-                        'id',
-                        'title',
-                        'subtitle',
-                        'call_number',
-                        'item_type_id',
-                        'released',
-                    ],
-                    'page',
-                    $filters['page']
-                );
+                return $query->orderBy('created_at', 'desc')
+                    ->paginate(
+                        $filters['per_page'],
+                        [
+                            'id',
+                            'title',
+                            'subtitle',
+                            'call_number',
+                            'item_type_id',
+                            'released',
+                        ],
+                        'page',
+                        $filters['page']
+                    );
             }
         );
 
@@ -94,9 +94,81 @@ class ItemController extends Controller
         return $this->response(
             'success',
             'Items retrieved successfully.',
-            $items->toArray(),
+            $items,
             200
         );
+    }
+
+    public function indexV2(Request $request)
+    {
+        $filters = QueryService::filters($request);
+
+        // Complete Filter
+        $filters = array_merge($filters, [
+            'search' => trim($filters['search'], '-'),
+            'item_type_id' => $request->input('item_type_id'),
+            'item_type_category_id' => $request->input('item_type_category_id'),
+        ]);
+
+        $data = CacheService::remember(
+            CacheService::ITEMS,
+            $filters,
+            now()->addHour(),
+            function () use ($filters) {
+                $item = Item::query();
+
+                // ============== Search ============
+                $item->when($filters['search'] ?? null, fn ($q, $s) => $q->where(fn ($w) => $w->where('title', 'LIKE', "%$s%")->orWhere('subtitle', 'LIKE', "%$s%")));
+
+                // ============== Item Type ============
+                $item->when($filters['item_type_id'] ?? null, function ($i, $param) {
+                    $i->where('item_type_id', $param);
+                });
+
+                // ============== Item Category ============
+                $item->when($filters['item_type_category_id'] ?? null, function ($i, $param) {
+                    $i->where('item_type_category_id', $param);
+                });
+
+                return $item
+                    ->orderBy($filters['sort'], $filters['order'])
+                    ->paginate(
+                        $filters['per_page'],
+                        [
+                            '*',
+                        ],
+                        'page',
+                        $filters['page']
+                    );
+            }
+
+        );
+
+        return $this->response(data: $data);
+    }
+
+    public function authors(Item $item)
+    {
+        $data = $item->authors()->get();
+
+        return $this->response(data: $data);
+    }
+
+    public function accessions(Item $item)
+    {
+        $data = $item->accessions()->get();
+
+        return $this->response(data: $data);
+    }
+
+    public function acquisitions(Item $item)
+    {
+        $data = $item->acquisitions()->with([
+            'receiver:last_name,first_name',
+            'acquisition_lines' => fn ($q) => $q->where('item_id', $item->id)->withCount('accessions as quantity'),
+        ])->get()->makeHidden('pivot');
+
+        return $this->response(data: $data);
     }
 
     /**
@@ -109,32 +181,30 @@ class ItemController extends Controller
         return $this->response(message: 'Catalog received successfully', data: $item->toArray());
     }
 
-    public function store(StoreItemRequest $request, Item $item)
+    public function store(StoreItemRequest $request)
     {
-        DB::beginTransaction();
+        $newItem = array_merge($request->validated(), [
+            'library_id' => $this->user()->librarian?->library_id,
+        ]);
+        $item = $this->itemService->create($newItem);
 
-        $newItem = array_merge($request->validated(), ['library_id' => $this->user()->librarian->id]);
+        return $this->response(
+            'success',
+            'Item created successfully',
+            $item->toArray(),
+            201
+        );
+    }
 
-        try {
-            $item = Item::create($newItem);
+    public function update(UpdateItemRequest $request, Item $item)
+    {
+        $item = $this->itemService->update($item, $request->validated());
 
-            $item->syncAuthors($request->input('authors'));
-            $item->refresh();
-
-            DB::commit();
-
-            CacheService::invalidate(CacheService::ITEMS);
-
-            return $this->response(
-                'success',
-                'Item created successfully',
-                $item->toArray(),
-                201
-            );
-        } catch (Throwable $e) {
-            DB::rollBack();
-
-            throw $e;
-        }
+        return $this->response(
+            'success',
+            'Item updated successfully',
+            $item->toArray(),
+            200
+        );
     }
 }

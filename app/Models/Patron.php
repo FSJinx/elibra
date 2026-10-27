@@ -11,14 +11,14 @@ class Patron extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        // 
-        // 
+        //
+        //
         /**
          * EBC      -   Electronic Borrowers Card
          * Format   -   Patron Type + Year of Registration + Nth number of patron
          * Sample   -   SP202601
          */
-        'ebc_number', 
+        'ebc_number',
 
         'external_organization',
         'date_joined',

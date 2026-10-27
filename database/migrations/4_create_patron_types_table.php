@@ -18,6 +18,9 @@ return new class extends Migration
             $table->string('description')->nullable();
 
             $table->integer('validity_period'); // This is saved in years
+            $table->boolean('has_campus')->default(false);
+            $table->boolean('has_department')->default(false);
+            $table->boolean('has_program')->default(false);
 
             $table->timestamps();
             $table->softDeletes();

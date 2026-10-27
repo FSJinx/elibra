@@ -72,17 +72,6 @@ class AuthController extends Controller
         ], statusCode: 201);
     }
 
-    public function register(RegisterRequest $request, AuthService $authService)
-    {
-        try {
-            $authService->create($request->validated());
-
-            return $this->response(message: 'Account registered successfully. Please wait for approval before logging in or using your account', statusCode: 200);
-        } catch (Throwable $e) {
-            return $this->response('error', $e->getMessage());
-        }
-    }
-
     public function refresh()
     {
         try {
@@ -110,5 +99,12 @@ class AuthController extends Controller
         }
 
         return $this->response('success', 'Logged out succesfully.');
+    }
+
+    public function updateProfile(UpdateMyProfileRequest $request, AuthService $authService)
+    {
+        $this->auth()->user()->update($request->validated());
+
+        return $this->response('success', 'Profile successfully updated.', $authService->index());
     }
 }

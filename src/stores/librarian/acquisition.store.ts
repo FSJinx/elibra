@@ -1,18 +1,16 @@
-interface AcquisitionParams {
-  sort: string
-  page: number
-  per_page: number
-  order: 'asc' | 'desc'
+interface AcquisitionParams extends BaseParams {
+  acquisition_mode: 'purchase' | 'donation' | 'gift' | 'exchange' | ''
 }
 
-const defaultParams: Readonly<AcquisitionParams> = {
+const defaultParams: Readonly<Partial<AcquisitionParams>> = {
   sort: '',
   page: 1,
-  per_page: 10,
+  per_page: '25',
   order: 'asc',
+  acquisition_mode: '',
 }
 
-const url = 'librarian/acquisition'
+const url = 'acquisition'
 
 export const useAcquisitionStore = defineStore('acquisition', {
   state: () => ({
@@ -51,18 +49,17 @@ export const useAcquisitionStore = defineStore('acquisition', {
     },
 
     // =========== ACTIONS ============
-    async fetch(forced = false) {
-      if (this.data && !forced) return
+    async fetch(params?: Partial<AcquisitionParams>) {
+      // if (this.data && !forced) return
 
       this.loading = true
       try {
-        const res = await get(url)
+        const res = await get(url, params)
         this.setData(res.data.data)
         return res
       } finally {
         this.loading = false
       }
-
     },
 
     async show(id: any) {

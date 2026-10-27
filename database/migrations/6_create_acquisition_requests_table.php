@@ -45,7 +45,7 @@ return new class extends Migration
             $table->text('remarks')->nullable();
 
             // Foreign Keys
-            $table->unsignedBigInteger('requested_by');
+            $table->unsignedBigInteger('requested_by')->nullable();
             $table->unsignedBigInteger('item_type_id')->nullable();
             $table->unsignedBigInteger('reviewed_by')->nullable();
 

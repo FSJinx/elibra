@@ -40,7 +40,7 @@ class AcquisitionSeeder extends Seeder
         ])->each(function ($data) use ($acquisition, $acquisition_modes, $receivers) {
             $acquisition->create([
                 ...$data,
-                'acquisition_date' => fake()->date(),
+                'acquisition_date' => fake()->dateTimeBetween('2025-01-01')->format('Y-m-d'),
                 'acquisition_mode' => fake()->randomElement($acquisition_modes),
                 'receiver_id' => $receivers->random(),
 

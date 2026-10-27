@@ -21,11 +21,22 @@ class LibrarianController extends Controller
      */
     public function index()
     {
-        return $this->response(data: Librarian::with([
+        $user = $this->user();
+
+        $query = Librarian::query()->with([
             'user',
             'library',
-        ])->get()
-        );
+        ]);
+
+        if ($user->isAdmin()) {
+            $query->whereHas('library', function ($query) use ($user) {
+                $query->where('campus_id', $user->campus_id);
+            });
+        } elseif ($user->isLibrarian()) {
+            $query->where('library_id', $user->librarian?->library_id);
+        }
+
+        return $this->response(data: $query->get());
 
     }
 

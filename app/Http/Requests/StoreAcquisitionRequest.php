@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use App\Models\AcquisitionRequest;
 use App\Models\Librarian;
-use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Validation\Rule;
 
@@ -17,9 +16,8 @@ class StoreAcquisitionRequest extends BaseRequest
     {
         $user = $this->user();
 
-        return
-            $user->hasPermission('acquisition.create') && ($user->isLibrarian() && $user->librarian->branch)
-            || $user->isAdmin();
+        return $user !== null
+            && (($user->isLibrarian() && $user->librarian?->library !== null) || $user->isAdmin());
     }
 
     /**
@@ -29,18 +27,42 @@ class StoreAcquisitionRequest extends BaseRequest
      */
     public function rules(): array
     {
-        $rules = [
+        return [
             'acquisition_id' => ['nullable', 'string', 'max:255', 'unique:acquisitions,acquisition_id'],
             'dealer' => ['required', 'string', 'max:255'],
             'acquisition_mode' => ['required', Rule::in(['purchase', 'donation', 'gift', 'exchange'])],
             'acquisition_date' => ['required', 'date'],
             'remarks' => ['nullable', 'string', 'max:255'],
 
-            'receiver_id' => ['sometimes', 'integer', Rule::exists((new Librarian)->getTable(), 'id')],
+            'receiver_id' => ['required', 'integer', Rule::exists((new Librarian)->getTable(), 'id')],
             'acquisition_request_id' => ['nullable', 'integer', Rule::exists((new AcquisitionRequest)->getTable(), 'id')],
         ];
+    }
 
-        return $rules;
+    public function withValidator($validator): void
+    {
+        $validator->after(function ($validator) {
+            $receiverId = $this->input('receiver_id');
+
+            if (! $receiverId) {
+                return;
+            }
+
+            $user = $this->user();
+            $query = Librarian::query()->whereKey($receiverId);
+
+            if ($user->isAdmin()) {
+                $query->whereHas('library', function ($query) use ($user) {
+                    $query->where('campus_id', $user->campus_id);
+                });
+            } elseif ($user->isLibrarian()) {
+                $query->where('library_id', $user->librarian?->library_id);
+            }
+
+            if (! $query->exists()) {
+                $validator->errors()->add('receiver_id', 'The selected librarian is not available for this library.');
+            }
+        });
     }
 
     public function messages(): array
@@ -63,9 +85,9 @@ class StoreAcquisitionRequest extends BaseRequest
             'remarks.string' => 'The remarks must be a valid text value.',
             'remarks.max' => 'The remarks may not exceed 255 characters.',
 
-            'receiver_id.required' => 'The receiver user is required.',
-            'receiver_id.integer' => 'The receiver user ID must be a valid number.',
-            'receiver_id.exists' => 'The selected receiver user does not exist.',
+            'receiver_id.required' => 'A librarian is required.',
+            'receiver_id.integer' => 'The librarian selection is invalid.',
+            'receiver_id.exists' => 'The selected librarian does not exist.',
 
             'acquisition_request_id.integer' => 'The acquisition request ID must be a valid number.',
             'acquisition_request_id.exists' => 'The selected acquisition request does not exist.',

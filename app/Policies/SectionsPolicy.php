@@ -36,7 +36,7 @@ class SectionsPolicy
      */
     public function update(User $user, Sections $sections): bool
     {
-        return $user->isSuperAdmin();
+        return $user->isSuperAdmin() || $user->isAdmin();
     }
 
     /**

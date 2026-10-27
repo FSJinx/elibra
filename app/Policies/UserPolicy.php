@@ -26,9 +26,11 @@ class UserPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(AuthUser $user): bool
+    public function create(User $user): bool
     {
-        return $user->hasPermission('user.create');
+        // return $user->hasPermission('user.create');
+
+        return $user->isSuperAdmin() || $user->isAdmin();
     }
 
     /**

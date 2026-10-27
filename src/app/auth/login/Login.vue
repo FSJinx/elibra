@@ -33,36 +33,43 @@
 </template>
 
 <script setup lang="ts">
+interface Status {
+  status: 'error' | 'success' | null
+  message: string | null
+  username: string | null
+  password: string | null
+}
+
 const store = authStore()
 const auth = useAuth()
 const router = useRouter()
 
-const error = reactive({
+const defaultStatus: Status = {
   status: null,
   message: null,
   username: null,
   password: null,
-})
+}
+
+const error = reactive(defaultStatus)
 
 const credentials = reactive({
   username: '',
   password: '',
 })
 
-async function handleSubmit() {
-  Object.assign(error, {
-    status: null,
-    message: null,
-    username: null,
-    password: null,
-  })
+const setStatus = (s: Status) => {
+  Object.assign(error, s)
+}
 
+async function handleSubmit() {
+  setStatus(defaultStatus)
   const res = await auth.login({ username: credentials.username, password: credentials.password })
 
   console.log(res)
 
   if (!res.success) {
-    Object.assign(error, {
+    setStatus({
       status: res.data?.status,
       message: res.data?.message ?? '',
       username: res.data?.data?.username ?? null,

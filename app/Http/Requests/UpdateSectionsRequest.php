@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use App\Models\Sections;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class UpdateSectionsRequest extends BaseRequest
@@ -25,14 +24,8 @@ class UpdateSectionsRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'name' => [
-                'sometimes',
-                'required',
-                'string',
-                'max:255',
-                Rule::unique((new Sections)->getTable(), 'name')
-                    ->ignore($this->route('section')),
-            ]
+            'name' => ['sometimes', 'required', 'string', 'max:255', Rule::unique((new Sections)->getTable(), 'name')->ignore($this->route('section'))],
+            'librarian_id' => ['sometimes'],
         ];
     }
 }

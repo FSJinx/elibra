@@ -1,22 +1,20 @@
 <template>
   <div class="size-full flex flex-col gap-5 overflow-hidden">
-    <SectionHeader title="Library Sections" description="Manage sections or departments of this library." icon="building-add">
+    <SectionHeader title="Sections" description="Manage sections or departments of this library." icon="building-add">
       <div class="flex items-center justify-end gap-2">
         <NewSection @refresh="search" />
       </div>
     </SectionHeader>
 
-    <div class="flex flex-col flex-1 p-5 gap-3">
+    <div class="flex flex-col flex-1 p-5 gap-3 overflow-y-auto">
       <Card class="flex items-center flex-row gap-2">
         <Form id="section-form" class="flex-1 flex items-center gap-2" @submit="search">
           <Input id="section-query" class="max-w-100" type="text" placeholder="Search by section name" v-model="params.query" />
-          <Button type="submit" variant="info">Search</Button>
+          <Button type="submit">Search</Button>
         </Form>
-
-        <Button variant="restore" left-icon="filter">Filter</Button>
       </Card>
 
-      <Table title="Library Sections" subtitle="These are all the sections or departments under this library" data-length="">
+      <Table title="Library Sections" subtitle="These are all the sections or departments under this library" :data="data">
         <Thead>
           <tr>
             <Th class="text-left">Name</Th>
@@ -27,38 +25,39 @@
           </tr>
         </Thead>
         <Tbody :data="data" :loading="loading" cols="5">
-          <Tr v-for="(d, index) in data" :key="index">
+          <Tr v-for="(d, index) in sections.data" :key="index">
             <Td class="text-left" :data="d.name" />
             <Td class="text-left" :data="d.librarian_id ? d.librarian?.name : null" />
             <Td :data="parse.formatDate(d.created_at)" />
             <Td :data="parse.formatTimeAgo(d.updated_at)" />
             <Td class="space-x-2">
-              <Button size="sm" class="hover:text-info">Edit</Button>
+              <EditSection :data="d" />
               <Button size="sm" class="hover:text-danger">Delete</Button>
             </Td>
           </Tr>
         </Tbody>
+        <template #footer />
       </Table>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import EditSection from '@/app/librarian/administration/sections/modals/EditSection.vue'
 import NewSection from '@/app/librarian/administration/sections/modals/NewSection.vue'
 
 const sections = sectionStore()
 
 const loading = ref<boolean>(false)
 const parse = useParser()
-const data = ref<Section[] | null>()
+const data = ref<Pagination>()
+
 const params = reactive(sections.defaultParams)
 
 async function search() {
   loading.value = true
 
   try {
-    console.log('Search')
-
     const res = await sections.fetch(params)
     data.value = res.data
   } catch (e: any) {
@@ -68,6 +67,7 @@ async function search() {
   }
 }
 
+watchDebounced(() => params.query, search, { debounce: 300 })
 onBeforeMount(() => search())
 </script>
 

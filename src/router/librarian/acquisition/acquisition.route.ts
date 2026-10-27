@@ -6,7 +6,12 @@ export const acquisitionAcquisition = [
   },
   {
     path: ':id',
-    name: 'librarian.acquisition.lines',
-    component: () => import('@/app/librarian/acquisition/acquisition_line/AcquisitionLines.vue'),
+    children: [
+      {
+        path: '',
+        name: 'librarian.acquisition.lines',
+        component: () => import('@/app/librarian/acquisition/acquisition_line/AcquisitionLines.vue'),
+      },
+    ]
   },
 ]

@@ -41,5 +41,10 @@ export const usersStore = defineStore('users', {
         return e.response
       }
     },
+
+    async create (params: Partial<User>) {
+      const res = await post(this.url, params)
+      return res
+    }
   },
 })

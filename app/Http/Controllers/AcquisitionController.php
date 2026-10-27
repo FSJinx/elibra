@@ -51,11 +51,7 @@ class AcquisitionController extends Controller
      */
     public function store(StoreAcquisitionRequest $request)
     {
-        $data = array_merge($request->validated(), [
-            'receiver_user_id' => $request->input('receiver_user_id') ?? $this->user()->id,
-        ]);
-
-        $acquisition = $this->acquisitionService->create($data);
+        $acquisition = $this->acquisitionService->create($request->validated());
 
         return $this->response(
             'success',

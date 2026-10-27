@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('file_path');
             $table->string('mime_type')->nullable();
             $table->unsignedBigInteger('file_size')->nullable();
+            $table->unsignedBigInteger("item_id")->nullable();
 
             $table->enum('image_type', ['profile', 'logo', 'subscription', 'book_cover', 'item_cover', 'document', 'banner', 'other']);
             $table->timestamps();

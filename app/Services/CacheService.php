@@ -28,7 +28,11 @@ class CacheService
     public const PATRONS = 'patrons';
 
     public const LIBRARIANS = 'librarians';
+    
+    // ========= CATALOGING ==========
+    public const PATRON_TYPES = 'patron_types';
 
+    
     // ========= CATALOGING ==========
     public const ITEMS = 'items';
 
@@ -64,6 +68,8 @@ class CacheService
     public const CIRCULATIONS = 'circulations';
 
     public const FINES_TRANSACTIONS = 'fines_transactions';
+
+    public const LOAN_MODES = 'loan_modes';
 
     public const PATRON_TYPE_LOAN_POLICY = 'patron_type_loan_policy';
 

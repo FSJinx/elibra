@@ -1,12 +1,17 @@
 // src/plugins/axios.ts
-import axios from 'axios'
+import axios, { type AxiosRequestConfig } from 'axios'
 
 import router from '@/router'
 import { authStore } from '@/stores/auth.store'
 
 // export const backendRoute = `${(import.meta as any).env.VITE_APP_URL}/api`
-export const backendRoute = `http://localhost:8000/api`
-// export const backendRoute = `http://10.10.149.83:8000/api`
+const apiRoute = 'http://localhost:8000'
+export const backendRoute = `${apiRoute}/api`
+export const storageRoute = `${apiRoute}/storage`
+
+const pending = new Map<string, AbortController>()
+const keyOf = (c: AxiosRequestConfig) => `${c.method}:${c.baseURL ?? ''}${c.url?.split('?')[0]}`
+const clear = (c?: AxiosRequestConfig) => c && pending.get(keyOf(c))?.signal === c.signal && pending.delete(keyOf(c))
 
 export const api = axios.create({
   baseURL: backendRoute,
@@ -22,6 +27,16 @@ api.interceptors.request.use(
     if (my.token) {
       config.headers.Authorization = `Bearer ${my.token}`
     }
+
+    if (config.method === 'GET') {
+      const key = keyOf(config)
+      pending.get(key)?.abort()
+
+      const ctrl = new AbortController()
+      pending.set(key, ctrl)
+      config.signal = ctrl.signal
+    }
+
     return config
   },
   (error) => Promise.reject(error),
@@ -69,23 +84,12 @@ api.interceptors.response.use(
       }
     }
 
-    // if (status === 403) {
-    //   pop.error(response?.message)
-    // }
-
-    // if (status === 404) {
-    //   // pop.unload()
-    //   pop.error(response?.message)
-    // }
-
     if (status === 422) {
       // pop.unload()
 
-      const errors = response.errors
-      const firstErrorMessage = Object.values(errors as object)[0][0]
+      const firstErrorMessage = (Object.values(response?.errors ?? {})[0] as string[] | undefined)?.[0]
       console.log(firstErrorMessage)
-
-      pop.error(firstErrorMessage ?? response?.message)
+      pop.error(firstErrorMessage ?? 'Invalid input, please check your inputs and try again.')
     }
 
     if (status === 500) {

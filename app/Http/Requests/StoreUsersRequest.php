@@ -29,34 +29,27 @@ class StoreUsersRequest extends BaseRequest
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'middle_initial' => ['nullable', 'string', 'max:2'],
-            'sex' => ['required', Rule::in(['male', 'female'])],
-
+            'sex' => ['required', 'in:male,female'],
             'birthdate' => ['required', 'date', 'before:today'],
+
             'contact_number' => ['nullable', 'regex:/^09\d{9}$/'],
             'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')],
 
             'username' => ['required', 'string', 'max:255', Rule::unique('users', 'username')],
-            'password' => ['required', 'string', 'min:8'],
+            'patron_type_id' => ['required_if:role,patron', 'prohibited_unless:role,patron', 'nullable', 'exists:patron_types,id'],
+            // 'password' => ['required', 'string', 'min:8'],
         ];
 
-        //For Super Admin
-        if ($authUser->isSuperAdmin()){
-            $rules['role'] = [
-                            'required', 
-                            Rule::in(['admin', 'librarian', 'patron'])
-                            ];
-            $rules['campus_id'] = [
-                            'required',
-                            'exists:campuses,id'
-                            ];
-        // For Library Admin
-        }elseif($authUser->isAdmin()){
-            $rules['role'] = [
-                            'required', 
-                            Rule::in(['librarian', 'patron'])
-                            ];
+        // For Super Admin
+        if ($authUser->isSuperAdmin()) {
+            $rules['role'] = ['required', 'in:super_admin,admin,librarian,patron'];
+            $rules['campus_id'] = ['required', 'exists:campuses,id'];
+
+            // For Library Admin
+        } elseif ($authUser->isAdmin()) {
+            $rules['role'] = ['required', 'in:admin,librarian,patron'];
         }
-        
+
         return $rules;
     }
 }
