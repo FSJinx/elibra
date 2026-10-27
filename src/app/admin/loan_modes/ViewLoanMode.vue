@@ -6,14 +6,15 @@
       <Title :level="3">Loan Mode: {{ loan_mode.currentData?.name ?? '-' }}</Title>
     </div>
 
-    <div class="flex-1 flex flex-col overflow-y-auto p-5">
+    <div class="flex-1 flex flex-col overflow-y-auto p-5 gap-4">
+      <Card class="items-end">
+        <NewPatronLoanPolicy @refresh="fetch" />
+      </Card>
       <Table title="Patrons Loan Policy" subtitle="These are the current loan modes your library accomodate" :data="paginatedData" cols="5">
         <Thead>
           <tr>
             <Th>No</Th>
             <Th>Patron Type</Th>
-            <Th>Can Reserve</Th>
-            <Th>Reservation Limit</Th>
             <Th>
               Loan Period
               <p class="text-sm text-muted-foreground font-normal lowercase">(in days)</p>
@@ -31,10 +32,6 @@
           <Tr v-for="(item, index) in policy.data" :key="index">
             <Td :data="index + 1" />
             <Td :data="item.patron_type?.name" />
-            <Td>
-              <Status :variant="String(item.can_reserve)">{{ item.can_reserve }}</Status>
-            </Td>
-            <Td :data="item.reservation_limit" />
             <Td :data="item.loan_period_days" />
             <Td :data="item.max_items" />
             <Td :data="item.max_renewals" />
@@ -53,6 +50,7 @@
 
 <script setup lang="ts">
 import EditLoanPolicy from '@/app/admin/loan_modes/modals/EditLoanPolicy.vue'
+import NewPatronLoanPolicy from '@/app/admin/loan_modes/modals/NewPatronLoanPolicy.vue'
 
 const policy = patronTypeLoanPolicyStore()
 const loan_mode = loanModeStore()
@@ -73,6 +71,7 @@ async function fetch() {
 }
 
 async function load() {
+  loading.value = true
   pop.load()
   try {
     await loan_mode.show({ id: route.params.id })
@@ -83,6 +82,7 @@ async function load() {
 }
 watchEffect(() => loan_mode.currentData?.name && crumb.set(`${route.name as string}:${route.params.id}`, loan_mode.currentData.name))
 onBeforeMount(load)
+onBeforeUnmount(() => (policy.data = null))
 </script>
 
 <style scoped></style>

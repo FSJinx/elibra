@@ -17,6 +17,12 @@
           <Label>Description</Label>
           <Input type="text" placeholder="e.g. In House" v-model="form.description" :error="errors.description?.[0]" />
         </Control>
+        <Control class="gap-3" col>
+          <Checkbox id="mode-renewable" v-model="form.renewable" label="Can Renew" />
+          <Checkbox id="mode-charges_fine" v-model="form.charges_fine" label="Charges Fine" />
+          <Checkbox id="mode-has_grace_period" v-model="form.has_grace_period" label="Has Grace Period" />
+          <Checkbox id="mode-is_active" v-model="form.is_active" label="Active" />
+        </Control>
       </Form>
     </ModalBody>
     <ModalFooter class="space-x-2">

@@ -79,6 +79,7 @@ Route::group(['prefix' => '/option'], function () {
     Route::get('categories', [OptionController::class, 'categories']);
     Route::get('item_types', [OptionController::class, 'item_types']);
     Route::get('patron_types', [OptionController::class, 'patronTypes']);
+    Route::get('loan_modes', [OptionController::class, 'loanModes']);
 
     // ============== AUTHORITY CONTROL ================
     Route::get('languages', [OptionController::class, 'languages']);

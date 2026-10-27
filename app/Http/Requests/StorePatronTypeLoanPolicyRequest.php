@@ -30,8 +30,6 @@ class StorePatronTypeLoanPolicyRequest extends BaseRequest
             'key' => ['required', 'string', 'max:255', Rule::unique(PatronTypeLoanPolicy::class, 'key')],
             'description' => ['nullable', 'string', 'max:255'],
 
-            'can_reserve' => ['boolean'],
-            'reservation_limit' => ['required', 'integer', 'min:0'],
             'loan_period_days' => ['required', 'integer', 'min:1'],
 
             'max_items' => ['required', 'integer', 'min:1'],
@@ -60,12 +58,6 @@ class StorePatronTypeLoanPolicyRequest extends BaseRequest
 
             'description.string' => 'The description must be a valid string.',
             'description.max' => 'The description may not exceed 255 characters.',
-
-            'can_reserve.boolean' => 'The reserve option must be true or false.',
-
-            'reservation_limit.required' => 'The reservation limit is required.',
-            'reservation_limit.integer' => 'The reservation limit must be a whole number.',
-            'reservation_limit.min' => 'The reservation limit must be 0 or greater.',
 
             'loan_period_days.required' => 'The loan period is required.',
             'loan_period_days.integer' => 'The loan period must be a whole number.',
