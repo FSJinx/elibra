@@ -7,6 +7,7 @@
 export {}
 declare global {
   const EffectScope: typeof import('vue').EffectScope
+  const acaRepoStore: typeof import('./stores/acarepo.store').acaRepoStore
   const acceptHMRUpdate: typeof import('pinia').acceptHMRUpdate
   const acquisitionAcquisition: typeof import('./router/librarian/acquisition/acquisition.route').acquisitionAcquisition
   const acquisitionRequest: typeof import('./router/librarian/acquisition/request.route').acquisitionRequest
@@ -437,6 +438,9 @@ declare global {
   export type { Variants, Sizes } from './composables/useType'
   import('./composables/useType')
   // @ts-ignore
+  export type { AcaRepoPayload, AcaRepo } from './stores/acarepo.store'
+  import('./stores/acarepo.store')
+  // @ts-ignore
   export type { ItemParams } from './stores/catalog/item.store'
   import('./stores/catalog/item.store')
   // @ts-ignore
@@ -519,6 +523,7 @@ declare module 'vue' {
   interface GlobalComponents {}
   interface ComponentCustomProperties {
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
+    readonly acaRepoStore: UnwrapRef<typeof import('./stores/acarepo.store')['acaRepoStore']>
     readonly acceptHMRUpdate: UnwrapRef<typeof import('pinia')['acceptHMRUpdate']>
     readonly acquisitionAcquisition: UnwrapRef<typeof import('./router/librarian/acquisition/acquisition.route')['acquisitionAcquisition']>
     readonly acquisitionRequest: UnwrapRef<typeof import('./router/librarian/acquisition/request.route')['acquisitionRequest']>

@@ -27,6 +27,7 @@ class AcaRepo extends Model
 
     protected $casts = [
         'keywords' => 'array',
+        'on_catalog' => 'boolean',
     ];
 
     public function language()

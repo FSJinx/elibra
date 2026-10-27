@@ -4,14 +4,16 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 
-class UpdateAcaRepoRequest extends BaseRequest
+class UpdateAcaRepoRequest extends StoreAcaRepoRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        $user = $this->user();
+
+        return $user !== null && ($user->isSuperAdmin() || $user->isAdmin() || $user->isLibrarian());
     }
 
     /**
@@ -21,8 +23,6 @@ class UpdateAcaRepoRequest extends BaseRequest
      */
     public function rules(): array
     {
-        return [
-            //
-        ];
+        return parent::rules();
     }
 }
