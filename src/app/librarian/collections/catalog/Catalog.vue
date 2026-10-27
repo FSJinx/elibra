@@ -18,7 +18,7 @@
         </Form>
       </Card>
 
-      <Table cols="7" :data-length="data?.length" title="Catalog List" subtitle="List of all library materials." :data="pagination" @per_page="apply({ per_page: $event })" @next="apply({ page: $event })" @prev="apply({ page: $event })">
+      <Table :data-length="data?.length" title="Catalog List" subtitle="List of all library materials." :data="pagination" @per_page="apply({ per_page: $event })" @next="apply({ page: $event })" @prev="apply({ page: $event })">
         <Thead>
           <tr>
             <Th>No</Th>

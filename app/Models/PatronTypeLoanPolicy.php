@@ -12,10 +12,6 @@ class PatronTypeLoanPolicy extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'key',
-        'description',
-
         'can_reserve',
         'reservation_limit',
         'loan_period_days',

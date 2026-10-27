@@ -13,7 +13,7 @@ class LoanMode extends Model
     use AutoFormatter, HasFactory;
 
     protected $fillable = [
-        'slug', 'name',
+        'slug', 'name', 'description',
     ];
 
     protected $formatter = [

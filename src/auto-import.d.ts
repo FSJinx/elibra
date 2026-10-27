@@ -7,6 +7,7 @@
 export {}
 declare global {
   const EffectScope: typeof import('vue').EffectScope
+  const PatronTypeLoanPolicyStore: typeof import('./stores/patron_type_loan_policy.store').PatronTypeLoanPolicyStore
   const acceptHMRUpdate: typeof import('pinia').acceptHMRUpdate
   const acquisitionAcquisition: typeof import('./router/librarian/acquisition/acquisition.route').acquisitionAcquisition
   const acquisitionRequest: typeof import('./router/librarian/acquisition/request.route').acquisitionRequest
@@ -19,6 +20,7 @@ declare global {
   const adminLibraryRoutes: typeof import('./router/admin/organization/library.route').adminLibraryRoutes
   const adminOrganizationRoutes: typeof import('./router/admin/organization.route').adminOrganizationRoutes
   const adminOverviewRoutes: typeof import('./router/admin/dashboard/overview.route').adminOverviewRoutes
+  const adminPolicy: typeof import('./router/admin/policies/index.route').adminPolicy
   const adminRoutes: typeof import('./router/admin.routes').adminRoutes
   const adminStandard: typeof import('./router/admin/standard/index.route').adminStandard
   const adminStandardRoutes: typeof import('./router/admin/standard/index.route').adminStandardRoutes
@@ -112,6 +114,9 @@ declare global {
   const librarianUsers: typeof import('./router/librarian/users/index.route').librarianUsers
   const librariansStore: typeof import('./stores/user.store').librariansStore
   const libraryStore: typeof import('./stores/library.store').libraryStore
+  const loan: typeof import('./router/admin/standard/loan_modes.route').loan
+  const loanModeStore: typeof import('./stores/loan_mode.store').loanModeStore
+  const loanModes: typeof import('./router/admin/standard/loan_modes.route').loanModes
   const loanStore: typeof import('./stores/loan.store').loanStore
   const makeDestructurable: typeof import('@vueuse/core').makeDestructurable
   const mapActions: typeof import('pinia').mapActions
@@ -145,7 +150,9 @@ declare global {
   const opacSearchStore: typeof import('./stores/opac/opacStore').opacSearchStore
   const optionStore: typeof import('./stores/ui/option.store').optionStore
   const patch: typeof import('./composables/data/useApi').patch
+  const patronLoan: typeof import('./stores/patron_type_loan_policy.store').patronLoan
   const patronRoutes: typeof import('./router/patron.routes').patronRoutes
+  const patronTypeLoanPolicyStore: typeof import('./stores/patron_type_loan_policy.store').patronTypeLoanPolicyStore
   const patronTypeStore: typeof import('./stores/patron_type.store').patronTypeStore
   const pausableWatch: typeof import('@vueuse/core').pausableWatch
   const post: typeof import('./composables/data/useApi').post
@@ -180,6 +187,7 @@ declare global {
   const standardCategory: typeof import('./router/admin/standard/item_categories.route').standardCategory
   const standardItemType: typeof import('./router/admin/standard/item_types.route').standardItemType
   const standardPatronType: typeof import('./router/admin/standard/patron_type.route').standardPatronType
+  const stanoanModes: typeof import('./router/admin/standard/loan_modes.route').stanoanModes
   const storageRoute: typeof import('./plugins/axios').storageRoute
   const storeToRefs: typeof import('pinia').storeToRefs
   const syncRef: typeof import('@vueuse/core').syncRef
@@ -485,11 +493,17 @@ declare global {
   export type { Library } from './interfaces/library'
   import('./interfaces/library')
   // @ts-ignore
+  export type { LoanMode, StoreLoanMode, UpdateLoanMode } from './interfaces/loan_modes'
+  import('./interfaces/loan_modes')
+  // @ts-ignore
   export type { Patron } from './interfaces/patron'
   import('./interfaces/patron')
   // @ts-ignore
   export type { PatronType } from './interfaces/patron_type'
   import('./interfaces/patron_type')
+  // @ts-ignore
+  export type { PatronTypeLoanPolicy } from './interfaces/patron_type_loan_policy'
+  import('./interfaces/patron_type_loan_policy')
   // @ts-ignore
   export type { Program } from './interfaces/program'
   import('./interfaces/program')
@@ -529,6 +543,7 @@ declare module 'vue' {
     readonly adminLibraryRoutes: UnwrapRef<typeof import('./router/admin/organization/library.route')['adminLibraryRoutes']>
     readonly adminOrganizationRoutes: UnwrapRef<typeof import('./router/admin/organization.route')['adminOrganizationRoutes']>
     readonly adminOverviewRoutes: UnwrapRef<typeof import('./router/admin/dashboard/overview.route')['adminOverviewRoutes']>
+    readonly adminPolicy: UnwrapRef<typeof import('./router/admin/policies/index.route')['adminPolicy']>
     readonly adminRoutes: UnwrapRef<typeof import('./router/admin.routes')['adminRoutes']>
     readonly adminStandard: UnwrapRef<typeof import('./router/admin/standard/index.route')['adminStandard']>
     readonly adminUserRoutes: UnwrapRef<typeof import('./router/admin/users.route')['adminUserRoutes']>
@@ -606,6 +621,8 @@ declare module 'vue' {
     readonly librarianSerial: UnwrapRef<typeof import('./router/librarian/serial.route')['librarianSerial']>
     readonly librarianSettings: UnwrapRef<typeof import('./router/librarian/settings.route')['librarianSettings']>
     readonly libraryStore: UnwrapRef<typeof import('./stores/library.store')['libraryStore']>
+    readonly loanModeStore: UnwrapRef<typeof import('./stores/loan_mode.store')['loanModeStore']>
+    readonly loanModes: UnwrapRef<typeof import('./router/admin/standard/loan_modes.route')['loanModes']>
     readonly loanStore: UnwrapRef<typeof import('./stores/loan.store')['loanStore']>
     readonly makeDestructurable: UnwrapRef<typeof import('@vueuse/core')['makeDestructurable']>
     readonly mapActions: UnwrapRef<typeof import('pinia')['mapActions']>
@@ -640,6 +657,7 @@ declare module 'vue' {
     readonly optionStore: UnwrapRef<typeof import('./stores/ui/option.store')['optionStore']>
     readonly patch: UnwrapRef<typeof import('./composables/data/useApi')['patch']>
     readonly patronRoutes: UnwrapRef<typeof import('./router/patron.routes')['patronRoutes']>
+    readonly patronTypeLoanPolicyStore: UnwrapRef<typeof import('./stores/patron_type_loan_policy.store')['patronTypeLoanPolicyStore']>
     readonly patronTypeStore: UnwrapRef<typeof import('./stores/patron_type.store')['patronTypeStore']>
     readonly pausableWatch: UnwrapRef<typeof import('@vueuse/core')['pausableWatch']>
     readonly post: UnwrapRef<typeof import('./composables/data/useApi')['post']>

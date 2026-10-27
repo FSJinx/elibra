@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\LoanMode;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Override;
 
 class StoreLoanModeRequest extends BaseRequest
 {
@@ -11,7 +13,9 @@ class StoreLoanModeRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return false;
+        $user = $this->user();
+
+        return $user->can('create', LoanMode::class);
     }
 
     /**
@@ -22,7 +26,17 @@ class StoreLoanModeRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            //
+            'slug' => 'required|unique:loan_modes,slug',
+            'name' => 'required',
+            'description' => 'sometimes',
+        ];
+    }
+
+    #[Override]
+    public function messages()
+    {
+        return [
+            'slug.unique' => 'The provided code is already in use.',
         ];
     }
 }
