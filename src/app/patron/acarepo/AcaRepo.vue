@@ -42,7 +42,14 @@
         </Control>
         <Control id="manuscript-keywords" required col class="sm:col-span-2">
           <Label>Keywords</Label>
-          <Textarea v-model="keywords" :rows="3" helper="Enter one keyword per line." :disabled="busy" />
+          <div class="flex flex-col">
+            <AddKeywords v-model="form" :disabled="busy" subtitle="Add keywords or subjects for your manuscript." />
+            <div class="flex flex-wrap gap-2 mt-5">
+              <p v-if="!form.keywords.length" class="text-center text-muted-foreground">No keywords yet.</p>
+              <Chip v-for="tag in form.keywords.slice(0, 1)" :key="tag">{{ tag }}</Chip>
+              <Chip v-if="form.keywords.length > 1" :title="form.keywords.slice(1).join(', ')">+{{ form.keywords.length - 1 }} more</Chip>
+            </div>
+          </div>
         </Control>
         <div class="sm:col-span-2 flex items-center gap-4">
           <Button type="submit" variant="success" :loading="busy" :disabled="busy || loading || !form.language_id || !options.languages?.length">{{ busy ? 'Submitting...' : 'Submit manuscript' }}</Button>
@@ -58,12 +65,12 @@
 import { onBeforeMount, ref } from 'vue'
 import { acaRepoStore, type AcaRepo, type AcaRepoPayload } from '@/stores/acarepo.store'
 import { optionStore } from '@/stores/ui/option.store'
+import AddKeywords from '@/app/librarian/collections/catalog/forms/sections/modals/AddKeywords.vue'
 
 const store = acaRepoStore()
 const options = optionStore()
 const defaults = (): AcaRepoPayload => ({ title: '', category: 'ut', abstract: '', doi: null, keywords: [], status: 'pending', statusRemark: null, on_catalog: false, language_id: null, program_id: null })
 const form = ref(defaults())
-const keywords = ref('')
 const busy = ref(false)
 const loading = ref(false)
 const error = ref('')
@@ -82,13 +89,12 @@ async function submit() {
   if (busy.value) return
   error.value = ''
   if (!form.value.language_id) { error.value = 'Select a language.'; return }
-  const words = keywords.value.split('\n').map(word => word.trim()).filter(Boolean)
+  const words = form.value.keywords.map(word => word.trim()).filter(Boolean)
   if (!words.length) { error.value = 'Enter at least one keyword.'; return }
   busy.value = true
   try {
     submitted.value = (await store.create({ ...form.value, doi: form.value.doi || null, keywords: words })).data
     form.value = defaults()
-    keywords.value = ''
   } catch (e) { failure(e) } finally { busy.value = false }
 }
 onBeforeMount(loadLanguages)
