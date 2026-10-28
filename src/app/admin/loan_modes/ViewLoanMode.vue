@@ -82,7 +82,10 @@ async function load() {
 }
 watchEffect(() => loan_mode.currentData?.name && crumb.set(`${route.name as string}:${route.params.id}`, loan_mode.currentData.name))
 onBeforeMount(load)
-onBeforeUnmount(() => (policy.data = null))
+onBeforeUnmount(() => {
+  policy.data = null
+  loan_mode.currentData = null
+})
 </script>
 
 <style scoped></style>

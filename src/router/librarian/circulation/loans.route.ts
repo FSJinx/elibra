@@ -6,7 +6,7 @@ export const ciruclationLoans = [
       {
         path: '',
         name: 'librarian.circulation.loans',
-        component: () => import('@/app/librarian/circulation/loans/issue/Issue.vue'),
+        component: () => import('@/app/librarian/circulation/loans/issue/NewIssue.vue'),
       },
       {
         path: 'recent',
