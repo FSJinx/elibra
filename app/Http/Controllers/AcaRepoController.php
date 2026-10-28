@@ -16,7 +16,7 @@ class AcaRepoController extends Controller
      */
     public function index()
     {
-        $acaRepos = AcaRepo::with(['language', 'program'])->latest()->get();
+        $acaRepos = AcaRepo::with(['language', 'program', 'submitter', 'library'])->latest()->get();
 
         return $this->response(
             'success',
@@ -39,17 +39,24 @@ class AcaRepoController extends Controller
      */
     public function store(StoreAcaRepoRequest $request)
     {
-        $acaRepo = $request->user()->isPatron()
-            ? $this->acaRepoService->submitAcaRepo([
-                ...$request->validated(),
-                'program_id' => $request->user()->patron->program_id,
-            ])
-            : $this->acaRepoService->create($request->validated());
+        $user = $request->user();
+        $data = [
+            ...$request->validated(),
+            'submitted_by' => $user->id,
+        ];
+
+        if ($user->isPatron()) {
+            $patron = $user->patron;
+            $data['program_id'] = $patron->program_id;
+            $acaRepo = $this->acaRepoService->submitAcaRepo($data);
+        } else {
+            $acaRepo = $this->acaRepoService->create($data);
+        }
 
         return $this->response(
             'success',
             'Academic repository submission created successfully.',
-            $acaRepo->toArray(),
+            $acaRepo->load(['submitter', 'library'])->toArray(),
             201,
         );
     }
@@ -59,7 +66,7 @@ class AcaRepoController extends Controller
      */
     public function show(AcaRepo $acaRepo)
     {
-        $acaRepo->load(['language', 'program']);
+        $acaRepo->load(['language', 'program', 'submitter', 'library']);
 
         return $this->response(
             'success',
@@ -87,7 +94,7 @@ class AcaRepoController extends Controller
         return $this->response(
             'success',
             'Academic repository updated successfully.',
-            $acaRepo->load(['language', 'program'])->toArray(),
+            $acaRepo->load(['language', 'program', 'submitter', 'library'])->toArray(),
             200
         );
     }

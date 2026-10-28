@@ -9,6 +9,8 @@ use App\Services\AcaRepoService;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 use Tymon\JWTAuth\Http\Middleware\Authenticate;
 use Tymon\JWTAuth\JWTGuard;
@@ -20,7 +22,31 @@ class AcaRepoTest extends TestCase
         parent::setUp();
         $this->withoutMiddleware([JWTGuard::class, Authenticate::class]);
         (require database_path('migrations/3_create_aca_repos_table.php'))->up();
-        $this->actingAs(new User(['role' => 'librarian']), 'api');
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('role');
+            $table->unsignedBigInteger('campus_id')->nullable();
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->string('username')->nullable();
+            $table->softDeletes();
+        });
+        Schema::create('libraries', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('campus_id');
+            $table->softDeletes();
+        });
+        Schema::create('languages', function (Blueprint $table) {
+            $table->id();
+        });
+        Schema::create('programs', function (Blueprint $table) {
+            $table->id();
+            $table->softDeletes();
+        });
+        DB::table('users')->insert(['id' => 1, 'role' => 'librarian', 'campus_id' => 5]);
+        DB::table('libraries')->insert(['id' => 1, 'campus_id' => 5]);
+        Storage::fake('public');
+        $this->actingAs((new User(['role' => 'librarian']))->forceFill(['id' => 1]), 'api');
     }
 
     public function test_staff_can_create_read_update_and_delete_a_submission(): void
@@ -30,10 +56,17 @@ class AcaRepoTest extends TestCase
             'description' => 'A research abstract.', 'keywords' => ['research', 'library'],
             'status' => 'pending', 'on_catalog' => false,
             'language_id' => null, 'program_id' => null,
+            'library_id' => 1,
         ];
-        $id = $this->postJson('/api/acarepo', $payload)->assertCreated()
+        $response = $this->post('/api/acarepo', [
+            ...$payload,
+            'electronic_file' => UploadedFile::fake()->create('manuscript.pdf', 100, 'application/pdf'),
+        ])->assertCreated()
             ->assertJsonPath('data.keywords', ['research', 'library'])
-            ->assertJsonPath('data.on_catalog', false)->json('data.id');
+            ->assertJsonPath('data.on_catalog', false)
+            ->assertJsonPath('data.submitted_by', 1);
+        $id = $response->json('data.id');
+        Storage::disk('public')->assertExists($response->json('data.electronic_file'));
 
         $this->getJson('/api/acarepo')->assertOk()->assertJsonPath('data.0.id', $id);
         $this->getJson("/api/acarepo/$id")->assertOk()->assertJsonPath('data.title', $payload['title']);
@@ -47,7 +80,7 @@ class AcaRepoTest extends TestCase
     {
         $this->postJson('/api/acarepo', [
             'category' => 'invalid', 'keywords' => 'invalid', 'status' => 'invalid', 'on_catalog' => 'invalid',
-        ])->assertUnprocessable()->assertJsonValidationErrors(['title', 'description', 'category', 'keywords', 'status', 'on_catalog']);
+        ])->assertUnprocessable()->assertJsonValidationErrors(['title', 'description', 'category', 'keywords', 'status', 'on_catalog', 'electronic_file', 'library_id']);
     }
 
     public function test_patron_submission_service_forces_pending_and_off_catalog(): void
@@ -56,6 +89,9 @@ class AcaRepoTest extends TestCase
             'title' => 'Patron research', 'category' => 'gt',
             'description' => 'Abstract', 'keywords' => ['research'],
             'status' => 'approved', 'on_catalog' => true,
+            'electronic_file' => UploadedFile::fake()->create('manuscript.pdf', 100, 'application/pdf'),
+            'library_id' => 1,
+            'submitted_by' => 1,
         ]);
 
         $this->assertSame('pending', $record->fresh()->status);
@@ -65,23 +101,33 @@ class AcaRepoTest extends TestCase
     public function test_patron_can_submit_manuscript_without_setting_review_fields(): void
     {
         (require database_path('migrations/2_create_patrons_table.php'))->up();
-        Schema::create('languages', function (Blueprint $table) {
-            $table->id();
-        });
         DB::table('languages')->insert(['id' => 1]);
-        $user = (new User(['role' => 'patron']))->forceFill(['id' => 7]);
+        DB::table('programs')->insert(['id' => 9]);
+        DB::table('users')->insert(['id' => 7, 'role' => 'patron', 'campus_id' => 5]);
+        DB::table('libraries')->insert(['id' => 2, 'campus_id' => 6]);
+        $user = (new User(['role' => 'patron']))->forceFill(['id' => 7, 'campus_id' => 5]);
         Patron::create(['user_id' => 7, 'patron_type_id' => 1, 'program_id' => 9]);
         $this->actingAs($user, 'api');
 
-        $this->postJson('/api/acarepo', [
+        $this->post('/api/acarepo', [
+            'title' => 'Wrong campus manuscript', 'category' => 'ut',
+            'description' => 'Research abstract.', 'keywords' => ['research'],
+            'language_id' => 1, 'library_id' => 2,
+            'electronic_file' => UploadedFile::fake()->create('manuscript.pdf', 100, 'application/pdf'),
+        ])->assertUnprocessable()->assertJsonValidationErrors(['library_id']);
+
+        $this->post('/api/acarepo', [
             'title' => 'Patron manuscript', 'category' => 'ut',
             'description' => 'Research abstract.', 'keywords' => ['research'],
             'language_id' => 1, 'program_id' => 999,
             'status' => 'approved', 'on_catalog' => true,
+            'library_id' => 1,
+            'electronic_file' => UploadedFile::fake()->create('manuscript.pdf', 100, 'application/pdf'),
         ])->assertCreated()->assertJsonPath('data.program_id', 9)
             ->assertJsonPath('data.status', 'pending')
             ->assertJsonPath('data.on_catalog', false)
-            ->assertJsonPath('data.description', 'Research abstract.');
+            ->assertJsonPath('data.description', 'Research abstract.')
+            ->assertJsonPath('data.submitted_by', 7);
     }
 
     public function test_patron_cannot_manage_submissions(): void
@@ -89,6 +135,9 @@ class AcaRepoTest extends TestCase
         $record = AcaRepo::create([
             'title' => 'Protected submission', 'category' => 'ut',
             'description' => 'Abstract', 'keywords' => ['research'],
+            'electronic_file' => 'aca-repo/files/manuscript.pdf',
+            'library_id' => 1,
+            'submitted_by' => 1,
         ]);
         $this->actingAs(new User(['role' => 'patron']), 'api');
         $this->getJson('/api/acarepo')->assertUnauthorized();

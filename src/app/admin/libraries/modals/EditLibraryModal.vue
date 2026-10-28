@@ -14,7 +14,7 @@
         </Control>
         <Control col>
           <Label id="library-phone">Phone</Label>
-          <Input id="library-phone" type="tel" v-model="form.phone" placeholder="e.g. 09xxxxxxxxx" :error="errors?.phone?.[0]" />
+          <Input id="library-phone" type="tel" pattern="09[0-9]{9}|639[0-9]{9}" v-model="form.phone" placeholder="09171234567 or 639171234567" :error="errors?.phone?.[0]" />
         </Control>
         <Control col required>
           <Label id="library-email">Email</Label>

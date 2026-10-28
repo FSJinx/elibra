@@ -13,7 +13,7 @@ export const useCampusStore = defineStore('campus', {
 
   getters: {
     getCampus() {
-      return (id: any) => (this.data as Campus[]).find((i) => i.id === id)
+      return (id: any) => this.data?.find((i) => i.id === id)
     },
   },
 

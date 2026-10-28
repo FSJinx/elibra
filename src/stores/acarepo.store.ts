@@ -63,8 +63,16 @@ export const acaRepoStore = defineStore('acarepo', {
       return { ...res, data }
     },
 
-    async create(payload: AcaRepoPayload) {
-      const res = await post(this.url, toRequest(payload))
+    async create(payload: AcaRepoPayload, electronicFile: File) {
+      const { abstract, keywords, ...fields } = payload
+      const formData = new FormData()
+      Object.entries({ ...fields, description: abstract }).forEach(([key, value]) => {
+        if (value !== null && value !== undefined) formData.append(key, String(value))
+      })
+      keywords.forEach((keyword, index) => formData.append(`keywords[${index}]`, keyword))
+      formData.append('electronic_file', electronicFile)
+
+      const res = await post(this.url, formData)
       const data = fromResponse(res.data)
       this.pushData(data)
       this.setCurrentData(data)
