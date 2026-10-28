@@ -90,18 +90,20 @@
         </CardFooter>
       </Card>
 
-      <Control id="" col required>
-        <Label>Loan Mode</Label>
-        <Select v-model="loanModeId">
-          <Option value="" selected disabled>Select loan mode</Option>
-          <Option :value="item.id" v-for="item in options.loan_modes">{{ item.name }}</Option>
-        </Select>
-      </Control>
+      <Form id="checkout-form" @submit="">
+        <Control id="" col required>
+          <Label>Loan Mode</Label>
+          <Select v-model="loanModeId">
+            <Option value="" selected disabled>Select loan mode</Option>
+            <Option :value="item.id" v-for="item in options.loan_modes">{{ item.name }}</Option>
+          </Select>
+        </Control>
+      </Form>
     </DrawerBody>
 
     <DrawerFooter class="grid grid-cols-2 gap-3" v-if="preview">
       <Button variant="danger" @click="cancel">Cancel</Button>
-      <Button @click="checkout" variant="success" type="submit">Proceed Loan</Button>
+      <Button form="checkout-form" variant="success" type="submit">Proceed Loan</Button>
     </DrawerFooter>
   </Drawer>
 </template>
