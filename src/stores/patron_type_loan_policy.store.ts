@@ -1,4 +1,6 @@
-interface PatronTypeLoanPolicyParams extends BaseParams {}
+interface PatronTypeLoanPolicyParams extends BaseParams {
+  loan_mode_id: any
+}
 
 const defaultParams: Partial<PatronTypeLoanPolicyParams> = {
   query: '',
@@ -17,6 +19,16 @@ export const patronTypeLoanPolicyStore = defineStore('patron_type_loan_policy', 
     async fetch(params?: Partial<PatronTypeLoanPolicyParams>) {
       const res = await get(`${this.url}`, params)
       this.data = res.data.data
+      return res
+    },
+
+    async create(params: StorePatronTypeLoanPolicy) {
+      const res = await post(this.url, params)
+      return res
+    },
+
+    async update(params: UpdatePatronTypeLoanPolicy) {
+      const res = await put(`${this.url}/${params.id}`, params)
       return res
     },
   },

@@ -29,6 +29,12 @@ class UpdateLoanModeRequest extends BaseRequest
             'slug' => ['sometimes', 'required', 'string', 'max:255', Rule::unique('loan_modes', 'slug')->ignore($loanMode)],
             'name' => ['sometimes', 'required', 'string', 'max:255'],
             'description' => ['sometimes', 'nullable', 'string', 'max:255'],
+
+            'renewable' => ['sometimes', 'boolean'],
+            'charges_fine' => ['sometimes', 'boolean'],
+            'has_grace_period' => ['sometimes', 'boolean'],
+
+            'is_active' => ['sometimes', 'boolean'],
         ];
     }
 }

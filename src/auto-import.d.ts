@@ -7,7 +7,6 @@
 export {}
 declare global {
   const EffectScope: typeof import('vue').EffectScope
-  const PatronTypeLoanPolicyStore: typeof import('./stores/patron_type_loan_policy.store').PatronTypeLoanPolicyStore
   const acceptHMRUpdate: typeof import('pinia').acceptHMRUpdate
   const acquisitionAcquisition: typeof import('./router/librarian/acquisition/acquisition.route').acquisitionAcquisition
   const acquisitionRequest: typeof import('./router/librarian/acquisition/request.route').acquisitionRequest
@@ -15,20 +14,15 @@ declare global {
   const actions: typeof import('./stores/ui/option.store').actions
   const adminAuthorityRoute: typeof import('./router/admin/authority.route').adminAuthorityRoute
   const adminCampusRoutes: typeof import('./router/admin/organization/campus.route').adminCampusRoutes
-  const adminItemCategoriesRoutes: typeof import('./router/admin/standard/item_categories.route').adminItemCategoriesRoutes
-  const adminItemTypeRoutes: typeof import('./router/admin/standard/item_types.route').adminItemTypeRoutes
   const adminLibraryRoutes: typeof import('./router/admin/organization/library.route').adminLibraryRoutes
   const adminOrganizationRoutes: typeof import('./router/admin/organization.route').adminOrganizationRoutes
   const adminOverviewRoutes: typeof import('./router/admin/dashboard/overview.route').adminOverviewRoutes
   const adminPolicy: typeof import('./router/admin/policies/index.route').adminPolicy
   const adminRoutes: typeof import('./router/admin.routes').adminRoutes
   const adminStandard: typeof import('./router/admin/standard/index.route').adminStandard
-  const adminStandardRoutes: typeof import('./router/admin/standard/index.route').adminStandardRoutes
   const adminUserRoutes: typeof import('./router/admin/users.route').adminUserRoutes
   const adminVendorRoute: typeof import('./router/admin/organization/vendor.route').adminVendorRoute
-  const administ: typeof import('./router/librarian/administration/users.route').administ
   const administrationSection: typeof import('./router/librarian/administration/section.route').administrationSection
-  const administrationStaff: typeof import('./router/librarian/users/staff.route').administrationStaff
   const administrationUsers: typeof import('./router/librarian/administration/users.route').administrationUsers
   const api: typeof import('./plugins/axios').api
   const asyncComputed: typeof import('@vueuse/core').asyncComputed
@@ -40,7 +34,6 @@ declare global {
   const axios: typeof import('./plugins/axios').default
   const backendRoute: typeof import('./plugins/axios').backendRoute
   const circulationCheckOut: typeof import('./router/librarian/circulation/check_out.route').circulationCheckOut
-  const circulationIssue: typeof import('./router/librarian/circulation/issue.route').circulationIssue
   const ciruclationLoans: typeof import('./router/librarian/circulation/loans.route').ciruclationLoans
   const collectionsCatalog: typeof import('./router/librarian/collections/catalog.route').collectionsCatalog
   const collectionsInventory: typeof import('./router/librarian/collections/inventory.route').collectionsInventory
@@ -66,7 +59,6 @@ declare global {
   const customRef: typeof import('vue').customRef
   const debouncedRef: typeof import('@vueuse/core').debouncedRef
   const debouncedWatch: typeof import('@vueuse/core').debouncedWatch
-  const defaultParams: typeof import('./stores/patron_type.store').defaultParams
   const defineAsyncComponent: typeof import('vue').defineAsyncComponent
   const defineComponent: typeof import('vue').defineComponent
   const defineStore: typeof import('pinia').defineStore
@@ -92,29 +84,17 @@ declare global {
   const isReadonly: typeof import('vue').isReadonly
   const isRef: typeof import('vue').isRef
   const isShallow: typeof import('vue').isShallow
-  const itemDefaultParams: typeof import('./stores/catalog/item.store').itemDefaultParams
   const librarianAcquisition: typeof import('./router/librarian/acquisition/index.route').librarianAcquisition
   const librarianAdministration: typeof import('./router/librarian/administration/index.route').librarianAdministration
-  const librarianAdministrationSection: typeof import('./router/librarian/administration/section.route').librarianAdministrationSection
-  const librarianAdministrationStaff: typeof import('./router/librarian/users/staff.route').librarianAdministrationStaff
   const librarianCirculation: typeof import('./router/librarian/circulation/index.route').librarianCirculation
-  const librarianCirculationIssue: typeof import('./router/librarian/circulation/issue.route').librarianCirculationIssue
-  const librarianCiruclationLoans: typeof import('./router/librarian/circulation/loans.route').librarianCiruclationLoans
   const librarianCollections: typeof import('./router/librarian/collections/index.route').librarianCollections
-  const librarianCollectionsCatalog: typeof import('./router/librarian/collections/catalog.route').librarianCollectionsCatalog
-  const librarianCollectionsInventory: typeof import('./router/librarian/collections/inventory.route').librarianCollectionsInventory
   const librarianDashboard: typeof import('./router/librarian/dashboard.route').librarianDashboard
   const librarianPatron: typeof import('./router/librarian/patron.route').librarianPatron
   const librarianReport: typeof import('./router/librarian/report.route').librarianReport
   const librarianRoutes: typeof import('./router/librarian.routes').default
-  const librarianSectionRoute: typeof import('./router/librarian/administration/section.route').librarianSectionRoute
   const librarianSerial: typeof import('./router/librarian/serial.route').librarianSerial
   const librarianSettings: typeof import('./router/librarian/settings.route').librarianSettings
-  const librarianStaffRoute: typeof import('./router/librarian/users/staff.route').librarianStaffRoute
-  const librarianUsers: typeof import('./router/librarian/users/index.route').librarianUsers
-  const librariansStore: typeof import('./stores/user.store').librariansStore
   const libraryStore: typeof import('./stores/library.store').libraryStore
-  const loan: typeof import('./router/admin/standard/loan_modes.route').loan
   const loanModeStore: typeof import('./stores/loan_mode.store').loanModeStore
   const loanModes: typeof import('./router/admin/standard/loan_modes.route').loanModes
   const loanStore: typeof import('./stores/loan.store').loanStore
@@ -150,7 +130,6 @@ declare global {
   const opacSearchStore: typeof import('./stores/opac/opacStore').opacSearchStore
   const optionStore: typeof import('./stores/ui/option.store').optionStore
   const patch: typeof import('./composables/data/useApi').patch
-  const patronLoan: typeof import('./stores/patron_type_loan_policy.store').patronLoan
   const patronRoutes: typeof import('./router/patron.routes').patronRoutes
   const patronTypeLoanPolicyStore: typeof import('./stores/patron_type_loan_policy.store').patronTypeLoanPolicyStore
   const patronTypeStore: typeof import('./stores/patron_type.store').patronTypeStore
@@ -183,11 +162,9 @@ declare global {
   const shallowReadonly: typeof import('vue').shallowReadonly
   const shallowRef: typeof import('vue').shallowRef
   const sizes: typeof import('./composables/useType').sizes
-  const standard: typeof import('./router/admin/standard/item_categories.route').standard
   const standardCategory: typeof import('./router/admin/standard/item_categories.route').standardCategory
   const standardItemType: typeof import('./router/admin/standard/item_types.route').standardItemType
   const standardPatronType: typeof import('./router/admin/standard/patron_type.route').standardPatronType
-  const stanoanModes: typeof import('./router/admin/standard/loan_modes.route').stanoanModes
   const storageRoute: typeof import('./plugins/axios').storageRoute
   const storeToRefs: typeof import('pinia').storeToRefs
   const syncRef: typeof import('@vueuse/core').syncRef
@@ -210,7 +187,6 @@ declare global {
   const unref: typeof import('vue').unref
   const unrefElement: typeof import('@vueuse/core').unrefElement
   const until: typeof import('@vueuse/core').until
-  const use: typeof import('./composables/api/useLoan').use
   const useAccessionStore: typeof import('./stores/librarian/accession.store').useAccessionStore
   const useAcquisitionLinesStore: typeof import('./stores/librarian/acquisition_lines.store').useAcquisitionLinesStore
   const useAcquisitionStore: typeof import('./stores/librarian/acquisition.store').useAcquisitionStore
@@ -312,7 +288,6 @@ declare global {
   const useLastChanged: typeof import('@vueuse/core').useLastChanged
   const useLibrarianDashboardStore: typeof import('./stores/librarian/librarian_dashboard.store').useLibrarianDashboardStore
   const useLink: typeof import('vue-router').useLink
-  const useLoan: typeof import('./composables/api/useLoan').useLoan
   const useLocalStorage: typeof import('@vueuse/core').useLocalStorage
   const useMagicKeys: typeof import('@vueuse/core').useMagicKeys
   const useManualRefHistory: typeof import('@vueuse/core').useManualRefHistory
@@ -413,11 +388,6 @@ declare global {
   const useWindowFocus: typeof import('@vueuse/core').useWindowFocus
   const useWindowScroll: typeof import('@vueuse/core').useWindowScroll
   const useWindowSize: typeof import('@vueuse/core').useWindowSize
-  const userPatron: typeof import('./router/librarian/users/patron.route').userPatron
-  const users: typeof import('./router/librarian/users/staff.route').users
-  const usersLibrarian: typeof import('./router/librarian/users/staff.route').usersLibrarian
-  const usersPatron: typeof import('./router/librarian/users/patron.route').usersPatron
-  const usersStaff: typeof import('./router/librarian/users/staff.route').usersStaff
   const usersStore: typeof import('./stores/user.store').usersStore
   const watch: typeof import('vue').watch
   const watchArray: typeof import('@vueuse/core').watchArray
@@ -502,7 +472,7 @@ declare global {
   export type { PatronType } from './interfaces/patron_type'
   import('./interfaces/patron_type')
   // @ts-ignore
-  export type { PatronTypeLoanPolicy } from './interfaces/patron_type_loan_policy'
+  export type { PatronTypeLoanPolicy, StorePatronTypeLoanPolicy, UpdatePatronTypeLoanPolicy } from './interfaces/patron_type_loan_policy'
   import('./interfaces/patron_type_loan_policy')
   // @ts-ignore
   export type { Program } from './interfaces/program'

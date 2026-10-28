@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PatronTypeLoanPolicy;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePatronTypeLoanPolicyRequest;
 use App\Http\Requests\UpdatePatronTypeLoanPolicyRequest;
+use App\Models\PatronTypeLoanPolicy;
+use App\Services\CacheService;
 use App\Services\PatronTypeLoanPolicyService;
+use App\Services\QueryService;
+use Illuminate\Http\Request;
 
 class PatronTypeLoanPolicyController extends Controller
 {
@@ -16,17 +18,43 @@ class PatronTypeLoanPolicyController extends Controller
     {
         $this->policyService = $policyService;
     }
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $policies = PatronTypeLoanPolicy::with(['patronType', 'loanMode'])->get();
+        $filters = QueryService::filters($request);
+
+        $filters = array_merge($filters, [
+            'loan_mode_id' => $request->input('loan_mode_id') ?? null,
+        ]);
+
+        $policies = CacheService::remember(
+            CacheService::PATRON_TYPE_LOAN_POLICY,
+            $filters,
+            now()->addHour(),
+            function () use ($filters) {
+                $policy = PatronTypeLoanPolicy::query();
+
+                $policy->with(['patronType']);
+
+                $policy->when($filters['loan_mode_id'], function ($q) use ($filters) {
+                    $q->where('loan_mode_id', $filters['loan_mode_id']);
+                });
+
+                return $policy->paginate(
+                    null,
+                    ['*'],
+                    'page',
+                );
+            }
+        );
 
         return $this->response(
             'success',
             'Patron type loan policies retrieved successfully.',
-            $policies->toArray(),
+            $policies,
             200
         );
     }
@@ -89,7 +117,7 @@ class PatronTypeLoanPolicyController extends Controller
 
         $deleted = $this->policyService->delete($patronTypeLoanPolicy);
 
-        if(!$deleted) {
+        if (! $deleted) {
             return $this->response(
                 'Error',
                 'The selected policy loan record could not be deleted.',

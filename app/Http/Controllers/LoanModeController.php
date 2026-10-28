@@ -6,7 +6,6 @@ use App\Http\Requests\StoreLoanModeRequest;
 use App\Http\Requests\UpdateLoanModeRequest;
 use App\Models\LoanMode;
 use App\Services\CacheService;
-use App\Services\QueryService;
 use Illuminate\Http\Request;
 
 class LoanModeController extends Controller
@@ -20,20 +19,11 @@ class LoanModeController extends Controller
      */
     public function index(Request $request)
     {
-        $filters = QueryService::filters($request);
+        $modes = LoanMode::query()->paginate();
 
-        return CacheService::remember(
-            CacheService::LOAN_MODES,
-            $filters,
-            now()->addHour(),
-            function () {
-                $modes = LoanMode::query()->paginate();
-
-                return $this->response(
-                    message: $modes->isEmpty() ? 'No loan modes found' : 'Loan modes successfully fetched',
-                    data: $modes
-                );
-            }
+        return $this->response(
+            message: $modes->isEmpty() ? 'No loan modes found' : 'Loan modes successfully fetched',
+            data: $modes
         );
     }
 
@@ -59,16 +49,11 @@ class LoanModeController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified resource.  
      */
     public function show(LoanMode $loanMode)
     {
-        return $this->response(
-            'success',
-            'Loan mode retrieved successfully.',
-            $loanMode->toArray(),
-            200
-        );
+        return $this->response(data: $loanMode);
     }
 
     /**

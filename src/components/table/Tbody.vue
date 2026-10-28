@@ -11,11 +11,13 @@
         </div>
       </td>
     </tr>
-    <slot v-else />
+    <template v-else>
+      <slot />
 
-    <tr class="bg-secondary" v-if="endOfList">
-      <td :colspan="Number(cols)">- End -</td>
-    </tr>
+      <tr class="bg-secondary text-muted-foreground font-light" v-if="endOfList">
+        <td :colspan="Number(cols)">- Nothing follows -</td>
+      </tr>
+    </template>
   </tbody>
 </template>
 
@@ -25,13 +27,12 @@ const props = defineProps<{ loading: boolean; data: any; errorMessage?: string }
 const table = inject<any>('table', null)
 const cols = computed(() => table.cols.value)
 
-const tableData = computed(() => table.props.data)
+const tableData = computed<Pagination>(() => table.props.data)
 
 const endOfList = computed(() => {
-  if (table.data?.data) {
-    return tableData.value?.current_page == tableData.value?.last_page
-  }
-
-  return false
+  // if (table.data?.data) {
+  //   return tableData.value?.current_page == tableData.value?.last_page
+  // }
+  return tableData.value?.next_page_url === null
 })
 </script>

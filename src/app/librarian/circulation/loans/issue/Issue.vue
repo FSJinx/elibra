@@ -35,7 +35,17 @@
     </CardBody>
 
     <CardBody v-else>
-      <div class="grid gap-5 lg:grid-cols-2">
+      <Form id="loan-form" @submit="" class="grid gap-5 lg:grid-cols-2">
+        <div class="flex items-center col-span-2">
+          <Control id="loan-mode" required col>
+            <Label>Loan Mode</Label>
+            <Select title="Loan Modes">
+              <Option value="" selected disabled>Select loan mode</Option>
+              <Option :value="item.id" v-for="item in options.loan_modes">{{ item.name }}</Option>
+            </Select>
+          </Control>
+        </div>
+
         <!-- Patron -->
         <Card class="">
           <CardHeader>
@@ -106,10 +116,10 @@
             </dl>
           </CardFooter>
         </Card>
-      </div>
+      </Form>
     </CardBody>
-    <CardFooter v-if="preview">
-      <Button>Proceed Loan</Button>
+    <CardFooter class="flex justify-end" v-if="preview">
+      <Button form="loan-form" variant="success" type="submit">Proceed Loan</Button>
     </CardFooter>
   </Card>
 </template>
@@ -121,14 +131,12 @@ import Input from '@/components/form/Input.vue'
 
 const loan = loanStore()
 const pop = usePopup()
+const options = optionStore()
 
 const loading = ref(false)
 const errorMessage = ref(null)
 const patronInput = ref<InstanceType<typeof Input>>()
-const preview = ref<{
-  patron: User
-  accession: Accession
-} | null>(null)
+const preview = ref<{ patron: User; accession: Accession } | null>(null)
 
 const emptyForm = () => ({
   patron: '',
@@ -161,9 +169,7 @@ async function review() {
   }
 }
 
-async function continueCheckout() {
-  
-}
+async function continueCheckout() {}
 
 // interface PatronPreview {
 //   ebc_number: string | null
