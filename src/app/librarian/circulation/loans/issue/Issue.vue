@@ -104,7 +104,7 @@
     <DrawerFooter class="grid grid-cols-2 gap-3" v-if="preview">
       <Button variant="danger" @click="cancel">Cancel</Button>
       <Button form="checkout-form" variant="success" type="submit">Proceed Loan</Button>
-    </DrawerFooter>
+    </DrawerFooter> 
   </Drawer>
 </template>
 
