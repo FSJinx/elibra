@@ -44,6 +44,8 @@
 
         <!-- Side Navigation Body -->
         <div class="mt-5 flex flex-col">
+          <Button as="link" :to="{ name: 'login' }" variant="text" class="hover:bg-primary/10 transition-all duration-300" data-title="Login">Login</Button>
+          <Button as="link" :to="{ name: 'register' }" variant="text" class="hover:bg-primary/10 transition-all duration-300" data-title="Register">Register</Button>
           <Button as="link" :to="{ name: 'home' }" variant="text" class="hover:bg-primary/10 transition-all duration-300" data-title="Home" v-if="$route.name !== 'home'">Home</Button>
           <Button as="link" :to="{ name: user.userHomeLink }" variant="text" class="hover:bg-primary/10 transition-all duration-300" data-title="Dashboard">Dashboard</Button>
           <Button variant="text" class="hover:bg-primary/10 transition-all duration-300" :data-title="auth.getFullName">Profile</Button>
