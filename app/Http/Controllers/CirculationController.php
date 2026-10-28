@@ -23,12 +23,13 @@ class CirculationController extends Controller
     public function index()
     {
         $circulations = Circulation::with([
-            'processedBy',
-            'patron',
-            'accession',
+            'processedBy.user',
+            'patron.user',
+            'patron.patronType',
+            'accession.item',
             'loanMode',
             'returnReceivedBy',
-        ])->get();
+        ])->latest('borrowed_at')->paginate(request()->integer('per_page', 25));
 
         return $this->response(
             'success',
@@ -117,7 +118,7 @@ class CirculationController extends Controller
      */
     public function store(StoreCirculationRequest $request)
     {
-        $circulation = $this->circulationService->create($request->validated());
+        $circulation = $this->circulationService->checkout($request->validated(), $request->user());
 
         return $this->response(
             'success',

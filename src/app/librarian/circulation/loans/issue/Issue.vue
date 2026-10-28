@@ -90,12 +90,12 @@
         </CardFooter>
       </Card>
 
-      <Form id="checkout-form" @submit="">
+      <Form id="checkout-form" @submit="checkout">
         <Control id="" col required>
           <Label>Loan Mode</Label>
           <Select v-model="loanModeId">
             <Option value="" selected disabled>Select loan mode</Option>
-            <Option :value="item.id" v-for="item in options.loan_modes">{{ item.name }}</Option>
+            <Option :value="item.id" v-for="item in options.loan_modes" :key="item.id">{{ item.name }}</Option>
           </Select>
         </Control>
       </Form>
@@ -103,8 +103,10 @@
 
     <DrawerFooter class="grid grid-cols-2 gap-3" v-if="preview">
       <Button variant="danger" @click="cancel">Cancel</Button>
-      <Button form="checkout-form" variant="success" type="submit">Proceed Loan</Button>
-    </DrawerFooter> 
+      <Button form="checkout-form" variant="success" type="submit" :loading="checkoutLoading">
+        {{ checkoutLoading ? 'Processing...' : 'Proceed Loan' }}
+      </Button>
+    </DrawerFooter>
   </Drawer>
 </template>
 
@@ -120,29 +122,29 @@ const options = optionStore()
 
 const drawer = ref<InstanceType<typeof Drawer>>()
 const loading = ref(false)
-const errorMessage = ref(null)
+const checkoutLoading = ref(false)
 const patronInput = ref<InstanceType<typeof Input>>()
 const preview = ref<{ patron: User; accession: Accession } | null>(null)
 const loanModeId = ref()
 const emit = defineEmits(['refresh'])
 
 const emptyForm = () => ({
-  //   patron: '',
-  //   accession: '',
-  patron: '22-1513',
-  accession: 'P000001',
+  patron: '',
+  accession: '',
 })
 
 const form = reactive(emptyForm())
 
 async function review() {
-  drawer.value?.open()
+  preview.value = null
+  loanModeId.value = ''
   loading.value = true
   try {
     const res = await loan.review(form)
     preview.value = res.data
+    drawer.value?.open()
   } catch (e: any) {
-    errorMessage.value = e.response.data?.message
+    pop.error(e?.response?.data?.message ?? 'Unable to find the patron or item.')
   } finally {
     loading.value = false
   }
@@ -156,7 +158,6 @@ function cancel() {
 function clear() {
   Object.assign(form, emptyForm())
   preview.value = null
-  errorMessage.value = null
   loanModeId.value = ''
 
   nextTick()
@@ -165,20 +166,37 @@ function clear() {
 }
 
 async function checkout() {
+  const patronId = preview.value?.patron.patron?.id
+  const accessionId = preview.value?.accession.id
+  if (!patronId || !accessionId || !loanModeId.value) {
+    pop.info('Select a loan mode and verify the patron and item before proceeding.')
+    return
+  }
+
+  checkoutLoading.value = true
   pop.load()
   try {
     const res = await loan.checkout({
-      patron_id: preview.value?.patron?.patron?.user_id,
-      accession_number: preview.value?.accession?.accession_number,
+      patron_id: patronId,
+      accession_id: accessionId,
       loan_mode_id: loanModeId.value,
     })
-    pop.success(res.message)
+    pop.unload()
     emit('refresh')
+    drawer.value?.close()
     clear()
+    await pop.success(res.message ?? 'Loan recorded successfully.')
   } catch (e: any) {
-    pop.error(e.response?.data?.message)
+    pop.unload()
+    const validationErrors = e?.response?.data?.errors
+    const firstValidationError = validationErrors ? Object.values(validationErrors).flat()[0] : null
+    pop.error(firstValidationError ?? e?.response?.data?.message ?? 'Unable to proceed with this loan.')
+  } finally {
+    checkoutLoading.value = false
   }
 }
+
+onBeforeMount(() => options.fetch('loan_modes'))
 </script>
 
 <style scoped></style>

@@ -1,4 +1,5 @@
 export interface Loan {
+  id: any
   borrowed_at: string
   due_at: string
   returned_at: string

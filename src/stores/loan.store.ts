@@ -13,6 +13,7 @@ export const loanStore = defineStore('loan', {
   actions: {
     async fetch(params?: Partial<LoanParams>) {
       const res = await get(`${this.url}`, params)
+      this.data = res.data?.data ?? []
       return res
     },
 
@@ -21,9 +22,17 @@ export const loanStore = defineStore('loan', {
       return res
     },
 
-    async checkout(params: { patron_id: any; accession_number: any; loan_mode_id: any }) {
+    async checkout(params: { patron_id: any; accession_id: any; loan_mode_id: any }) {
       const res = await post(`${this.url}`, params)
       return res
+    },
+
+    async updateStatus(id: Loan['id'], status: Loan['status']) {
+      return await put(`${this.url}/${id}`, { status })
+    },
+
+    async deleteLoan(id: Loan['id']) {
+      return await del(`${this.url}/${id}`)
     },
   },
 })
