@@ -11,14 +11,15 @@ export const librarianMenu = [
   {
     name: 'Circulation',
     children: [
+      { path: 'librarian.circulation.loans', name: 'Loans', icon: 'bag-plus' },
+      { path: 'librarian.circulation.holdings', name: 'Holds & Reservations', icon: 'bookmark-check' },
+      { path: 'librarian.circulation.attendance', name: 'Attendance', icon: 'person-check' },
+
       // { path: 'librarian.circulation.check_out', name: 'Check Out', icon: 'journal-arrow-up' },
       // { path: 'librarian.circulation.issue', name: 'Issue', icon: 'ui-checks' },
-      { path: 'librarian.circulation.loans', name: 'Loans', icon: 'bag-plus' },
       // returns: { path: 'librarian.circulation.returns', name: 'Returns', icon: 'arrow-return-left' },
       // renewals: { path: 'librarian.circulation.renewals', name: 'Renewals', icon: 'arrow-repeat' },
-      // holds: { path: 'librarian.circulation.holds', name: 'Holds & Reservations', icon: 'bookmark-check' },
       // fines: { path: 'librarian.circulation.fines', name: 'Fines & Penalties', icon: 'cash-coin' },
-      { path: 'librarian.circulation.attendance', name: 'Attendance', icon: 'person-check' },
     ],
   },
 

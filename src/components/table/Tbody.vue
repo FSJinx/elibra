@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{ loading: boolean; data: any; errorMessage?: string }>()
+const props = defineProps<{ loading: boolean; data?: any; errorMessage?: string }>()
 
 const table = inject<any>('table', null)
 const cols = computed(() => table.cols.value)

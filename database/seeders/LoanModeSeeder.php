@@ -15,7 +15,7 @@ class LoanModeSeeder extends Seeder
         collect([
             ['slug' => 'in_house', 'name' => 'In House', 'renewable' => false, 'charges_fine' => false, 'has_grace_period' => false, 'is_active' => true],
             ['slug' => 'take_home', 'name' => 'Take Home', 'renewable' => true, 'charges_fine' => true, 'has_grace_period' => true, 'is_active' => true],
-            ['slug' => 'reserve', 'name' => 'Reservation', 'renewable' => false, 'charges_fine' => false, 'has_grace_period' => false, 'is_active' => true],
+            ['slug' => 'in-campus', 'name' => 'In Campus', 'description' => 'Borrow an item for a limited amount of time within campus limit', 'renewable' => true, 'charges_fine' => true, 'has_grace_period' => true, 'is_active' => true],
         ])->each(function ($d) use ($service) {
             $service->create($d);
         });
