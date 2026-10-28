@@ -38,7 +38,7 @@ class ItemService
                 'item_type_category_id',
                 'library_id',
                 'language_id',
-                'released'
+                'released',
             ]));
 
             if (isset($data['authors'])) {
@@ -47,7 +47,7 @@ class ItemService
 
             $this->saveCoverImage($item, $data);
 
-            IndexCatalogItemJob::dispatch($item->id);
+            IndexCatalogItemJob::dispatch($item->id)->afterCommit();
 
             CacheService::invalidate(CacheService::ITEMS);
 
@@ -85,7 +85,7 @@ class ItemService
                 'item_type_id',
                 'item_type_category_id',
                 'language_id',
-                'released'
+                'released',
             ]));
 
             if (array_key_exists('authors', $data) || array_key_exists('authors_present', $data)) {

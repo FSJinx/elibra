@@ -34,7 +34,12 @@
 <script setup lang="ts">
 import Modal from '@/components/my/Modal.vue'
 
-withDefaults(defineProps<{ disabled?: boolean; subtitle?: string }>(), {
+interface Props {
+  disabled?: boolean
+  subtitle?: string
+}
+
+withDefaults(defineProps<Props>(), {
   disabled: false,
   subtitle: 'Add keywords or subjects for this catalog. This will be helpful in OPAC searches.',
 })

@@ -2,8 +2,15 @@
 
 namespace Tests\Feature;
 
+use App\Models\AcaRepo;
+use App\Models\Patron;
 use App\Models\User;
+use App\Services\AcaRepoService;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
+use Tymon\JWTAuth\Http\Middleware\Authenticate;
 use Tymon\JWTAuth\JWTGuard;
 
 class AcaRepoTest extends TestCase
@@ -11,7 +18,7 @@ class AcaRepoTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->withoutMiddleware([JWTGuard::class, \Tymon\JWTAuth\Http\Middleware\Authenticate::class]);
+        $this->withoutMiddleware([JWTGuard::class, Authenticate::class]);
         (require database_path('migrations/3_create_aca_repos_table.php'))->up();
         $this->actingAs(new User(['role' => 'librarian']), 'api');
     }
@@ -45,7 +52,7 @@ class AcaRepoTest extends TestCase
 
     public function test_patron_submission_service_forces_pending_and_off_catalog(): void
     {
-        $record = app(\App\Services\AcaRepoService::class)->submitAcaRepo([
+        $record = app(AcaRepoService::class)->submitAcaRepo([
             'title' => 'Patron research', 'category' => 'gt',
             'description' => 'Abstract', 'keywords' => ['research'],
             'status' => 'approved', 'on_catalog' => true,
@@ -58,12 +65,12 @@ class AcaRepoTest extends TestCase
     public function test_patron_can_submit_manuscript_without_setting_review_fields(): void
     {
         (require database_path('migrations/2_create_patrons_table.php'))->up();
-        \Illuminate\Support\Facades\Schema::create('languages', function (\Illuminate\Database\Schema\Blueprint $table) {
+        Schema::create('languages', function (Blueprint $table) {
             $table->id();
         });
-        \Illuminate\Support\Facades\DB::table('languages')->insert(['id' => 1]);
+        DB::table('languages')->insert(['id' => 1]);
         $user = (new User(['role' => 'patron']))->forceFill(['id' => 7]);
-        \App\Models\Patron::create(['user_id' => 7, 'patron_type_id' => 1, 'program_id' => 9]);
+        Patron::create(['user_id' => 7, 'patron_type_id' => 1, 'program_id' => 9]);
         $this->actingAs($user, 'api');
 
         $this->postJson('/api/acarepo', [
@@ -79,7 +86,7 @@ class AcaRepoTest extends TestCase
 
     public function test_patron_cannot_manage_submissions(): void
     {
-        $record = \App\Models\AcaRepo::create([
+        $record = AcaRepo::create([
             'title' => 'Protected submission', 'category' => 'ut',
             'description' => 'Abstract', 'keywords' => ['research'],
         ]);

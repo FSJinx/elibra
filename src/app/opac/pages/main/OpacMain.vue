@@ -32,9 +32,11 @@
       </Form>
     </section>
 
+    <Alert v-if="error" variant="danger">{{ error }}</Alert>
+
     <div class="flex-1 flex flex-col overflow-y-auto border border-border divide-y divide-border rounded-xl">
       <!-- SEARCHING -->
-      <section v-if="loading && route.query.search" class="flex-1 flex flex-col items-center justify-center min-h-100 bg-secondary text-center">
+      <section v-if="loading" class="flex-1 flex flex-col items-center justify-center min-h-100 bg-secondary text-center">
         <div class="flex items-center justify-center size-16 rounded-xl bg-primary/10 text-primary mb-5">
           <Icon icon="search" class="text-2xl" />
         </div>
@@ -43,12 +45,13 @@
       </section>
 
       <!-- NO RESULT -->
-      <section v-else-if="route.query.search && libraryData.length === 0" class="flex-1 flex flex-col items-center justify-center min-h-100 bg-secondary text-center px-5">
+      <section v-else-if="!error && libraryData.length === 0" class="flex-1 flex flex-col items-center justify-center min-h-100 bg-secondary text-center px-5">
         <div class="flex items-center justify-center size-16 rounded-xl bg-danger-soft text-danger mb-5">
           <Icon icon="search" class="text-2xl" />
         </div>
         <h2 class="text-xl font-semibold">No results found</h2>
-        <p class="mt-2 max-w-md text-sm text-foreground-secondary">We couldn't find any catalog materials matching "{{ route.query.search }}".</p>
+        <p v-if="route.query.search" class="mt-2 max-w-md text-sm text-foreground-secondary">We couldn't find any catalog materials matching "{{ route.query.search }}".</p>
+        <p v-else class="mt-2 max-w-md text-sm text-foreground-secondary">No published materials match the selected filters. Try another campus or library, or check back later.</p>
       </section>
 
       <router-link v-for="(item, index) in libraryData" :key="item.id ?? index" :to="{ name: 'opac.view', params: { id: item.item_id } }">
@@ -128,6 +131,7 @@ defineProps<{
   libraryData: LibraryItem[]
   total: number
   loading: boolean
+  error?: string | null
 }>()
 
 defineEmits<{
@@ -140,12 +144,9 @@ const { typedText } = useSearchTyping()
 const route = useRoute()
 const parse = useParser()
 
-const { item_types } = useItemTypeStore()
-const { categories } = useItemCategoriesStore()
-const { data } = useCampusStore()
-
-const selectedCampus = computed(() => data?.find((i) => String(i.id) === params.value.campus)?.name)
-const itemTypeCategories = computed(() => categories.filter((item) => String(item.item_type_id) === String(params.value.item_type)))
+const options = optionStore()
+const item_types = computed(() => options.item_types ?? [])
+const itemTypeCategories = computed(() => (options.categories ?? []).filter((item) => String(item.item_type_id) === String(params.value.item_type)))
 </script>
 
 <style scoped>

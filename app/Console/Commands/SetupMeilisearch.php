@@ -2,18 +2,24 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\IndexCatalogItemJob;
 use App\Models\CatalogIndex;
+use App\Models\Item;
 use Illuminate\Console\Command;
 use Meilisearch\Client;
 
 class SetupMeilisearch extends Command
 {
-    protected $signature = 'meilisearch:setup';
+    protected $signature = 'meilisearch:setup {--reindex : Rebuild released catalog items using the configured search driver}';
 
     protected $description = 'Configure the E-Libra Meilisearch catalog index';
 
     public function handle(): int
     {
+        if ($this->option('reindex') && config('scout.driver') !== 'meilisearch') {
+            return $this->reindex();
+        }
+
         $this->info('Setting up Meilisearch...');
 
         try {
@@ -28,7 +34,7 @@ class SetupMeilisearch extends Command
             $this->info('✓ Connected to Meilisearch');
 
             // Get/create catalog index
-            $index = $client->index('catalog_indices');
+            $index = $client->index((new CatalogIndex)->searchableAs());
 
             // Configure searchable attributes
             $index->updateSearchableAttributes([
@@ -41,7 +47,7 @@ class SetupMeilisearch extends Command
                 'item_type',
                 'item_type_category',
                 'campus',
-                'branch',
+                'library',
                 'language',
                 'content',
             ]);
@@ -51,7 +57,8 @@ class SetupMeilisearch extends Command
             // Configure filterable attributes
             $index->updateFilterableAttributes([
                 'campus_id',
-                'branch_id',
+                'library_id',
+                'released',
                 'item_type_id',
                 'item_type_category_id',
                 'department_id',
@@ -63,6 +70,7 @@ class SetupMeilisearch extends Command
 
             // Configure sortable attributes
             $index->updateSortableAttributes([
+                'title',
                 'publication_year',
             ]);
 
@@ -70,6 +78,10 @@ class SetupMeilisearch extends Command
 
             $this->newLine();
             $this->info('Meilisearch setup completed successfully!');
+
+            if ($this->option('reindex')) {
+                return $this->reindex();
+            }
 
             return self::SUCCESS;
 
@@ -80,6 +92,28 @@ class SetupMeilisearch extends Command
             return self::FAILURE;
         }
     }
+
+    private function reindex(): int
+    {
+        $count = 0;
+
+        Item::where('released', true)->chunkById(100, function ($items) use (&$count) {
+            foreach ($items as $item) {
+                IndexCatalogItemJob::dispatchSync($item->id);
+                $count++;
+            }
+        });
+
+        CatalogIndex::whereDoesntHave('item', function ($query) {
+            $query->where('released', true);
+        })->chunkById(100, function ($entries) {
+            $entries->each->delete();
+        });
+
+        $this->info("Indexed {$count} released items. Draft and deleted items are excluded.");
+
+        return self::SUCCESS;
+    }
 }
 
 // STEP BY STEP GUIDE TO SETUP MEILISEARCH
@@ -89,10 +123,11 @@ class SetupMeilisearch extends Command
 // 4. Run the command: php artisan meilisearch:setup
 // 5. Verify that the setup was successful by checking the console output for success messages.
 
-// Then run the command: [to populate the documents] 
-// php artisan scout:import "App\Models\CatalogIndex" to import the existing catalog data into Meilisearch.
+// Then run the command: [to populate the documents]
+// php artisan meilisearch:setup --reindex to build and synchronize released catalog items.
+// With a local Scout driver, --reindex does not connect to a Meilisearch server.
 
 // TO SUMMARIZE:
 // 1. php artisan meilisearch:setup
-// 2. php artisan scout:import "App\Models\CatalogIndex"
-// 3. php artisan queue:work 
+// 2. php artisan meilisearch:setup --reindex
+// 3. php artisan queue:work

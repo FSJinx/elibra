@@ -9,25 +9,41 @@ use Illuminate\Support\Facades\DB;
 class AcaRepoService
 {
     private const FIELDS = [
-        'title', 'category', 'description', 'doi', 'keywords',
-        'status', 'statusRemark', 'on_catalog', 'language_id', 'program_id',
+        'title',
+        'category',
+        'description',
+        'doi',
+        'keywords',
+
+        'status',
+        'statusRemark',
+        'on_catalog',
+
+        'language_id',
+        'program_id',
     ];
 
     public function create(array $data): AcaRepo
     {
-        return DB::transaction(fn () => AcaRepo::create(Arr::only($data, self::FIELDS)));
+        return DB::transaction(function () use ($data) {
+            return AcaRepo::create(Arr::only($data, self::FIELDS));
+        });
     }
 
     public function update(AcaRepo $acaRepo, array $data): AcaRepo
     {
-        DB::transaction(fn () => $acaRepo->update(Arr::only($data, self::FIELDS)));
+        DB::transaction(function () use ($acaRepo, $data) {
+            $acaRepo->update(Arr::only($data, self::FIELDS));
+        });
 
         return $acaRepo->fresh(['language', 'program']);
     }
 
     public function delete(AcaRepo $acaRepo): bool
     {
-        return DB::transaction(fn () => (bool) $acaRepo->delete());
+        return DB::transaction(function () use ($acaRepo) {
+            return (bool) $acaRepo->delete();
+        });
     }
 
     public function submitAcaRepo(array $data): AcaRepo

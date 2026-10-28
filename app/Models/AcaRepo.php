@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Database\Factories\AcaRepoFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class AcaRepo extends Model
 {
-    /** @use HasFactory<\Database\Factories\AcaRepoFactory> */
+    /** @use HasFactory<AcaRepoFactory> */
     use HasFactory;
 
     protected $fillable = [

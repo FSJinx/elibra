@@ -9,17 +9,21 @@ use App\Services\AcaRepoService;
 
 class AcaRepoController extends Controller
 {
-    public function __construct(private AcaRepoService $acaRepoService)
-    {
-    }
+    public function __construct(private AcaRepoService $acaRepoService) {}
 
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return $this->response('success', 'Academic repositories retrieved successfully.',
-            AcaRepo::with(['language', 'program'])->latest()->get()->toArray(), 200);
+        $acaRepos = AcaRepo::with(['language', 'program'])->latest()->get();
+
+        return $this->response(
+            'success',
+            'Academic repositories retrieved successfully.',
+            $acaRepos->toArray(),
+            200
+        );
     }
 
     /**
@@ -55,8 +59,14 @@ class AcaRepoController extends Controller
      */
     public function show(AcaRepo $acaRepo)
     {
-        return $this->response('success', 'Academic repository retrieved successfully.',
-            $acaRepo->load(['language', 'program'])->toArray(), 200);
+        $acaRepo->load(['language', 'program']);
+
+        return $this->response(
+            'success',
+            'Academic repository retrieved successfully.',
+            $acaRepo->toArray(),
+            200
+        );
     }
 
     /**
@@ -74,8 +84,12 @@ class AcaRepoController extends Controller
     {
         $acaRepo = $this->acaRepoService->update($acaRepo, $request->validated());
 
-        return $this->response('success', 'Academic repository updated successfully.',
-            $acaRepo->load(['language', 'program'])->toArray(), 200);
+        return $this->response(
+            'success',
+            'Academic repository updated successfully.',
+            $acaRepo->load(['language', 'program'])->toArray(),
+            200
+        );
     }
 
     /**
@@ -84,9 +98,19 @@ class AcaRepoController extends Controller
     public function destroy(AcaRepo $acaRepo)
     {
         if (! $this->acaRepoService->delete($acaRepo)) {
-            return $this->response('error', 'The academic repository could not be deleted.', null, 500);
+            return $this->response(
+                'error',
+                'The academic repository could not be deleted.',
+                null,
+                500
+            );
         }
 
-        return $this->response('success', 'Academic repository deleted successfully.', null, 200);
+        return $this->response(
+            'success',
+            'Academic repository deleted successfully.',
+            null,
+            200
+        );
     }
 }

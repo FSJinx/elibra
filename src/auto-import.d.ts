@@ -445,14 +445,14 @@ declare global {
   export type { Variants, Sizes } from './composables/useType'
   import('./composables/useType')
   // @ts-ignore
-  export type { AcaRepoPayload, AcaRepo } from './stores/acarepo.store'
-  import('./stores/acarepo.store')
-  // @ts-ignore
   export type { ItemParams } from './stores/catalog/item.store'
   import('./stores/catalog/item.store')
   // @ts-ignore
   export type { Opac } from './stores/opac/opacStore2'
   import('./stores/opac/opacStore2')
+  // @ts-ignore
+  export type { AcaRepoPayload, AcaRepo } from './interfaces/acarepo'
+  import('./interfaces/acarepo')
   // @ts-ignore
   export type { Accession } from './interfaces/accession'
   import('./interfaces/accession')

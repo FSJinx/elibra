@@ -7,12 +7,11 @@
         <h1 class="mt-2 text-3xl font-bold">Digital manuscript submission</h1>
         <p class="mt-3 text-slate-600">Submit your research details for library review. Your program will be taken from your patron profile.</p>
       </header>
-      <p v-if="error" role="alert" class="rounded-xl bg-red-50 p-4 text-red-700">{{ error }}</p>
-      <section v-if="submitted" role="status" class="rounded-2xl border border-emerald-200 bg-emerald-50 p-6">
-        <h2 class="text-xl font-bold text-emerald-800">Manuscript submitted</h2>
+      <Alert v-if="error" variant="danger">{{ error }}</Alert>
+      <Alert v-if="submitted" variant="success" title="Manuscript submitted">
         <p class="mt-2">“{{ submitted.title }}” has been submitted and is pending review.</p>
         <Button type="button" variant="success" class="mt-4" @click="submitted = null">Submit another manuscript</Button>
-      </section>
+      </Alert>
       <Form v-else class="grid gap-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:grid-cols-2" @submit="submit">
         <Control id="manuscript-title" required col class="sm:col-span-2">
           <Label>Title</Label>
@@ -62,14 +61,26 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, ref } from 'vue'
-import { acaRepoStore, type AcaRepo, type AcaRepoPayload } from '@/stores/acarepo.store'
-import { optionStore } from '@/stores/ui/option.store'
+import type { AcaRepo, AcaRepoPayload } from '@/interfaces/acarepo'
 import AddKeywords from '@/app/librarian/collections/catalog/forms/sections/modals/AddKeywords.vue'
 
 const store = acaRepoStore()
 const options = optionStore()
-const defaults = (): AcaRepoPayload => ({ title: '', category: 'ut', abstract: '', doi: null, keywords: [], status: 'pending', statusRemark: null, on_catalog: false, language_id: null, program_id: null })
+const defaults = (): AcaRepoPayload => ({
+  title: '',
+  category: 'ut',
+  abstract: '',
+  doi: null,
+  keywords: [],
+
+  status: 'pending',
+  statusRemark: null,
+  on_catalog: false,
+
+  language_id: null,
+  program_id: null,
+})
+
 const form = ref(defaults())
 const busy = ref(false)
 const loading = ref(false)
@@ -80,23 +91,44 @@ function failure(e: any) {
   const messages = e.response?.data?.errors
   error.value = (messages ? Object.values(messages).flat().join(' ') : e.response?.data?.message || 'Unable to complete the request. Please try again.').replace(/description/gi, 'abstract')
 }
+
 async function loadLanguages() {
   loading.value = true
   error.value = ''
-  try { await options.fetch('languages') } catch (e) { failure(e) } finally { loading.value = false }
+  try {
+    await options.fetch('languages')
+  } catch (e) {
+    failure(e)
+  } finally {
+    loading.value = false
+  }
 }
+
 async function submit() {
   if (busy.value) return
   error.value = ''
-  if (!form.value.language_id) { error.value = 'Select a language.'; return }
-  const words = form.value.keywords.map(word => word.trim()).filter(Boolean)
-  if (!words.length) { error.value = 'Enter at least one keyword.'; return }
+  if (!form.value.language_id) {
+    error.value = 'Select a language.'
+    return
+  }
+
+  const words = form.value.keywords.map((word) => word.trim()).filter(Boolean)
+  if (!words.length) {
+    error.value = 'Enter at least one keyword.'
+    return
+  }
+
   busy.value = true
   try {
     submitted.value = (await store.create({ ...form.value, doi: form.value.doi || null, keywords: words })).data
     form.value = defaults()
-  } catch (e) { failure(e) } finally { busy.value = false }
+  } catch (e) {
+    failure(e)
+  } finally {
+    busy.value = false
+  }
 }
+
 onBeforeMount(loadLanguages)
 </script>
 

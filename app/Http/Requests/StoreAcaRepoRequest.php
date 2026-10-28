@@ -38,7 +38,7 @@ class StoreAcaRepoRequest extends BaseRequest
             'language_id' => ['required', Rule::exists((new Language)->getTable(), 'id')],
         ];
 
-        if (!$this->user()->isPatron()) {
+        if (! $this->user()->isPatron()) {
             $rules['language_id'] = ['nullable', Rule::exists((new Language)->getTable(), 'id')];
             $rules['program_id'] = ['nullable', 'exists:programs,id'];
             $rules['status'] = ['required', Rule::in(['pending', 'approved', 'rejected'])];
