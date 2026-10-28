@@ -29,6 +29,7 @@
 
                 <Icon :icon="child.icon" class="shrink-0" v-if="child.icon" />
                 <span class="truncate">{{ child.name }}</span>
+                <NewFeature v-if="child.new" />
               </router-link>
             </div>
           </div>

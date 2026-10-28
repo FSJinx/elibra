@@ -22,6 +22,7 @@ class AcaRepo extends Model
         'statusRemark',
         'on_catalog',
 
+        'library_id',
         'language_id',
         'program_id',
     ];

@@ -36,6 +36,8 @@ declare global {
   const backendRoute: typeof import('./plugins/axios').backendRoute
   const circulationCheckOut: typeof import('./router/librarian/circulation/check_out.route').circulationCheckOut
   const ciruclationLoans: typeof import('./router/librarian/circulation/loans.route').ciruclationLoans
+  const collectionAcarepo: typeof import('./router/librarian/collections/acarepo.route').collectionAcarepo
+  const collectionsAcarepo: typeof import('./router/librarian/collections/acarepo.route').collectionsAcarepo
   const collectionsCatalog: typeof import('./router/librarian/collections/catalog.route').collectionsCatalog
   const collectionsInventory: typeof import('./router/librarian/collections/inventory.route').collectionsInventory
   const computed: typeof import('vue').computed
@@ -542,6 +544,7 @@ declare module 'vue' {
     readonly backendRoute: UnwrapRef<typeof import('./plugins/axios')['backendRoute']>
     readonly circulationCheckOut: UnwrapRef<typeof import('./router/librarian/circulation/check_out.route')['circulationCheckOut']>
     readonly ciruclationLoans: UnwrapRef<typeof import('./router/librarian/circulation/loans.route')['ciruclationLoans']>
+    readonly collectionsAcarepo: UnwrapRef<typeof import('./router/librarian/collections/acarepo.route')['collectionsAcarepo']>
     readonly collectionsCatalog: UnwrapRef<typeof import('./router/librarian/collections/catalog.route')['collectionsCatalog']>
     readonly collectionsInventory: UnwrapRef<typeof import('./router/librarian/collections/inventory.route')['collectionsInventory']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
