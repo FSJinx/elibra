@@ -10,17 +10,6 @@
           <Label>Patron Type</Label>
           <Input :model-value="props.data.patron_type?.name ?? 'Unknown patron type'" readonly />
         </Control>
-        <Control id="policy-can-reserve" col>
-          <Label>Can Reserve</Label>
-          <Select v-model="form.can_reserve" placeholder="Select if patron can reserve" :error="errors?.can_reserve?.[0]">
-            <Option :value="true">Yes</Option>
-            <Option :value="false">No</Option>
-          </Select>
-        </Control>
-        <Control id="policy-reservation-limit" col required>
-          <Label>Reservation Limit</Label>
-          <Input id="policy-reservation-limit" v-model="form.reservation_limit" type="number" placeholder="Enter reservation limit" :error="errors?.reservation_limit?.[0]" />
-        </Control>
         <Control id="policy-loan-period" col required>
           <Label>Loan Period <span class="text-sm text-muted-foreground font-normal">(in days)</span></Label>
           <Input id="policy-loan-period" v-model="form.loan_period_days" type="number" placeholder="Enter loan period" :error="errors?.loan_period_days?.[0]" />

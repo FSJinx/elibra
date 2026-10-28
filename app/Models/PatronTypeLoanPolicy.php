@@ -19,8 +19,6 @@ class PatronTypeLoanPolicy extends Model
         'max_renewals',
         'fine_per_due', 
         'grace_period',
-        'can_reserve',
-        'reservation_limit',
 
         'notes',
 

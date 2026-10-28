@@ -38,8 +38,6 @@ class StorePatronTypeLoanPolicyRequest extends BaseRequest
             'fine_per_due' => ['required', 'numeric', 'min:0'],
             'grace_period' => ['required', 'integer', 'min:0'],
             
-            'can_reserve' => ['required', 'boolean'],
-            'reservation_limit' => ['sometimes', 'required', 'integer', 'min:0'],
             'notes' => ['nullable', 'string', 'max:255'],
 
             'patron_type_id' => ['required', 'integer', Rule::exists((new PatronType)->getTable(), 'id')],
@@ -81,12 +79,6 @@ class StorePatronTypeLoanPolicyRequest extends BaseRequest
             'grace_period.required' => 'The grace period is required.',
             'grace_period.integer' => 'The grace period must be a whole number.',
             'grace_period.min' => 'The grace period must be 0 or greater.',
-
-            'can_reserve.required' => 'Please specify whether this patron type can reserve items.',
-            'can_reserve.boolean' => 'The reserve option must be true or false.',
-            'reservation_limit.required' => 'The reservation limit is required.',
-            'reservation_limit.integer' => 'The reservation limit must be a whole number.',
-            'reservation_limit.min' => 'The reservation limit must be 0 or greater.',
 
             'notes.string' => 'The notes must be a valid string.',
             'notes.max' => 'The notes may not exceed 255 characters.',

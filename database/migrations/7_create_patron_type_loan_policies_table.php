@@ -17,8 +17,6 @@ return new class extends Migration
 
             $table->integer('max_items')->default(0); 
             $table->integer('max_renewals')->default(0); 
-            $table->integer('reservation_limit')->default(0);
-            $table->boolean('can_reserve')->default(false);
             $table->decimal('fine_per_due', 10, 2)->default(0);
             $table->integer('grace_period')->default(0); // in hours
 
