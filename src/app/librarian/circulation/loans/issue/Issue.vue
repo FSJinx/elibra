@@ -129,8 +129,8 @@ const loanModeId = ref()
 const emit = defineEmits(['refresh'])
 
 const emptyForm = () => ({
-  patron: '',
-  accession: '',
+  patron: '22-1513',
+  accession: 'GC000001',
 })
 
 const form = reactive(emptyForm())

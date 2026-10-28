@@ -24,8 +24,8 @@
     <Thead>
       <tr>
         <Th>No</Th>
-        <Th class="text-left">Title</Th>
         <Th>Accession</Th>
+        <Th class="text-left">Title</Th>
         <Th class="text-left">Borrower</Th>
         <Th>Borrowed At</Th>
         <Th>Due Date</Th>
@@ -36,19 +36,19 @@
     <Tbody :data="loan.data" :loading="loading">
       <Tr v-for="(item, index) in loan.data" :key="index">
         <Td :data="index + 1" />
-        <Td :data="item.accession?.item?.title" />
         <Td :data="item.accession?.accession_number" />
-        <Td>{{ item.patron?.user?.name?.full }} ({{ item.patron?.user?.username }})</Td>
-        <Td :data="parse.formatDate(item.borrowed_at)" />
-        <Td :data="parse.formatDate(item.due_at)" />
+        <Td class="text-left" :data="item.accession?.item?.title" />
+        <Td class="text-left">{{ item.patron?.user?.name?.full }} ({{ item.patron?.user?.username }})</Td>
+        <Td :data="parse.formatDateTime(item.borrowed_at)" />
+        <Td :data="parse.formatDateTime(item.due_at)" />
         <Td>
           <Status :variant="item?.status">{{ item?.status }}</Status>
         </Td>
-        <Td>
-          <EditLoanStatus :data="item" @refresh="search" />
-          <Button class="hover:text-danger" size="sm" :loading="deletingId === item.id" @click="deleteLoan(item)">
-            Delete
-          </Button>
+        <Td class="space-x-2">
+          <!-- <EditLoanStatus :data="item" @refresh="search" /> -->
+          <Button variant="info" size="sm"> Renew </Button>
+          <Button variant="success" size="sm"> Return </Button>
+          <Button class="hover:text-danger" size="sm" :loading="deletingId === item.id" @click="deleteLoan(item)"> Delete </Button>
         </Td>
       </Tr>
     </Tbody>

@@ -201,6 +201,14 @@ return new class extends Migration
             ],
         ],
         [
+            'name' => 'holdings',
+            'foreign_columns' => [
+                ['name' => 'reserved_by', 'references' => 'id', 'on' => 'patrons', 'onDelete' => 'cascade'],
+                ['name' => 'accession_id', 'references' => 'id', 'on' => 'accessions', 'onDelete' => 'cascade'],
+                ['name' => 'processed_by', 'references' => 'id', 'on' => 'librarians', 'onDelete' => 'set null'],
+            ],
+        ],
+        [
             'name' => 'patron_type_loan_policies',
             'foreign_columns' => [
                 ['name' => 'patron_type_id', 'references' => 'id', 'on' => 'patron_types', 'onDelete' => 'cascade'],
