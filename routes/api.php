@@ -461,6 +461,9 @@ Route::group(['prefix' => '/loan'], function () {
 
     Route::post('', [CirculationController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
 
+    Route::post('{circulation}/return', [CirculationController::class, 'return'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
+    Route::post('{circulation}/renew', [CirculationController::class, 'renew'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
+
     Route::put('{circulation}', [CirculationController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
 
     Route::delete('{circulation}', [CirculationController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:delete');

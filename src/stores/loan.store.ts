@@ -31,6 +31,14 @@ export const loanStore = defineStore('loan', {
       return await put(`${this.url}/${id}`, { status })
     },
 
+    async returnLoan(id: Loan['id']) {
+      return await post(`${this.url}/${id}/return`)
+    },
+
+    async renew(id: Loan['id']) {
+      return await post(`${this.url}/${id}/renew`)
+    },
+
     async deleteLoan(id: Loan['id']) {
       return await del(`${this.url}/${id}`)
     },

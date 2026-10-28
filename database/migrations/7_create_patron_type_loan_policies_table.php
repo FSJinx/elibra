@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('patron_type_loan_policies', function (Blueprint $table) {
             $table->id();
-            $table->integer('loan_period_days')->default(1); // in hours
+            $table->integer('loan_period_days')->default(1); // in days
 
             $table->integer('max_items')->default(0); 
             $table->integer('max_renewals')->default(0); 

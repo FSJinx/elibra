@@ -164,6 +164,30 @@ class CirculationController extends Controller
         );
     }
 
+    public function return(Circulation $circulation, Request $request)
+    {
+        $returned = $this->circulationService->returnLoan($circulation, $request->user());
+
+        return $this->response(
+            'success',
+            'Loan returned successfully. The item is available again.',
+            $returned->toArray(),
+            200
+        );
+    }
+
+    public function renew(Circulation $circulation)
+    {
+        $renewed = $this->circulationService->renew($circulation);
+
+        return $this->response(
+            'success',
+            'Loan renewed successfully. The due date has been extended according to the loan policy.',
+            $renewed->toArray(),
+            200
+        );
+    }
+
     /**
      * Remove the specified resource from storage.
      */
