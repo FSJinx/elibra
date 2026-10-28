@@ -15,6 +15,8 @@
           <tr>
             <Th>No</Th>
             <Th>Patron Type</Th>
+            <Th>Can Reserve</Th>
+            <Th>Reservation Limit</Th>  
             <Th>
               Loan Period
               <p class="text-sm text-muted-foreground font-normal lowercase">(in days)</p>
@@ -29,10 +31,12 @@
         </Thead>
 
         <Tbody :data="policy.data" :loading="loading">
-          <Tr v-for="(item, index) in policy.data" :key="index">
+          <Tr v-for="(item, index) in policy.data" :key="index">  
             <Td :data="index + 1" />
             <Td :data="item.patron_type?.name" />
-            <Td :data="item.loan_period_days" />
+            <Td :data="item.can_reserve" />
+            <Td :data="item.reservation_limit" />
+            <Td :data="item.loan_period_days" />  
             <Td :data="item.max_items" />
             <Td :data="item.max_renewals" />
             <Td :data="item.fine_per_due" />
@@ -55,6 +59,7 @@ import NewPatronLoanPolicy from '@/app/admin/loan_modes/modals/NewPatronLoanPoli
 const policy = patronTypeLoanPolicyStore()
 const loan_mode = loanModeStore()
 const route = useRoute()
+const router = useRouter()
 const pop = usePopup()
 const crumb = useBreadcrumbStore()
 
@@ -74,7 +79,7 @@ async function load() {
   loading.value = true
   pop.load()
   try {
-    await loan_mode.show({ id: route.params.id })
+    await loan_mode.show(String(route.params.id))
   } finally {
     pop.unload()
     fetch()
@@ -88,4 +93,4 @@ onBeforeUnmount(() => {
 })
 </script>
 
-<style scoped></style>
+<style scoped></style>  

@@ -6,9 +6,16 @@
 
     <ModalBody class="p-5">
       <Form id="update-loan-policy" class="space-y-4" @submit="submit">
+        <Control id="policy-patron-type" col>
+          <Label>Patron Type</Label>
+          <Input :model-value="props.data.patron_type?.name ?? 'Unknown patron type'" readonly />
+        </Control>
         <Control id="policy-can-reserve" col>
           <Label>Can Reserve</Label>
-          <Checkbox v-model="form.can_reserve" />
+          <Select v-model="form.can_reserve" placeholder="Select if patron can reserve" :error="errors?.can_reserve?.[0]">
+            <Option :value="true">Yes</Option>
+            <Option :value="false">No</Option>
+          </Select>
         </Control>
         <Control id="policy-reservation-limit" col required>
           <Label>Reservation Limit</Label>
@@ -59,9 +66,11 @@ const props = defineProps<{ data: PatronTypeLoanPolicy }>()
 const modal = ref<InstanceType<typeof Modal>>()
 const defaultForm = ref<PatronTypeLoanPolicy>(structuredClone(toRaw(props.data)))
 const form = reactive<UpdatePatronTypeLoanPolicy>(defaultForm.value)
-const errors = ref<UpdatePatronTypeLoanPolicy>()
+const errors = ref<Record<string, string[]> | null>(null)
 
 function open() {
+  Object.assign(form, toRaw(props.data))
+  errors.value = null
   modal.value?.open()
 }
 
@@ -78,11 +87,16 @@ async function submit() {
   if (confirm.isConfirmed) {
     pop.load()
     try {
-        const res = await policy.update(form)
-        pop.success(res.message)
+      const res = await policy.update(form)
+      close()
       emit('refresh')
+      pop.success(res.message ?? 'Patron loan policy updated successfully')
     } catch (e: any) {
-      Object.assign(errors, e.response?.data?.errors)
+      pop.unload()
+      errors.value = e?.response?.data?.errors ?? null
+      if (!errors.value) {
+        pop.error(e?.response?.data?.message ?? 'Failed to update patron loan policy')
+      }
     }
   }
 }

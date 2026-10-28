@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreLoanModeRequest;
 use App\Http\Requests\UpdateLoanModeRequest;
 use App\Models\LoanMode;
+use App\Services\CacheService;
 use Illuminate\Http\Request;
 
 class LoanModeController extends Controller
@@ -38,6 +39,7 @@ class LoanModeController extends Controller
     {
         $data = $request->validated();
         $mode = $this->service->create($data);
+        CacheService::invalidate(CacheService::LOAN_MODES);
 
         return $this->response(
             'success',
@@ -47,7 +49,7 @@ class LoanModeController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified resource.  
      */
     public function show(LoanMode $loanMode)
     {
@@ -57,9 +59,9 @@ class LoanModeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(LoanMode $loanMode)
+    public function edit(UpdateLoanModeRequest $request, LoanMode $loanMode)
     {
-        //
+    //
     }
 
     /**
@@ -67,7 +69,17 @@ class LoanModeController extends Controller
      */
     public function update(UpdateLoanModeRequest $request, LoanMode $loanMode)
     {
-        //
+        $data = $request->validated();
+
+        $loanMode->update($data);
+        CacheService::invalidate(CacheService::LOAN_MODES);
+
+        return $this->response(
+            'success',
+            'Loan mode updated succesfully',
+            $loanMode->toArray(),
+            200
+        );
     }
 
     /**
@@ -75,6 +87,33 @@ class LoanModeController extends Controller
      */
     public function destroy(LoanMode $loanMode)
     {
-        //
+        $this->authorize('delete', $loanMode);
+
+        if ($loanMode->circulations()->exists()) {
+            return $this->response(
+                'error',
+                'This loan mode cannot be deleted because it is used by existing circulation records.',
+                null,
+                409
+            );
+        }
+
+        if (! $loanMode->delete()) {
+            return $this->response(
+                'error',
+                'The loan mode could not be deleted.',
+                null,
+                500
+            );
+        }
+
+        CacheService::invalidate(CacheService::LOAN_MODES);
+
+        return $this->response(
+            'success',
+            'Loan mode deleted succesfully',
+            null,
+            200
+        );
     }
 }

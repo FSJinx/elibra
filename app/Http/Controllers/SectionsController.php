@@ -22,7 +22,7 @@ class SectionsController extends Controller
         $user = $request->user();
         $filters = QueryService::filters($request);
 
-        $libraryId = $user->isSuperAdmin()
+        $libraryId = $user->isSuperAdmin() || $user->isAdmin()
             ? $request->query('library_id', $request->query('id'))
             : $user->librarian?->library_id;
 
@@ -131,8 +131,8 @@ class SectionsController extends Controller
         try {
             $data = $request->validated();
             $library = Library::findOrFail($data['library_id']);
-            $data['librarian_id'] = $library->library_head_id;
-            $section = Sections::create($data);
+            $data['librarian_id'] = $data['librarian_id'] ?? $library->library_head_id;
+            $section = Sections::create($data)->load('librarian.user');
 
             DB::commit();
             CacheService::invalidate(CacheService::SECTIONS);
@@ -174,6 +174,7 @@ class SectionsController extends Controller
         DB::beginTransaction();
         try {
             $section->update($request->validated());
+            $section->load('librarian.user');
 
             DB::commit();
             CacheService::invalidate(CacheService::SECTIONS);

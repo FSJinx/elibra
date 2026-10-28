@@ -21,22 +21,25 @@ class StorePatronTypeLoanPolicyRequest extends BaseRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string> 
      */
     public function rules(): array
-    {
+    {   
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'key' => ['required', 'string', 'max:255', Rule::unique(PatronTypeLoanPolicy::class, 'key')],
-            'description' => ['nullable', 'string', 'max:255'],
+            // 'name' => ['required', 'string', 'max:255'],
+            // 'key' => ['required', 'string', 'max:255', Rule::unique(PatronTypeLoanPolicy::class, 'key')],
+            // 'description' => ['nullable', 'string', 'max:255'],
 
+            
             'loan_period_days' => ['required', 'integer', 'min:1'],
-
+            
             'max_items' => ['required', 'integer', 'min:1'],
             'max_renewals' => ['required', 'integer', 'min:0'],
             'fine_per_due' => ['required', 'numeric', 'min:0'],
             'grace_period' => ['required', 'integer', 'min:0'],
-
+            
+            'can_reserve' => ['required', 'boolean'],
+            'reservation_limit' => ['sometimes', 'required', 'integer', 'min:0'],
             'notes' => ['nullable', 'string', 'max:255'],
 
             'patron_type_id' => ['required', 'integer', Rule::exists((new PatronType)->getTable(), 'id')],
@@ -47,17 +50,17 @@ class StorePatronTypeLoanPolicyRequest extends BaseRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'The policy name is required.',
-            'name.string' => 'The policy name must be a valid string.',
-            'name.max' => 'The policy name may not exceed 255 characters.',
+            // 'name.required' => 'The policy name is required.',
+            // 'name.string' => 'The policy name must be a valid string.',
+            // 'name.max' => 'The policy name may not exceed 255 characters.',
 
-            'key.required' => 'The policy key is required.',
-            'key.string' => 'The policy key must be a valid string.',
-            'key.max' => 'The policy key may not exceed 255 characters.',
-            'key.unique' => 'This policy key already exists.',
+            // 'key.required' => 'The policy key is required.',
+            // 'key.string' => 'The policy key must be a valid string.',
+            // 'key.max' => 'The policy key may not exceed 255 characters.',
+            // 'key.unique' => 'This policy key already exists.',
 
-            'description.string' => 'The description must be a valid string.',
-            'description.max' => 'The description may not exceed 255 characters.',
+            // 'description.string' => 'The description must be a valid string.',
+            // 'description.max' => 'The description may not exceed 255 characters.',
 
             'loan_period_days.required' => 'The loan period is required.',
             'loan_period_days.integer' => 'The loan period must be a whole number.',
@@ -78,6 +81,12 @@ class StorePatronTypeLoanPolicyRequest extends BaseRequest
             'grace_period.required' => 'The grace period is required.',
             'grace_period.integer' => 'The grace period must be a whole number.',
             'grace_period.min' => 'The grace period must be 0 or greater.',
+
+            'can_reserve.required' => 'Please specify whether this patron type can reserve items.',
+            'can_reserve.boolean' => 'The reserve option must be true or false.',
+            'reservation_limit.required' => 'The reservation limit is required.',
+            'reservation_limit.integer' => 'The reservation limit must be a whole number.',
+            'reservation_limit.min' => 'The reservation limit must be 0 or greater.',
 
             'notes.string' => 'The notes must be a valid string.',
             'notes.max' => 'The notes may not exceed 255 characters.',

@@ -5,6 +5,8 @@ export interface PatronTypeLoanPolicy {
   max_renewals: any
   fine_per_due: any
   grace_period: any
+  can_reserve: boolean
+  reservation_limit: any
   notes: any
 
   patron_type_id: any

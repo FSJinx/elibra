@@ -8,9 +8,12 @@
         <Control id="policy-patron-type" col required>
           <Label>Patron Type</Label>
           <Select id="policy-patron-type" v-model="form.patron_type_id" placeholder="Select patron type" :error="errors?.patron_type_id?.[0]">
-            <Option value="" disabled>Select patron type</Option>
+            <Option value="" selected   disabled>Select patron type</Option>
             <Option v-for="type in missingPatronTypes" :key="type.id" :value="type.id">{{ type.name }}</Option>
           </Select>
+          <p v-if="selectedPatronTypeName" class="text-sm text-muted-foreground">
+            Policy will apply to {{ selectedPatronTypeName }} patrons.
+          </p>
         </Control>
         <Control id="policy-loan-period" col required>
           <Label>Loan Period <span class="text-sm text-muted-foreground font-normal">(in days)</span></Label>
@@ -32,9 +35,21 @@
           <Label>Max Renewals</Label>
           <Input id="policy-max-renewals" v-model="form.max_renewals" type="number" min="0" placeholder="Enter maximum renewals" :error="errors?.max_renewals?.[0]" />
         </Control>
+        <Control id="policy-reservation-limit" col required>
+          <Label>Reservation Limit</Label>
+          <Input id="policy-reservation-limit" v-model="form.reservation_limit" type="number" min="0" placeholder="Enter reservation limit" :disabled="!form.can_reserve" :error="errors?.reservation_limit?.[0]" />
+        </Control>
         <Control id="policy-fine-per-due" col required>
           <Label>Fine Per Due</Label>
           <Input id="policy-fine-per-due" v-model="form.fine_per_due" type="number" min="0" step="0.01" placeholder="Enter fine per due" :error="errors?.fine_per_due?.[0]" />
+        </Control>
+        <Control id="policy-can-reserve" col required>
+          <Label>Can Reserve</Label>
+          <Select id="policy-can-reserve" v-model="form.can_reserve" placeholder="Select if patron can reserve" :error="errors?.can_reserve?.[0]">
+            <Option value="" selected disabled>Select option</Option>
+            <Option :value="true">Yes</Option>
+            <Option :value="false">No</Option>
+          </Select>
         </Control>
         <Control id="policy-grace-period" col required>
           <Label>Grace Period <span class="text-sm text-muted-foreground font-normal">(in days)</span></Label>
@@ -65,7 +80,7 @@
 import Modal from '@/components/my/Modal.vue'
 import type { PatronType } from '@/interfaces/patron_type'
 
-const policy = patronTypeLoanPolicyStore()
+const policy = patronTypeLoanPolicyStore()  
 const loan_mode = loanModeStore()
 const options = optionStore()
 const pop = usePopup()
@@ -80,12 +95,17 @@ const defaultForm = (): StorePatronTypeLoanPolicy => ({
   loan_period_days: '',
   max_items: 1,
   max_renewals: 0,
+  can_reserve: false,
+  reservation_limit: 0,
   fine_per_due: 0,
   grace_period: 0,
   notes: '',
   loan_mode_id: loan_mode.currentData?.id ?? null,
-})
+})  
 const form = reactive<StorePatronTypeLoanPolicy>(defaultForm())
+const selectedPatronTypeName = computed(() =>
+  missingPatronTypes.value.find((type) => String(type.id) === String(form.patron_type_id))?.name,
+)
 const errors = ref<Record<string, string[]> | null>(null)
 
 function open() {

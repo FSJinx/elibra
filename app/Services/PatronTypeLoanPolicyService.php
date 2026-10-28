@@ -13,10 +13,6 @@ class PatronTypeLoanPolicyService
         $policy = DB::transaction(function () use ($data) {
             $policy = PatronTypeLoanPolicy::create(
                 Arr::only($data, [
-                    'name',
-                    'key',
-                    'description',
-
                     'can_reserve',
                     'reservation_limit',
                     'loan_period_days',
@@ -43,13 +39,10 @@ class PatronTypeLoanPolicyService
     }
 
     public function update( PatronTypeLoanPolicy $policy, array $data): PatronTypeLoanPolicy
-    {
+    {   
         DB::transaction(function () use ($policy, $data) {
             $policy->update(
                 Arr::only($data, [
-                    'name',
-                    'key',
-                    'description',
                     'can_reserve',
                     'reservation_limit',
                     'loan_period_days',

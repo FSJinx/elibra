@@ -92,6 +92,11 @@ const form = defineModel<Partial<Form>>({ default: {} })
 const options = optionStore()
 const item_type = computed(() => options.item_types?.find((i) => i.id == form.value?.item_type_id) ?? null)
 
+const supportsElectronicFile = computed(() => {
+  const selectedType = options.item_types?.find((itemType) => String(itemType.id) === String(form.value.item_type_id))
+  return ['book', 'thesis'].includes(selectedType?.slug?.toLowerCase() ?? '')
+})
+
 watch(
   () => form.value.item_type_id,
   () => {

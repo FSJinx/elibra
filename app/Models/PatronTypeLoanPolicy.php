@@ -17,8 +17,10 @@ class PatronTypeLoanPolicy extends Model
 
         'max_items',
         'max_renewals',
-        'fine_per_due',
+        'fine_per_due', 
         'grace_period',
+        'can_reserve',
+        'reservation_limit',
 
         'notes',
 
@@ -32,6 +34,8 @@ class PatronTypeLoanPolicy extends Model
         'max_renewals' => 'integer',
         'fine_per_due' => 'decimal:2',
         'grace_period' => 'integer',
+        'can_reserve' => 'boolean',
+        'reservation_limit' => 'integer',
 
         'patron_type_id' => 'integer',
         'loan_mode_id' => 'integer',
