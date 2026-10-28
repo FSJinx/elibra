@@ -78,6 +78,7 @@ return new class extends Migration
             'name' => 'aca_repos',
             'foreign_columns' => [
                 ['name' => 'library_id', 'references' => 'id', 'on' => 'libraries', 'onDelete' => 'restrict'],
+                ['name' => 'submitted_by', 'references' => 'id', 'on' => 'users', 'onDelete' => 'restrict'],
                 ['name' => 'language_id', 'references' => 'id', 'on' => 'languages', 'onDelete' => 'set null'],
                 ['name' => 'program_id', 'references' => 'id', 'on' => 'programs', 'onDelete' => 'set null'],
             ],

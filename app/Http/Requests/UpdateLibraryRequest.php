@@ -27,7 +27,7 @@ class UpdateLibraryRequest extends BaseRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'phone' => ['nullable', 'string', 'starts_with:639,09', 'regex:/^(09\d{9}|639\d{9})$/', 'min:11'],
+            'phone' => ['nullable', 'string', 'regex:/^(09\d{9}|639\d{9})$/'],
             'email' => ['required', 'email', 'max:255', Rule::unique('libraries', 'email')->ignore($this->route('library'))],
             'email_verified_at' => ['nullable', 'date'],
             'website' => ['nullable', 'url'],
@@ -44,8 +44,7 @@ class UpdateLibraryRequest extends BaseRequest
     {
         return [
             'name.required' => 'Library name is required.',
-            'phone.starts_with' => 'Phone number must start with 639 or 09.',
-            'phone.regex' => 'Invalid PH mobile number (e.g. 09123456789 or 639123456789).',
+            'phone.regex' => 'Enter a Philippine mobile number as 09171234567 or 639171234567.',
             'email.required' => 'Library email is required.',
             'email.email' => 'Please enter a valid email address.',
             'email.unique' => 'This email address is already in use.',

@@ -16,6 +16,7 @@ class AcaRepo extends Model
         'category',
         'description',
         'doi',
+        'electronic_file',
         'keywords',
 
         'status',
@@ -23,6 +24,7 @@ class AcaRepo extends Model
         'on_catalog',
 
         'library_id',
+        'submitted_by',
         'language_id',
         'program_id',
     ];
@@ -40,5 +42,15 @@ class AcaRepo extends Model
     public function program()
     {
         return $this->belongsTo(Programs::class);
+    }
+
+    public function submitter()
+    {
+        return $this->belongsTo(User::class, 'submitted_by');
+    }
+
+    public function library()
+    {
+        return $this->belongsTo(Library::class);
     }
 }

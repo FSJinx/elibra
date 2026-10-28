@@ -10,6 +10,7 @@
           </div>
 
           <div class="flex items-center justify-end gap-2">
+            <Button @click="loadLibraries(true)">Refresh</Button>
             <AddNewLibraryModal />
           </div>
         </CardBody>
@@ -53,7 +54,17 @@ const library = libraryStore()
 const campus = useCampusStore()
 const parse = useParser()
 const pop = usePopup()
-const filters = reactive({})
+
+async function loadLibraries(force = false) {
+  try {
+    await campus.fetch()
+    await library.fetch(force)
+  } catch (error: any) {
+    await pop.error(error?.response?.data?.message ?? 'Unable to load library records. Please try again.')
+  }
+}
+
+onBeforeMount(() => loadLibraries(true))
 
 async function remove(c: Library) {
   const res = await pop.confirm({ text: `Are you sure you want to delete ${c?.name}?` })
@@ -64,7 +75,7 @@ async function remove(c: Library) {
       const res = await library.remove(c)
       pop.success(res.message ?? 'Something is deleted')
     } catch (e) {
-      throw e
+      await pop.error((e as any)?.response?.data?.message ?? 'Unable to delete the library. Please try again.')
     }
   }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Language;
+use App\Models\Library;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Validation\Rule;
 
@@ -28,11 +29,18 @@ class StoreAcaRepoRequest extends BaseRequest
      */
     public function rules(): array
     {
+        $libraryRule = Rule::exists((new Library)->getTable(), 'id');
+        if ($this->user()->isPatron()) {
+            $libraryRule->where('campus_id', $this->user()->campus_id);
+        }
+
         $rules = [
             'title' => ['required', 'string', 'max:255'],
             'category' => ['required', Rule::in(['ut', 'gt'])],
             'description' => ['required', 'string'],
             'doi' => ['nullable', 'string', 'max:255'],
+            'electronic_file' => [$this->isMethod('POST') ? 'required' : 'sometimes', 'file', 'mimes:pdf,doc,docx', 'max:20480'],
+            'library_id' => [$this->isMethod('POST') ? 'required' : 'sometimes', $libraryRule],
             'keywords' => ['required', 'array'],
             'keywords.*' => ['string', 'max:255'],
             'language_id' => ['required', Rule::exists((new Language)->getTable(), 'id')],

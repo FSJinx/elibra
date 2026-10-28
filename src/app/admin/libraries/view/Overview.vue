@@ -21,7 +21,7 @@
           </div>
           <div>
             <p class="card-label">Phone</p>
-            <p class="card-data">{{ library.currentData?.contact_info || '—' }}</p>
+            <p class="card-data">{{ library.currentData?.phone || '—' }}</p>
           </div>
           <div>
             <p class="card-label">Email</p>
