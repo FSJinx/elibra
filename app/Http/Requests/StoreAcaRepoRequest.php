@@ -6,6 +6,7 @@ use App\Models\Language;
 use App\Models\Library;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Validation\Rule;
+use Override;
 
 class StoreAcaRepoRequest extends BaseRequest
 {
@@ -39,7 +40,7 @@ class StoreAcaRepoRequest extends BaseRequest
             'category' => ['required', Rule::in(['ut', 'gt'])],
             'description' => ['required', 'string'],
             'doi' => ['nullable', 'string', 'max:255'],
-            'electronic_file' => [$this->isMethod('POST') ? 'required' : 'sometimes', 'file', 'mimes:pdf,doc,docx', 'max:20480'],
+            'electronic_file' => $this->hasFile('electronic_file') ? ['file', 'required', 'mimes:pdf', 'max:20480'] : ['required', 'string'],
             'library_id' => [$this->isMethod('POST') ? 'required' : 'sometimes', $libraryRule],
             'keywords' => ['required', 'array'],
             'keywords.*' => ['string', 'max:255'],
@@ -55,5 +56,13 @@ class StoreAcaRepoRequest extends BaseRequest
         }
 
         return $rules;
+    }
+
+    #[Override]
+    public function messages(): array
+    {
+        return [
+            'electronic_file.mimes' => 'Please convert your file to PDF or upload only PDF files.',
+        ];
     }
 }

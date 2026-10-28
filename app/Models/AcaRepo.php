@@ -46,7 +46,7 @@ class AcaRepo extends Model
 
     public function submitter()
     {
-        return $this->belongsTo(User::class, 'submitted_by');
+        return $this->belongsTo(Patron::class, 'submitted_by');
     }
 
     public function library()

@@ -421,14 +421,16 @@ Route::group(['prefix' => '/patron'], function () {
 });
 
 Route::group(['prefix' => '/acarepo', 'middleware' => ['jwt.auth']], function () {
+    Route::get('', [AcaRepoController::class, 'index'])->middleware('jwt.auth', 'throttle:read');
+    Route::get('{acaRepo}', [AcaRepoController::class, 'show'])->middleware('jwt.auth', 'throttle:read');
+
     Route::post('', [AcaRepoController::class, 'store'])->middleware('throttle:write');
 
-    Route::group(['middleware' => ['role:super_admin,admin,librarian']], function () {
-        Route::get('', [AcaRepoController::class, 'index'])->middleware('throttle:read');
-        Route::get('{acaRepo}', [AcaRepoController::class, 'show'])->middleware('throttle:read');
-        Route::put('{acaRepo}', [AcaRepoController::class, 'update'])->middleware('throttle:write');
-        Route::delete('{acaRepo}', [AcaRepoController::class, 'destroy'])->middleware('throttle:delete');
-    });
+    Route::put('{acaRepo}', [AcaRepoController::class, 'update'])->middleware('jwt.auth', 'throttle:write');
+    Route::put('{acaRepo}/reject', [AcaRepoController::class, 'reject'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
+    Route::put('{acaRepo}/approve', [AcaRepoController::class, 'approve'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
+
+    Route::delete('{acaRepo}', [AcaRepoController::class, 'destroy'])->middleware('throttle:delete');
 });
 
 Route::group(['prefix' => '/patron-type-loan-policy'], function () {

@@ -6,6 +6,8 @@ use App\Http\Requests\StoreAcaRepoRequest;
 use App\Http\Requests\UpdateAcaRepoRequest;
 use App\Models\AcaRepo;
 use App\Services\AcaRepoService;
+use App\Services\QueryService;
+use Illuminate\Http\Request;
 
 class AcaRepoController extends Controller
 {
@@ -14,14 +16,25 @@ class AcaRepoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $acaRepos = AcaRepo::with(['language', 'program', 'submitter', 'library'])->latest()->get();
+        $user = $this->user();
+        $filters = QueryService::filters($request);
+        $filters = array_merge($filters, [
+            'submitted_by' => $request->input('submitted_by') ?? null,
+            'library_id' => $request->input('library_id') ?? $user->librarian->library_id ?? null,
+        ]);
+
+        $theses = AcaRepo::query()
+            ->when($filters['library_id'] !== null, fn ($q) => $q->where('library_id', $filters['library_id']))
+            ->when($filters['submitted_by'] !== null, fn ($q) => $q->where('submitted_by', $filters['submitted_by']))
+            ->with(['language', 'program', 'submitter.user:id,last_name,first_name', 'library'])
+            ->paginate();
 
         return $this->response(
             'success',
             'Academic repositories retrieved successfully.',
-            $acaRepos->toArray(),
+            $theses,
             200
         );
     }
@@ -40,18 +53,18 @@ class AcaRepoController extends Controller
     public function store(StoreAcaRepoRequest $request)
     {
         $user = $request->user();
+        $patron = $user->patron;
         $data = [
             ...$request->validated(),
-            'submitted_by' => $user->id,
+            'submitted_by' => $user->patron->id,
+            $data['program_id'] = $patron->program_id,
         ];
 
-        if ($user->isPatron()) {
-            $patron = $user->patron;
-            $data['program_id'] = $patron->program_id;
-            $acaRepo = $this->acaRepoService->submitAcaRepo($data);
-        } else {
-            $acaRepo = $this->acaRepoService->create($data);
-        }
+        // if ($user->isPatron()) {
+        //     $acaRepo = $this->acaRepoService->submitAcaRepo($data);
+        // } else {
+        //     }
+        $acaRepo = $this->acaRepoService->create($data);
 
         return $this->response(
             'success',
@@ -94,6 +107,38 @@ class AcaRepoController extends Controller
         return $this->response(
             'success',
             'Academic repository updated successfully.',
+            $acaRepo->load(['language', 'program', 'submitter', 'library'])->toArray(),
+            200
+        );
+    }
+
+    public function reject(UpdateAcaRepoRequest $request, AcaRepo $acaRepo)
+    {
+        $data = array_merge($request->validated(), [
+            'status' => 'rejected',
+            'statusRemark' => $request->input('statusRemark') ?? null,
+        ]);
+
+        $acaRepo = $this->acaRepoService->update($acaRepo, $data);
+
+        return $this->response(
+            'success',
+            'Academic repository rejected successfully.',
+            $acaRepo->load(['language', 'program', 'submitter', 'library'])->toArray(),
+            200
+        );
+    }
+
+    public function approve(AcaRepo $acaRepo)
+    {
+        $acaRepo->update([
+            'status' => 'approved',
+            'statusRemark' => null,
+        ]);
+
+        return $this->response(
+            'success',
+            'Academic repository approved successfully.',
             $acaRepo->load(['language', 'program', 'submitter', 'library'])->toArray(),
             200
         );

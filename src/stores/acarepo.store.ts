@@ -1,13 +1,3 @@
-type AcaRepoResponse = Omit<AcaRepo, 'abstract'> & { description: string }
-
-function fromResponse({ description, ...record }: AcaRepoResponse): AcaRepo {
-  return { ...record, abstract: description }
-}
-
-function toRequest({ abstract, ...payload }: AcaRepoPayload) {
-  return { ...payload, description: abstract }
-}
-
 export const acaRepoStore = defineStore('acarepo', {
   state: () => ({
     data: null as AcaRepo[] | null,
@@ -18,38 +8,14 @@ export const acaRepoStore = defineStore('acarepo', {
   }),
 
   actions: {
-    // =========== SETTERS ============
-    setData(data: AcaRepo[]) {
-      this.data = data
-    },
-
-    setCurrentData(data: AcaRepo) {
-      this.currentData = data
-    },
-
-    pushData(data: AcaRepo) {
-      this.data = [...(this.data ?? []), data]
-    },
-
-    updateData(data: AcaRepo) {
-      this.data = (this.data ?? []).map((item) => (item.id === data.id ? data : item))
-    },
-
-    removeData(id: number) {
-      this.data = (this.data ?? []).filter((item) => item.id !== id)
-      if (this.currentData?.id === id) this.currentData = null
-    },
-
     // =========== ACTIONS ============
-    async fetch() {
+    async fetch(params?: Partial<AcaRepoParams>) {
       this.loading = true
 
       try {
-        const res = await get(this.url)
-        const data = res.data.map(fromResponse)
-        this.setData(data)
-
-        return { ...res, data }
+        const res = await get(this.url, params)
+        this.data = res.data.data
+        return res
       } finally {
         this.loading = false
       }
@@ -57,46 +23,32 @@ export const acaRepoStore = defineStore('acarepo', {
 
     async show(id: number) {
       const res = await get(`${this.url}/${id}`)
-      const data = fromResponse(res.data)
-      this.setCurrentData(data)
-
-      return { ...res, data }
+      return res
     },
 
-    async create(payload: AcaRepoPayload, electronicFile: File) {
-      const { abstract, keywords, ...fields } = payload
-      const formData = new FormData()
-      Object.entries({ ...fields, description: abstract }).forEach(([key, value]) => {
-        if (value !== null && value !== undefined) formData.append(key, String(value))
-      })
-      keywords.forEach((keyword, index) => formData.append(`keywords[${index}]`, keyword))
-      formData.append('electronic_file', electronicFile)
-
-      const res = await post(this.url, formData)
-      const data = fromResponse(res.data)
-      this.pushData(data)
-      this.setCurrentData(data)
-
-      return { ...res, data }
+    async create(payload: Partial<StoreAcaRepo>) {
+      const res = await post(this.url, payload, { headers: { 'Content-Type': 'multipart/form-data' } })
+      return res
     },
 
-    async update(id: number, payload: AcaRepoPayload) {
-      const res = await put(`${this.url}/${id}`, toRequest(payload))
-      const data = fromResponse(res.data)
-      this.updateData(data)
-      this.setCurrentData(data)
-
-      return { ...res, data }
+    async update(payload: UpdateAcaRepo) {
+      const res = await put(`${this.url}/${payload.id}`, payload, { headers: { 'Content-Type': 'multipart/form-data' } })
+      return res
     },
 
-    async remove(id: number) {
-      return this.destroy(id)
+    async remove(payload: AcaRepo) {
+      const res = await del(`${this.url}/${payload.id}`)
+      return res
     },
 
-    async destroy(id: number) {
-      const res = await del(`${this.url}/${id}`)
-      this.removeData(id)
+    // =========== ADDINATIONAL ACTIONS ============
+    async approve(payload: AcaRepo) {
+      const res = await put(`${this.url}/${payload.id}/approve`, payload)
+      return res
+    },
 
+    async reject(payload: UpdateAcaRepo) {
+      const res = await put(`${this.url}/${payload.id}/reject`, payload)
       return res
     },
   },
