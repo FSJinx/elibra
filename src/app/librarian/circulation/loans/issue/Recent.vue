@@ -1,5 +1,5 @@
 <template>
-  <Issue @refresh="" />
+  <Issue @refresh="search" />
 
   <Card>
     <CardBody class="flex items-center gap-2 justify-between">
@@ -45,8 +45,10 @@
           <Status :variant="item?.status">{{ item?.status }}</Status>
         </Td>
         <Td>
-          <Button class="hover:text-info" size="sm">Edit</Button>
-          <Button class="hover:text-danger" size="sm">Delete</Button>
+          <EditLoanStatus :data="item" @refresh="search" />
+          <Button class="hover:text-danger" size="sm" :loading="deletingId === item.id" @click="deleteLoan(item)">
+            Delete
+          </Button>
         </Td>
       </Tr>
     </Tbody>
@@ -56,12 +58,15 @@
 
 <script setup lang="ts">
 import Issue from '@/app/librarian/circulation/loans/issue/Issue.vue'
+import EditLoanStatus from '@/app/librarian/circulation/loans/modals/EditLoanStatus.vue'
 
 const loan = loanStore()
 const parse = useParser()
 const auth = authStore()
+const pop = usePopup()
 
 const loading = ref<boolean>(false)
+const deletingId = ref<Loan['id'] | null>(null)
 const pagination = ref<Pagination>()
 
 const defaultParams = (): Partial<LoanParams> => ({
@@ -78,6 +83,30 @@ async function search() {
     pagination.value = res.data
   } finally {
     loading.value = false
+  }
+}
+
+async function deleteLoan(item: Loan) {
+  const confirmation = await pop.confirm({
+    title: 'Delete loan record?',
+    text: 'This will remove the circulation from the current loans list. If the item is still checked out, it will be marked available again.',
+    confirmButtonText: 'Delete',
+  })
+
+  if (!confirmation.isConfirmed) return
+
+  deletingId.value = item.id
+  pop.load()
+  try {
+    const res = await loan.deleteLoan(item.id)
+    pop.unload()
+    await search()
+    await pop.success(res.message ?? 'Loan record deleted successfully.')
+  } catch (e: any) {
+    pop.unload()
+    pop.error(e?.response?.data?.message ?? 'Unable to delete the loan record.')
+  } finally {
+    deletingId.value = null
   }
 }
 

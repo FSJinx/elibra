@@ -24,7 +24,7 @@
           <Checkbox id="mode-is_active" v-model="form.is_active" label="Active" />
         </Control>
       </Form>
-    </ModalBody>
+  </ModalBody>
     <ModalFooter class="space-x-2">
       <Button variant="danger" @click="close">Cancel</Button>
       <Button form="update-loan-mode" variant="success" type="submit">Save</Button>
