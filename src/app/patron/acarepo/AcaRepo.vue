@@ -50,6 +50,10 @@
             </div>
           </div>
         </Control>
+        <Control id="manuscript-file" col class="sm:col-span-2">
+          <Label>Thesis File</Label>
+          <InputFile accept=".pdf" />
+        </Control>
         <div class="sm:col-span-2 flex items-center gap-4">
           <Button type="submit" variant="success" :loading="busy" :disabled="busy || loading || !form.language_id || !options.languages?.length">{{ busy ? 'Submitting...' : 'Submit manuscript' }}</Button>
           <span v-if="loading" role="status" class="text-sm text-slate-500">Loading languages...</span>
@@ -66,6 +70,7 @@ import AddKeywords from '@/app/librarian/collections/catalog/forms/sections/moda
 
 const store = acaRepoStore()
 const options = optionStore()
+
 const defaults = (): AcaRepoPayload => ({
   title: '',
   category: 'ut',
@@ -131,4 +136,3 @@ async function submit() {
 
 onBeforeMount(loadLanguages)
 </script>
-

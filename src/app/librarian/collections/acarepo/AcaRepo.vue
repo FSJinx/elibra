@@ -12,26 +12,26 @@
         <CardBody> </CardBody>
       </Card> -->
 
-      <Table title="Recent Inventory Tracking" subtitle="Track your inventory history here." :data-length="inventory.data?.length">
+      <Table title="Submissions" subtitle="Track theses submitted for approval.">
         <Thead>
           <Th>No.</Th>
-          <Th>Inventory ID</Th>
-          <Th>Shelf Location</Th>
-          <Th>Created By</Th>
-          <Th>Date Created</Th>
+          <Th class="text-left">Title</Th>
+          <Th>Category</Th>
+          <Th>Submitted By</Th>
+          <Th>Date Submitted</Th>
           <Th>Status</Th>
           <Th>Action</Th>
         </Thead>
 
-        <Tbody cols="7" :loading="inventory.loading" :data="inventory.data">
-          <tr v-for="item in inventory.data" :key="item.id" class="border-b border-border last:border-0 hover:bg-secondary/30 transition-colors">
-            <Td :data="item.inventory_id"></Td>
-            <Td :data="item.librarian_id"></Td>
-            <Td :data="item.created_at"></Td>
-            <Td :data="item.is_completed"></Td>
+        <Tbody cols="7" :loading="acarepo.loading" :data="acarepo.data">
+          <tr v-for="(item, index) in acarepo.data" :key="item.id" class="border-b border-border last:border-0 hover:bg-secondary/30 transition-colors">
+            <Td :data="index + 1"></Td>
+            <Td :data="item.title"></Td>
+            <Td :data="item.category"></Td>
+            <Td :data="item.doi"></Td>
           </tr>
 
-          <tr v-if="inventory.data?.length === 0">
+          <tr v-if="acarepo.data?.length === 0">
             <Td colspan="8" class="px-5 py-10 text-center text-sm">No items match your filters.</Td>
           </tr>
         </Tbody>
@@ -41,7 +41,5 @@
 </template>
 
 <script setup lang="ts">
-import NewInventory from '@/app/librarian/collections/inventory/modals/NewInventory.vue'
-
-const inventory = useInventoryStore()
+const acarepo = acaRepoStore()
 </script>
