@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('statusRemark')->nullable();
             $table->boolean('on_catalog')->default(false);
 
+            $table->unsignedBigInteger('library_id');
             $table->unsignedBigInteger('language_id')->nullable();
             $table->unsignedBigInteger('program_id')->nullable();
 

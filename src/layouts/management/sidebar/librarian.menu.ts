@@ -27,6 +27,7 @@ export const librarianMenu = [
     children: [
       { path: 'librarian.collections.catalog', name: 'Catalog', icon: 'journal-plus' },
       { path: 'librarian.collections.inventory', name: 'Inventory', icon: 'boxes' },
+      { path: 'librarian.collections.acarepo', name: 'AcaRepo', icon: 'mortarboard', new: true },
     ],
   },
 
