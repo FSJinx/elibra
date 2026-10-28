@@ -11,11 +11,13 @@
         </div>
       </td>
     </tr>
-    <slot v-else />
+    <template v-else>
+      <slot />
 
-    <tr class="bg-secondary" v-if="endOfList">
-      <td :colspan="Number(cols)">- End -</td>
-    </tr>
+      <tr class="bg-secondary text-muted-foreground font-light" v-if="endOfList">
+        <td :colspan="Number(cols)">- Nothing follows -</td>
+      </tr>
+    </template>
   </tbody>
 </template>
 

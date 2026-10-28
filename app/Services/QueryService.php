@@ -13,7 +13,7 @@ class QueryService
     ): array {
         $perPage = $request->integer('per_page', $defaultPerPage);
         $sort = trim((string) $request->query('sort', ''));
-        $order = strtolower((string) $request->query('order', 'desc'));
+        $order = strtolower((string) $request->query('order', 'asc'));
 
         $perPage = max(1, min($perPage, $maxPerPage));
 

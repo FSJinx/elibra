@@ -13,7 +13,23 @@ class LoanMode extends Model
     use AutoFormatter, HasFactory;
 
     protected $fillable = [
-        'slug', 'name', 'description',
+        'slug',
+        'name',
+        'description',
+
+        'renewable',
+        'charges_fine',
+        'has_grace_period',
+
+        'is_active',
+    ];
+
+    protected $casts = [
+        'renewable' => 'boolean',
+        'charges_fine' => 'boolean',
+        'has_grace_period' => 'boolean',
+
+        'is_active' => 'boolean',
     ];
 
     protected $formatter = [
