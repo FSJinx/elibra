@@ -6,12 +6,12 @@ export const ciruclationLoans = [
       {
         path: '',
         name: 'librarian.circulation.loans',
-        component: () => import('@/app/librarian/circulation/loans/issue/Issue.vue'),
+        component: () => import('@/app/librarian/circulation/loans/issue/Recent.vue'),
       },
       {
-        path: 'recent',
-        name: 'librarian.circulation.loans.recent',
-        component: () => import('@/app/librarian/circulation/loans/recent/Recent.vue'),
+        path: 'reservation',
+        name: 'librarian.circulation.loans.reservation',
+        component: () => import('@/app/librarian/circulation/loans/reservations/Reservations.vue'),
       },
     ],
   },

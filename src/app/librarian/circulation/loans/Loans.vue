@@ -17,6 +17,6 @@
 <script setup lang="ts">
 const links = [
   { name: 'Issue', path: 'librarian.circulation.loans' },
-  { name: 'Recent', path: 'librarian.circulation.loans.recent' },
+  { name: 'Reservations', path: 'librarian.circulation.loans.reservation' },
 ]
 </script>

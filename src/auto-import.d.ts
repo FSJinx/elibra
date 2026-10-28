@@ -418,6 +418,9 @@ declare global {
   export type { ItemParams } from './stores/catalog/item.store'
   import('./stores/catalog/item.store')
   // @ts-ignore
+  export type { LoanParams } from './stores/loan.store'
+  import('./stores/loan.store')
+  // @ts-ignore
   export type { Opac } from './stores/opac/opacStore2'
   import('./stores/opac/opacStore2')
   // @ts-ignore
@@ -462,6 +465,9 @@ declare global {
   // @ts-ignore
   export type { Library } from './interfaces/library'
   import('./interfaces/library')
+  // @ts-ignore
+  export type { Loan } from './interfaces/loan'
+  import('./interfaces/loan')
   // @ts-ignore
   export type { LoanMode, StoreLoanMode, UpdateLoanMode } from './interfaces/loan_modes'
   import('./interfaces/loan_modes')

@@ -9,6 +9,7 @@ export interface Accession {
 
   acquisition: Acquisition
   section: Section
+  item: Item
 
   [key: string]: any
 }

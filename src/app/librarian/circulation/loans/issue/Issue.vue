@@ -122,6 +122,7 @@ const errorMessage = ref(null)
 const patronInput = ref<InstanceType<typeof Input>>()
 const preview = ref<{ patron: User; accession: Accession } | null>(null)
 const loanModeId = ref()
+const emit = defineEmits(['refresh'])
 
 const emptyForm = () => ({
   //   patron: '',
@@ -170,6 +171,7 @@ async function checkout() {
       loan_mode_id: loanModeId.value,
     })
     pop.success(res.message)
+    emit('refresh')
     clear()
   } catch (e: any) {
     pop.error(e.response?.data?.message)
