@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\CatalogSearchService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -9,7 +10,7 @@ use Laravel\Scout\Searchable;
 
 class CatalogIndex extends Model
 {
-    use SoftDeletes, Searchable;
+    use Searchable, SoftDeletes;
 
     protected $fillable = [
         'item_id',
@@ -38,13 +39,9 @@ class CatalogIndex extends Model
 
     public function toSearchableArray(): array
     {
-        $item = $this->item()->with([
-            'authors',
-            'itemType',
-            'itemTypeCategory',
-            'library.campus',
-            'language',
-        ])->first();
+        $this->loadMissing('item');
+        $item = $this->item;
+        $item?->loadMissing(CatalogSearchService::ITEM_RELATIONS);
 
         // Get branch and campus from the Item relationship
         $library = $item?->library;
@@ -59,7 +56,8 @@ class CatalogIndex extends Model
             'subtitle' => $item?->subtitle,
             'description' => $item?->description,
             'call_number' => $item?->call_number,
-            'publication_year' => $item?->publication_year,
+            'publication_year' => $this->publication_year,
+            'released' => (bool) $item?->released,
 
             // Search fields
             'keywords' => $this->normalizeKeywords($item?->keywords),
@@ -95,6 +93,11 @@ class CatalogIndex extends Model
         ];
     }
 
+    public function shouldBeSearchable(): bool
+    {
+        return ! $this->trashed() && (bool) $this->item?->released;
+    }
+
     protected function normalizeKeywords($keywords): array
     {
         if (empty($keywords)) {
@@ -112,4 +115,3 @@ class CatalogIndex extends Model
         ));
     }
 }
-

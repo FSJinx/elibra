@@ -420,7 +420,16 @@ Route::group(['prefix' => '/patron'], function () {
     Route::delete('{patron}', [PatronController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:delete');
 });
 
-Route::post('/aca-repo', [AcaRepoController::class, 'store'])->middleware('jwt.auth', 'throttle:write');
+Route::group(['prefix' => '/acarepo', 'middleware' => ['jwt.auth']], function () {
+    Route::post('', [AcaRepoController::class, 'store'])->middleware('throttle:write');
+
+    Route::group(['middleware' => ['role:super_admin,admin,librarian']], function () {
+        Route::get('', [AcaRepoController::class, 'index'])->middleware('throttle:read');
+        Route::get('{acaRepo}', [AcaRepoController::class, 'show'])->middleware('throttle:read');
+        Route::put('{acaRepo}', [AcaRepoController::class, 'update'])->middleware('throttle:write');
+        Route::delete('{acaRepo}', [AcaRepoController::class, 'destroy'])->middleware('throttle:delete');
+    });
+});
 
 Route::group(['prefix' => '/patron-type-loan-policy'], function () {
     Route::get('', [PatronTypeLoanPolicyController::class, 'index'])->middleware('throttle:read');

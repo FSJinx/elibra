@@ -9,16 +9,21 @@ use App\Services\AcaRepoService;
 
 class AcaRepoController extends Controller
 {
-    public function __construct(private AcaRepoService $acaRepoService)
-    {
-    }
+    public function __construct(private AcaRepoService $acaRepoService) {}
 
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $acaRepos = AcaRepo::with(['language', 'program'])->latest()->get();
+
+        return $this->response(
+            'success',
+            'Academic repositories retrieved successfully.',
+            $acaRepos->toArray(),
+            200
+        );
     }
 
     /**
@@ -34,10 +39,12 @@ class AcaRepoController extends Controller
      */
     public function store(StoreAcaRepoRequest $request)
     {
-        $acaRepo = $this->acaRepoService->submitAcaRepo([
-            ...$request->validated(),
-            'program_id' => $request->user()->patron->program_id,
-        ]);
+        $acaRepo = $request->user()->isPatron()
+            ? $this->acaRepoService->submitAcaRepo([
+                ...$request->validated(),
+                'program_id' => $request->user()->patron->program_id,
+            ])
+            : $this->acaRepoService->create($request->validated());
 
         return $this->response(
             'success',
@@ -52,7 +59,14 @@ class AcaRepoController extends Controller
      */
     public function show(AcaRepo $acaRepo)
     {
-        //
+        $acaRepo->load(['language', 'program']);
+
+        return $this->response(
+            'success',
+            'Academic repository retrieved successfully.',
+            $acaRepo->toArray(),
+            200
+        );
     }
 
     /**
@@ -68,7 +82,14 @@ class AcaRepoController extends Controller
      */
     public function update(UpdateAcaRepoRequest $request, AcaRepo $acaRepo)
     {
-        //
+        $acaRepo = $this->acaRepoService->update($acaRepo, $request->validated());
+
+        return $this->response(
+            'success',
+            'Academic repository updated successfully.',
+            $acaRepo->load(['language', 'program'])->toArray(),
+            200
+        );
     }
 
     /**
@@ -76,6 +97,20 @@ class AcaRepoController extends Controller
      */
     public function destroy(AcaRepo $acaRepo)
     {
-        //
+        if (! $this->acaRepoService->delete($acaRepo)) {
+            return $this->response(
+                'error',
+                'The academic repository could not be deleted.',
+                null,
+                500
+            );
+        }
+
+        return $this->response(
+            'success',
+            'Academic repository deleted successfully.',
+            null,
+            200
+        );
     }
 }

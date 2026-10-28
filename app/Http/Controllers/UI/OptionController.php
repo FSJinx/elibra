@@ -36,7 +36,7 @@ class OptionController extends Controller
 
     public function libraries()
     {
-        $data = Library::query()->select(['id', 'name'])->get();
+        $data = Library::query()->select(['id', 'name', 'campus_id'])->get();
 
         return $this->response(data: $data);
 
