@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 interface Props {
-  variant?: string
+  variant?: string | boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {

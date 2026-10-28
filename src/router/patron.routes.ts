@@ -11,6 +11,12 @@ export const patronRoutes = [
     component: () => import('@/layouts/patron/PatronLayout.vue'),
     children: [
       {
+        path: 'digital-manuscript-submission',
+        name: 'patron.acarepo',
+        meta: { title: 'Digital Manuscript Submission' },
+        component: () => import('@/app/patron/acarepo/AcaRepo.vue'),
+      },
+      {
         path: '',
         name: 'patron.dashboard',
         component: () => import('@/app/patron/dashboard/Dashboard.vue'),

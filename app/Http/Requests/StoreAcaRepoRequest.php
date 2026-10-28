@@ -15,9 +15,10 @@ class StoreAcaRepoRequest extends BaseRequest
     {
         $user = $this->user();
 
-        return $user !== null
-            && $user->isPatron()
-            && $user->patron()->exists();
+        return $user !== null && (
+            ($user->isPatron() && $user->patron()->exists())
+            || $user->isSuperAdmin() || $user->isAdmin() || $user->isLibrarian()
+        );
     }
 
     /**
@@ -27,7 +28,7 @@ class StoreAcaRepoRequest extends BaseRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'title' => ['required', 'string', 'max:255'],
             'category' => ['required', Rule::in(['ut', 'gt'])],
             'description' => ['required', 'string'],
@@ -36,5 +37,15 @@ class StoreAcaRepoRequest extends BaseRequest
             'keywords.*' => ['string', 'max:255'],
             'language_id' => ['required', Rule::exists((new Language)->getTable(), 'id')],
         ];
+
+        if (! $this->user()->isPatron()) {
+            $rules['language_id'] = ['nullable', Rule::exists((new Language)->getTable(), 'id')];
+            $rules['program_id'] = ['nullable', 'exists:programs,id'];
+            $rules['status'] = ['required', Rule::in(['pending', 'approved', 'rejected'])];
+            $rules['statusRemark'] = ['nullable', 'string', 'max:255'];
+            $rules['on_catalog'] = ['required', 'boolean'];
+        }
+
+        return $rules;
     }
 }

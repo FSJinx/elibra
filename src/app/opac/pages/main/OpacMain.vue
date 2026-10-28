@@ -32,9 +32,11 @@
       </Form>
     </section>
 
+    <Alert v-if="error" variant="danger">{{ error }}</Alert>
+
     <div class="flex-1 flex flex-col overflow-y-auto border border-border divide-y divide-border rounded-xl">
       <!-- SEARCHING -->
-      <section v-if="loading && route.query.search" class="flex-1 flex flex-col items-center justify-center min-h-100 bg-secondary text-center">
+      <section v-if="loading" class="flex-1 flex flex-col items-center justify-center min-h-100 bg-secondary text-center">
         <div class="flex items-center justify-center size-16 rounded-xl bg-primary/10 text-primary mb-5">
           <Icon icon="search" class="text-2xl" />
         </div>
@@ -43,12 +45,13 @@
       </section>
 
       <!-- NO RESULT -->
-      <section v-else-if="route.query.search && libraryData.length === 0" class="flex-1 flex flex-col items-center justify-center min-h-100 bg-secondary text-center px-5">
+      <section v-else-if="!error && libraryData.length === 0" class="flex-1 flex flex-col items-center justify-center min-h-100 bg-secondary text-center px-5">
         <div class="flex items-center justify-center size-16 rounded-xl bg-danger-soft text-danger mb-5">
           <Icon icon="search" class="text-2xl" />
         </div>
         <h2 class="text-xl font-semibold">No results found</h2>
-        <p class="mt-2 max-w-md text-sm text-foreground-secondary">We couldn't find any catalog materials matching "{{ route.query.search }}".</p>
+        <p v-if="route.query.search" class="mt-2 max-w-md text-sm text-foreground-secondary">We couldn't find any catalog materials matching "{{ route.query.search }}".</p>
+        <p v-else class="mt-2 max-w-md text-sm text-foreground-secondary">No published materials match the selected filters. Try another campus or library, or check back later.</p>
       </section>
 
       <router-link v-for="(item, index) in libraryData" :key="item.id ?? index" :to="{ name: 'opac.view', params: { id: item.item_id } }">
@@ -87,53 +90,6 @@
             </div>
           </div>
 
-<<<<<<< HEAD
-            <div class="relative w-20 sm:w-24 aspect-2/3 shrink-0 rounded-lg overflow-hidden bg-primary/5 border border-border">
-              <img :src="default_book" alt="" class="w-full h-full object-cover transition-transform duration-300" />
-            </div>
-
-            <div class="flex-1 min-w-0 py-1">
-              <div class="flex items-start gap-3">
-                <div class="min-w-0 flex-1">
-                  <h3 class="font-semibold text-lg leading-snug truncate group-hover:text-primary transition-colors">
-                    {{ item.title }}
-                  </h3>
-                  <p v-if="item.subtitle" class="mt-1 text-sm text-foreground-secondary truncate">
-                    {{ item.subtitle }}
-                  </p>
-                </div>
-
-                <Icon icon="arrow-up-right" class="hidden sm:block shrink-0 text-foreground-secondary opacity-0 group-hover:opacity-100 group-hover:text-primary transition-all" />
-              </div>
-
-              <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mt-4 text-xs text-foreground-secondary">
-                <span class="inline-flex items-center gap-1.5">
-                  <Icon icon="user" />
-                  {{ item.authors?.join(', ') || 'No Author' }}
-                </span>
-
-                <span class="inline-flex items-center gap-1.5">
-                  <Icon icon="calendar" />
-                  {{ item.publication_year || 'Unknown Year' }}
-                </span>
-
-                <span class="inline-flex items-center gap-1.5">
-                  <Icon icon="building-2" />
-                  {{ item.branch }} - {{ item.campus || 'Unknown Campus' }}
-                </span>
-              </div>
-            </div>
-
-            <div class="hidden sm:block shrink-0 pt-1">
-              <Status class="text-xs capitalize px-3 py-1.5 rounded-full border border-current/30" :variant="parse.status(item.itemType as string)">
-                {{ item.item_type }}
-              </Status>
-            </div>
-          </Card>
-        </router-link>
-      </div>
-    </section>
-=======
           <div class="hidden sm:block shrink-0 pt-1">
             <Status class="text-xs capitalize px-3 py-1.5 rounded-full border border-current/30" :variant="parse.status(item.itemType as string)">
               {{ item.item_type }}
@@ -142,7 +98,6 @@
         </div>
       </router-link>
     </div>
->>>>>>> dc589cece2127835548c01de82f4bd238c045bd6
   </main>
 </template>
 
@@ -176,6 +131,7 @@ defineProps<{
   libraryData: LibraryItem[]
   total: number
   loading: boolean
+  error?: string | null
 }>()
 
 defineEmits<{
@@ -188,12 +144,9 @@ const { typedText } = useSearchTyping()
 const route = useRoute()
 const parse = useParser()
 
-const { item_types } = useItemTypeStore()
-const { categories } = useItemCategoriesStore()
-const { data } = useCampusStore()
-
-const selectedCampus = computed(() => data?.find((i) => String(i.id) === params.value.campus)?.name)
-const itemTypeCategories = computed(() => categories.filter((item) => String(item.item_type_id) === String(params.value.item_type)))
+const options = optionStore()
+const item_types = computed(() => options.item_types ?? [])
+const itemTypeCategories = computed(() => (options.categories ?? []).filter((item) => String(item.item_type_id) === String(params.value.item_type)))
 </script>
 
 <style scoped>

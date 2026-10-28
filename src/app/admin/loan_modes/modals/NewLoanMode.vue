@@ -17,6 +17,13 @@
           <Label>Description</Label>
           <Input type="text" placeholder="e.g. In House" v-model="form.description" :error="errors.description?.[0]" />
         </Control>
+
+        <Control class="gap-3" col>
+          <Checkbox id="mode-renewable" v-model="form.renewable" label="Can Renew" />
+          <Checkbox id="mode-charges_fine" v-model="form.charges_fine" label="Charges Fine" />
+          <Checkbox id="mode-has_grace_period" v-model="form.has_grace_period" label="Has Grace Period" />
+          <Checkbox id="mode-is_active" v-model="form.is_active" label="Active" />
+        </Control>
       </Form>
     </ModalBody>
     <ModalFooter class="space-x-2">
@@ -37,6 +44,10 @@ const defaultForm = (): StoreLoanMode => ({
   slug: '',
   name: '',
   description: '',
+  renewable: false,
+  charges_fine: false,
+  has_grace_period: false,
+  is_active: true,
 })
 
 const modal = ref<InstanceType<typeof Modal>>()
@@ -63,6 +74,7 @@ async function submit() {
   try {
     const res = await loan_mode.create(form)
     pop.success(res.message ?? 'Loan mode created successfully')
+    nextTick()
     emit('refresh')
     close()
   } catch (e: any) {

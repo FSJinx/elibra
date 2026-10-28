@@ -10,6 +10,7 @@ use App\Models\ItemType;
 use App\Models\ItemTypeCategory;
 use App\Models\Language;
 use App\Models\Library;
+use App\Models\LoanMode;
 use App\Models\PatronType;
 use App\Models\Programs;
 use App\Models\Sections;
@@ -35,7 +36,7 @@ class OptionController extends Controller
 
     public function libraries()
     {
-        $data = Library::query()->select(['id', 'name'])->get();
+        $data = Library::query()->select(['id', 'name', 'campus_id'])->get();
 
         return $this->response(data: $data);
 
@@ -83,6 +84,13 @@ class OptionController extends Controller
     public function patronTypes()
     {
         $data = PatronType::query()->select(['id', 'key', 'name', 'has_campus', 'has_department', 'has_program'])->get();
+
+        return $this->response(data: $data);
+    }
+
+    public function loanModes()
+    {
+        $data = LoanMode::query()->select(['id', 'slug', 'name'])->get();
 
         return $this->response(data: $data);
     }

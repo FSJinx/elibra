@@ -17,7 +17,7 @@
           <Label id="params-campus">Campus</Label>
           <Select id="params-campus" title="Campus" v-model="params.campus">
             <Option value="">All data</Option>
-            <template v-for="(item, index) in campus.data" :key="index">
+            <template v-for="item in options.campuses" :key="item.id">
               <Option :value="item.id">{{ item.name }}</Option>
             </template>
           </Select>
@@ -26,7 +26,7 @@
         <Control direction="col">
           <Label id="params-branch">Branch</Label>
           <Select id="params-branch" title="Branch" v-model="params.branch">
-            <Option value="">All data?</Option>
+            <Option value="">All branches</Option>
             <template v-for="item in campusBranches" :key="item.id">
               <Option :value="item.id">{{ item.name }}</Option>
             </template>
@@ -74,33 +74,29 @@ defineEmits<{
   reset: []
 }>()
 
-const campus = useCampusStore()
-const branch = useBranchStore()
+const options = optionStore()
+
+watch(
+  () => params.value.campus,
+  () => {
+    params.value.branch = ''
+  },
+  { flush: 'sync' },
+)
 
 const campusBranches = computed(() => {
   if (params.value.campus) {
-    return branch.data?.filter((item) => String(item.campus_id) === String(params.value.campus))
+    return (options.libraries ?? []).filter((item) => String(item.campus_id) === String(params.value.campus))
   }
 
-  return branch.data?.map((b) => {
-    const c = campus.data?.find((i) => i.id === b.campus_id)
+  return (options.libraries ?? []).map((b) => {
+    const c = options.campuses?.find((i) => String(i.id) === String(b.campus_id))
     return {
       ...b,
-      name: `${b.name} - ${c?.name}`,
+      name: c ? `${b.name} - ${c.name}` : b.name,
     }
   })
 })
-
-watch(
-  () => campus.data,
-  () => console.log(campus.data),
-  { deep: true, immediate: true },
-)
-watch(
-  () => branch.data,
-  () => console.log(branch.data),
-  { deep: true, immediate: true },
-)
 </script>
 
 <style scoped></style>

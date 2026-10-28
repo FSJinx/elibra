@@ -1,4 +1,3 @@
-```vue
 <template>
   <div class="min-h-screen w-full max-w-7xl mx-auto bg-background border-x border-border shadow">
     <!-- Header -->
@@ -177,7 +176,7 @@
               <div>
                 <dt class="text-foreground-secondary">Accession Number</dt>
 
-                <dd class="font-medium mt-1">{{ opac.currentData?.item_id ?? 'Not available' }}</dd>
+                <dd class="font-medium mt-1">{{ opac.currentData?.accessions?.map((copy: { accession_number?: string | null }) => copy.accession_number).filter(Boolean).join(', ') || 'Not available' }}</dd>
               </div>
 
               <div>
@@ -229,12 +228,10 @@ const route = useRoute()
 
 const itemDetails = computed(() => {
   const data = opac.currentData
-  const details = data?.book ?? data?.academic ?? data?.serial ?? {}
-
   return {
-    isbn: details.isbn,
-    pages: details.pages ?? details.page_count,
-    publisher: details.publisher ?? details.institution,
+    isbn: data?.isbn_issn,
+    pages: data?.pages,
+    publisher: data?.publisher,
   }
 })
 

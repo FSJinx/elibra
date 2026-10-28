@@ -1,7 +1,1 @@
-export const adminPolicy = [
-  {
-    path: '',
-    meta: { title: 'Policies' },
-    children: [],
-  },
-]
+export const adminPolicy = []
