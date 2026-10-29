@@ -58,8 +58,8 @@
             <Td :data="parse.formatDateTime(item.due_at)" />
             <Td class="space-x-2">
               <!-- <EditLoanStatus :data="item" @refresh="search" /> -->
-              <Button variant="info" size="sm"> Renew </Button>
-              <Button variant="success" size="sm"> Return </Button>
+              <Button v-if="canUpdateLoan(item) && item.loan_mode?.renewable" variant="info" size="sm" :loading="actionId === item.id && actionType === 'renew'" :disabled="actionId !== null" @click="updateLoan(item, 'renew')"> Renew </Button>
+              <Button v-if="canUpdateLoan(item)" variant="success" size="sm" :loading="actionId === item.id && actionType === 'return'" :disabled="actionId !== null" @click="updateLoan(item, 'return')"> Return </Button>
               <Button class="hover:text-danger" size="sm" :loading="deletingId === item.id" @click="deleteLoan(item)"> Delete </Button>
             </Td>
           </Tr>
@@ -81,6 +81,8 @@ const pop = usePopup()
 
 const loading = ref<boolean>(false)
 const deletingId = ref<Loan['id'] | null>(null)
+const actionId = ref<Loan['id'] | null>(null)
+const actionType = ref<'renew' | 'return' | null>(null)
 const pagination = ref<Pagination>()
 
 const defaultParams = (): Partial<LoanParams> => ({
@@ -97,6 +99,42 @@ async function search() {
     pagination.value = res.data
   } finally {
     loading.value = false
+  }
+}
+
+function canUpdateLoan(item: Loan) {
+  return ['borrowed', 'overdue'].includes(item.status)
+}
+
+async function updateLoan(item: Loan, action: 'renew' | 'return') {
+  const isReturn = action === 'return'
+  const confirmation = await pop.confirm({
+    title: isReturn ? 'Return this item?' : 'Renew this loan?',
+    text: isReturn
+      ? 'The loan will be marked returned and the item will become available.'
+      : 'The due date will be extended by the loan period set for this patron type and loan mode.',
+    confirmButtonText: isReturn ? 'Return item' : 'Renew loan',
+  })
+
+  if (!confirmation.isConfirmed) return
+
+  actionId.value = item.id
+  actionType.value = action
+  pop.load()
+  try {
+    const res = isReturn ? await loan.returnLoan(item.id) : await loan.renew(item.id)
+    pop.unload()
+    await search()
+    await pop.success(res.message ?? (isReturn ? 'Loan returned successfully.' : 'Loan renewed successfully.'))
+  } catch (e: any) {
+    pop.unload()
+    const firstValidationError = e?.response?.data?.errors
+      ? Object.values(e.response.data.errors).flat()[0]
+      : null
+    await pop.error(firstValidationError ?? e?.response?.data?.message ?? `Unable to ${action} this loan.`)
+  } finally {
+    actionId.value = null
+    actionType.value = null
   }
 }
 

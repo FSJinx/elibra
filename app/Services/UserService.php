@@ -129,20 +129,30 @@ class UserService
 
     public function index(array $filters, User $user)
     {
-        $campusId = $user->isSuperAdmin() ? null : $user->campus_id;
+        $isSuperAdmin = $user->isSuperAdmin();
+        $campusId = match (true) {
+            $isSuperAdmin => null,
+            $user->isLibrarian() => $user->librarian?->library?->campus_id,
+            default => $user->campus_id,
+        };
 
         return CacheService::remember(
             CacheService::USERS,
             array_merge($filters, [
                 'campus_id' => $campusId,
+                'is_super_admin' => $isSuperAdmin,
             ]),
             now()->addHour(),
-            function () use ($filters, $campusId) {
+            function () use ($filters, $campusId, $isSuperAdmin) {
                 $users = User::query();
 
-                $users->when($campusId, function ($u, $campusId) {
-                    $u->where('campus_id', $campusId);
-                });
+                if (! $isSuperAdmin) {
+                    if ($campusId === null) {
+                        $users->whereRaw('1 = 0');
+                    } else {
+                        $users->where('campus_id', $campusId);
+                    }
+                }
 
                 $users->when(! empty($filters['query']),
                     function ($u) use ($filters) {
@@ -164,6 +174,7 @@ class UserService
                 );
 
                 return $users
+                    ->with(['campus', 'library', 'librarian.library', 'patron.program', 'patron.patronType'])
                     ->orderBy($filters['sort'], $filters['order'])
                     ->paginate(
                         $filters['per_page'] ?? 25,

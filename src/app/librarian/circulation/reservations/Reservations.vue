@@ -15,26 +15,24 @@
             <Th>Actions</Th>
           </tr>
         </Thead>
-        <Tbody :data="[{}]" :loading="false">
-          <!-- Sample Data -->
-          <Tr>
-            <Td>1</Td>
-            <Td>GC034834</Td>
-            <Td class="text-left">Sample Book Title</Td>
-            <Td class="text-left">Juan Dela Cruz</Td>
-            <Td>October 29, 2026 - 9:00 AM</Td>
+        <Tbody :data="holding.data" :loading="holding.loading" cols="7">
+          <Tr v-for="(item, index) in holding.data" :key="item.id">
+            <Td :data="index + 1" />
+            <Td :data="item.accession?.accession_number" />
+            <Td class="text-left" :data="item.accession?.item?.title" />
+            <Td class="text-left" :data="item.reserver?.user?.name?.full" />
+            <Td :data="parse.formatDateTime(item.pickup_date)" />
             <Td>
-              <Status variant="completed">Completed</Status>
+              <Status :variant="item.picked_up_at ? 'success' : 'warning'">{{ item.picked_up_at ? 'Completed' : 'Pending' }}</Status>
             </Td>
             <Td class="space-x-2">
-              <Complete :data="{} as Holding" />
-              <Button class="hover:text-danger" size="sm" @click="deleteReservation({} as Holding)">Delete</Button>
+              <Complete v-if="!item.picked_up_at" :data="item" @refresh="fetchReservations" />
+              <Button class="hover:text-danger" size="sm" :loading="deletingId === item.id" :disabled="deletingId !== null" @click="deleteReservation(item)">Delete</Button>
             </Td>
           </Tr>
-          <!-- <Tr v-for="(item, index) in " :key="index">
-            <Td :data="index + 1" />
-            <Td></Td>
-          </Tr> -->
+          <Tr v-if="holding.data?.length === 0">
+            <Td colspan="7" class="px-5 py-10 text-center text-sm">No reservations found.</Td>
+          </Tr>
         </Tbody>
       </Table>
     </div>
@@ -46,20 +44,37 @@ import Complete from '@/app/librarian/circulation/reservations/modals/Complete.v
 
 const holding = holdingStore()
 const pop = usePopup()
+const parse = useParser()
+const deletingId = ref<Holding['id'] | null>(null)
+
+async function fetchReservations() {
+  try {
+    await holding.fetch()
+  } catch (error: any) {
+    await pop.error(error?.response?.data?.message ?? 'Unable to load reservations. Please try again.')
+  }
+}
 
 async function deleteReservation(h: Holding) {
   const confirm = await pop.confirm({ text: 'Delete this reservation? By proceeding, this will cancel and delete the reservation' })
 
   if (confirm.isConfirmed) {
+    deletingId.value = h.id
     pop.load()
     try {
       const res = await holding.deleteHolding(h)
+      pop.unload()
       pop.success(res.message)
     } catch (e: any) {
-      pop.error(e.response?.data?.message)
+      pop.unload()
+      pop.error(e.response?.data?.message ?? 'Unable to delete this reservation.')
+    } finally {
+      deletingId.value = null
     }
   }
 }
+
+onBeforeMount(fetchReservations)
 </script>
 
 <style scoped></style>

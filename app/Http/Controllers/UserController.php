@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreUsersRequest;
 use App\Http\Requests\UpdateUsersRequest;
 use App\Models\User;
+use App\Services\CacheService;
 use App\Services\QueryService;
 use App\Services\UserService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class UserController extends Controller
@@ -168,11 +170,84 @@ class UserController extends Controller
         }
     }
 
+    public function approveRegistration(Request $request, User $user)
+    {
+        $this->authorizeUserAccess($request, $user);
+        $this->ensureRegistrationPending($user);
+
+        $user->update([
+            'registration' => 'approved',
+            'status' => 'active',
+        ]);
+        CacheService::invalidate(CacheService::USERS);
+
+        return $this->response('success', 'User registration approved successfully.', $user->fresh(['campus', 'patron.program']));
+    }
+
+    public function rejectRegistration(Request $request, User $user)
+    {
+        $this->authorizeUserAccess($request, $user);
+        $this->ensureRegistrationPending($user);
+
+        $user->update([
+            'registration' => 'rejected',
+            'status' => 'inactive',
+        ]);
+        CacheService::invalidate(CacheService::USERS);
+
+        return $this->response('success', 'User registration rejected.', $user->fresh(['campus', 'patron.program']));
+    }
+
+    private function authorizeUserAccess(Request $request, User $target): void
+    {
+        $reviewer = $request->user();
+        $reviewerCampusId = $reviewer->campus_id;
+        if ($reviewer->isLibrarian()) {
+            $reviewerCampusId = $reviewer->librarian?->library?->campus_id;
+        }
+
+        abort_unless(
+            $reviewer->isSuperAdmin()
+            || (
+                ($reviewer->isAdmin() || $reviewer->isLibrarian())
+                && $reviewerCampusId !== null
+                && $target->campus_id !== null
+                && (int) $reviewerCampusId === (int) $target->campus_id
+            ),
+            403,
+            'You are not authorized to manage this user.'
+        );
+    }
+
+    private function ensureRegistrationPending(User $user): void
+    {
+        if ($user->registration !== 'pending') {
+            throw ValidationException::withMessages([
+                'registration' => ['This user does not have a pending registration.'],
+            ]);
+        }
+    }
+
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $users)
+    public function destroy(Request $request, User $user)
     {
-        //
+        $this->authorizeUserAccess($request, $user);
+
+        if ((int) $request->user()->id === (int) $user->id) {
+            throw ValidationException::withMessages([
+                'user' => ['You cannot delete your own account.'],
+            ]);
+        }
+
+        if ($user->isSuperAdmin() && ! $request->user()->isSuperAdmin()) {
+            abort(403, 'You are not authorized to delete a super administrator.');
+        }
+
+        $user->delete();
+        CacheService::invalidate(CacheService::USERS);
+
+        return $this->response('success', 'User record deleted successfully.');
     }
 }

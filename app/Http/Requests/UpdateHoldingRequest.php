@@ -11,7 +11,9 @@ class UpdateHoldingRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return false;
+        $user = $this->user();
+
+        return $user && ($user->isLibrarian() || $user->isAdmin() || $user->isSuperAdmin());
     }
 
     /**
@@ -22,7 +24,7 @@ class UpdateHoldingRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            //
+            'loan_mode_id' => ['required', 'integer', 'exists:loan_modes,id'],
         ];
     }
 }

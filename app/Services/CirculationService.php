@@ -127,6 +127,116 @@ class CirculationService
         ]);
     }
 
+    public function returnLoan(Circulation $circulation, User $receivedBy): Circulation
+    {
+        $returned = DB::transaction(function () use ($circulation, $receivedBy) {
+            $loan = Circulation::query()
+                ->lockForUpdate()
+                ->findOrFail($circulation->id);
+
+            if (! in_array($loan->status, ['borrowed', 'overdue'], true)) {
+                throw ValidationException::withMessages([
+                    'status' => ['Only borrowed or overdue loans can be returned.'],
+                ]);
+            }
+
+            $accession = Accession::query()
+                ->lockForUpdate()
+                ->findOrFail($loan->accession_id);
+
+            $loan->update([
+                'status' => 'returned',
+                'returned_at' => Carbon::now(),
+                'return_received_by' => $receivedBy->librarian?->id,
+            ]);
+
+            if ($accession->status === 'on_load') {
+                $accession->update(['status' => 'available']);
+            }
+
+            return $loan;
+        });
+
+        CacheService::invalidate(CacheService::CIRCULATIONS);
+
+        return $returned->fresh([
+            'processedBy.user',
+            'patron.user',
+            'patron.patronType',
+            'accession.item',
+            'loanMode',
+            'returnReceivedBy.user',
+        ]);
+    }
+
+    public function renew(Circulation $circulation): Circulation
+    {
+        $renewed = DB::transaction(function () use ($circulation) {
+            $loan = Circulation::query()
+                ->with('patron')
+                ->lockForUpdate()
+                ->findOrFail($circulation->id);
+
+            if (! in_array($loan->status, ['borrowed', 'overdue'], true)) {
+                throw ValidationException::withMessages([
+                    'status' => ['Only borrowed or overdue loans can be renewed.'],
+                ]);
+            }
+
+            $loan->loadMissing('loanMode');
+            if (! $loan->loanMode?->renewable) {
+                throw ValidationException::withMessages([
+                    'loan_mode_id' => ['This loan mode does not allow renewals.'],
+                ]);
+            }
+
+            if (! $loan->patron) {
+                throw ValidationException::withMessages([
+                    'patron_id' => ['The patron associated with this loan could not be found.'],
+                ]);
+            }
+
+            $policy = PatronTypeLoanPolicy::query()
+                ->where('patron_type_id', $loan->patron->patron_type_id)
+                ->where('loan_mode_id', $loan->loan_mode_id)
+                ->first();
+
+            if (! $policy) {
+                throw ValidationException::withMessages([
+                    'loan_mode_id' => ['There is no loan policy for this patron type and loan mode.'],
+                ]);
+            }
+
+            if ($loan->renewal_count >= $policy->max_renewals) {
+                throw ValidationException::withMessages([
+                    'renewal_count' => ['This loan has reached the maximum number of renewals.'],
+                ]);
+            }
+
+            $now = Carbon::now();
+            $extensionBase = $loan->due_at->greaterThan($now) ? $loan->due_at->copy() : $now;
+
+            $loan->update([
+                'due_at' => $extensionBase->addDays($policy->loan_period_days),
+                'renewal_count' => $loan->renewal_count + 1,
+                'status' => 'borrowed',
+            ]);
+
+            return $loan;
+        });
+
+        CacheService::invalidate(CacheService::CIRCULATIONS);
+
+        return $renewed->fresh([
+            'processedBy.user',
+            'patron.user',
+            'patron.patronType',
+            'accession.item',
+            'loanMode',
+            'returnReceivedBy.user',
+        ]);
+    }
+
     public function delete(Circulation $circulation): bool
     {
         $deleted = DB::transaction(function () use ($circulation) {

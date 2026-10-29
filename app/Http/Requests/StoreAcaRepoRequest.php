@@ -63,6 +63,7 @@ class StoreAcaRepoRequest extends BaseRequest
     {
         return [
             'electronic_file.mimes' => 'Please convert your file to PDF or upload only PDF files.',
+            'library_id.exists' => 'The selected library does not exist or is not assigned to your campus. Please select a library from your campus.',
         ];
     }
 }
