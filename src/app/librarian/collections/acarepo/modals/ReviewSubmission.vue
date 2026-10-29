@@ -33,7 +33,7 @@
         </Control>
         <Control id="submission-program" col>
           <Label>Program</Label>
-          <Input :model-value="form.program?.name || form.program_id" readonly />
+          <Input :model-value="programName" readonly />
         </Control>
         <Control id="submission-doi" col class="sm:col-span-2">
           <Label>DOI</Label>
@@ -94,6 +94,7 @@ const categoryLabel = computed(() => {
   return categories[props.data.category] ?? (props.data.category || 'Not provided')
 })
 
+const programName = computed(() => form.value.program?.name || form.value.submitter?.program?.name || 'Not provided')
 const submitterName = computed(() => props.data.submitter?.user?.name?.full || props.data.submitted_by || 'Not provided')
 
 function open() {

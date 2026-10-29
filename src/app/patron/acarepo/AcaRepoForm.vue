@@ -44,8 +44,8 @@
             </Control>
             <Control class="col-span-2" id="manuscript-library" required col>
               <Label>Library</Label>
-              <Select v-model="form.library_id" :disabled="loading || !campusLibraries.length">
-                <Option value="" selected disabled>Select language</Option>
+              <Select v-model="form.library_id" :disabled="loading || !campusLibraries.length" :error="fieldErrors?.library_id?.[0]">
+                <Option :value="null" disabled>Select your campus library</Option>
                 <Option v-for="library in campusLibraries" :key="library.id" :value="library.id">{{ library.name }}</Option>
               </Select>
               <p v-if="!loading && !campusLibraries.length" class="text-sm text-danger">No libraries are configured for your campus.</p>
@@ -99,31 +99,62 @@ const defaultForm = (): StoreAcaRepo => ({
   electronic_file: null,
   keywords: [],
 
-  library_id: '',
-  language_id: '',
+  library_id: null,
+  language_id: null,
 })
 
 const form = ref<StoreAcaRepo>(defaultForm())
-const error = ref(null)
+const error = ref<string | null>(null)
+const fieldErrors = ref<Record<string, string[]> | null>(null)
 const submitted = ref<AcaRepo | null>(null)
 const loading = ref<boolean>(false)
 
 const campusLibraries = computed(() => options.libraries?.filter((library) => String(library.campus_id) === String(auth.user?.campus_id)) ?? [])
 
+async function loadOptions() {
+  loading.value = true
+  error.value = null
+  try {
+    await Promise.all([
+      options.fetch('languages', true),
+      options.fetch('libraries', true),
+    ])
+  } catch (e: any) {
+    error.value = e?.response?.data?.message ?? 'Unable to load submission options. Please try again.'
+  } finally {
+    loading.value = false
+  }
+}
+
 async function submit() {
+  error.value = null
+  fieldErrors.value = null
   if (!form.value.keywords?.length) return pop.info('Please enter at least one keyword')
+  if (!campusLibraries.value.some((library) => String(library.id) === String(form.value.library_id))) {
+    fieldErrors.value = { library_id: ['Select a library that belongs to your campus.'] }
+    return
+  }
 
   const confirm = await pop.confirm({ text: 'Are you sure you want to submit this manuscript?' })
 
   if (confirm.isConfirmed) {
+    loading.value = true
     pop.load()
     try {
       const res = await acarepo.create(form.value)
       submitted.value = res.data
       pop.success(res.message)
     } catch (e: any) {
-      error.value = e.response?.data?.data?.errors?.[0] ?? e.response?.data?.message ?? 'Something went wrong, please check your inputs and try again.'
+      fieldErrors.value = e?.response?.data?.errors ?? null
+      error.value = fieldErrors.value?.library_id?.[0]
+        ?? e?.response?.data?.message
+        ?? 'Something went wrong, please check your inputs and try again.'
+    } finally {
+      pop.unload()
+      loading.value = false
     }
   }
 }
+
+onBeforeMount(loadOptions)
 </script>

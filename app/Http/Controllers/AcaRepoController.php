@@ -28,7 +28,7 @@ class AcaRepoController extends Controller
         $theses = AcaRepo::query()
             ->when($filters['library_id'] !== null, fn ($q) => $q->where('library_id', $filters['library_id']))
             ->when($filters['submitted_by'] !== null, fn ($q) => $q->where('submitted_by', $filters['submitted_by']))
-            ->with(['language', 'program', 'submitter.user:id,last_name,first_name', 'library'])
+            ->with(['language', 'program', 'submitter.user:id,last_name,first_name', 'submitter.program', 'library'])
             ->paginate();
 
         return $this->response(
@@ -56,20 +56,18 @@ class AcaRepoController extends Controller
         $patron = $user->patron;
         $data = [
             ...$request->validated(),
-            'submitted_by' => $user->patron->id,
-            $data['program_id'] = $patron->program_id,
+            'submitted_by' => $patron->id,
+            'program_id' => $patron->program_id,
         ];
 
-        // if ($user->isPatron()) {
-        //     $acaRepo = $this->acaRepoService->submitAcaRepo($data);
-        // } else {
-        //     }
-        $acaRepo = $this->acaRepoService->create($data);
+        $acaRepo = $user->isPatron()
+            ? $this->acaRepoService->submitAcaRepo($data)
+            : $this->acaRepoService->create($data);
 
         return $this->response(
             'success',
             'Academic repository submission created successfully.',
-            $acaRepo->load(['submitter', 'library'])->toArray(),
+            $acaRepo->load(['program', 'submitter.user', 'submitter.program', 'library'])->toArray(),
             201,
         );
     }
@@ -79,7 +77,7 @@ class AcaRepoController extends Controller
      */
     public function show(AcaRepo $acaRepo)
     {
-        $acaRepo->load(['language', 'program', 'submitter', 'library']);
+        $acaRepo->load(['language', 'program', 'submitter.user', 'submitter.program', 'library']);
 
         return $this->response(
             'success',
@@ -107,7 +105,7 @@ class AcaRepoController extends Controller
         return $this->response(
             'success',
             'Academic repository updated successfully.',
-            $acaRepo->load(['language', 'program', 'submitter', 'library'])->toArray(),
+            $acaRepo->load(['language', 'program', 'submitter.user', 'submitter.program', 'library'])->toArray(),
             200
         );
     }
@@ -124,7 +122,7 @@ class AcaRepoController extends Controller
         return $this->response(
             'success',
             'Academic repository rejected successfully.',
-            $acaRepo->load(['language', 'program', 'submitter', 'library'])->toArray(),
+            $acaRepo->load(['language', 'program', 'submitter.user', 'submitter.program', 'library'])->toArray(),
             200
         );
     }
@@ -139,7 +137,7 @@ class AcaRepoController extends Controller
         return $this->response(
             'success',
             'Academic repository approved successfully.',
-            $acaRepo->load(['language', 'program', 'submitter', 'library'])->toArray(),
+            $acaRepo->load(['language', 'program', 'submitter.user', 'submitter.program', 'library'])->toArray(),
             200
         );
     }

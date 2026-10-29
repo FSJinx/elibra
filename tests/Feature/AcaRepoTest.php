@@ -31,6 +31,12 @@ class AcaRepoTest extends TestCase
             $table->string('username')->nullable();
             $table->softDeletes();
         });
+        Schema::create('librarians', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('library_id')->nullable();
+            $table->softDeletes();
+        });
         Schema::create('libraries', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('campus_id');
@@ -41,6 +47,7 @@ class AcaRepoTest extends TestCase
         });
         Schema::create('programs', function (Blueprint $table) {
             $table->id();
+            $table->string('name')->nullable();
             $table->softDeletes();
         });
         DB::table('users')->insert(['id' => 1, 'role' => 'librarian', 'campus_id' => 5]);
@@ -102,7 +109,7 @@ class AcaRepoTest extends TestCase
     {
         (require database_path('migrations/2_create_patrons_table.php'))->up();
         DB::table('languages')->insert(['id' => 1]);
-        DB::table('programs')->insert(['id' => 9]);
+        DB::table('programs')->insert(['id' => 9, 'name' => 'Computer Science']);
         DB::table('users')->insert(['id' => 7, 'role' => 'patron', 'campus_id' => 5]);
         DB::table('libraries')->insert(['id' => 2, 'campus_id' => 6]);
         $user = (new User(['role' => 'patron']))->forceFill(['id' => 7, 'campus_id' => 5]);
@@ -124,10 +131,16 @@ class AcaRepoTest extends TestCase
             'library_id' => 1,
             'electronic_file' => UploadedFile::fake()->create('manuscript.pdf', 100, 'application/pdf'),
         ])->assertCreated()->assertJsonPath('data.program_id', 9)
+            ->assertJsonPath('data.program.name', 'Computer Science')
             ->assertJsonPath('data.status', 'pending')
             ->assertJsonPath('data.on_catalog', false)
             ->assertJsonPath('data.description', 'Research abstract.')
-            ->assertJsonPath('data.submitted_by', 7);
+            ->assertJsonPath('data.submitted_by', 1);
+
+        $this->getJson('/api/acarepo')
+            ->assertOk()
+            ->assertJsonPath('data.data.0.program.name', 'Computer Science')
+            ->assertJsonPath('data.data.0.submitter.program.name', 'Computer Science');
     }
 
     public function test_patron_cannot_manage_submissions(): void

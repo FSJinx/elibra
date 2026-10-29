@@ -25,8 +25,8 @@ export const optionStore = defineStore('option', {
   state,
 
   actions: {
-    async fetch(key: Key) {
-      if (this[key]) return
+    async fetch(key: Key, forced = false) {
+      if (this[key] && !forced) return
       this[key] = (await get(`${this.url}/${key}`)).data
     },
 

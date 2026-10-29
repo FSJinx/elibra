@@ -13,6 +13,7 @@ use App\Http\Controllers\CampusController;
 use App\Http\Controllers\CirculationController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\FinesTransactionController;
+use App\Http\Controllers\HoldingController;
 use App\Http\Controllers\HolidaysController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\InventoryLineController;
@@ -496,6 +497,12 @@ Route::group(['prefix' => '/fines-transaction'], function () {
     Route::post('', [FinesTransactionController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
     Route::put('{finesTransaction}', [FinesTransactionController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
     Route::delete('{finesTransaction}', [FinesTransactionController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:delete');
+});
+
+Route::group(['prefix' => '/holding'], function () {
+    Route::get('', [HoldingController::class, 'index'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
+    Route::post('{holding}/complete', [HoldingController::class, 'complete'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
+    Route::delete('{holding}', [HoldingController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:delete');
 });
 
 /**

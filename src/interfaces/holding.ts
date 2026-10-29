@@ -8,8 +8,8 @@ export interface Holding {
   picked_up_at: string
 
   reserver: Partial<Patron>
-  accesion: Partial<Accession>
-  proccessor: Partial<Librarian>
+  accession: Partial<Accession>
+  processor: Partial<Librarian>
 
   [key: string]: any
 }
