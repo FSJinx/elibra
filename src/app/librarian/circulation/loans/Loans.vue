@@ -37,9 +37,10 @@
             <Th>Accession</Th>
             <Th class="text-left">Title</Th>
             <Th class="text-left">Borrower</Th>
+            <Th>Status</Th>
+            <Th>Loan Mode</Th>
             <Th>Borrowed At</Th>
             <Th>Due Date</Th>
-            <Th>Status</Th>
             <Th>Actions</Th>
           </tr>
         </Thead>
@@ -49,11 +50,12 @@
             <Td :data="item.accession?.accession_number" />
             <Td class="text-left" :data="item.accession?.item?.title" />
             <Td class="text-left">{{ item.patron?.user?.name?.full }} ({{ item.patron?.user?.username }})</Td>
-            <Td :data="parse.formatDateTime(item.borrowed_at)" />
-            <Td :data="parse.formatDateTime(item.due_at)" />
             <Td>
               <Status :variant="item?.status">{{ item?.status }}</Status>
             </Td>
+            <Td :data="item.loan_mode?.name" />
+            <Td :data="parse.formatDateTime(item.borrowed_at)" />
+            <Td :data="parse.formatDateTime(item.due_at)" />
             <Td class="space-x-2">
               <!-- <EditLoanStatus :data="item" @refresh="search" /> -->
               <Button variant="info" size="sm"> Renew </Button>

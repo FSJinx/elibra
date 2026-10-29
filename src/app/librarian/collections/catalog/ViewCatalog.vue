@@ -44,7 +44,7 @@ const data = ref<Item | null>(null)
 
 const routes = [
   { name: 'Overview', path: 'librarian.collections.catalog.view.overview' },
-  { name: 'Authors', path: 'librarian.collections.catalog.view.authors' },
+  // { name: 'Authors', path: 'librarian.collections.catalog.view.authors' },
   { name: 'Accession', path: 'librarian.collections.catalog.view.accession' },
   { name: 'Acquisition', path: 'librarian.collections.catalog.view.acquisition' },
 ]

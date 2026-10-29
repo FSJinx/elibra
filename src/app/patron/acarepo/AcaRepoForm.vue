@@ -92,9 +92,9 @@ const auth = authStore()
 const acarepo = acaRepoStore()
 
 const defaultForm = (): StoreAcaRepo => ({
-  title: '',
-  category: '',
-  description: '',
+  title: 'e-Libra 2.0',
+  category: 'ut',
+  description: 'A centralized library management system',
   doi: '',
   electronic_file: null,
   keywords: [],

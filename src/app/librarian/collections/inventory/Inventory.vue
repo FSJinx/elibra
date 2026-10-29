@@ -12,7 +12,7 @@
         <CardBody> </CardBody>
       </Card> -->
 
-      <Table title="Recent Inventory Tracking" subtitle="Track your inventory history here." :data-length="inventory.data?.length">
+      <Table title="Recent Inventory Tracking" subtitle="Track your inventory history here.">
         <Thead>
           <Th>No.</Th>
           <Th>Inventory ID</Th>
@@ -23,17 +23,26 @@
           <Th>Action</Th>
         </Thead>
 
-        <Tbody cols="7" :loading="inventory.loading" :data="inventory.data">
-          <tr v-for="item in inventory.data" :key="item.id" class="border-b border-border last:border-0 hover:bg-secondary/30 transition-colors">
+        <Tbody cols="7" :loading="inventory.loading" :data="[{}]">
+          <Tr :to="{ name: 'librarian.collections.inventory.view', params: { id: 1 } }">
+            <Td data="1" />
+            <Td data="INV0001" />
+            <Td data="General Sections" />
+            <Td data="Juan Dela Cruz" />
+            <Td data="Octobe 26, 2026" />
+            <Td>
+              <Status variant="pending">pending</Status>
+            </Td>
+            <Td>
+              <Button class="hover:text-primary" size="sm">End</Button>
+            </Td>
+          </Tr>
+          <!-- <tr v-for="item in inventory.data" :key="item.id" class="border-b border-border last:border-0 hover:bg-secondary/30 transition-colors">
             <Td :data="item.inventory_id"></Td>
             <Td :data="item.librarian_id"></Td>
             <Td :data="item.created_at"></Td>
             <Td :data="item.is_completed"></Td>
-          </tr>
-
-          <tr v-if="inventory.data?.length === 0">
-            <Td colspan="8" class="px-5 py-10 text-center text-sm">No items match your filters.</Td>
-          </tr>
+          </tr> -->
         </Tbody>
       </Table>
     </div>
