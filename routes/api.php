@@ -409,9 +409,15 @@ Route::group(['prefix' => '/librarian', 'middleware' => ['jwt.auth', 'role:admin
 
 // User Routes
 Route::group(['prefix' => '/user', 'middleware' => ['jwt.auth', 'role:super_admin,admin']], function () {
-    Route::get('', [UserController::class, 'index'])->middleware('throttle:read');
     Route::post('', [UserController::class, 'create'])->middleware('throttle:write');
     Route::put('{user}', [UserController::class, 'update'])->middleware('throttle:write');
+});
+
+Route::group(['prefix' => '/user', 'middleware' => ['jwt.auth', 'role:super_admin,admin,librarian']], function () {
+    Route::get('', [UserController::class, 'index'])->middleware('throttle:read');
+    Route::post('{user}/approve-registration', [UserController::class, 'approveRegistration'])->middleware('throttle:write');
+    Route::post('{user}/reject-registration', [UserController::class, 'rejectRegistration'])->middleware('throttle:write');
+    Route::delete('{user}', [UserController::class, 'destroy'])->middleware('throttle:delete');
 });
 
 Route::group(['prefix' => '/patron'], function () {
