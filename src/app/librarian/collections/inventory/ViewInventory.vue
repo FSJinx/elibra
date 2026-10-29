@@ -67,15 +67,7 @@ const route = useRoute()
 const pop = usePopup()
 const inventory = inventoryStore()
 
-async function load() {
-  pop.load()
-  try {
-    await inventory.show(route.params.id)
-  } finally {
-    pop.unload()
-  }
-}
-onBeforeMount(load)
+onBeforeUnmount(() => (inventory.currentData = null))
 </script>
 
 <style scoped></style>

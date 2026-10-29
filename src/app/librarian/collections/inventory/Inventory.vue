@@ -3,7 +3,7 @@
     <!-- Header -->
     <SectionHeader title="Stock Verification" description="Browse and verify materials on-shelf" icon="boxes">
       <div class="flex items-center justify-end gap-2">
-        <NewInventory />
+        <NewInventory @refresh="search" />
       </div>
     </SectionHeader>
 

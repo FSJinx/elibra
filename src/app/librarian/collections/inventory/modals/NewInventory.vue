@@ -34,6 +34,8 @@ const auth = authStore()
 const pop = usePopup()
 const inventory = inventoryStore()
 
+const emit = defineEmits(['refresh'])
+
 const defaultForm = (): StoreInventory => ({
   section_id: '',
 })
@@ -58,6 +60,7 @@ async function submit() {
     try {
       const res = await inventory.create(form.value)
       pop.success(res.message)
+      emit('refresh')
       close()
     } catch (e: any) {
       pop.error(e?.response?.data?.message ?? 'Something went wrong, please try again')
