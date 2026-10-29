@@ -37,7 +37,7 @@
       <Label>Campus</Label>
       <Select v-model="form.campus_id" :error="errors.campus_id">
         <Option value="" selected disabled>Select campus</Option>
-        <Option :value="campus.id" v-for="campus in campuses.data">{{ campus.name }}</Option>
+        <Option :value="campus.id" v-for="campus in options.campuses">{{ campus.name }}</Option>
       </Select>
     </Control>
   </div>
@@ -49,7 +49,6 @@ const props = defineProps<{
   errors: Partial<User>
 }>()
 
-const campuses = useCampusStore()
 const options = optionStore()
 
 const hasCampus = computed(() => options.patron_types?.find((i) => i.id === props.form.patron_type_id)?.has_campus ?? false)

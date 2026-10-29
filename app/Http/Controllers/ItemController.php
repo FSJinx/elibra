@@ -108,6 +108,7 @@ class ItemController extends Controller
             'search' => trim($filters['search'], '-'),
             'item_type_id' => $request->input('item_type_id'),
             'item_type_category_id' => $request->input('item_type_category_id'),
+            'include_cover_media' => true,
         ]);
 
         $data = CacheService::remember(
@@ -115,7 +116,7 @@ class ItemController extends Controller
             $filters,
             now()->addHour(),
             function () use ($filters) {
-                $item = Item::query();
+                $item = Item::query()->with('coverMedia');
 
                 // ============== Search ============
                 $item->when($filters['search'] ?? null, fn ($q, $s) => $q->where(fn ($w) => $w->where('title', 'LIKE', "%$s%")->orWhere('subtitle', 'LIKE', "%$s%")));

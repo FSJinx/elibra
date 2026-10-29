@@ -36,7 +36,7 @@ class LoanModePolicy
      */
     public function update(User $user, LoanMode $loanMode): bool
     {
-        return false;
+        return $user->isSuperAdmin() || $user->isAdmin();
     }
 
     /**
@@ -44,7 +44,7 @@ class LoanModePolicy
      */
     public function delete(User $user, LoanMode $loanMode): bool
     {
-        return false;
+        return $user->isSuperAdmin();
     }
 
     /**

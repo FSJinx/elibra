@@ -4,7 +4,7 @@
     <div v-if="fileList.length > 0" class="flex flex-col gap-2 mt-1">
       <div v-for="(file, index) in fileList" :key="`${file.name}-${index}`" class="flex items-center gap-3 px-3 py-2 border border-border rounded-md bg-background">
         <span class="flex items-center justify-center shrink-0 text-slate-400">
-          <Icon icon="file-earmark" />
+          <Icon :icon="getFileIcon(file.name)" />
         </span>
 
         <div class="flex-1 min-w-0">
@@ -13,7 +13,7 @@
         </div>
 
         <button type="button" class="shrink-0 text-slate-500 hover:text-danger focus:outline-none transition-colors" aria-label="Remove file" :disabled="isDisabled" @click.stop="removeFile(index)">
-          <Icon icon="x" />
+          <Icon icon="x-lg" />
         </button>
       </div>
     </div>
@@ -111,6 +111,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const model = defineModel<File[] | File | string | null>({ default: null })
 const control = inject<any>('control')
+const pop = usePopup()
 
 const input = ref<HTMLInputElement | null>(null)
 const isDragging = ref(false)
@@ -140,6 +141,35 @@ const sizeMap: Record<Sizes, { container: string; icon: string }> = {
 }
 
 const sizeConfig = computed(() => sizeMap[props.size] ?? sizeMap.md)
+
+const iconMap: Record<string, string> = {
+  pdf: 'file-earmark-pdf',
+  doc: 'file-earmark-word',
+  docx: 'file-earmark-word',
+  xls: 'file-earmark-excel',
+  xlsx: 'file-earmark-excel',
+  csv: 'file-earmark-excel',
+  ppt: 'file-earmark-ppt',
+  pptx: 'file-earmark-ppt',
+  jpg: 'file-earmark-image',
+  jpeg: 'file-earmark-image',
+  png: 'file-earmark-image',
+  gif: 'file-earmark-image',
+  webp: 'file-earmark-image',
+  svg: 'file-earmark-image',
+  zip: 'file-earmark-zip',
+  rar: 'file-earmark-zip',
+  '7z': 'file-earmark-zip',
+  mp4: 'file-earmark-play',
+  mov: 'file-earmark-play',
+  mkv: 'file-earmark-play',
+  mp3: 'file-earmark-music',
+  wav: 'file-earmark-music',
+  txt: 'file-earmark-text',
+  md: 'file-earmark-text',
+}
+
+const getFileIcon = (name: string) => iconMap[name.split('.').pop()?.toLowerCase() ?? ''] ?? 'file-earmark'
 
 function triggerBrowse() {
   input.value?.click()
@@ -188,14 +218,18 @@ function handleDrop(e: DragEvent) {
   validateAndAssign(Array.from(e.dataTransfer.files))
 }
 
-function removeFile(index: number) {
+async function removeFile(index: number) {
   if (!props.multiple) {
     model.value = null
     return
   }
 
-  const updated = [...fileList.value]
-  updated.splice(index, 1)
-  model.value = updated
+  const confirm = await pop.confirm({ text: 'Are you sure you want to remove file?' })
+
+  if (confirm.isConfirmed) {
+    const updated = [...fileList.value]
+    updated.splice(index, 1)
+    model.value = updated
+  }
 }
 </script>

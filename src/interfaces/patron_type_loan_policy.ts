@@ -1,13 +1,11 @@
 export interface PatronTypeLoanPolicy {
   id: any
-  can_reserve: boolean
-  reservation_limit: string
-  loan_period_days: string
-  max_items: string
-  max_renewals: string
-  fine_per_due: string
-  grace_period: string
-  notes: string
+  loan_period_days: any
+  max_items: any
+  max_renewals: any
+  fine_per_due: any
+  grace_period: any
+  notes: any
 
   patron_type_id: any
   loan_mode_id: any
@@ -15,5 +13,8 @@ export interface PatronTypeLoanPolicy {
   patron_type: Partial<PatronType>
 }
 
-export interface StorePatronTypeLoanPolicy extends Partial<PatronTypeLoanPolicy> {}
+export interface StorePatronTypeLoanPolicy extends Partial<PatronTypeLoanPolicy> {
+  loan_period_unit?: string
+  grace_period_unit?: string
+}
 export interface UpdatePatronTypeLoanPolicy extends Partial<PatronTypeLoanPolicy> {}

@@ -24,6 +24,10 @@ export interface Item {
   library_id: any
   language_id: any
   cover_media_id: any
+  cover_media?: {
+    file_path: string
+    file_name: string
+  } | null
 
   created_at: string
   updated_at: string

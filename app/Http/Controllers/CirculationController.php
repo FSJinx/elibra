@@ -23,12 +23,13 @@ class CirculationController extends Controller
     public function index()
     {
         $circulations = Circulation::with([
-            'processedBy',
-            'patron',
-            'accession',
+            'processedBy.user',
+            'patron.user',
+            'patron.patronType',
+            'accession.item',
             'loanMode',
             'returnReceivedBy',
-        ])->get();
+        ])->latest('borrowed_at')->paginate(request()->integer('per_page', 25));
 
         return $this->response(
             'success',
@@ -117,7 +118,7 @@ class CirculationController extends Controller
      */
     public function store(StoreCirculationRequest $request)
     {
-        $circulation = $this->circulationService->create($request->validated());
+        $circulation = $this->circulationService->checkout($request->validated(), $request->user());
 
         return $this->response(
             'success',
@@ -159,6 +160,30 @@ class CirculationController extends Controller
             'success',
             'Circulation updated successfully.',
             $updated->toArray(),
+            200
+        );
+    }
+
+    public function return(Circulation $circulation, Request $request)
+    {
+        $returned = $this->circulationService->returnLoan($circulation, $request->user());
+
+        return $this->response(
+            'success',
+            'Loan returned successfully. The item is available again.',
+            $returned->toArray(),
+            200
+        );
+    }
+
+    public function renew(Circulation $circulation)
+    {
+        $renewed = $this->circulationService->renew($circulation);
+
+        return $this->response(
+            'success',
+            'Loan renewed successfully. The due date has been extended according to the loan policy.',
+            $renewed->toArray(),
             200
         );
     }

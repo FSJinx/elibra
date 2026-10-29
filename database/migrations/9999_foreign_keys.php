@@ -77,8 +77,10 @@ return new class extends Migration
         [
             'name' => 'aca_repos',
             'foreign_columns' => [
-                ['name' => 'program_id', 'references' => 'id', 'on' => 'programs', 'onDelete' => 'set null'],
+                ['name' => 'library_id', 'references' => 'id', 'on' => 'libraries', 'onDelete' => 'restrict'],
+                ['name' => 'submitted_by', 'references' => 'id', 'on' => 'patrons', 'onDelete' => 'restrict'],
                 ['name' => 'language_id', 'references' => 'id', 'on' => 'languages', 'onDelete' => 'set null'],
+                ['name' => 'program_id', 'references' => 'id', 'on' => 'programs', 'onDelete' => 'set null'],
             ],
         ],
         [
@@ -196,6 +198,14 @@ return new class extends Migration
             'foreign_columns' => [
                 ['name' => 'patron_id', 'references' => 'id', 'on' => 'patrons', 'onDelete' => 'restrict'],
                 ['name' => 'circulation_id', 'references' => 'id', 'on' => 'circulations', 'onDelete' => 'cascade'],
+                ['name' => 'processed_by', 'references' => 'id', 'on' => 'librarians', 'onDelete' => 'set null'],
+            ],
+        ],
+        [
+            'name' => 'holdings',
+            'foreign_columns' => [
+                ['name' => 'reserved_by', 'references' => 'id', 'on' => 'patrons', 'onDelete' => 'cascade'],
+                ['name' => 'accession_id', 'references' => 'id', 'on' => 'accessions', 'onDelete' => 'cascade'],
                 ['name' => 'processed_by', 'references' => 'id', 'on' => 'librarians', 'onDelete' => 'set null'],
             ],
         ],

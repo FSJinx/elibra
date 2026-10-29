@@ -20,7 +20,7 @@
       <AuthorityControlSection v-model="form" :errors="errors" />
 
       <!-- AUTHOR CONTROL INFORMATION -->
-      <AuthorSection v-model="form" :errors="errors" />
+      <AuthorSection v-model="form" :editing="true" :errors="errors" />
 
       <Card class="sticky bottom-0 z-100">
         <CardBody class="flex justify-end gap-2">

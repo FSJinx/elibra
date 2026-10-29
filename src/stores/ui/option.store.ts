@@ -13,6 +13,7 @@ const state = () => ({
   categories: null as Partial<ItemCategory>[] | null,
   item_types: null as Partial<ItemType>[] | null,
   patron_types: null as Partial<PatronType>[] | null,
+  loan_modes: null as Partial<LoanMode>[] | null,
 
   // ======> AUTHORITY CONTROL
   languages: null as Partial<Language>[] | null,
@@ -24,8 +25,8 @@ export const optionStore = defineStore('option', {
   state,
 
   actions: {
-    async fetch(key: Key) {
-      if (this[key]) return
+    async fetch(key: Key, forced = false) {
+      if (this[key] && !forced) return
       this[key] = (await get(`${this.url}/${key}`)).data
     },
 

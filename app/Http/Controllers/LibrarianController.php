@@ -6,6 +6,7 @@ use App\Http\Requests\StoreLibrarianRequest;
 use App\Http\Requests\UpdateLibrarianRequest;
 use App\Models\Librarian;
 use App\Services\LibrarianService;
+use Illuminate\Http\Request;
 
 class LibrarianController extends Controller
 {
@@ -19,7 +20,7 @@ class LibrarianController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = $this->user();
 
@@ -34,6 +35,10 @@ class LibrarianController extends Controller
             });
         } elseif ($user->isLibrarian()) {
             $query->where('library_id', $user->librarian?->library_id);
+        }
+
+        if ($request->filled('library_id')) {
+            $query->where('library_id', $request->query('library_id'));
         }
 
         return $this->response(data: $query->get());

@@ -12,29 +12,6 @@
     </div>
 
     <div class="flex-1 flex p-5 gap-5" v-else>
-      <div class="flex flex-col gap-5 w-200">
-        <Card>
-          <CardHeader>Tracker</CardHeader>
-          <CardBody>
-            <Form class="flex flex-col gap-3" id="attendance-recorder" @submit="submit()">
-              <Control col required>
-                <Label>Patron ID Number</Label>
-                <Input id="patron-id" auto-focus type="text" placeholder="Enter Patron ID number..." v-model="form.patron" />
-              </Control>
-              <Control col>
-                <Label>Section</Label>
-                <Select class="" v-model="form.section_id">
-                  <Option value="">Select a section</Option>
-                  <Option :value="section.id" v-for="section in sections.data">{{ section.name }}</Option>
-                </Select>
-              </Control>
-            </Form>
-          </CardBody>
-          <CardFooter class="justify-end">
-            <Button variant="primary" type="submit" form="attendance-recorder">Submit</Button>
-          </CardFooter>
-        </Card>
-      </div>
       <Card class="flex-1">
         <CardHeader> Attendance Result </CardHeader>
 
@@ -60,7 +37,7 @@
 
             <div class="flex flex-col items-center p-3 flex-1">
               <div class="flex items-center gap-5">
-                <Title :level="1">{{ patron?.user.full_name }}</Title>
+                <Title :level="1">{{ patron?.user.name?.full }}</Title>
                 <Status variant="patron">Student</Status>
               </div>
 
@@ -71,7 +48,7 @@
           <div class="flex flex-col gap-2">
             <Control col>
               <Label>Name</Label>
-              <p class="px-5 py-3 border border-border rounded-lg bg-secondary">{{ patron.user.full_name ?? '-' }}</p>
+              <p class="px-5 py-3 border border-border rounded-lg bg-secondary">{{ patron.user.name?.full ?? '-' }}</p>
             </Control>
             <Control col>
               <Label>ID Number</Label>
@@ -92,6 +69,30 @@
           </div>
         </CardBody>
       </Card>
+      
+      <div class="flex flex-col gap-5 w-200">
+        <Card>
+          <CardHeader>Tracker</CardHeader>
+          <CardBody>
+            <Form class="flex flex-col gap-3" id="attendance-recorder" @submit="submit()">
+              <Control col required>
+                <Label>Patron ID Number</Label>
+                <Input id="patron-id" auto-focus type="text" placeholder="Enter Patron ID number..." v-model="form.patron" />
+              </Control>
+              <Control col>
+                <Label>Section</Label>
+                <Select class="" v-model="form.section_id">
+                  <Option value="">Select a section</Option>
+                  <Option :value="section.id" v-for="section in sections.data">{{ section.name }}</Option>
+                </Select>
+              </Control>
+            </Form>
+          </CardBody>
+          <CardFooter class="justify-end">
+            <Button variant="primary" type="submit" form="attendance-recorder">Submit</Button>
+          </CardFooter>
+        </Card>
+      </div>
     </div>
   </div>
 </template>

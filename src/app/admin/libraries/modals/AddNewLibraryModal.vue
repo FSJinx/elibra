@@ -14,7 +14,8 @@
           </Control>
           <Control col>
             <Label id="library-contact">Phone Number</Label>
-            <Input id="library-contact" type="tel" pattern="[0-9]{9}" placeholder="e.g. 09XXXXXXXXX" v-model="form.contact_info" />
+            <Input id="library-contact" type="tel" pattern="09[0-9]{9}|639[0-9]{9}" placeholder="09171234567 or 639171234567" v-model="form.phone" />
+            <p class="mt-1 text-xs text-muted-foreground">Use 09 followed by 9 digits, or 639 followed by 9 digits.</p>
           </Control>
           <Control col required>
             <Label id="library-email">Email</Label>
@@ -56,7 +57,7 @@ import Modal from '@/components/my/Modal.vue'
 
 const defaultBranch = (): Partial<Library> => ({
   name: '',
-  contact_info: '',
+  phone: '',
   email: '',
   campus_id: '',
   opening_hour: '',
