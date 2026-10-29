@@ -29,6 +29,7 @@ export function useParser() {
         admin: 'success',
         completed: 'success',
         approved: 'success',
+        returned: 'success',
         true: 'success',
         1: 'success',
 

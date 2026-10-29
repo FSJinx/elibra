@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('inventories', function (Blueprint $table) {
             $table->id();
-            $table->string('inventory_code')->unique();
-            $table->enum('status', ['completed', 'pending', 'closed']);
+            $table->string('inventory_code')->unique()->nullable();
+            $table->enum('status', ['completed', 'pending', 'closed'])->default('pending');
 
             $table->unsignedBigInteger('librarian_id')->nullable();
             $table->unsignedBigInteger('section_id');
-            $table->json('logs');
+            $table->dateTime('closed_at')->nullable();
+            $table->json('logs')->nullable();
             $table->timestamps();
         });
     }
@@ -31,4 +32,3 @@ return new class extends Migration
         Schema::dropIfExists('inventories');
     }
 };
- 

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Inventory;
 use App\Http\Requests\StoreInventoryRequest;
 use App\Http\Requests\UpdateInventoryRequest;
+use App\Models\Inventory;
+use App\Services\QueryService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class InventoryController extends Controller
@@ -12,16 +14,16 @@ class InventoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $inventories = Inventory::all();
+        $filters = QueryService::filters($request);
 
-        return $this->response(
-            'success',
-            'Inventories retrieved successfully',
-            $inventories->toArray(),
-            200
-        );
+        $inventories = Inventory::query()
+            ->when($filters['search'], fn ($i, $s) => $i->where('inventory_code', 'LIKE', "%$s%"))->with(['librarian.user', 'section']);
+
+        $inventories = $inventories->paginate(null, ['*']);
+
+        return $this->response('success', 'Inventories retrieved successfully', $inventories, 200);
     }
 
     /**
@@ -37,27 +39,25 @@ class InventoryController extends Controller
      */
     public function store(StoreInventoryRequest $request)
     {
-        $user = $this->user();
+        $user = $this->user()->librarian;
 
-        $inventory = DB::transaction(function () use ($user) {
+        if (Inventory::where('section_id', $request->input('section_id'))->where('status', 'pending')->exists()) {
+            return $this->response('error', 'This section has an on-going inventory. Select other sections or finish the pending before creating one again', [], 409);
+        }
+
+        $inventory = DB::transaction(function () use ($user, $request) {
 
             $lastInventory = Inventory::latest('id')->first();
 
-            $nextNumber = $lastInventory
-                ? $lastInventory->id + 1
-                : 1;
+            $nextNumber = $lastInventory ? $lastInventory->id + 1 : 1;
 
-            $inventoryCode = 'INV-' . now()->year . '-' . str_pad(
-                $nextNumber,
-                4,
-                '0',
-                STR_PAD_LEFT
-            );
+            $inventoryCode = 'INV-'.now()->year.'-'.str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
 
             return Inventory::create([
                 'inventory_code' => $inventoryCode,
-                'librarian_id'   => $user->id,
-                'is_completed'   => false,
+                'section_id' => $request->input('section_id'),
+                'librarian_id' => $user->id,
+
             ]);
         });
 
@@ -74,35 +74,23 @@ class InventoryController extends Controller
      */
     public function show(Inventory $inventory)
     {
-        $user = $this->user();
+        // $user = $this->user();
 
-        if ($inventory->librarian_id !== $user->id) {
-            return $this->response(
-                'error',
-                'You are not authorized to view this inventory',
-                null,
-                403
-            );
-        }
-
-        $lines = $inventory->lines()
-            ->whereHas('accession', function ($query) use ($user) {
-                $query->where('library_id', $user->library_id);
-            })
-            ->with([
-                'accession.item',
-                'accession.section',
-                'verifiedBy',
-            ])
-            ->get();
+        // $lines = $inventory->lines()
+        //     ->whereHas('accession', function ($query) use ($user) {
+        //         $query->where('library_id', $user->library_id);
+        //     })
+        //     ->with([
+        //         'accession.item',
+        //         'accession.section',
+        //         'verifiedBy',
+        //     ])
+        //     ->get();
 
         return $this->response(
             'success',
             'Inventory retrieved successfully',
-            [
-                'inventory' => $inventory,
-                'lines' => $lines,
-            ],
+            $inventory->load(['librarian.user', 'section']),
             200
         );
     }

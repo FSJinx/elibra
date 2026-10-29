@@ -12,10 +12,10 @@
         <CardBody> </CardBody>
       </Card> -->
 
-      <Table title="Recent Inventory Tracking" subtitle="Track your inventory history here.">
+      <Table title="Recent Inventory Tracking" subtitle="Track your inventory history here." :data="pagination">
         <Thead>
           <Th>No.</Th>
-          <Th>Inventory ID</Th>
+          <Th>Inventory Code</Th>
           <Th>Shelf Location</Th>
           <Th>Created By</Th>
           <Th>Date Created</Th>
@@ -23,13 +23,14 @@
           <Th>Action</Th>
         </Thead>
 
-        <Tbody cols="7" :loading="inventory.loading" :data="[{}]">
-          <Tr :to="{ name: 'librarian.collections.inventory.view', params: { id: 1 } }">
-            <Td data="1" />
-            <Td data="INV0001" />
-            <Td data="General Sections" />
-            <Td data="Juan Dela Cruz" />
-            <Td data="Octobe 26, 2026" />
+        <Tbody :loading="loading" :data="inventory.data">
+          <Tr v-for="(item, index) in inventory.data" :key="item.id" :to="{ name: 'librarian.collections.inventory.view', params: { id: item.id } }">
+            <Td :data="index + 1"></Td>
+            <Td :data="item.inventory_code"></Td>
+            <Td :data="item.section?.name"></Td>
+            <Td :data="item.librarian?.user?.name?.full"></Td>
+            <Td :data="parse.formatDateAgo(item.created_at)"></Td>
+
             <Td>
               <Status variant="pending">pending</Status>
             </Td>
@@ -37,12 +38,6 @@
               <Button class="hover:text-primary" size="sm">End</Button>
             </Td>
           </Tr>
-          <!-- <tr v-for="item in inventory.data" :key="item.id" class="border-b border-border last:border-0 hover:bg-secondary/30 transition-colors">
-            <Td :data="item.inventory_id"></Td>
-            <Td :data="item.librarian_id"></Td>
-            <Td :data="item.created_at"></Td>
-            <Td :data="item.is_completed"></Td>
-          </tr> -->
         </Tbody>
       </Table>
     </div>
@@ -52,5 +47,20 @@
 <script setup lang="ts">
 import NewInventory from '@/app/librarian/collections/inventory/modals/NewInventory.vue'
 
-const inventory = useInventoryStore()
+const inventory = inventoryStore()
+const parse = useParser()
+
+const loading = ref<boolean>(false)
+const pagination = ref<Pagination>()
+
+async function search() {
+  loading.value = true
+  try {
+    const res = await inventory.fetch()
+    pagination.value = res.data
+  } finally {
+    loading.value = false
+  }
+}
+onBeforeMount(search)
 </script>

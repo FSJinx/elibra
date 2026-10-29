@@ -250,7 +250,7 @@ Route::group(['prefix' => '/inventory-line'], function () {
 // ============== ITEM ROUTES ===============
 Route::group(['prefix' => '/items'], function () {
 
-    Route::get('', [ItemController::class, 'indexV2']);
+    Route::get('', [ItemController::class, 'indfinveexV2']);
 
     // Route::get('{catalogId}', [CatalogController::class, 'show']);
     Route::get('{item}', [ItemController::class, 'show']);

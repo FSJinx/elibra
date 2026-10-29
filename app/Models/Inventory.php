@@ -2,27 +2,37 @@
 
 namespace App\Models;
 
+use Database\Factories\InventoryFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Inventory extends Model
 {
-    /** @use HasFactory<\Database\Factories\InventoryFactory> */
+    /** @use HasFactory<InventoryFactory> */
     use HasFactory;
 
     protected $fillable = [
         'inventory_code',
-        'is_completed',
+        'status',
+
+        'section_id',
         'librarian_id',
+
+        'closed_at',
     ];
 
     protected $casts = [
-        'is_completed' => 'boolean',
+        'closed_at' => 'datetime',
     ];
 
     public function librarian()
     {
-        return $this->belongsTo(Librarian::class);
+        return $this->belongsTo(Librarian::class, 'librarian_id');
+    }
+
+    public function section()
+    {
+        return $this->belongsTo(Sections::class, 'section_id');
     }
 
     public function lines()

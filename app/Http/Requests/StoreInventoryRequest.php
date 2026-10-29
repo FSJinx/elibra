@@ -24,9 +24,7 @@ class StoreInventoryRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'inventory_code' => ['required', 'string', 'max:255', 'unique:inventories,inventory_code'],
-            'is_completed' => ['required', 'boolean'],
-            'librarian_id' => ['required', 'integer', Rule::exists((new Librarian)->getTable(), 'id')],
+            'section_id' => 'required|exists:sections,id'
         ];
     }
 }

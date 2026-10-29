@@ -37,6 +37,7 @@ class CirculationController extends Controller
             $circulations->toArray(),
             200
         );
+        
     }
 
     public function preview(Request $request)

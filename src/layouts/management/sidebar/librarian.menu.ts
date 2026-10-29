@@ -36,7 +36,7 @@ export const librarianMenu = [
     name: 'Acquisitions',
     children: [
       { path: 'librarian.acquisition', name: 'Acquisition', icon: 'receipt' },
-      { path: 'librarian.acquisition-requests', name: 'Acquisition Request', icon: 'box-arrow-in-down' },
+      // { path: 'librarian.acquisition-requests', name: 'Acquisition Request', icon: 'box-arrow-in-down' },
     ],
   },
 

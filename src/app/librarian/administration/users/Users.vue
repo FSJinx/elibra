@@ -21,6 +21,7 @@
             <Th>Username</Th>
             <Th>Sex</Th>
             <Th>Role</Th>
+            <Th>Registration Status</Th>
             <Th>Actions</Th>
           </tr>
         </Thead>
@@ -38,6 +39,9 @@
             <Td>
               <Status :variant="user.role">{{ user.role }}</Status>
             </Td>
+            <Td>
+              <Status :variant="user.registration as string">{{ user.registration ?? 'User not created through registration' }}</Status>
+            </Td>
             <Td class="space-x-2">
               <Button class="hover:text-info" size="sm" @click="viewUser(user)">View</Button>
               <Button class="hover:text-danger" size="sm" @click="deleteUser(user)">Delete</Button>
@@ -48,12 +52,7 @@
     </div>
 
     <Modal ref="modal" size="large">
-      <ModalHeader
-        use-default-layout
-        title="User information"
-        :subtitle="selectedUser ? `${selectedUser.first_name} ${selectedUser.last_name}` : ''"
-        icon="person"
-      />
+      <ModalHeader use-default-layout title="User information" :subtitle="selectedUser ? `${selectedUser.first_name} ${selectedUser.last_name}` : ''" icon="person" />
       <ModalBody v-if="selectedUser">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-5">
           <div>
@@ -154,10 +153,7 @@ async function reviewRegistration(action: 'approve' | 'reject') {
   reviewing.value = true
   pop.load()
   try {
-    const result =
-      action === 'approve'
-        ? await users.approveRegistration(user)
-        : await users.rejectRegistration(user)
+    const result = action === 'approve' ? await users.approveRegistration(user) : await users.rejectRegistration(user)
     await users.fetch()
     selectedUser.value = users.data?.find((item) => item.uuid === user.uuid) ?? null
     await pop.success(result.message ?? `User registration ${action === 'approve' ? 'approved' : 'rejected'} successfully.`)
