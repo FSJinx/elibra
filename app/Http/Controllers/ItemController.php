@@ -118,8 +118,20 @@ class ItemController extends Controller
             function () use ($filters) {
                 $item = Item::query()->with('coverMedia');
 
+                $search = $filters['search'] ?? null;
+
                 // ============== Search ============
-                $item->when($filters['search'] ?? null, fn ($q, $s) => $q->where(fn ($w) => $w->where('title', 'LIKE', "%$s%")->orWhere('subtitle', 'LIKE', "%$s%")));
+                $item->when($search, function ($q) use ($search) {
+                    return $q->where(function ($qq) use ($search) {
+                        return $qq->where('title', 'LIKE', "%{$search}%")
+                            ->orWhere('subtitle', 'LIKE', "%{$search}%")
+                            ->orWhereHas('accessions', fn ($qq2) => $qq2->where('accession_number', 'LIKE', "%{$search}%")
+                            );
+                    });
+                });
+                // fn ($i) => $i->where('title', 'LIKE', "%$search%")->orWhere('subtitle', 'LIKE', "%$search%")
+                //     ->orWhereHas('accessions', fn ($i) => $i->accessions->where('accession_number', 'LIKE', "%$search%"))
+                // );
 
                 // ============== Item Type ============
                 $item->when($filters['item_type_id'] ?? null, function ($i, $param) {

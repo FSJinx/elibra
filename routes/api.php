@@ -259,6 +259,7 @@ Route::group(['prefix' => '/items'], function () {
     Route::get('{item}/acquisitions', [ItemController::class, 'acquisitions']);
 
     Route::post('', [ItemController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin,librarian');
+    
     Route::put('{item}', [ItemController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin,librarian');
 });
 
