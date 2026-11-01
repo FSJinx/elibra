@@ -1,8 +1,8 @@
 <template>
-  <Button @click="open" class="hover:text-primary">Add Keywords</Button>
+  <Button @click="open" :disabled="disabled" class="hover:text-primary">Add Keywords</Button>
 
   <Modal ref="modal" size="large">
-    <ModalHeader use-default-layout title="Keywords / Subjects" subtitle="Add keywords or subjects for this catalog. This will be helpful in OPAC searches." icon="" />
+    <ModalHeader use-default-layout title="Keywords / Subjects" :subtitle="subtitle" icon="" />
 
     <ModalBody class="p-5 overflow-hidden!">
       <Form class="flex items-center gap-2 w-125 ml-auto" @submit="add">
@@ -32,11 +32,20 @@
 </template>
 
 <script setup lang="ts">
-import type { Form } from '@/app/librarian/collections/catalog/forms/form'
 import Modal from '@/components/my/Modal.vue'
 
+interface Props {
+  disabled?: boolean
+  subtitle?: string
+}
+
+withDefaults(defineProps<Props>(), {
+  disabled: false,
+  subtitle: 'Add keywords or subjects for this catalog. This will be helpful in OPAC searches.',
+})
+
 const modal = ref<InstanceType<typeof Modal>>()
-const form = defineModel<Partial<Form>>({ default: {} })
+const form = defineModel<{ keywords?: string[] }>({ default: () => ({}) })
 const word = ref('')
 const pop = usePopup()
 

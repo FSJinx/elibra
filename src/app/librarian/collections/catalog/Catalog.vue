@@ -10,7 +10,7 @@
       <Card>
         <Form @submit="search()" class="flex items-center gap-2">
           <div class="flex-1 flex items-center gap-2">
-            <Input id="catalog-query" v-model="params.query" placeholder="Search for an item in the catalog by title..." class="max-w-100" enable-clear />
+            <Input id="catalog-query" v-model="params.query" placeholder="Search for an item in the catalog by title or accession number..." class="max-w-100" enable-clear />
             <Button type="submit" icon="search">Search</Button>
           </div>
           <CatalogFilter :params="params" @filterApplied="apply" />
@@ -22,6 +22,7 @@
         <Thead>
           <tr>
             <Th>No</Th>
+            <Th>Cover</Th>
             <Th class="text-left max-w-10">Title</Th>
             <Th>Item Type</Th>
             <Th>Call Number</Th>
@@ -34,6 +35,10 @@
         <Tbody :loading="loading" :data="data">
           <Tr v-for="(item, index) in data" :key="item.id" :to="{ name: 'librarian.collections.catalog.view', params: { id: item.id } }">
             <Td :data="(index as number) + 1" />
+
+            <Td>
+              <img :src="coverUrl(item.cover_media?.file_path)" :alt="`${item.title} cover`" class="h-16 w-12 rounded border border-border object-cover" />
+            </Td>
 
             <Td class="text-left">
               <Title :level="4">{{ item.title }}</Title>
@@ -62,6 +67,8 @@
 
 <script setup lang="ts">
 import CatalogFilter from '@/app/librarian/collections/catalog/modals/CatalogFilter.vue'
+import book from '@/assets/images/default_book.png'
+import { backendRoute } from '@/plugins/axios'
 
 const items = useItemStore()
 const options = optionStore()
@@ -84,6 +91,7 @@ const params = reactive<ItemParams>(defaultParams())
 const pagination = ref<Pagination>()
 
 const item_type = computed(() => (id: any) => options.item_types?.find((i) => i.id == id))
+const coverUrl = (path?: string | null) => (path ? `${backendRoute.replace(/\/api\/?$/, '')}/storage/${path}` : book)
 
 function apply(p: Partial<ItemParams>) {
   Object.assign(params, p)

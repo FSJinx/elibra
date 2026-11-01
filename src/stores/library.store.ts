@@ -44,12 +44,14 @@ export const libraryStore = defineStore('library', {
     async fetch(forced = false) {
       if (this.data && !forced) return
 
-      this.loading = true
-      const res = await get(url)
-      this.setData(res.data)
-      this.loading = false
-
-      return res
+      try {
+        this.loading = true
+        const res = await get(url)
+        this.setData(res.data)
+        return res
+      } finally {
+        this.loading = false
+      }
     },
 
     async show(id: any) {

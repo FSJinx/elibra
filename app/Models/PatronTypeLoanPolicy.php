@@ -2,39 +2,39 @@
 
 namespace App\Models;
 
+use Database\Factories\PatronTypeLoanPolicyFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PatronTypeLoanPolicy extends Model
 {
-    /** @use HasFactory<\Database\Factories\PatronTypeLoanPolicyFactory> */
+    /** @use HasFactory<PatronTypeLoanPolicyFactory> */
     use HasFactory;
 
     protected $fillable = [
-        'can_reserve',
-        'reservation_limit',
         'loan_period_days',
 
         'max_items',
         'max_renewals',
-        'fine_per_due',
+        'fine_per_due', 
         'grace_period',
 
         'notes',
-        
+
         'patron_type_id',
         'loan_mode_id',
     ];
 
     protected $casts = [
-        'can_reserve' => 'boolean',
-        'reservation_limit' => 'integer',
         'loan_period_days' => 'integer',
         'max_items' => 'integer',
         'max_renewals' => 'integer',
         'fine_per_due' => 'decimal:2',
         'grace_period' => 'integer',
+        'can_reserve' => 'boolean',
+        'reservation_limit' => 'integer',
+
         'patron_type_id' => 'integer',
         'loan_mode_id' => 'integer',
     ];

@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\DB;
 
 class AcquisitionService
 {
+    protected function fields(): array
+    {
+        return (new Acquisition)->getFillable();
+    }
+
     public function index(array $filters)
     {
         return CacheService::remember(
@@ -19,6 +24,7 @@ class AcquisitionService
                 $query = Acquisition::query()
                     ->with([
                         'receiver',
+                        'acquisitionMode',
                         'acquisitionRequest',
                     ]);
 
@@ -87,18 +93,7 @@ class AcquisitionService
     public function create(array $data): Acquisition
     {
         $acquisition = DB::transaction(function () use ($data) {
-
-            $acquisition = Acquisition::create(
-                Arr::only($data, [
-                    'dealer',
-                    'acquisition_mode',
-                    'acquisition_date',
-                    'remarks',
-
-                    'receiver_id',
-                    'acquisition_request_id',
-                ])
-            );
+            $acquisition = Acquisition::create(Arr::only($data, self::fields()));
 
             $acquisition->reference = $this->generateReference($acquisition);
             $acquisition->save();

@@ -151,7 +151,7 @@
       </div>
 
       <Table>
-        <Thead>
+        <Thead> 
           <tr>
             <Th class="text-left">Patron</Th>
             <Th class="text-left">Item</Th>

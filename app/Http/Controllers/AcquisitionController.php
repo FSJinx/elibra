@@ -39,6 +39,25 @@ class AcquisitionController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        $data = Acquisition::with(['receiver', 'acquisitionRequest', 'acquisitionMode'])->find($id);
+
+        if (! $data) {
+            return $this->response(
+                'error',
+                'Acquisition not found.',
+                null,
+                404
+            );
+        }
+
+        return $this->response(data: $data->toArray());
+    }
+
+    /**
      * Show the form for creating a new resource.
      */
     public function create()
@@ -51,7 +70,12 @@ class AcquisitionController extends Controller
      */
     public function store(StoreAcquisitionRequest $request)
     {
-        $acquisition = $this->acquisitionService->create($request->validated());
+        $user = $this->user();
+        $data = array_merge($request->validated(), [
+            'receiver_id' => $user->librarian->id,
+        ]);
+
+        $acquisition = $this->acquisitionService->create($data);
 
         return $this->response(
             'success',
@@ -59,29 +83,6 @@ class AcquisitionController extends Controller
             $acquisition->toArray(),
             201
         );
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        $data = Cache::remember(
-            "acquisition-show:$id",
-            now()->addHour(),
-            fn () => Acquisition::with(['receiver', 'acquisitionRequest'])->find($id)
-        );
-
-        if (! $data) {
-            return $this->response(
-                'error',
-                'Acquisition not found.',
-                null,
-                404
-            );
-        }
-
-        return $this->response(data: $data->toArray());
     }
 
     /**

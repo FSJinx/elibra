@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CatalogSearchRequest;
 use App\Services\CatalogSearchService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class OpacSearchController extends Controller
 {
@@ -13,9 +12,11 @@ class OpacSearchController extends Controller
         private CatalogSearchService $searchService
     ) {}
 
-    public function show(int $itemId): JsonResponse
+    public function show(string $itemId): JsonResponse
     {
-        $item = $this->searchService->show($itemId);
+        $item = ctype_digit($itemId) && (int) $itemId > 0
+            ? $this->searchService->show((int) $itemId)
+            : null;
 
         if (! $item) {
             return response()->json([

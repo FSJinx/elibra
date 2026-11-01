@@ -16,13 +16,16 @@ return new class extends Migration
             $table->string('title');
             $table->enum('category', ['ut', 'gt']);
             $table->longText('description');
-            $table->string('doi')->nullable();
+            $table->string('doi')->nullable();  
+            $table->string('electronic_file');
             $table->json('keywords');
-
+            
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->string('statusRemark')->nullable();
             $table->boolean('on_catalog')->default(false);
-
+            
+            $table->unsignedBigInteger('submitted_by');
+            $table->unsignedBigInteger('library_id');
             $table->unsignedBigInteger('language_id')->nullable();
             $table->unsignedBigInteger('program_id')->nullable();
 

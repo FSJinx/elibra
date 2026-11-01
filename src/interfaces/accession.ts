@@ -7,8 +7,9 @@ export interface Accession {
   section_id: string
   acquisition_line_id: string
 
-  acquisition: Acquisition
-  section: Section
+  acquisition: Partial<Acquisition>
+  section: Partial<Section>
+  item: Partial<Item>
 
   [key: string]: any
 }

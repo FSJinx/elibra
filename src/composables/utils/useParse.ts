@@ -28,6 +28,8 @@ export function useParser() {
         active: 'success',
         admin: 'success',
         completed: 'success',
+        approved: 'success',
+        returned: 'success',
         true: 'success',
         1: 'success',
 
@@ -51,6 +53,7 @@ export function useParser() {
         female: 'danger',
         false: 'danger',
         0: 'danger',
+        rejected: 'danger',
 
         // ====== RESTORE =======
         restore: 'restore',

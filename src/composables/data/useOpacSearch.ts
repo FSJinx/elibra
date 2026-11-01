@@ -24,7 +24,7 @@ export const useOpacSearch = () => {
             // return res.data
 
         } catch (err: any) {
-            error.value = err?.data.message ?? 'Unable to search catalog.'
+            error.value = err?.response?.data?.message ?? 'Unable to search catalog.'
 
             results.value = []
             total.value = 0

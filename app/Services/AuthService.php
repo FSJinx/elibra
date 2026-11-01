@@ -109,6 +109,7 @@ class AuthService
                 'password' => Hash::make($data['password']),
                 'role' => 'patron',
                 'status' => 'active',
+                'registration' => 'pending',
                 'campus_id' => $campus->id,
             ]);
 
@@ -123,6 +124,8 @@ class AuthService
                 'program_id' => $data['program_id'],
                 'ebc_number' => $this->generateEbcNumber($campus->code, $patronType->key),
             ]);
+
+            CacheService::invalidate(CacheService::USERS);
 
             // UserService::assignRoleAndPermissions($user, 'patron');
 

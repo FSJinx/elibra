@@ -22,8 +22,13 @@ export const patronTypeLoanPolicyStore = defineStore('patron_type_loan_policy', 
       return res
     },
 
-    async update(params?: UpdatePatronTypeLoanPolicy) {
-      const res = await get(`${this.url}`, params)
+    async create(params: StorePatronTypeLoanPolicy) {
+      const res = await post(this.url, params)
+      return res
+    },
+
+    async update(params: UpdatePatronTypeLoanPolicy) {
+      const res = await put(`${this.url}/${params.id}`, params)
       return res
     },
   },

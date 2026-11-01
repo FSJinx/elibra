@@ -29,6 +29,11 @@ class StoreLoanModeRequest extends BaseRequest
             'slug' => 'required|unique:loan_modes,slug',
             'name' => 'required',
             'description' => 'sometimes',
+
+            'renewable' => 'sometimes|boolean',
+            'charges_fine' => 'sometimes|boolean',
+            'has_grace_period' => 'sometimes|boolean',
+            'is_active' => 'sometimes|boolean',
         ];
     }
 

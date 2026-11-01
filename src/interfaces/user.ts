@@ -13,6 +13,7 @@ export interface User {
   password: string
   role: string
   status: string
+  registration: 'approved' | 'pending' | 'rejected' | null
   login_attempts: string
   profile_picture_id: any
   campus_id: any

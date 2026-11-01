@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class CatalogSearchRequest extends FormRequest
+class CatalogSearchRequest extends BaseRequest
 {
     public function authorize(): bool
     {
@@ -29,8 +27,10 @@ class CatalogSearchRequest extends FormRequest
             'branch_id' => [
                 'nullable',
                 'integer',
-                'exists:branches,id',
+                'exists:libraries,id',
             ],
+
+            'library_id' => ['nullable', 'integer', 'exists:libraries,id'],
 
             'item_type_id' => [
                 'nullable',
@@ -66,15 +66,16 @@ class CatalogSearchRequest extends FormRequest
             'sort' => [
                 'nullable',
                 'string',
-                'in:title,author,publisher,publication_year',
+                'in:title,publication_year',
             ],
-            
+
             'per_page' => [
                 'nullable',
                 'integer',
                 'min:1',
                 'max:50',
             ],
+            'page' => ['nullable', 'integer', 'min:1'],
         ];
     }
 }

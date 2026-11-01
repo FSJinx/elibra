@@ -6,17 +6,17 @@ use App\Models\LoanMode;
 use App\Models\PatronType;
 use App\Models\PatronTypeLoanPolicy;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class LoanModeService
 {
     public function create(array $data): LoanMode
     {
-        return DB::transaction(function () use ($data) {
+        $mode = DB::transaction(function () use ($data) {
             $loan_mode = LoanMode::create($data);
 
             foreach (PatronType::pluck('id') as $id) {
                 PatronTypeLoanPolicy::create([
-                    'can_reserve' => fake()->boolean(),
                     'patron_type_id' => $id,
                     'loan_mode_id' => $loan_mode->id,
                 ]);
@@ -24,5 +24,10 @@ class LoanModeService
 
             return $loan_mode;
         });
+
+        CacheService::invalidate(CacheService::LOAN_MODES);
+        Log::info('invalidated');
+
+        return $mode;
     }
 }

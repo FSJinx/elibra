@@ -19,7 +19,7 @@
           <tr>
             <Th class="text-left">Name</Th>
             <Th class="text-left">Section Head</Th>
-            <Th>Date Addede</Th>
+            <Th>Date Added</Th>
             <Th>Last Modified</Th>
             <Th>Actions</Th>
           </tr>
@@ -27,7 +27,7 @@
         <Tbody :data="data" :loading="loading" cols="5">
           <Tr v-for="(d, index) in sections.data" :key="index">
             <Td class="text-left" :data="d.name" />
-            <Td class="text-left" :data="d.librarian_id ? d.librarian?.name : null" />
+            <!-- <Td class="text-left" :data="sectionHeadName(d)" /> -->
             <Td :data="parse.formatDate(d.created_at)" />
             <Td :data="parse.formatTimeAgo(d.updated_at)" />
             <Td class="space-x-2">
@@ -45,8 +45,11 @@
 <script setup lang="ts">
 import EditSection from '@/app/librarian/administration/sections/modals/EditSection.vue'
 import NewSection from '@/app/librarian/administration/sections/modals/NewSection.vue'
+import EditSectionModal from '@/app/admin/libraries/modals/EditSectionModal.vue'
 
 const sections = sectionStore()
+const auth = authStore()
+const pop = usePopup()
 
 const loading = ref<boolean>(false)
 const parse = useParser()
@@ -60,8 +63,8 @@ async function search() {
   try {
     const res = await sections.fetch(params)
     data.value = res.data
-  } catch (e: any) {
-    throw e
+  } catch (error: any) {
+    await pop.error(error?.response?.data?.message ?? 'Unable to load sections. Please try again.')
   } finally {
     loading.value = false
   }

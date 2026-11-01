@@ -10,7 +10,7 @@
       aria-haspopup="listbox"
       :data-title="enableTooltip ? `${parse.toCapital(title as string)}: ${selectedOption.label}` : ''"
     >
-      <span class="line-clamp-1 mr-5">{{ placeholder ?? selectedOption.label }}</span>
+      <span class="line-clamp-1 mr-5">{{ selectedOption.label || placeholder }}</span>
       <Icon icon="chevron-down" class="ml-auto transition-all duration-300 pointer-events-none" :class="{ '-rotate-180': open }" />
     </div>
 

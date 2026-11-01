@@ -1,4 +1,5 @@
 export interface Patron {
+  id: any
   ebc_number: string
   external_organization: string
   date_joined: string

@@ -17,8 +17,6 @@ class ItemFactory extends Factory
      */
     public function definition(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 }

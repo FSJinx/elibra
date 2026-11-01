@@ -4,21 +4,14 @@
     <!-- <div class="flex flex-col w-full max-w-6xl bg-restore border border-border rounded-xl overflow-hidden">
       <div class="h-50 bg-background"></div>
 
-<<<<<<< HEAD
-      <OpacMain v-model:params="params" :library-data="libraryData", :total="total" :loading="loading" @search="search" />
-
-      <OpacHistory />
-    </div>
-=======
       <div class="flex-1 overflow-y-auto">
         <div class="h-screen"></div>
       </div>
     </div> -->
-    <OpacMain v-model:params="params" :library-data="libraryData" :total="total" :loading="loading" @search="search" />
+    <OpacMain v-model:params="params" :library-data="libraryData" :total="total" :loading="loading" :error="error" @search="search" />
     <!-- <div class="w-100 bg-danger">
       <div class="h-[40vh]"></div>
     </div> -->
->>>>>>> dc589cece2127835548c01de82f4bd238c045bd6
   </div>
 
   <!-- <OpacHistory /> -->
@@ -27,32 +20,23 @@
 <script setup lang="ts">
 import OpacFilter from '@/app/opac/pages/main/OpacFilter.vue'
 import OpacMain from '@/app/opac/pages/main/OpacMain.vue'
-import OpacHistory from '@/app/opac/pages/main/OpacHistory.vue'
 
-const auth = authStore()
 const route = useRoute()
 const router = useRouter()
 
-const { results: libraryData, total, loading, search: searchOpac } = useOpacSearch()
+const { results: libraryData, total, loading, error, search: searchOpac } = useOpacSearch()
 
 const history = opacSearchStore()
 
 const params = reactive({
   search: (route.query.search as string) ?? '',
-  campus: (route.query.campus as string) ?? auth.user?.campus?.id ?? '',
+  campus: (route.query.campus as string) ?? '',
   branch: (route.query.branch as string) ?? '',
   sort: (route.query.sort as string) ?? '',
   order: (route.query.order as string) ?? 'asc',
   item_type: (route.query.item_type as string) ?? '',
   category: (route.query.category as string) ?? '',
 })
-
-watch(
-  () => params.campus,
-  () => {
-    params.branch = ''
-  },
-)
 
 async function fetchResults() {
   // if (!params.search) {
@@ -110,7 +94,7 @@ watch(
   () => route.query,
   async (query) => {
     params.search = (query.search as string) ?? ''
-    params.campus = (query.campus as string) ?? auth.user?.library?.campus?.id ?? ''
+    params.campus = (query.campus as string) ?? ''
     params.branch = (query.branch as string) ?? ''
     params.item_type = (query.item_type as string) ?? ''
     params.category = (query.category as string) ?? ''
@@ -131,9 +115,6 @@ watch(
   },
 )
 
-onMounted(async () => {
-  await fetchResults()
-})
 </script>
 
 <style scoped></style>

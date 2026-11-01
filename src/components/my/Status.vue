@@ -4,14 +4,14 @@
     <slot />
   </Badge> -->
 
-  <span class="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-medium tracking-wide capitalize" :class="[statusIndicator]">
+  <span class="inline-flex items-center max-w-max px-4 py-1.5 rounded-full text-xs font-medium tracking-wide capitalize" :class="[statusIndicator]">
     <slot />
   </span>
 </template>
 
 <script setup lang="ts">
 interface Props {
-  variant?: string
+  variant?: string | boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {

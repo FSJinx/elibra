@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             // ========= PRODUCTION SEEDS =========
 
             SuperAdminSeeder::class,
+            AcquisitionModeSeeder::class,
             ItemTypeSeeder::class,
             ItemTypeCategorySeeder::class,
             // PermissionSeeder::class,
@@ -36,6 +37,7 @@ class DatabaseSeeder extends Seeder
             ItemSeeder::class,
             AcquisitionSeeder::class,
             AcquisitionLinesSeeder::class,
+            HoldingSeeder::class,
         ]);
     } 
 }

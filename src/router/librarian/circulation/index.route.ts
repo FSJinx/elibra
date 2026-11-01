@@ -1,13 +1,24 @@
 export const librarianCirculation = [
   {
-    path: 'loans',
-    meta: { breadcrumb: 'Loans', title: 'Circulation' },
-    children: ciruclationLoans,
-  },
-  {
-    path: 'attendance',
-    name: 'librarian.circulation.attendance',
-    meta: { breadcrumb: 'Attendnace', title: 'Circulation' },
-    component: () => import('@/app/librarian/circulation/attendance/Attendance.vue'),
+    path: '',
+    meta: { title: 'Circulation' },
+    children: [
+      {
+        path: 'loans',
+        meta: { breadcrumb: 'Loans' },
+        children: ciruclationLoans,
+      },
+      {
+        path: 'holdings',
+        meta: { breadcrumb: 'Holdings' },
+        children: circulationHoldings,
+      },
+      {
+        path: 'attendance',
+        name: 'librarian.circulation.attendance',
+        meta: { breadcrumb: 'Attendnace' },
+        component: () => import('@/app/librarian/circulation/attendance/Attendance.vue'),
+      },
+    ],
   },
 ]

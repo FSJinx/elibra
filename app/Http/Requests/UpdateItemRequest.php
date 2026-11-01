@@ -55,7 +55,12 @@ class UpdateItemRequest extends BaseRequest
             'call_number' => ['sometimes', 'nullable', 'string', 'max:255'],
             'keywords' => ['sometimes', 'nullable', 'array'],
             'language_id' => ['sometimes', 'required', Rule::exists((new Language)->getTable(), 'id')],
-            'electronic_file' => ['sometimes', 'file', 'mimes:pdf,doc,docx'],
+            'electronic_file' => [
+                Rule::prohibitedIf(fn (): bool => ! $this->supportsElectronicFile()),
+                'nullable',
+                'file',
+                'mimes:pdf,doc,docx',
+            ],
             'cover_image' => ['sometimes', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'item_type_id' => ['sometimes', 'required', Rule::exists((new ItemType)->getTable(), 'id')],
             'item_type_category_id' => ['sometimes', 'required', Rule::exists((new ItemTypeCategory)->getTable(), 'id')],
@@ -82,5 +87,16 @@ class UpdateItemRequest extends BaseRequest
                 $this->merge([$field => []]);
             }
         }
+    }
+
+    private function supportsElectronicFile(): bool
+    {
+        $item = $this->route('item');
+        $itemTypeId = $this->input('item_type_id', $item instanceof Item ? $item->item_type_id : null);
+
+        return ItemType::query()
+            ->whereKey($itemTypeId)
+            ->whereIn('slug', ['book', 'thesis'])
+            ->exists();
     }
 }

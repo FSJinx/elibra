@@ -38,13 +38,25 @@ export const usersStore = defineStore('users', {
         this.setData(res.data.data)
         return res.data
       } catch (e: any) {
-        return e.response
+        throw e
       }
     },
 
     async create (params: Partial<User>) {
       const res = await post(this.url, params)
       return res
+    },
+
+    async approveRegistration(user: User) {
+      return await post(`${this.url}/${user.uuid}/approve-registration`)
+    },
+
+    async rejectRegistration(user: User) {
+      return await post(`${this.url}/${user.uuid}/reject-registration`)
+    },
+
+    async delete(user: User) {
+      return await del(`${this.url}/${user.uuid}`)
     }
   },
 })

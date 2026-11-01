@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\AcquisitionMode;
 use App\Models\Campus;
 use App\Models\Librarian;
 use App\Models\Library;
@@ -20,6 +21,7 @@ class AcquisitionSeeder extends Seeder
         $campus = Campus::where('code', 'ISU-E')->pluck('id')->first();
         $library = Library::where('campus_id', $campus)->pluck('id')->first();
         $receivers = Librarian::where('library_id', $library)->pluck('id');
+        $acquisition_modes = AcquisitionMode::all()->pluck('id');
 
         collect([
             ['dealer' => 'National Book Store'],
@@ -43,7 +45,7 @@ class AcquisitionSeeder extends Seeder
                 'acquisition_date' => fake()->dateTimeBetween('2025-01-01')->format('Y-m-d'),
                 'acquisition_mode' => fake()->randomElement($acquisition_modes),
                 'receiver_id' => $receivers->random(),
-
+                'acquisition_mode_id' => $acquisition_modes->random(),
             ]);
         });
     }

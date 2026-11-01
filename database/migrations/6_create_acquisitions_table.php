@@ -15,11 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('reference')->unique()->nullable(); // ISU-E-2025-MM-DD-ID
             $table->string('dealer');
-            $table->enum('acquisition_mode', ['purchase', 'donation', 'gift', 'exchange']);
+            // $table->enum('acquisition_mode', ['purchase', 'donation', 'gift', 'exchange']);
             $table->date('acquisition_date');
             $table->string('remarks')->nullable();
             $table->timestamps();
 
+            $table->unsignedBigInteger('acquisition_mode_id')->nullable();
             $table->unsignedBigInteger('receiver_id')->nullable();
             $table->unsignedBigInteger('acquisition_request_id')->nullable(); // If the acquisition came from a request
         });

@@ -37,6 +37,10 @@ class LoginController extends Controller
             return $this->response('error', "Your registration is still pending, please wait until approval or go to your campus' library to check with admin. If you are not a student of ISU, visit the nearest ISU campus.", statusCode: 423);
         }
 
+        if ($user->registration === 'rejected') {
+            return $this->response('error', 'Your registration was rejected. Please contact your campus administrator for assistance.', statusCode: 423);
+        }
+
         // Successfully logs in user
         if ($user && $token = $this->auth()->attempt($credentials)) {
             $user->login_attempts = 0;

@@ -35,8 +35,6 @@ class UpdatePatronTypeLoanPolicyRequest extends BaseRequest
             ],
             'description' => ['sometimes', 'nullable', 'string', 'max:255'],
 
-            'can_reserve' => ['sometimes', 'boolean'],
-            'reservation_limit' => ['sometimes', 'integer', 'min:0'],
             'loan_period_days' => ['sometimes', 'integer', 'min:1'],
 
             'max_items' => ['sometimes', 'integer', 'min:1'],

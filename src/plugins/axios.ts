@@ -17,7 +17,16 @@ export const api = axios.create({
   baseURL: backendRoute,
 })
 
-let refreshed = false
+let refreshPromise: Promise<string> | null = null
+
+function handleExpiredSession() {
+  const my = authStore()
+  if (!my.token) return
+
+  my.clearUser()
+  usePopup().error('Session expired, please re-login to continue.')
+  router.push({ name: 'home' })
+}
 
 // Request interceptor: inject token if exists
 api.interceptors.request.use(
@@ -51,36 +60,44 @@ api.interceptors.response.use(
     const response = error.response?.data
 
     if (status === 401) {
-      if (refreshed) {
-        my.clearUser()
-        pop.error('Session expired, please re-login to continue.')
-        router.push({ name: 'home' })
+      const request = error.config as (AxiosRequestConfig & { _retry?: boolean }) | undefined
+      const refreshRequest = request?.url?.includes('auth/refresh')
+
+      if (!request || refreshRequest || request._retry) {
+        if (refreshRequest || request?._retry) handleExpiredSession()
         return Promise.reject(error)
       }
 
-      refreshed = true
+      request._retry = true
       try {
-        const refreshResponse = await api.post('auth/refresh')
-        const newToken = refreshResponse.data?.data?.token
-        const newUserData = refreshResponse.data?.data?.user
+        if (!refreshPromise) {
+          refreshPromise = api
+            .post('auth/refresh')
+            .then((refreshResponse) => {
+              const newToken = refreshResponse.data?.data?.token
+              const newUserData = refreshResponse.data?.data?.user
 
-        if (!newToken) {
-          throw error
+              if (!newToken) {
+                throw new Error('Token refresh response did not contain a token.')
+              }
+
+              my.setToken(newToken)
+              if (newUserData) my.setUser(newUserData)
+              return newToken
+            })
+            .finally(() => {
+              refreshPromise = null
+            })
         }
 
-        my.setToken(newToken)
-        my.setUser(newUserData)
+        const newToken = await refreshPromise
 
         error.config.headers.Authorization = `Bearer ${newToken}`
 
-        return api(error.config)
+        return api.request(request)
       } catch (refreshError) {
-        my.clearUser()
-        pop.error('Session expired, please re-login to continue.')
-        router.push({ name: 'home' })
+        handleExpiredSession()
         return Promise.reject(refreshError)
-      } finally {
-        refreshed = false
       }
     }
 

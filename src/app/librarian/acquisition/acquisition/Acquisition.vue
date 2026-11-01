@@ -46,7 +46,7 @@
             <tr class="hover cursor-pointer" @click="navigate" role="button">
               <Td :data="a.reference"></Td>
               <Td class="text-left" :data="a.dealer"></Td>
-              <Td class="capitalize" :data="a.acquisition_mode"></Td>
+              <Td class="capitalize" :data="a.acquisition_mode?.name"></Td>
               <Td :data="parse.formatDate(a.acquisition_date)"></Td>
               <Td :data="parse.formatTimeAgo(a.created_at ?? null)" :data-title="parse.formatDate(a.created_at ?? null)" />
               <Td :data="parse.formatTimeAgo(a.updated_at ?? null)" :data-title="parse.formatDate(a.updated_at ?? null)" />
