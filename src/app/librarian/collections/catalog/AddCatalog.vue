@@ -72,7 +72,7 @@ async function submit() {
 
         if (route.query.acquisition) {
           try {
-            const acq = await useAcquisitionLinesStore().create({ item_id: res.data.id, acquisition_id: route.query.acquisition_id, quantity: 1 })
+            const acq = await acquisitionLinesStore().create({ item_id: res.data.id, acquisition_id: route.query.acquisition_id })
             pop.success(acq.message)
             return router.back()
           } catch (e: any) {

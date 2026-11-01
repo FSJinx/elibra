@@ -1,39 +1,21 @@
 const pop = usePopup()
 
-export const useAcquisitionLinesStore = defineStore('acquisition_lines', {
+export const acquisitionLinesStore = defineStore('acquisition_lines', {
   state: () => ({
-    url: 'acquisition-lines',
-
-    fetchData: null as AcquisitionLine[] | null,
-    searchData: null as AcquisitionLine[] | null,
+    data: null as AcquisitionLine[] | null,
     currentData: null as AcquisitionLine | null,
-    loading: false as boolean,
+
+    url: 'acquisition-lines',
   }),
 
-  getters: {
-    data(): AcquisitionLine[] | null {
-      return this.searchData ?? this.fetchData ?? null
-    },
-  },
-
   actions: {
-    setFetchData(data: AcquisitionLine[] | null) {
-      this.fetchData = data
-    },
-
-    setSearchData(data: AcquisitionLine[] | null) {
-      this.searchData = data
-    },
-
     setCurrentData(data: AcquisitionLine | null) {
       this.currentData = data
     },
 
     async fetch(id: any) {
-      this.loading = true
       const res = await get(this.url, { id: id })
-      this.setFetchData(res.data.data)
-      this.loading = false
+      this.data = res.data?.data
       return res
     },
 

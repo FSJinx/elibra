@@ -1,97 +1,53 @@
-interface AcquisitionParams extends BaseParams {
-  acquisition_mode: 'purchase' | 'donation' | 'gift' | 'exchange' | ''
-}
-
 const defaultParams: Readonly<Partial<AcquisitionParams>> = {
   sort: '',
   page: 1,
   per_page: '25',
   order: 'asc',
-  acquisition_mode: '',
+  acquisition_mode_id: '',
 }
 
-const url = 'acquisition'
-
-export const useAcquisitionStore = defineStore('acquisition', {
+export const acquisitionStore = defineStore('acquisition', {
   state: () => ({
     data: null as Acquisition[] | null,
     currentData: null as Acquisition | null,
-    loading: false as true | false,
     params: defaultParams as AcquisitionParams,
 
-    pop: usePopup(),
-    auth: authStore(),
+    url: 'acquisition',
   }),
 
   getters: {},
 
   actions: {
-    // =========== SETTERS ============
-    pushData(data: Acquisition) {
-      this.data?.push(data)
-    },
-
-    updateData(data: Acquisition) {
-      this.data = (this.data as Acquisition[]).filter((i) => i.id !== data.id)
-      nextTick(() => this.data?.push(data))
-    },
-
-    removeData(data: Acquisition) {
-      this.data = (this.data as Acquisition[]).filter((i) => i.id !== data.id)
-    },
-
-    setData(data: Acquisition[]) {
-      this.data = data
-    },
-
-    setCurrentData(data: Acquisition) {
-      this.currentData = data
-    },
-
     // =========== ACTIONS ============
     async fetch(params?: Partial<AcquisitionParams>) {
-      // if (this.data && !forced) return
-
-      this.loading = true
-      try {
-        const res = await get(url, params)
-        this.setData(res.data.data)
-        return res
-      } finally {
-        this.loading = false
-      }
+      const res = await get(this.url, params)
+      this.data = res.data?.data
+      return res
     },
 
     async show(id: any) {
-      const res = await get(`${url}/${id}`)
-      this.setCurrentData(res?.data)
+      const res = await get(`${this.url}/${id}`)
+      this.currentData = res.data
       return res
     },
 
     async create(params: Partial<Acquisition>) {
-      const res = await post(url, params)
-      this.pushData(res.data)
-
+      const res = await post(this.url, params)
       return res
     },
 
     async update(params: Acquisition) {
-      const res = await put(`${url}/${params.id}`, params)
-      this.updateData(res.data)
-      this.setCurrentData(res.data)
+      const res = await put(`${this.url}/${params.id}`, params)
       return res
     },
 
     async destory(params: Acquisition) {
-      const res = await del(`${url}/${params?.id}`)
-      this.removeData(params)
-
+      const res = await del(`${this.url}/${params?.id}`)
       return res
     },
 
     async restore(params: Acquisition) {
-      const res = await patch(`${url}/${params?.id}`)
-      this.pushData(res.data)
+      const res = await patch(`${this.url}/${params?.id}`)
       return res
     },
   },

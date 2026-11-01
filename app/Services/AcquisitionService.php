@@ -20,34 +20,15 @@ class AcquisitionService
             $filters,
             now()->addMinutes(10),
             function () use ($filters) {
-
-                $query = Acquisition::query()
-                    ->with([
-                        'receiver',
-                        'acquisitionMode',
-                        'acquisitionRequest',
-                    ]);
-
-                if ($filters['search'] !== '') {
-                    $search = $filters['search'];
-
-                    $query->where(function ($q) use ($search) {
-                        $q->where('reference', 'like', "%{$search}%")
-                            ->orWhere('dealer', 'like', "%{$search}%")
-                            ->orWhere('acquisition_mode', 'like', "%{$search}%")
-                            ->orWhere('remarks', 'like', "%{$search}%");
-                    });
-                }
-
-                if (! empty($filters['acquisition_mode'])) {
-                    $query->where('acquisition_mode', $filters['acquisition_mode']);
-                }
+                $query = Acquisition::query()->with(['receiver', 'acquisitionMode', 'acquisitionRequest'])
+                    ->when($filters['search'] ?? null, fn ($q, $search) => $q->where('reference', 'like', "%{$search}%")->orWhere('dealer', 'like', "%{$search}%"))
+                    ->when($filters['acquisition_mode_id' ?? null], fn ($q, $a) => $q->where('acquisition_mode_id', $a));
 
                 $allowedSorts = [
                     'id',
                     'reference',
                     'dealer',
-                    'acquisition_mode',
+                    'acquisition_mode_id',
                     'acquisition_date',
                     'created_at',
                     'updated_at',

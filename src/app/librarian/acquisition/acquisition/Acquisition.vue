@@ -7,16 +7,16 @@
     </SectionHeader>
 
     <div class="flex-1 flex flex-col p-5 gap-3 overflow-hidden">
+      <!-- FILTERS -->
       <Card class="">
         <CardBody class="flex items-center gap-2">
-          <Input id="search" type="text" class="max-w-100" placeholder="Search by dealer..." enable-clear v-model="params.query" />
-          <Button type="submit">Search</Button>
-          <Select title="Acquisition Mode" class="max-w-max ml-auto" v-model="params.acquisition_mode">
-            <Option value="" selected disabled>Select acquisition mode</Option>
-            <Option value="donation">Donation</Option>
-            <Option value="exchange">Exchange</Option>
-            <Option value="gift">Gift</Option>
-            <Option value="purchase">Purchase</Option>
+          <Form class="w-full flex items-center gap-2" id="search-acquisition" @submit="search">
+            <Input id="search" type="text" class="max-w-100" placeholder="Search by dealer or reference number..." enable-clear v-model="params.query" />
+            <Button type="submit">Search</Button>
+          </Form>
+          <Select title="Acquisition Mode" class="max-w-max ml-auto" v-model="params.acquisition_mode_id">
+            <Option value="">All</Option>
+            <Option :value="item.id" v-for="item in options.acquisition_modes">{{ item.name }}</Option>
           </Select>
           <Select title="Sort By" class="max-w-max" v-model="params.sort">
             <Option value="">Default</Option>
@@ -30,6 +30,7 @@
           </Select>
         </CardBody>
       </Card>
+
       <Table class="" title="Recent Acquisitions" subtitle="These are your library's recent acquisitions." :data="pagination" @per_page="params.per_page = $event">
         <Thead>
           <tr>
@@ -41,7 +42,7 @@
             <Th>Last Updated</Th>
           </tr>
         </Thead>
-        <Tbody :data="acquisition.data" :loading="acquisition.loading" cols="6">
+        <Tbody :data="acquisition.data" :loading="loading" cols="6">
           <router-link v-for="a in acquisition.data" :to="{ name: 'librarian.acquisition.lines', params: { id: a.id } }" custom v-slot="{ navigate }">
             <tr class="hover cursor-pointer" @click="navigate" role="button">
               <Td :data="a.reference"></Td>
@@ -64,18 +65,22 @@ import AddNewAcquisitionButton from '@/app/librarian/acquisition/acquisition/mod
 import SectionHeader from '@/components/my/SectionHeader.vue'
 
 const parse = useParser()
-const pop = usePopup()
-const acquisition = useAcquisitionStore()
+const acquisition = acquisitionStore()
+const options = optionStore()
 
 const params = reactive(acquisition.params)
+const loading = ref<boolean>(false)
 const pagination = ref<Pagination>()
 
 async function search() {
+  loading.value = true
   try {
     const res = await acquisition.fetch(params)
     pagination.value = res.data
   } catch (e: any) {
     throw e
+  } finally {
+    loading.value = false
   }
 }
 

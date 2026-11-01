@@ -4,19 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreAcquisitionLinesRequest;
 use App\Http\Requests\UpdateAcquisitionLinesRequest;
+use App\Models\Acquisition;
 use App\Models\AcquisitionLines;
+use App\Services\AccessionService;
 use App\Services\AcquisitionLinesService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
 class AcquisitionLinesController extends Controller
 {
-    protected AcquisitionLinesService $acquisitionLineService;
-
-    public function __construct(AcquisitionLinesService $acquisitionLineService)
-    {
-        $this->acquisitionLineService = $acquisitionLineService;
-    }
+    public function __construct(
+        protected AcquisitionLinesService $acquisitionLineService,
+        protected AccessionService $accessionService,
+    ) {}
 
     /**
      * Display a listing of the resource.
@@ -51,15 +51,18 @@ class AcquisitionLinesController extends Controller
      */
     public function store(StoreAcquisitionLinesRequest $request)
     {
-        $acquisitionLine = $this->acquisitionLineService->create($request->validated());
+        $acquisition = Acquisition::find($request->input('acquisition_id', null));
 
-        if ($request->input('quantity')) {
+        $data = array_merge($request->validated(), [
+            'unit_price' => $acquisition->acquisitionMode->has_price ? $request->input('unit_price') : null,
+            'quantity' => $request->input('quantity'),
+        ]);
 
-        }
+        $acquisitionLine = $this->acquisitionLineService->create($data);
 
         return $this->response(
             'success',
-            'Acquisition Line created successfully',
+            'Item added to acquisition',
             $acquisitionLine->toArray(),
             201
         );

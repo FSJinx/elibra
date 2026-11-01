@@ -26,6 +26,10 @@ class AcquisitionController extends Controller
     {
         $filters = QueryService::filters($request);
 
+        $filters = array_merge($filters, [
+            'acquisition_mode_id' => $request->input('acquisition_mode_id')
+        ]);
+
         $acquisitions = $this->acquisitionService->index($filters);
 
         return $this->response(

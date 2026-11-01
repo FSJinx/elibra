@@ -29,21 +29,21 @@
 
 <script setup lang="ts">
 import Modal from '@/components/my/Modal.vue'
-import { usePopup } from '../../../../../composables/ui/usePopup'
-import { ItemParams } from '@/stores/catalog/item.store'
 
-const modal = ref<InstanceType<typeof Modal>>()
+const emit = defineEmits(['update:Lines'])
+
 const item = useItemStore()
+const acquisition_line = acquisitionLinesStore()
+const pop = usePopup()
+const route = useRoute()
+
 const items = ref<Item[] | null>(null)
 const params = ref<Partial<ItemParams>>({
   query: '',
 })
+const modal = ref<InstanceType<typeof Modal>>()
 const loading = ref<boolean>(false)
-const pop = usePopup()
-const route = useRoute()
-
 const lastSearch = ref<string | null>(null)
-const emit = defineEmits(['update:Lines'])
 
 async function open() {
   params.value.query = ''
@@ -73,7 +73,7 @@ async function add(i: any) {
   if (confirm.isConfirmed) {
     pop.load()
     try {
-      const acq = await useAcquisitionLinesStore().create({ item_id: i.id, acquisition_id: route.params.id, quantity: 1 })
+      const acq = await acquisition_line.create({ item_id: i.id, acquisition_id: route.params.id })
       emit('update:Lines', acq.data)
       pop.success(acq.message)
       close()

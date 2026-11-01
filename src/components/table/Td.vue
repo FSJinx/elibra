@@ -1,5 +1,5 @@
 <template>
-  <td v-if="hasData" :class="{ 'text-muted-foreground/50': data === null || data.length === 0 }">
+  <td v-if="props.data !== undefined" :class="{ 'text-muted-foreground/50': data === null || data.length === 0 }">
     {{ data ?? nullMessage }}
   </td>
 
@@ -31,9 +31,5 @@ const alignClass = computed(() => {
   }
 
   return aligns[props.align]
-})
-
-const hasData = computed(() => {
-  return props.data !== undefined
 })
 </script>
