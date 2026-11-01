@@ -25,9 +25,7 @@ class CatalogSearchService
     public function show(int $itemId): ?array
     {
         $item = $this->itemQuery()
-            ->with([
-                'accessions' => fn ($query) => $query->whereNull('deleted_at'),
-            ])
+            ->with(['accessions'])
             ->find($itemId);
 
         if (! $item) {

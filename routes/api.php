@@ -76,6 +76,7 @@ Route::group(['prefix' => '/option'], function () {
     Route::get('sections', [OptionController::class, 'sections']);
 
     // ================== STANDARDS ====================
+    Route::get('acquisition_modes', [OptionController::class, 'acquisitionModes']);
     Route::get('authorships', [OptionController::class, 'authorships']);
     Route::get('categories', [OptionController::class, 'categories']);
     Route::get('item_types', [OptionController::class, 'item_types']);
@@ -250,7 +251,7 @@ Route::group(['prefix' => '/inventory-line'], function () {
 // ============== ITEM ROUTES ===============
 Route::group(['prefix' => '/items'], function () {
 
-    Route::get('', [ItemController::class, 'indfinveexV2']);
+    Route::get('', [ItemController::class, 'indexV2']);
 
     // Route::get('{catalogId}', [CatalogController::class, 'show']);
     Route::get('{item}', [ItemController::class, 'show']);
@@ -259,7 +260,7 @@ Route::group(['prefix' => '/items'], function () {
     Route::get('{item}/acquisitions', [ItemController::class, 'acquisitions']);
 
     Route::post('', [ItemController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin,librarian');
-    
+
     Route::put('{item}', [ItemController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin,librarian');
 });
 

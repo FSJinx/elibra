@@ -169,6 +169,7 @@ return new class extends Migration
         [
             'name' => 'acquisitions',
             'foreign_columns' => [
+                ['name' => 'acquisition_mode_id', 'references' => 'id', 'on' => 'acquisition_modes', 'onDelete' => 'set null'],
                 ['name' => 'receiver_id', 'references' => 'id', 'on' => 'librarians', 'onDelete' => 'set null'],
                 ['name' => 'acquisition_request_id', 'references' => 'id', 'on' => 'acquisition_requests', 'onDelete' => 'restrict'],
             ],

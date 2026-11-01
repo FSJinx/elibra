@@ -5,6 +5,7 @@ namespace App\Models;
 use Database\Factories\AcquisitionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Acquisition extends Model
 {
@@ -14,10 +15,11 @@ class Acquisition extends Model
     protected $fillable = [
         'reference',
         'dealer',
-        'acquisition_mode',
+        // 'acquisition_mode',
         'acquisition_date',
         'remarks',
 
+        'acquisition_mode_id',
         'receiver_id',
         'acquisition_request_id',
     ];
@@ -28,8 +30,12 @@ class Acquisition extends Model
 
     public function receiver()
     {
-        // return $this->belongsTo(Librarian::class, 'receiver_id');
-        return $this->hasOneThrough(User::class, Librarian::class, 'id', 'id', 'receiver_id', 'user_id');
+        return $this->hasOneThrough(User::class, Librarian::class, 'id', 'id', 'receiver_id', 'user_id')->select('users.id', 'users.last_name', 'users.first_name');
+    }
+
+    public function acquisitionMode(): BelongsTo
+    {
+        return $this->belongsTo(AcquisitionMode::class);
     }
 
     public function acquisitionRequest()

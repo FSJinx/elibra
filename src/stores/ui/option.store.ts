@@ -9,6 +9,7 @@ const state = () => ({
   sections: null as Partial<Section>[] | null,
 
   // ======> STANDARDS
+  acquisition_modes: null as Partial<AcquisitionMode>[] | null,
   authorships: null as Partial<Authorship>[] | null,
   categories: null as Partial<ItemCategory>[] | null,
   item_types: null as Partial<ItemType>[] | null,

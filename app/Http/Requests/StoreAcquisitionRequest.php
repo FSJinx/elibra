@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\AcquisitionMode;
 use App\Models\AcquisitionRequest;
 use App\Models\Librarian;
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -30,11 +31,12 @@ class StoreAcquisitionRequest extends BaseRequest
         return [
             'acquisition_id' => ['nullable', 'string', 'max:255', 'unique:acquisitions,acquisition_id'],
             'dealer' => ['required', 'string', 'max:255'],
-            'acquisition_mode' => ['required', Rule::in(['purchase', 'donation', 'gift', 'exchange'])],
+            // 'acquisition_mode' => ['required', Rule::in(['purchase', 'donation', 'gift', 'exchange'])],
             'acquisition_date' => ['required', 'date'],
             'remarks' => ['nullable', 'string', 'max:255'],
 
-            'receiver_id' => ['required', 'integer', Rule::exists((new Librarian)->getTable(), 'id')],
+            'acquisition_mode_id' => ['required', 'integer', Rule::exists((new AcquisitionMode())->getTable(), 'id')],
+            // 'receiver_id' => ['required', 'integer', Rule::exists((new Librarian)->getTable(), 'id')],
             'acquisition_request_id' => ['nullable', 'integer', Rule::exists((new AcquisitionRequest)->getTable(), 'id')],
         ];
     }
@@ -76,8 +78,8 @@ class StoreAcquisitionRequest extends BaseRequest
             'dealer.string' => 'The dealer must be a valid text value.',
             'dealer.max' => 'The dealer may not exceed 255 characters.',
 
-            'acquisition_mode.required' => 'The acquisition mode is required.',
-            'acquisition_mode.in' => 'The selected acquisition mode is invalid.',
+            // 'acquisition_mode.required' => 'The acquisition mode is required.',
+            // 'acquisition_mode.in' => 'The selected acquisition mode is invalid.',
 
             'acquisition_date.required' => 'The acquisition date is required.',
             'acquisition_date.date' => 'The acquisition date must be a valid date.',
@@ -85,9 +87,9 @@ class StoreAcquisitionRequest extends BaseRequest
             'remarks.string' => 'The remarks must be a valid text value.',
             'remarks.max' => 'The remarks may not exceed 255 characters.',
 
-            'receiver_id.required' => 'A librarian is required.',
-            'receiver_id.integer' => 'The librarian selection is invalid.',
-            'receiver_id.exists' => 'The selected librarian does not exist.',
+            // 'receiver_id.required' => 'A librarian is required.',
+            // 'receiver_id.integer' => 'The librarian selection is invalid.',
+            // 'receiver_id.exists' => 'The selected librarian does not exist.',
 
             'acquisition_request_id.integer' => 'The acquisition request ID must be a valid number.',
             'acquisition_request_id.exists' => 'The selected acquisition request does not exist.',

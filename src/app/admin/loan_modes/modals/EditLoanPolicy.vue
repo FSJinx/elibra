@@ -10,26 +10,34 @@
           <Label>Patron Type</Label>
           <Input :model-value="props.data.patron_type?.name ?? 'Unknown patron type'" readonly />
         </Control>
+
         <Control id="policy-loan-period" col required>
           <Label>Loan Period <span class="text-sm text-muted-foreground font-normal">(in days)</span></Label>
           <Input id="policy-loan-period" v-model="form.loan_period_days" type="number" placeholder="Enter loan period" :error="errors?.loan_period_days?.[0]" />
         </Control>
+
         <Control id="policy-max-items" col required>
           <Label>Max Loanable Items</Label>
-          <Input id="policy-max-items" v-model="form.max_items" type="number" placeholder="Enter maximum loanable items" :error="errors?.max_items?.[0]" />
+          <Input id="policy-max-items" v-model="form.max_items" type="number" :placeholder="unlimited.item ? 'No limit' : 'Enter maximum loanable items'" :error="errors?.max_items?.[0]" :disabled="unlimited.item" />
         </Control>
+        <Checkbox label="No limit" v-model="unlimited.item" @update:model-value="(u) => (form.max_items = u ? null : props.data?.max_items)" />
+
         <Control id="policy-max-renewals" col required>
           <Label>Max Renewals</Label>
-          <Input id="policy-max-renewals" v-model="form.max_renewals" type="number" placeholder="Enter maximum renewals" :error="errors?.max_renewals?.[0]" />
+          <Input id="policy-max-renewals" v-model="form.max_renewals" type="number" :placeholder="unlimited.item ? 'No limit' : 'Enter maximum renewals'" :error="errors?.max_renewals?.[0]" />
         </Control>
+        <Checkbox label="No limit" v-model="unlimited.renewal" @update:model-value="(u) => (form.max_renewals = u ? null : props.data?.max_renewals)" />
+
         <Control id="policy-fine-per-due" col required>
           <Label>Fine Per Due</Label>
           <Input id="policy-fine-per-due" v-model="form.fine_per_due" type="number" step="0.01" placeholder="Enter fine per due" :error="errors?.fine_per_due?.[0]" />
         </Control>
+
         <Control id="policy-grace-period" col required>
           <Label>Grace Period <span class="text-sm text-muted-foreground font-normal">(in days)</span></Label>
           <Input id="policy-grace-period" v-model="form.grace_period" type="number" placeholder="Enter grace period" :error="errors?.grace_period?.[0]" />
         </Control>
+
         <Control id="policy-notes" col nullable>
           <Label>Notes</Label>
           <Textarea id="policy-notes" v-model="form.notes" placeholder="Add notes about this loan policy" :error="errors?.notes?.[0]" />
@@ -56,6 +64,10 @@ const modal = ref<InstanceType<typeof Modal>>()
 const defaultForm = ref<PatronTypeLoanPolicy>(structuredClone(toRaw(props.data)))
 const form = reactive<UpdatePatronTypeLoanPolicy>(defaultForm.value)
 const errors = ref<Record<string, string[]> | null>(null)
+const unlimited = ref({
+  item: false,
+  renewal: false,
+})
 
 function open() {
   Object.assign(form, toRaw(props.data))

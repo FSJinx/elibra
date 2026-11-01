@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\UI;
 
 use App\Http\Controllers\Controller;
+use App\Models\AcquisitionMode;
 use App\Models\Authorship;
 use App\Models\Campus;
 use App\Models\Department;
@@ -91,6 +92,13 @@ class OptionController extends Controller
     public function loanModes()
     {
         $data = LoanMode::query()->select(['id', 'slug', 'name'])->get();
+
+        return $this->response(data: $data);
+    }
+
+    public function acquisitionModes()
+    {
+        $data = AcquisitionMode::query()->select(['id', 'name', 'description', 'has_price'])->get();
 
         return $this->response(data: $data);
     }

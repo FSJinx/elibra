@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             // ========= PRODUCTION SEEDS =========
 
             SuperAdminSeeder::class,
+            AcquisitionModeSeeder::class,
             ItemTypeSeeder::class,
             ItemTypeCategorySeeder::class,
             // PermissionSeeder::class,
