@@ -13,18 +13,8 @@
       <div class="flex flex-col items-start gap-3" v-else>
         <div class="w-full flex items-center justify-between">
           <Title :level="2">Item Preview</Title>
-          <Button size="sm" class="hover:text-danger" @click="clear">Clear</Button>
+          <Button size="sm" class="hover:text-danger" @click="clear">Clear Bag</Button>
         </div>
-        <Form class="w-full mb-5" id="submit-borrow" @submit="submit">
-          <Control id="borrow-loan-mode" col>
-            <Label>Loan Mode</Label>
-
-            <Select v-model="model.loan_mode_id" required>
-              <Option value="" selected disabled>Select Loan Mode</Option>
-              <Option :value="item.id" v-for="item in options.loan_modes">{{ item.name }}</Option>
-            </Select>
-          </Control>
-        </Form>
         <Card class="p-4!" v-for="item in model?.accessions">
           <CardBody class="flex items-start gap-3">
             <div class="max-w-15 border border-border rounded-lg overflow-hidden">
@@ -60,6 +50,17 @@
           <p class="text-foreground-secondary line-clamp-1">Total items borrowing:</p>
           <span class="text-foreground text-end">{{ model?.accessions?.length ?? 'No items selected' }}</span>
         </div>
+
+        <Form class="w-full" id="submit-borrow" @submit="submit">
+          <Control id="borrow-loan-mode" col>
+            <Label>Loan Mode</Label>
+
+            <Select v-model="model.loan_mode_id" required>
+              <Option value="" selected disabled>Select Loan Mode</Option>
+              <Option :value="item.id" v-for="item in options.loan_modes">{{ item.name }}</Option>
+            </Select>
+          </Control>
+        </Form>
       </div>
       <div class="grid grid-cols-2 gap-2">
         <Button variant="danger" @click="close">Cancel</Button>
