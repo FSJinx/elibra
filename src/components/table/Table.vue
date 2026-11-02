@@ -13,7 +13,7 @@
     </div>
 
     <!-- Table Body -->
-    <div class="relative flex-1 shrink-0 overflow-y-auto bg-background">
+    <div ref="tableWrapper" class="relative flex-1 shrink-0 overflow-y-auto bg-background">
       <table ref="table" class="relative w-full has-data-empty:h-full text-left text-[12.5px] border-collapse" :class="[layout]">
         <slot />
       </table>
@@ -32,8 +32,8 @@
       </div>
 
       <div class="flex items-center gap-2">
-        <Button class="not-disabled:hover:text-primary" :disabled="!data?.prev_page_url" @click="emit('prev', data?.current_page - 1)">Previous</Button>
-        <Button class="not-disabled:hover:text-primary" :disabled="!data?.next_page_url" @click="emit('next', data?.current_page + 1)">Next</Button>
+        <Button class="not-disabled:hover:text-primary" :disabled="!data?.prev_page_url" @click="changePage(data?.current_page - 1)">Previous</Button>
+        <Button class="not-disabled:hover:text-primary" :disabled="!data?.next_page_url" @click="changePage(data?.current_page + 1)">Next</Button>
       </div>
     </div>
   </section>
@@ -48,17 +48,18 @@ interface Props {
   cols?: any
 }
 
-const cols = ref(0)
-const table = ref<HTMLTableElement>()
-const count = () => (cols.value = table.value?.querySelectorAll('thead th').length ?? 0)
-
+const emit = defineEmits(['page', 'per_page'])
 const props = withDefaults(defineProps<Props>(), {
   dataLength: 0,
   layout: 'auto',
 })
 
-const emit = defineEmits(['next', 'prev', 'per_page'])
+const cols = ref(0)
+const table = ref<HTMLTableElement>()
+const tableWrapper = ref<HTMLElement>()
+const count = () => (cols.value = table.value?.querySelectorAll('thead th').length ?? 0)
 const per_page = ref(props.data?.per_page ?? '25')
+let mo: MutationObserver
 
 const layout = computed(() => {
   const layouts: Record<NonNullable<Props['layout']>, string> = {
@@ -69,7 +70,10 @@ const layout = computed(() => {
   return layouts[props.layout]
 })
 
-let mo: MutationObserver
+function changePage(num: Number) {
+  emit('page', num)
+  tableWrapper.value?.scrollTo({ top: 0, behavior: 'smooth' })
+}
 
 onMounted(() => {
   count()
@@ -79,7 +83,10 @@ onMounted(() => {
 
 onBeforeUnmount(() => mo?.disconnect())
 
-watch(per_page, (val) => emit('per_page', val))
+watch(per_page, (val) => {
+  changePage(1)
+  emit('per_page', val)
+})
 
 provide('table', { props, cols })
 </script>

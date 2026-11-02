@@ -15,9 +15,9 @@
 </template>
 
 <script setup lang="ts">
-import BookBag from '@/app/librarian/circulation/borrow/BookBag.vue'
-import CheckItems from '@/app/librarian/circulation/borrow/CheckItems.vue'
-import CheckPatron from '@/app/librarian/circulation/borrow/CheckPatron.vue'
+import BookBag from '@/app/librarian/circulation/check_out/BookBag.vue'
+import CheckItems from '@/app/librarian/circulation/check_out/CheckItems.vue'
+import CheckPatron from '@/app/librarian/circulation/check_out/CheckPatron.vue'
 
 const pop = usePopup()
 

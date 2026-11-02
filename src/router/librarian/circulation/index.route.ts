@@ -4,14 +4,14 @@ export const librarianCirculation = [
     meta: { title: 'Circulation' },
     children: [
       {
-        path: 'borrow',
-        meta: { breadcrumb: 'Borrow' },
-        children: ciruclationBorrow,
+        path: 'check-out',
+        meta: { breadcrumb: 'Check Out' },
+        children: circulationCheckOut,
       },
       {
-        path: 'return',
-        meta: { breadcrumb: 'Return' },
-        children: ciruclationReturn,
+        path: 'check-in',
+        meta: { breadcrumb: 'Check In' },
+        children: ciruclationCheckIn,
       },
       {
         path: 'holdings',

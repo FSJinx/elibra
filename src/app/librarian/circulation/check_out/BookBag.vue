@@ -97,7 +97,7 @@ async function submit() {
   if (confirm.isConfirmed) {
     pop.load()
     try {
-      const res = await circulation.borrow(model.value)
+      const res = await circulation.checkOut(model.value)
       pop.success(res.message)
       nextTick()
       clear()

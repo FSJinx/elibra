@@ -2,6 +2,12 @@ export interface CirculationParams extends BaseParams {
   library_id: any
 }
 
+export interface CheckOut {
+  patron: Patron | null
+  accessions: Accession[] | null
+  loan_mode_id: any
+}
+
 export interface Circulation {
   id: any
   borrowed_at: string

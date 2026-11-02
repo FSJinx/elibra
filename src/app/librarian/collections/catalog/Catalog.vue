@@ -18,7 +18,7 @@
         </Form>
       </Card>
 
-      <Table :data-length="data?.length" title="Catalog List" subtitle="List of all library materials." :data="pagination" @per_page="apply({ per_page: $event })" @next="apply({ page: $event })" @prev="apply({ page: $event })">
+      <Table :data-length="data?.length" title="Catalog List" subtitle="List of all library materials." :data="pagination" @per_page="apply({ per_page: $event })" @page="apply({ page: $event })">
         <Thead>
           <tr>
             <Th>No</Th>
@@ -34,7 +34,7 @@
 
         <Tbody :loading="loading" :data="data">
           <Tr v-for="(item, index) in data" :key="item.id" :to="{ name: 'librarian.collections.catalog.view', params: { id: item.id } }">
-            <Td :data="(index as number) + 1" />
+            <Td :data="pagination?.from + index" />
 
             <Td>
               <img :src="coverUrl(item.cover_media?.file_path)" :alt="`${item.title} cover`" class="h-16 w-12 rounded border border-border object-cover" />

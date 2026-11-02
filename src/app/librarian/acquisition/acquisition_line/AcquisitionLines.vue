@@ -112,7 +112,8 @@ async function del(l: AcquisitionLine) {
 
 onMounted(search)
 onBeforeUnmount(() => {
-  ;((acquisition.currentData = null), (lines.data = null))
+  acquisition.currentData = null
+  lines.data = null
 })
 </script>
 

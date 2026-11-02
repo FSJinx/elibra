@@ -13,8 +13,23 @@ export const circulationStore = defineStore('circulation', {
       return res
     },
 
-    async borrow(payload?: Borrow) {
+    async checkOut(payload?: CheckOut) {
       const res = await post(`${this.url}`, payload)
+      return res
+    },
+
+    async checkIn(payload: Circulation) {
+      const res = await put(`${this.url}/${payload.id}/return`)
+      return res
+    },
+
+    async renew(payload: Circulation) {
+      const res = await put(`${this.url}/${payload.id}/renew`)
+      return res
+    },
+
+    async remove(payload: Circulation) {
+      const res = await del(`${this.url}/${payload.id}`)
       return res
     },
   },
