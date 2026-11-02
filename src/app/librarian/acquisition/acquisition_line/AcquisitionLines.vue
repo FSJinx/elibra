@@ -18,8 +18,26 @@
 
     <div class="flex-1 flex flex-col gap-3 overflow-y-auto p-5">
       <Card class="">
-        <CardBody class="flex flex-wrap"> </CardBody>
+        <CardBody class="grid grid-cols-4 gap-2">
+          <Control col>
+            <Label class="uppercase text-sm text-muted-foreground tracking-wide">Acquisition From</Label>
+            <Title>{{ acquisition.currentData?.dealer }}</Title>
+          </Control>
+          <Control col>
+            <Label class="uppercase text-sm text-muted-foreground tracking-wide">Acquisition Mode</Label>
+            <Title class="uppercase text-success tracking-wide">{{ acquisition.currentData?.acquisition_mode?.name }}</Title>
+          </Control>
+          <Control col>
+            <Label class="uppercase text-sm text-muted-foreground tracking-wide">Date Received</Label>
+            <Title>{{ parse.formatDateAgo(acquisition.currentData?.acquisition_date) }}</Title>
+          </Control>
+          <Control col>
+            <Label class="uppercase text-sm text-muted-foreground tracking-wide">Added By</Label>
+            <Title>{{ acquisition.currentData?.receiver?.name?.full }}</Title>
+          </Control>
+        </CardBody>
       </Card>
+
       <Table title="Acquired Items" :subtitle="`Here are the items that is acquired from ${acquisition.currentData?.dealer} through ${acquisition.currentData?.acquisition_mode?.name}.`" :data="pagination">
         <Thead>
           <tr>
@@ -40,7 +58,7 @@
             <Td :data="item.quantity" />
             <Td v-if="acquisition.currentData?.acquisition_mode?.has_price" :data="parse.toMoney(item.unitPrice)" />
             <Td class="space-x-2">
-              <EditItemAcquisition :data="item" />
+              <EditItemAcquisition :data="item" :acquisition="acquisition.currentData" @refresh="search" />
               <Button class="hover:text-danger" size="sm" @click="del(item)">Delete</Button>
             </Td>
           </Tr>
@@ -65,22 +83,36 @@ const pagination = ref<Pagination>()
 const loading = ref<boolean>(false)
 
 async function search() {
-  const res = await lines.fetch(acquisition.currentData?.id)
-  pagination.value = res.data
+  loading.value = true
+  try {
+    const res = await lines.fetch(acquisition.currentData?.id)
+    pagination.value = res.data
+  } finally {
+    loading.value = false
+  }
 }
 
 async function del(l: AcquisitionLine) {
   const confirm = await pop.confirm({ text: `Are you sure you want to delete "${l.item?.title}" from this acquisition?` })
 
   if (confirm.isConfirmed) {
-    pop.info("Oops, this feature isn't up yet. Please come back later.")
+    pop.load()
+    try {
+      const res = await lines.destroy(l)
+
+      if (res.status === 'success') {
+        search()
+        return pop.success(res.message)
+      } else return pop.success(res.message)
+    } catch (e: any) {
+      pop.error(e.response?.data?.message ?? 'Something went wrong deleting the item from the record')
+    }
   }
 }
 
 onMounted(search)
 onBeforeUnmount(() => {
-  acquisition.currentData = null
-  lines.data = null
+  ;((acquisition.currentData = null), (lines.data = null))
 })
 </script>
 

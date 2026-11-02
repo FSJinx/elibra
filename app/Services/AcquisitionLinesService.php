@@ -39,11 +39,11 @@ class AcquisitionLinesService
             );
 
             $quantity = (int) $data['quantity'];
-            
-            for ($i=0; $i < $quantity; $i++) { 
+
+            for ($i = 0; $i < $quantity; $i++) {
                 $this->accessionService->create([
                     'item_id' => $data['item_id'],
-                    'acquisition_line_id' => $acquisitionLine->id
+                    'acquisition_line_id' => $acquisitionLine->id,
                 ]);
             }
 
@@ -101,7 +101,7 @@ class AcquisitionLinesService
                 $acquisitionLine->id
             )->update([
                 'item_id' => $data['item_id'],
-                'section_id' => $data['section_id'],
+                'section_id' => $data['section_id'] ?? null,
             ]);
 
             /*
@@ -116,26 +116,26 @@ class AcquisitionLinesService
                 /*
                  * Get prefix.
                 */
-                // $prefix = $this->getAccessionPrefix($item);
+                $prefix = $this->getAccessionPrefix($item);
 
                 /*
                  * Generate additional accession numbers.
                  */
-                // $accessionNumbers = $this->generateAccessionNumbers($prefix, $additionalQuantity);
+                $accessionNumbers = $this->generateAccessionNumbers($prefix, $additionalQuantity);
 
                 /*
                  * Create additional accessions.
                  */
-                // foreach ($accessionNumbers as $accessionNumber) {
+                foreach ($accessionNumbers as $accessionNumber) {
 
-                //     Accession::create([
-                //         'accession_number' => $accessionNumber,
-                //         'status' => 'available',
-                //         'item_id' => $acquisitionLine->item_id,
-                //         'section_id' => $data['section_id'],
-                //         'acquisition_line_id' => $acquisitionLine->id,
-                //     ]);
-                // }
+                    Accession::create([
+                        'accession_number' => $accessionNumber,
+                        'status' => 'available',
+                        'item_id' => $acquisitionLine->item_id,
+                        'section_id' => $data['section_id'],
+                        'acquisition_line_id' => $acquisitionLine->id,
+                    ]);
+                }
             }
 
             /*
@@ -193,38 +193,27 @@ class AcquisitionLinesService
     /**
      * Delete acquisition line and its accessions.
      */
-    public function delete(
-        AcquisitionLines $acquisitionLine
-    ): bool {
+    public function delete(AcquisitionLines $acquisitionLine): bool
+    {
 
-        $deleted = DB::transaction(function () use (
-            $acquisitionLine
-        ) {
+        $deleted = DB::transaction(function () use ($acquisitionLine) {
 
             /*
              * Check if any accession is already used.
              */
-            $hasUsedAccessions = Accession::where(
-                'acquisition_line_id',
-                $acquisitionLine->id
-            )
+            $hasUsedAccessions = Accession::where('acquisition_line_id', $acquisitionLine->id)
                 ->whereNotIn('status', ['available'])
                 ->exists();
 
             if ($hasUsedAccessions) {
 
-                throw new RuntimeException(
-                    'This acquisition line cannot be deleted because one or more accessions are already in use.'
-                );
+                throw new RuntimeException('This acquisition line cannot be deleted because one or more accessions are already in use.');
             }
 
             /*
              * Delete related accessions.
              */
-            Accession::where(
-                'acquisition_line_id',
-                $acquisitionLine->id
-            )->delete();
+            Accession::where('acquisition_line_id', $acquisitionLine->id)->delete();
 
             /*
              * Delete acquisition line.

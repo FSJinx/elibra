@@ -36,5 +36,15 @@ export const acquisitionLinesStore = defineStore('acquisition_lines', {
         pop.unload()
       }
     },
+
+    async update(l: AcquisitionLine) {
+      const res = await put(`${this.url}/${l.id}`, l)
+      return res
+    },
+
+    async destroy(l: AcquisitionLine) {
+      const res = await del(`${this.url}/${l.id}`)
+      return res
+    },
   },
 })

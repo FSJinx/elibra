@@ -6,6 +6,7 @@ use App\Http\Requests\StoreAcquisitionLinesRequest;
 use App\Http\Requests\UpdateAcquisitionLinesRequest;
 use App\Models\Acquisition;
 use App\Models\AcquisitionLines;
+use App\Models\Item;
 use App\Services\AccessionService;
 use App\Services\AcquisitionLinesService;
 use Illuminate\Http\Request;
@@ -52,6 +53,13 @@ class AcquisitionLinesController extends Controller
     public function store(StoreAcquisitionLinesRequest $request)
     {
         $acquisition = Acquisition::find($request->input('acquisition_id', null));
+        $item = Item::find($request->input('item_id'));
+
+        $line = AcquisitionLines::where('acquisition_id', $acquisition->id)->where('item_id', $item->id)->first();
+
+        if ($line) {
+            return $this->response('error', 'This item is already is already added in this acquisition, edit to add new copies.', 409);
+        }
 
         $data = array_merge($request->validated(), [
             'unit_price' => $acquisition->acquisitionMode->has_price ? $request->input('unit_price') : null,
@@ -118,20 +126,10 @@ class AcquisitionLinesController extends Controller
         $deleted = $this->acquisitionLineService->delete($acquisitionLine);
 
         if (! $deleted) {
-            return $this->response(
-                'Error',
-                'The selected Acquisition Line record could not be deleted.',
-                null,
-                500
-            );
+            return $this->response('error', 'The selected item cannot be deleted from the record.', null, 500);
         }
 
-        return $this->response(
-            'success',
-            'Acquisition Line record deleted successfully',
-            null,
-            200
-        );
+        return $this->response('success', 'Item deleted successfully from the acquisition', null, 200);
 
     }
 }

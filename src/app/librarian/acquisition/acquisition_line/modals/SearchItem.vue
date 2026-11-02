@@ -73,9 +73,14 @@ async function add(i: any) {
   if (confirm.isConfirmed) {
     pop.load()
     try {
-      const acq = await acquisition_line.create({ item_id: i.id, acquisition_id: route.params.id })
-      emit('update:Lines', acq.data)
-      pop.success(acq.message)
+      const res = await acquisition_line.create({ item_id: i.id, acquisition_id: route.params.id })
+
+      if (res.status === 'success') {
+        emit('update:Lines', res.data)
+        pop.success(res.message)
+      } else {
+        pop.info(res.message)
+      }
       close()
     } catch (e: any) {
       pop.error(e.response.message)

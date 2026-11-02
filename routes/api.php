@@ -119,9 +119,10 @@ Route::group(['prefix' => '/acquisition-lines'], function () {
     Route::post('', [AcquisitionLinesController::class, 'store'])->middleware('throttle:write');
 
     // Update
-    Route::put('/{acquisitionLie}', [AcquisitionLinesController::class, 'update'])->middleware('throttle:write');
-
+    Route::put('/{acquisitionLine}', [AcquisitionLinesController::class, 'update'])->middleware('throttle:write');
+    
     // Delete
+    Route::delete('/{id}', [AcquisitionLinesController::class, 'destroy'])->middleware('throttle:write');
 });
 
 // ============== AUTHORS ROUTE ==================

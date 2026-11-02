@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use Illuminate\Auth\Access\Response;
 use App\Models\AcquisitionLines;
 use App\Models\User;
 
@@ -37,7 +36,7 @@ class AcquisitionLinesPolicy
      */
     public function update(User $user, AcquisitionLines $acquisitionLines): bool
     {
-        return false;
+        return $user->isAdmin() || $user->isLibrarian();
     }
 
     /**
@@ -45,7 +44,7 @@ class AcquisitionLinesPolicy
      */
     public function delete(User $user, AcquisitionLines $acquisitionLines): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
     /**
