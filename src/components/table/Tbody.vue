@@ -29,10 +29,5 @@ const cols = computed(() => table.cols.value)
 
 const tableData = computed<Pagination>(() => table.props.data)
 
-const endOfList = computed(() => {
-  // if (table.data?.data) {
-  //   return tableData.value?.current_page == tableData.value?.last_page
-  // }
-  return tableData.value?.next_page_url === null
-})
+const endOfList = computed(() => tableData.value?.next_page_url === null)
 </script>

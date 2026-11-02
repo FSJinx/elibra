@@ -11,7 +11,8 @@ export const librarianMenu = [
   {
     name: 'Circulation',
     children: [
-      { path: 'librarian.circulation.loans', name: 'Loans', icon: 'bag-plus' },
+      { path: 'librarian.circulation.borrow', name: 'Borrow', icon: 'bag-plus' },
+      { path: 'librarian.circulation.return', name: 'Return', icon: 'bag-dash' },
       { path: 'librarian.circulation.holdings', name: 'Holds & Reservations', icon: 'bookmark-check' },
       { path: 'librarian.circulation.attendance', name: 'Attendance', icon: 'person-check' },
 

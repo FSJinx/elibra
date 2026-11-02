@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AcaRepoController;
+use App\Http\Controllers\AccessionController;
 use App\Http\Controllers\AcquisitionController;
 use App\Http\Controllers\AcquisitionLinesController;
 use App\Http\Controllers\AttendanceLogsController;
@@ -91,6 +92,22 @@ Route::group(['prefix' => '/option'], function () {
 Route::group(['prefix' => '/landing'], function () {
     Route::get('new-items', [LandingController::class, 'newItems']);
     Route::get('discover', [LandingController::class, 'discover']);
+});
+
+// ============== ACCESSION ROUTE ==================
+Route::group(['prefix' => '/accession'], function () {
+    // Get
+    Route::get('', [AccessionController::class, 'index']);
+    Route::get('/{id}', [AccessionController::class, 'show']);
+
+    // Post
+    Route::post('', [AccessionController::class, 'store'])->middleware('throttle:write');
+
+    // Update
+    Route::put('/{acquisition}', [AccessionController::class, 'update'])->middleware('throttle:write');
+
+    // Delete
+    Route::delete('/{acquisition}', [AccessionController::class, 'destroy'])->middleware('throttle:delete');
 });
 
 // ============== ACQUISITION ROUTE ==================
@@ -464,7 +481,7 @@ Route::group(['prefix' => '/attendance'], function () {
     Route::delete('{attendanceLogs}', [AttendanceLogsController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:delete');
 });
 
-Route::group(['prefix' => '/loan'], function () {
+Route::group(['prefix' => '/circulation'], function () {
     Route::get('', [CirculationController::class, 'index'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
     Route::get('review', [CirculationController::class, 'preview'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
     Route::get('{circulation}', [CirculationController::class, 'show'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');

@@ -6,6 +6,8 @@ use App\Http\Requests\StorePatronRequest;
 use App\Http\Requests\UpdatePatronRequest;
 use App\Models\Patron;
 use App\Services\PatronService;
+use App\Services\QueryService;
+use Illuminate\Http\Request;
 
 class PatronController extends Controller
 {
@@ -19,13 +21,20 @@ class PatronController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Patron::with([
-            'user',
-            'patronType',
-            'program'
-        ])->get();
+        $filters = QueryService::filters($request);
+
+        $patron = Patron::query()->with(['user', 'patronType:id,name'])
+            ->when($filters['search'] ?? null, fn ($q, $s) => $q->where('ebc_number', 'LIKE', "%$s%")->orWhereHas('user', fn ($u) => $u->where('username', 'LIKE', "%$s%")->orWhere('first_name', 'LIKE', "%$s%")->orWhere('last_name', 'LIKE', "%$s%"))
+            )->paginate(
+                perPage: null
+            );
+
+        return $this->response(
+            message: $patron->isEmpty() ? 'No patrons found' : 'Patrons found',
+            data: $patron
+        );
     }
 
     /**

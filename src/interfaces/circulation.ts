@@ -1,4 +1,8 @@
-export interface Loan {
+export interface CirculationParams extends BaseParams {
+  library_id: any
+}
+
+export interface Circulation {
   id: any
   borrowed_at: string
   due_at: string

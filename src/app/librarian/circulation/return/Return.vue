@@ -1,16 +1,8 @@
 <template>
   <div class="size-full flex flex-col overflow-hidden">
-    <SectionHeader title="Loans" description="Manage patrons' loans and returns." icon="laptop">
-      <!-- <div class="flex items-center justify-end gap-2 text-sm">
-        <router-link :to="{ name: link.path }" v-for="link in links" class="px-4 py-1 rounded-md border border-transparent transition-all duration-150" exact-active-class="bg-primary-soft/25 text-primary border-primary/50!">
-          {{ link.name }}
-        </router-link>
-      </div> -->
-    </SectionHeader>
+    <SectionHeader title="Check In" description="Manage patron loans and returns." icon="bag-dash"></SectionHeader>
 
     <div class="flex-1 flex flex-col p-5 gap-3">
-      <Issue @refresh="search" />
-
       <Card>
         <CardBody class="flex items-center gap-2 justify-between">
           <Form class="flex items-center gap-3 w-full max-w-150 mr-auto" id="loan-search" @submit="search">
@@ -71,8 +63,8 @@
 </template>
 
 <script setup lang="ts">
-import Issue from '@/app/librarian/circulation/loans/issue/Issue.vue'
-import EditLoanStatus from '@/app/librarian/circulation/loans/modals/EditLoanStatus.vue'
+// import Issue from '@/app/librarian/circulation/loans/issue/Issue.vue'
+// import EditLoanStatus from '@/app/librarian/circulation/loans/modals/EditLoanStatus.vue'
 
 const loan = loanStore()
 const parse = useParser()
@@ -110,9 +102,7 @@ async function updateLoan(item: Loan, action: 'renew' | 'return') {
   const isReturn = action === 'return'
   const confirmation = await pop.confirm({
     title: isReturn ? 'Return this item?' : 'Renew this loan?',
-    text: isReturn
-      ? 'The loan will be marked returned and the item will become available.'
-      : 'The due date will be extended by the loan period set for this patron type and loan mode.',
+    text: isReturn ? 'The loan will be marked returned and the item will become available.' : 'The due date will be extended by the loan period set for this patron type and loan mode.',
     confirmButtonText: isReturn ? 'Return item' : 'Renew loan',
   })
 
@@ -128,9 +118,7 @@ async function updateLoan(item: Loan, action: 'renew' | 'return') {
     await pop.success(res.message ?? (isReturn ? 'Loan returned successfully.' : 'Loan renewed successfully.'))
   } catch (e: any) {
     pop.unload()
-    const firstValidationError = e?.response?.data?.errors
-      ? Object.values(e.response.data.errors).flat()[0]
-      : null
+    const firstValidationError = e?.response?.data?.errors ? Object.values(e.response.data.errors).flat()[0] : null
     await pop.error(firstValidationError ?? e?.response?.data?.message ?? `Unable to ${action} this loan.`)
   } finally {
     actionId.value = null

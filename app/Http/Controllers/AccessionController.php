@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAccessionRequest;
 use App\Http\Requests\UpdateAccessionRequest;
 use App\Services\AccessionService;
+use App\Services\QueryService;
+use Illuminate\Http\Request;
 
 class AccessionController extends Controller
 {
@@ -18,9 +20,20 @@ class AccessionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        
+        $filters = QueryService::filters($request);
+
+        $patron = Accession::query()->with(['item.itemType','item.coverMedia'])
+            ->when($filters['search'] ?? null, fn ($q, $s) => $q->where('accession_number', 'LIKE', "%$s%"))
+            ->paginate(
+                perPage: null
+            );
+
+        return $this->response(
+            message: $patron->isEmpty() ? 'No patrons found' : 'Patrons found',
+            data: $patron
+        );
     }
 
     /**

@@ -1,3 +1,7 @@
+export interface AccessionParams extends BaseParams {
+  status: string
+}
+
 export interface Accession {
   id: any
   accession_number: string

@@ -1,7 +1,7 @@
 <template>
   <Transition name="fade">
     <Teleport to="body">
-      <div v-if="isOpen" class="drawer fixed inset-0 flex bg-backdrop h-dvh overflow-hidden" :class="drawerParentClass">
+      <div v-if="isOpen" class="drawer fixed inset-0 flex bg-backdrop h-dvh overflow-hidden" :class="drawerParentClass" @click.self="close">
         <div class="drawer-panel relative flex flex-col bg-background h-full w-full max-w-120 shadow-2xl">
           <button type="button" class="absolute top-3 right-3 z-10 p-2 text-lg text-foreground/25 hover:text-foreground cursor-pointer transition-all duration-200" aria-label="Close drawer" @click="close">
             <Icon icon="x-lg" style="-webkit-text-stroke: 1px" />

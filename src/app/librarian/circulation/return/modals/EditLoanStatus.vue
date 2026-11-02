@@ -25,7 +25,7 @@
 <script setup lang="ts">
 import type Modal from '@/components/my/Modal.vue'
 
-const props = defineProps<{ data: Loan }>()
+const props = defineProps<{ data: Circulation }>()
 const emit = defineEmits(['refresh'])
 const loan = loanStore()
 const pop = usePopup()

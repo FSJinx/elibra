@@ -1,5 +1,5 @@
 <template>
-  <div class="drawer-header border-t border-border p-5 font-semibold text-lg">
+  <div class="drawer-header border-t border-border p-5">
     <slot />
   </div>
 </template>
