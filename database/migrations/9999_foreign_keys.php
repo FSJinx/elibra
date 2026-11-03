@@ -108,6 +108,7 @@ return new class extends Migration
                 ['name' => 'language_id', 'references' => 'id', 'on' => 'languages', 'onDelete' => 'set null'],
                 ['name' => 'library_id', 'references' => 'id', 'on' => 'libraries', 'onDelete' => 'restrict'],
                 ['name' => 'cover_media_id', 'references' => 'id', 'on' => 'media', 'onDelete' => 'set null'],
+                ['name' => 'publisher_id', 'references' => 'id', 'on' => 'publishers', 'onDelete' => 'set null'],
             ],
         ],
         [

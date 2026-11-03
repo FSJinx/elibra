@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Publisher;
 use App\Http\Requests\StorePublisherRequest;
 use App\Http\Requests\UpdatePublisherRequest;
+use App\Models\Publisher;
 use App\Services\PublisherService;
-use Illuminate\Support\Facades\Request;
+use App\Services\QueryService;
+use Illuminate\Http\Request;
 
 class PublisherController extends Controller
 {
@@ -16,19 +17,22 @@ class PublisherController extends Controller
     {
         $this->publisherService = $publisherService;
     }
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $publisher = Publisher::all();
+        $filters = QueryService::filters($request);
 
-        return $this->response(
-            'success',
-            'Publisher retriieved successfully',
-            $publisher->toArray(),
-            200
-        );
+        $publisher = Publisher::query()
+            ->when($filters['search'] ?? null, fn ($q, $s) => $q->where('name', 'LIKE', "%$s%"))
+            ->paginate(
+                $filters['per_page'] ?? null,
+                ['*']
+            );
+
+        return $this->response(data: $publisher);
     }
 
     /**
@@ -115,7 +119,7 @@ class PublisherController extends Controller
     public function destroy(Publisher $publisher)
     {
         $deleted = $this->publisherService->delete($publisher);
-        
+
         if (! $deleted) {
             return $this->response(
                 'error',
@@ -131,6 +135,6 @@ class PublisherController extends Controller
             [],
             200
         );
-        
+
     }
 }

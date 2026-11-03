@@ -39,6 +39,9 @@ class ItemService
                 'library_id',
                 'language_id',
                 'released',
+                'publisher_id',
+                'publication_year',
+                'place_of_publication',
             ]));
 
             if (isset($data['authors'])) {
@@ -86,6 +89,9 @@ class ItemService
                 'item_type_category_id',
                 'language_id',
                 'released',
+                'publisher_id',
+                'publication_year',
+                'place_of_publication',
             ]));
 
             if (array_key_exists('authors', $data) || array_key_exists('authors_present', $data)) {
@@ -158,7 +164,7 @@ class ItemService
     public function show(string $id)
     {
         $item = Item::query()
-            ->with(['authors', 'coverMedia'])
+            ->with(['authors', 'coverMedia', 'publisher'])
             ->findOrFail($id);
 
         return $item;

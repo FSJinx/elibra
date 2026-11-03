@@ -23,7 +23,6 @@ use App\Http\Controllers\ItemTypeCategoryController;
 use App\Http\Controllers\ItemTypeController;
 use App\Http\Controllers\LandingPage\LandingController;
 use App\Http\Controllers\LanguageController;
-use App\Http\Controllers\Librarian\Collections\CatalogController;
 use App\Http\Controllers\Librarian\DashboardController;
 use App\Http\Controllers\LibrarianController;
 use App\Http\Controllers\LibraryController;
@@ -268,15 +267,14 @@ Route::group(['prefix' => '/inventory-line'], function () {
 
 // ============== ITEM ROUTES ===============
 Route::group(['prefix' => '/items'], function () {
-
-    Route::get('', [ItemController::class, 'indexV2']);
-
-    // Route::get('{catalogId}', [CatalogController::class, 'show']);
+    // Get
+    Route::get('', [ItemController::class, 'index']);
     Route::get('{item}', [ItemController::class, 'show']);
     Route::get('{item}/acquisitions', [ItemController::class, 'acquisitions']);
 
+    // Post
     Route::post('', [ItemController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin,librarian');
-
+    // Put
     Route::put('{item}', [ItemController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin,librarian');
 });
 
@@ -356,7 +354,7 @@ Route::group(['prefix' => '/program'], function () {
 });
 
 // ============== PUBLISHERS ROUTE ==================
-Route::group(['prefix' => '/publishers'], function () {
+Route::group(['prefix' => '/publisher'], function () {
     // Get
     Route::get('', [PublisherController::class, 'index'])->middleware('throttle:read');
 
