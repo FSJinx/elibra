@@ -71,7 +71,7 @@ const item_type = computed(() => option.item_types?.find((a) => a.id === props.d
 const editing = ref<boolean>(false)
 const form = ref<Item>({} as Item)
 const hasChanges = computed(() => JSON.stringify(form.value) !== JSON.stringify(props.data))
-const items = useItemStore()
+const items = itemStore()
 const coverImage = computed(() => {
   const path = props.data.cover_media?.file_path
   return path ? `${storageRoute}/${path}` : book

@@ -32,7 +32,7 @@ import Modal from '@/components/my/Modal.vue'
 
 const emit = defineEmits(['update:Lines'])
 
-const item = useItemStore()
+const item = itemStore()
 const acquisition_line = acquisitionLinesStore()
 const pop = usePopup()
 const route = useRoute()

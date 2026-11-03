@@ -33,12 +33,12 @@ class Acquisition extends Model
         return $this->hasOneThrough(User::class, Librarian::class, 'id', 'id', 'receiver_id', 'user_id')->select('users.id', 'users.last_name', 'users.first_name');
     }
 
-    public function acquisitionMode(): BelongsTo
+    public function acquisition_mode(): BelongsTo
     {
         return $this->belongsTo(AcquisitionMode::class);
     }
 
-    public function acquisitionRequest()
+    public function acquisition_request()
     {
         return $this->belongsTo(AcquisitionRequest::class, 'acquisition_request_id');
     }

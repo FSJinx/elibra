@@ -27,13 +27,13 @@ class UpdateAccessionRequest extends BaseRequest
     public function rules(): array
     {
         $rules = [
-                'accession_number' => [ 'sometimes', 'nullable', 'string', 'max:255', 'unique:accessions,accession_number,' . $this->route('accession')->id ],
-                'status' => [ 'sometimes', 'required', Rule::in([ 'available', 'reserved', 'on_load', 'lost', 'missing', 'archived', 'condemned' ]), ],
-                'remarks' => [ 'sometimes', 'nullable', 'string', 'max:255' ],  
+            'accession_number' => ['sometimes', 'nullable', 'string', 'max:255', 'unique:accessions,accession_number,'.$this->route('accession')],
+            'status' => ['sometimes', 'required', Rule::in(['available', 'reserved', 'on_load', 'lost', 'missing', 'archived', 'condemned'])],
+            'remarks' => ['sometimes', 'nullable', 'string', 'max:255'],
 
-                'item_id' => [ 'sometimes', 'required', 'integer', Rule::exists((new Item)->getTable(), 'id')],
-                'section_id' => [ 'sometimes', 'required', 'integer', Rule::exists((new Sections)->getTable(), 'id')],
-                'acquisition_line_id' => [ 'sometimes', 'required', 'integer', Rule::exists((new AcquisitionLines)->getTable(), 'id')],
+            'item_id' => ['sometimes', 'required', 'integer', Rule::exists((new Item)->getTable(), 'id')],
+            'section_id' => ['sometimes', 'nullable', 'integer', Rule::exists((new Sections)->getTable(), 'id')],
+            'acquisition_line_id' => ['sometimes', 'nullable', 'integer', Rule::exists((new AcquisitionLines)->getTable(), 'id')],
         ];
 
         return $rules;

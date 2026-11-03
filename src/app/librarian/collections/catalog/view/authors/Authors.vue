@@ -35,12 +35,11 @@ import AddAuthors from '@/app/librarian/collections/catalog/forms/sections/modal
 
 const props = defineProps<{ data: Item }>()
 
-const { fetchResource } = useItemStore()
+const { fetchResource } = itemStore()
 const options = optionStore()
 const parse = useParser()
 
 const authors = ref<Author[] | null>()
-// const authors = defineModel<Author>({ default: {} })
 const loading = ref<boolean>(false)
 
 const item_type = computed(() => options.item_types?.find((a) => a.id === props.data.item_type_id) ?? null)

@@ -179,6 +179,7 @@ class ItemController extends Controller
         $data = $item->acquisitions()->with([
             'receiver:last_name,first_name',
             'acquisition_lines' => fn ($q) => $q->where('item_id', $item->id)->withCount('accessions as quantity'),
+            'acquisition_mode',
         ])->get()->makeHidden('pivot');
 
         return $this->response(data: $data);

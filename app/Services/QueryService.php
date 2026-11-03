@@ -20,7 +20,7 @@ class QueryService
         return [
             'search' => trim($request->query('query', '')),
             'sort' => $sort !== '' ? $sort : 'created_at',
-            'order' => in_array($order, ['asc', 'desc'], true) ? $order : 'desc',
+            'order' => in_array($order, ['asc', 'desc'], true) ? $order : 'asc',
             'page' => $request->integer('page', 1),
             'per_page' => $perPage,
         ];

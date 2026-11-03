@@ -8,7 +8,6 @@ use App\Models\Acquisition;
 use App\Services\AcquisitionService;
 use App\Services\QueryService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 class AcquisitionController extends Controller
 {
@@ -27,7 +26,8 @@ class AcquisitionController extends Controller
         $filters = QueryService::filters($request);
 
         $filters = array_merge($filters, [
-            'acquisition_mode_id' => $request->input('acquisition_mode_id')
+            'acquisition_mode_id' => $request->input('acquisition_mode_id'),
+            'item_id' => $request->input('item_id'),
         ]);
 
         $acquisitions = $this->acquisitionService->index($filters);
@@ -47,7 +47,7 @@ class AcquisitionController extends Controller
      */
     public function show(string $id)
     {
-        $data = Acquisition::with(['receiver', 'acquisitionRequest', 'acquisitionMode'])->find($id);
+        $data = Acquisition::with(['receiver', 'acquisition_request', 'acquisition_mode'])->find($id);
 
         if (! $data) {
             return $this->response(

@@ -42,10 +42,10 @@ import AuthorSection from '@/app/librarian/collections/catalog/forms/sections/Au
 import BaseSection from '@/app/librarian/collections/catalog/forms/sections/BaseSection.vue'
 import PhysicalDescriptionSection from '@/app/librarian/collections/catalog/forms/sections/PhysicalDescriptionSection.vue'
 import SerialSection from '@/app/librarian/collections/catalog/forms/sections/SerialSection.vue'
-import ViewItemDrafts from '@/app/librarian/collections/catalog/modals/ViewItemDrafts.vue'
+import ViewItemDrafts from '@/app/librarian/collections/catalog/forms/modals/ViewItemDrafts.vue'
 
 const pop = usePopup()
-const item = useItemStore()
+const item = itemStore()
 const drafts = draftStore()
 const route = useRoute()
 

@@ -98,16 +98,16 @@ Route::group(['prefix' => '/landing'], function () {
 Route::group(['prefix' => '/accession'], function () {
     // Get
     Route::get('', [AccessionController::class, 'index']);
-    Route::get('/{id}', [AccessionController::class, 'show']);
+    Route::get('{id}', [AccessionController::class, 'show']);
 
     // Post
     Route::post('', [AccessionController::class, 'store'])->middleware('throttle:write');
 
     // Update
-    Route::put('/{acquisition}', [AccessionController::class, 'update'])->middleware('throttle:write');
+    Route::put('{accession}', [AccessionController::class, 'update'])->middleware('throttle:write');
 
     // Delete
-    Route::delete('/{acquisition}', [AccessionController::class, 'destroy'])->middleware('throttle:delete');
+    Route::delete('{accession}', [AccessionController::class, 'destroy'])->middleware('throttle:delete');
 });
 
 // ============== ACQUISITION ROUTE ==================
@@ -137,7 +137,7 @@ Route::group(['prefix' => '/acquisition-lines'], function () {
 
     // Update
     Route::put('/{acquisitionLine}', [AcquisitionLinesController::class, 'update'])->middleware('throttle:write');
-    
+
     // Delete
     Route::delete('/{id}', [AcquisitionLinesController::class, 'destroy'])->middleware('throttle:write');
 });
@@ -273,8 +273,6 @@ Route::group(['prefix' => '/items'], function () {
 
     // Route::get('{catalogId}', [CatalogController::class, 'show']);
     Route::get('{item}', [ItemController::class, 'show']);
-    Route::get('{item}/accessions', [ItemController::class, 'accessions']);
-    Route::get('{item}/authors', [ItemController::class, 'authors']);
     Route::get('{item}/acquisitions', [ItemController::class, 'acquisitions']);
 
     Route::post('', [ItemController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin,librarian');

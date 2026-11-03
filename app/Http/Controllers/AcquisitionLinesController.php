@@ -52,7 +52,7 @@ class AcquisitionLinesController extends Controller
      */
     public function store(StoreAcquisitionLinesRequest $request)
     {
-        $acquisition = Acquisition::find($request->input('acquisition_id', null));
+        $acquisition = Acquisition::find($request->input('acquisition_id'));
         $item = Item::find($request->input('item_id'));
 
         $line = AcquisitionLines::where('acquisition_id', $acquisition->id)->where('item_id', $item->id)->first();
@@ -62,7 +62,7 @@ class AcquisitionLinesController extends Controller
         }
 
         $data = array_merge($request->validated(), [
-            'unit_price' => $acquisition->acquisitionMode->has_price ? $request->input('unit_price') : null,
+            'unit_price' => $acquisition->acquisition_mode->has_price ? $request->input('unit_price') : null,
             'quantity' => $request->input('quantity'),
         ]);
 

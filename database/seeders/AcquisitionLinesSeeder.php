@@ -25,17 +25,14 @@ class AcquisitionLinesSeeder extends Seeder
 
         foreach ($acquisitions as $acq) {
             for ($i = 0; $i < rand(3, 8); $i++) {
-                $a = $lines->create([
-                    'unit_price' => 0,
+                $lines->create([
+                    'unit_price' => $acq->acquisitionMode->has_price ? rand(500, 1500) : null,
                     'item_id' => $items->random(),
                     'acquisition_id' => $acq->id,
+                    'quantity' => rand(3, 10),
                 ]);
-
-                $accession->generateCopies(rand(3, 10), $a->item, $a);
             }
         }
 
     }
 }
-
-// App\Models\Acquisition::query()->whereHas('receiver', fn ($q) => $q->where('id', 1))->pluck('id')

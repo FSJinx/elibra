@@ -25,7 +25,6 @@ export const acquisitionAcquisition = [
             const key = `${to.name as string}:${to.params.id}`
             breadcrumb.set(key, `Viewing Acquisition: ${acquisition.currentData?.reference}`)
           }
-
           return true
         },
       },

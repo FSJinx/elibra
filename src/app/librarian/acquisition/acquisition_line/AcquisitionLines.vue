@@ -18,7 +18,8 @@
 
     <div class="flex-1 flex flex-col gap-3 overflow-y-auto p-5">
       <Card class="">
-        <CardBody class="grid grid-cols-4 gap-2">
+        <CardHeader>Acquisition Information</CardHeader>
+        <CardBody class="grid grid-cols-3 gap-5" :class="[acquisition.currentData?.acquisition_mode?.has_price ? 'xl:grid-cols-5' : 'xl:grid-cols-4']">
           <Control col>
             <Label class="uppercase text-sm text-muted-foreground tracking-wide">Acquisition From</Label>
             <Title>{{ acquisition.currentData?.dealer }}</Title>
@@ -35,6 +36,10 @@
             <Label class="uppercase text-sm text-muted-foreground tracking-wide">Added By</Label>
             <Title>{{ acquisition.currentData?.receiver?.name?.full }}</Title>
           </Control>
+          <Control col v-if="acquisition.currentData?.acquisition_mode?.has_price">
+            <Label class="uppercase text-sm text-muted-foreground tracking-wide">Total Acquisition Price</Label>
+            <Title>{{ parse.toMoney(totalAcquisitionPrice) }}</Title>
+          </Control>
         </CardBody>
       </Card>
 
@@ -45,6 +50,7 @@
             <Th class="text-left">Title</Th>
             <Th>Quantity</Th>
             <Th v-if="acquisition.currentData?.acquisition_mode?.has_price">Unit Price</Th>
+            <Th v-if="acquisition.currentData?.acquisition_mode?.has_price">Total Price</Th>
             <Th>Actions</Th>
           </tr>
         </Thead>
@@ -56,7 +62,8 @@
               <p class="text-xs text-muted-foreground">{{ item.item.subtitle }}</p>
             </Td>
             <Td :data="item.quantity" />
-            <Td v-if="acquisition.currentData?.acquisition_mode?.has_price" :data="parse.toMoney(item.unitPrice)" />
+            <Td v-if="acquisition.currentData?.acquisition_mode?.has_price" :data="parse.toMoney(item.unit_price)" />
+            <Td v-if="acquisition.currentData?.acquisition_mode?.has_price" :data="parse.toMoney((item.unit_price ?? 0) * (item.quantity ?? 0))" />
             <Td class="space-x-2">
               <EditItemAcquisition :data="item" :acquisition="acquisition.currentData" @refresh="search" />
               <Button class="hover:text-danger" size="sm" @click="del(item)">Delete</Button>
@@ -81,6 +88,18 @@ const lines = acquisitionLinesStore()
 
 const pagination = ref<Pagination>()
 const loading = ref<boolean>(false)
+
+const totalAcquisitionPrice = computed(() => {
+  if (!acquisition.currentData?.acquisition_mode?.has_price) return
+
+  let sum = 0
+
+  lines.data?.forEach((i) => {
+    sum += (i.quantity ?? 0) * (i.unit_price ?? 0)
+  })
+
+  return sum
+})
 
 async function search() {
   loading.value = true

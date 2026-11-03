@@ -14,7 +14,7 @@
     <template v-else>
       <slot />
 
-      <tr class="bg-secondary text-muted-foreground font-light" v-if="endOfList">
+      <tr class="bg-secondary text-foreground-secondary font-light border-b border-border" v-if="endOfList">
         <td :colspan="Number(cols)">- Nothing follows -</td>
       </tr>
     </template>

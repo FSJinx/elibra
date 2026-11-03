@@ -6,31 +6,35 @@ use App\Models\Accession;
 use App\Models\AcquisitionLines;
 use App\Models\Item;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use RuntimeException;
 
 class AccessionService
 {
-    public function create(array $data): Accession
+    protected function fields(): array
     {
-        $accession = DB::transaction(function () use ($data) {
-            return Accession::create(
-                Arr::only($data, [
-                    'accession_number',
-                    'status',
-                    'remarks',
+        return (new Accession)->getFillable();
+    }
 
-                    'item_id',
-                    'section_id',
-                    'acquisition_line_id',
-                ])
-            );
+    public function create(array $data): Collection
+    {
+        $quantity = max(1, (int) ($data['quantity'] ?? 1));
+        $attributes = Arr::only($data, self::fields());
 
+        $accessions = DB::transaction(function () use ($quantity, $attributes) {
+            $created = collect();
+
+            for ($i = 0; $i < $quantity; $i++) {
+                $created->push(Accession::create($attributes));
+            }
+
+            return $created;
         });
 
         CacheService::invalidate(CacheService::ACCESSION);
 
-        return $accession;
+        return $accessions;
     }
 
     public function update(Accession $accession, array $data): Accession
@@ -78,12 +82,6 @@ class AccessionService
                 'acquisition_line_id' => $acquisition_line->id,
             ]);
         }
-        // for ($i = 0; $i < $quantity; $i++) {
-        //     Accession::create([
-        //         'item_id' => $item->id,
-        //         'acquisition_line_id' => $acquisition_line->id ?? null,
-        //     ]);
-        // }
     }
 
     private function getAccessionPrefix(Item $item): string

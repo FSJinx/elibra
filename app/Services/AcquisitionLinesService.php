@@ -38,14 +38,11 @@ class AcquisitionLinesService
                 ])
             );
 
-            $quantity = (int) $data['quantity'];
-
-            for ($i = 0; $i < $quantity; $i++) {
-                $this->accessionService->create([
-                    'item_id' => $data['item_id'],
-                    'acquisition_line_id' => $acquisitionLine->id,
-                ]);
-            }
+            $this->accessionService->create([
+                'item_id' => $data['item_id'],
+                'acquisition_line_id' => $acquisitionLine->id,
+                'quantity' => (int) $data['quantity'] ?? 0,
+            ]);
 
             return $acquisitionLine->fresh([
                 'item',

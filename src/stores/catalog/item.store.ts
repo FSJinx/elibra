@@ -1,8 +1,3 @@
-export interface ItemParams extends BaseParams {
-  item_type_id: any
-  item_type_category_id: any
-}
-
 function appendFormData(formData: FormData, key: string, value: unknown): void {
   if (value == null) return
 
@@ -29,19 +24,24 @@ function appendFormData(formData: FormData, key: string, value: unknown): void {
   formData.append(key, String(value))
 }
 
-export const useItemStore = defineStore('item', {
+export const itemStore = defineStore('item', {
   state: () => ({
+    data: null as Item[] | null,
+    currentData: null as Item | null,
+
     url: '/items',
   }),
 
   actions: {
     async fetch(params: Partial<ItemParams>) {
       const res = await get(this.url, params)
+      this.data = res.data.data
       return res
     },
 
     async show(id: any) {
       const res = await get(`${this.url}/${id}`)
+      this.currentData = res.data
       return res
     },
 

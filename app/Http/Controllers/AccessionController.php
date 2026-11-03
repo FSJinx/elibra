@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Accession;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAccessionRequest;
 use App\Http\Requests\UpdateAccessionRequest;
+use App\Models\Accession;
 use App\Services\AccessionService;
 use App\Services\QueryService;
 use Illuminate\Http\Request;
@@ -13,10 +12,12 @@ use Illuminate\Http\Request;
 class AccessionController extends Controller
 {
     protected AccessionService $accessionService;
+
     public function __construct(AccessionService $accessionService)
     {
         $this->accessionService = $accessionService;
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -24,8 +25,13 @@ class AccessionController extends Controller
     {
         $filters = QueryService::filters($request);
 
-        $patron = Accession::query()->with(['item.itemType','item.coverMedia'])
+        $filters = array_merge($filters, [
+            'item_id' => $request->input('item_id'),
+        ]);
+
+        $patron = Accession::query()->with(['item.itemType', 'item.coverMedia'])
             ->when($filters['search'] ?? null, fn ($q, $s) => $q->where('accession_number', 'LIKE', "%$s%"))
+            ->when($filters['item_id'] ?? null, fn ($q, $s) => $q->where('item_id', $s))
             ->paginate(
                 perPage: null
             );
@@ -49,7 +55,10 @@ class AccessionController extends Controller
      */
     public function store(StoreAccessionRequest $request)
     {
-        $accession = $this->accessionService->create($request->validated());
+        $data = array_merge($request->validated(), [
+            'quantity' => $request->input('quantity'),
+        ]);
+        $accession = $this->accessionService->create($data);
 
         return $this->response(
             'success',

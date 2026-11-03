@@ -18,7 +18,7 @@
         </Form>
       </Card>
 
-      <Table :data-length="data?.length" title="Catalog List" subtitle="List of all library materials." :data="pagination" @per_page="apply({ per_page: $event })" @page="apply({ page: $event })">
+      <Table title="Catalog List" subtitle="List of all library materials." :data="pagination" @per_page="apply({ per_page: $event })" @page="apply({ page: $event })">
         <Thead>
           <tr>
             <Th>No</Th>
@@ -32,8 +32,8 @@
           </tr>
         </Thead>
 
-        <Tbody :loading="loading" :data="data">
-          <Tr v-for="(item, index) in data" :key="item.id" :to="{ name: 'librarian.collections.catalog.view', params: { id: item.id } }">
+        <Tbody :loading="loading" :data="items.data">
+          <Tr v-for="(item, index) in items.data" :key="item.id" :to="{ name: 'librarian.collections.catalog.view', params: { id: item.id } }">
             <Td :data="pagination?.from + index" />
 
             <Td>
@@ -66,11 +66,11 @@
 </template>
 
 <script setup lang="ts">
-import CatalogFilter from '@/app/librarian/collections/catalog/modals/CatalogFilter.vue'
+import CatalogFilter from '@/app/librarian/collections/catalog/forms/modals/CatalogFilter.vue'
 import book from '@/assets/images/default_book.png'
 import { backendRoute } from '@/plugins/axios'
 
-const items = useItemStore()
+const items = itemStore()
 const options = optionStore()
 const parse = useParser()
 
@@ -85,7 +85,6 @@ const defaultParams = (): Readonly<ItemParams> => ({
   item_type_category_id: '',
 })
 
-const data = ref<Item[] | null>(null)
 const loading = ref<boolean>(false)
 const params = reactive<ItemParams>(defaultParams())
 const pagination = ref<Pagination>()
@@ -108,7 +107,6 @@ async function search() {
   try {
     const res = await items.fetch(params)
     pagination.value = res.data
-    data.value = res.data.data
   } finally {
     loading.value = false
   }

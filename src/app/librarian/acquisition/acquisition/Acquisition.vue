@@ -31,9 +31,10 @@
         </CardBody>
       </Card>
 
-      <Table class="" title="Recent Acquisitions" subtitle="These are your library's recent acquisitions." :data="pagination" @per_page="params.per_page = $event">
+      <Table class="" title="Recent Acquisitions" subtitle="These are your library's recent acquisitions." :data="pagination" @per_page="params.per_page = $event" @page="params.page = $event">
         <Thead>
           <tr>
+            <Th>No.</Th>
             <Th>Reference No.</Th>
             <Th class="text-left">Dealer</Th>
             <Th>Mode of Acquisition</Th>
@@ -43,8 +44,9 @@
           </tr>
         </Thead>
         <Tbody :data="acquisition.data" :loading="loading" cols="6">
-          <router-link v-for="a in acquisition.data" :to="{ name: 'librarian.acquisition.lines', params: { id: a.id } }" custom v-slot="{ navigate }">
+          <router-link v-for="(a, index) in acquisition.data" :to="{ name: 'librarian.acquisition.lines', params: { id: a.id } }" custom v-slot="{ navigate }">
             <tr class="hover cursor-pointer" @click="navigate" role="button">
+              <Td :data="pagination?.from + index"></Td>
               <Td :data="a.reference"></Td>
               <Td class="text-left" :data="a.dealer"></Td>
               <Td class="capitalize" :data="a.acquisition_mode?.name"></Td>

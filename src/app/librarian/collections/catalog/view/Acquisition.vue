@@ -19,7 +19,7 @@
           <Td>{{ index + 1 }}</Td>
           <Td class="text-left" :data="item.reference" />
           <Td class="text-left" :data="item.dealer" />
-          <Td class="capitalize" :data="item.acquisition_mode" />
+          <Td class="capitalize" :data="item.acquisition_mode?.name" />
           <Td :data="parse.formatDate(item.acquisition_date)" />
           <Td :data="parse.name(item.receiver).full" />
           <Td :data="item.acquisition_lines.quantity" />
@@ -34,8 +34,7 @@
 <script setup lang="ts">
 const props = defineProps<{ data: Item }>()
 
-const { fetchResource } = useItemStore()
-const options = optionStore()
+const { fetchResource } = itemStore()
 const parse = useParser()
 
 const acquisitions = ref<Acquisition[] | null>()
