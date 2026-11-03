@@ -26,7 +26,7 @@ class AcquisitionLinesSeeder extends Seeder
         foreach ($acquisitions as $acq) {
             for ($i = 0; $i < rand(3, 8); $i++) {
                 $lines->create([
-                    'unit_price' => $acq->acquisitionMode->has_price ? rand(500, 1500) : null,
+                    'unit_price' => $acq->acquisition_mode->has_price ? rand(500, 1500) : null,
                     'item_id' => $items->random(),
                     'acquisition_id' => $acq->id,
                     'quantity' => rand(3, 10),

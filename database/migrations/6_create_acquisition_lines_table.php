@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('acquisition_id');
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

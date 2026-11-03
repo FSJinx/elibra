@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\Accession;
 use App\Models\Acquisition;
 use App\Models\AcquisitionLines;
-use App\Models\Item;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use RuntimeException;
@@ -63,120 +62,34 @@ class AcquisitionLinesService
     {
 
         $acquisitionLine = DB::transaction(function () use ($acquisitionLine, $data) {
+            $oldQuantity = Accession::query()->where('acquisition_line_id', $acquisitionLine->id)->count();
+            $newQuantity = $data['quantity'] ?? 0;
 
-            $oldQuantity = (int) $acquisitionLine->quantity;
-            $newQuantity = array_key_exists('quantity', $data)
-                ? (int) $data['quantity']
-                : $oldQuantity;
+            $acquisitionLine->update(Arr::only($data, self::fields()));
 
-            /*
-             * Get new item.
-             */
-            $item = Item::with('itemTypeCategory')
-                ->findOrFail($data['item_id'] ?? $acquisitionLine->item_id);
-
-            /*
-             * Update acquisition line.
-             */
-            $acquisitionLine->update(
-                Arr::only($data, [
-                    'quantity',
-                    'unit_price',
-                    'item_id',
-                    'acquisition_id',
-                ])
-            );
-
-            /*
-             * Update existing accessions.
-             *
-             * We intentionally DO NOT change the
-             * accession_number.
-             */
-            Accession::where(
-                'acquisition_line_id',
-                $acquisitionLine->id
-            )->update([
-                'item_id' => $data['item_id'],
-                'section_id' => $data['section_id'] ?? null,
-            ]);
-
-            /*
-             * ==========================================
-             * QUANTITY INCREASED
-             * ==========================================
-             */
             if ($newQuantity > $oldQuantity) {
-
-                $additionalQuantity = $newQuantity - $oldQuantity;
-
-                /*
-                 * Get prefix.
-                */
-                $prefix = $this->getAccessionPrefix($item);
-
-                /*
-                 * Generate additional accession numbers.
-                 */
-                $accessionNumbers = $this->generateAccessionNumbers($prefix, $additionalQuantity);
-
-                /*
-                 * Create additional accessions.
-                 */
-                foreach ($accessionNumbers as $accessionNumber) {
-
-                    Accession::create([
-                        'accession_number' => $accessionNumber,
-                        'status' => 'available',
-                        'item_id' => $acquisitionLine->item_id,
-                        'section_id' => $data['section_id'],
-                        'acquisition_line_id' => $acquisitionLine->id,
-                    ]);
-                }
-            }
-
-            /*
-             * ==========================================
-             * QUANTITY DECREASED
-             * ==========================================
-             */
-            if ($newQuantity < $oldQuantity) {
-
-                $removeQuantity = $oldQuantity - $newQuantity;
-
-                /*
-                 * Only remove available accessions.
-                 */
-                $accessions = Accession::where(
-                    'acquisition_line_id',
-                    $acquisitionLine->id
-                )
+                $this->accessionService->create([
+                    'item_id' => $acquisitionLine->item_id,
+                    'acquisition_line_id' => $acquisitionLine->id,
+                    'quantity' => $newQuantity - $oldQuantity,
+                ]);
+            } elseif ($newQuantity < $oldQuantity) {
+                $accessions = Accession::where('acquisition_line_id', $acquisitionLine->id)
                     ->where('status', 'available')
                     ->latest('id')
-                    ->limit($removeQuantity)
+                    ->limit($oldQuantity - $newQuantity)
                     ->get();
 
-                /*
-                 * Cannot reduce quantity if some
-                 * accessions are already being used.
-                 */
-                if ($accessions->count() < $removeQuantity) {
-
-                    throw new RuntimeException(
-                        'The quantity cannot be reduced because some accessions are already in use.'
-                    );
-                }
-
-                foreach ($accessions as $accession) {
-                    $accession->delete();
+                foreach ($accessions as $a) {
+                    $this->accessionService->update($a, [
+                        'status' => 'condemned',
+                        'remarks' => 'Condemned from wrong quantity count in acquisition',
+                    ]);
+                    $a->delete();
                 }
             }
 
-            return $acquisitionLine->fresh([
-                'item',
-                'acquisition',
-                'accessions',
-            ]);
+            return $acquisitionLine->fresh(['item', 'acquisition', 'accessions']);
 
         }, 5);
 
@@ -215,7 +128,7 @@ class AcquisitionLinesService
             /*
              * Delete acquisition line.
              */
-            $acquisitionLine->delete();
+        $acquisitionLine->delete();
 
             return true;
         }, 5);

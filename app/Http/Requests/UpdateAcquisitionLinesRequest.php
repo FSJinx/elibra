@@ -35,7 +35,6 @@ class UpdateAcquisitionLinesRequest extends BaseRequest
 
             'item_id' => ['sometimes', 'required', Rule::exists((new Item)->getTable(), 'id')],
             'acquisition_id' => ['sometimes', 'required', Rule::exists((new Acquisition)->getTable(), 'id')],
-            // 'section_id' => ['sometimes', 'nullable', Rule::exists((new Sections)->getTable(), 'id')],
         ];
 
         return $rules;
