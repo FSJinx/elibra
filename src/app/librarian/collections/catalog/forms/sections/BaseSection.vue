@@ -63,7 +63,7 @@
       <!-- Electronic File -->
       <Control id="item-electronic_file" nullable v-if="item_type?.has_electronic_file">
         <Label>Electronic File</Label>
-        <InputFile v-model="form.electronic_file" accept=".pdf,.doc,.docx" :error="getError(errors, 'electronic_file')" :readonly="!editing" />
+        <InputFile v-model="form.electronic_file" accept=".pdf," :error="getError(errors, 'electronic_file')" helper="Please upload PDF files only" :readonly="!editing" />
       </Control>
 
       <!-- Optional Cover Image -->

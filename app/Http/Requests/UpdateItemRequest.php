@@ -77,6 +77,10 @@ class UpdateItemRequest extends BaseRequest
             'authors_present' => ['sometimes', 'boolean'],
 
             'released' => ['sometimes', 'boolean'],
+            'publication_year' => ['sometimes', 'nullable', 'integer', 'between:1000,'.now()->year],
+            'place_of_publication' => ['sometimes', 'string'],
+            'publisher_id' => ['sometimes', 'nullable', 'exists:publishers,id'],
+            'publisher' => ['sometimes'],
         ];
     }
 

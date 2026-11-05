@@ -16,9 +16,17 @@ export const collectionsAcarepo = [
       pop.load()
       try {
         const res = await acarepo.show(to.params.id)
-        crumb.set(`${to.name}:${to.params.id}`, `Currently Cataloging: ${res.data.title}`)
-      } finally {
-        pop.unload()
+        if (acarepo.currentData?.on_catalog) {
+          pop.info('This thesis is already on the catalog')
+          return false
+        } else {
+          crumb.set(`${to.name}:${to.params.id}`, `Currently Cataloging: ${res.data.title}`)
+          pop.unload()
+          return true
+        }
+      } catch (e: any) {
+        pop.error(e.response?.data?.message)
+        return false
       }
     },
   },

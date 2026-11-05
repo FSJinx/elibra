@@ -274,6 +274,7 @@ Route::group(['prefix' => '/items'], function () {
 
     // Post
     Route::post('', [ItemController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin,librarian');
+    
     // Put
     Route::put('{item}', [ItemController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin,librarian');
 });
@@ -448,6 +449,7 @@ Route::group(['prefix' => '/acarepo', 'middleware' => ['jwt.auth']], function ()
     Route::get('{acaRepo}', [AcaRepoController::class, 'show'])->middleware('jwt.auth', 'throttle:read');
 
     Route::post('', [AcaRepoController::class, 'store'])->middleware('throttle:write');
+    Route::post('{acarepo}/catalog', [AcaRepoController::class, 'catalog'])->middleware('throttle:write');
 
     Route::put('{acaRepo}', [AcaRepoController::class, 'update'])->middleware('jwt.auth', 'throttle:write');
     Route::put('{acaRepo}/reject', [AcaRepoController::class, 'reject'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');

@@ -29,7 +29,7 @@ export const itemStore = defineStore('item', {
     data: null as Item[] | null,
     currentData: null as Item | null,
 
-    url: '/items',
+    url: 'items',
   }),
 
   actions: {
@@ -53,26 +53,14 @@ export const itemStore = defineStore('item', {
       return res
     },
 
-    async update(id: string | number, params: Partial<Item>) {
+    async update(id: string | number, params: UpdateItem) {
       const formData = new FormData()
-      const fields = ['title', 'subtitle', 'description', 'call_number', 'electronic_file', 'cover_image', 'keywords', 'edition', 'isbn_issn', 'doi', 'volume', 'issue', 'pages', 'department_id', 'released', 'item_type_id', 'item_type_category_id', 'language_id', 'authors']
-
-      fields.forEach((field) => {
-        const value = params[field]
-        if ((field === 'electronic_file' || field === 'cover_image') && !(value instanceof File)) {
-          return
-        }
-        if (field === 'authors' && Array.isArray(value) && value.length === 0) {
-          formData.append('authors', '[]')
-        } else if (field === 'keywords' && Array.isArray(value) && value.length === 0) {
-          formData.append('keywords', '[]')
-        } else if (value !== undefined) {
-          appendFormData(formData, field, value)
-        }
-      })
+      Object.entries(params).forEach(([key, value]) => appendFormData(formData, key, value))
       formData.append('_method', 'PUT')
 
-      return await post(`${this.url}/${id}`, formData)
+      const res = await post(`${this.url}/${id}`, formData)
+      this.currentData = res.data
+      return res
     },
 
     /**

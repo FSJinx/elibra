@@ -77,20 +77,6 @@ class ItemController extends Controller
         return $this->response(data: $data);
     }
 
-    public function authors(Item $item)
-    {
-        $data = $item->authors()->get();
-
-        return $this->response(data: $data);
-    }
-
-    public function accessions(Item $item)
-    {
-        $data = $item->accessions()->get();
-
-        return $this->response(data: $data);
-    }
-
     public function acquisitions(Item $item)
     {
         $data = $item->acquisitions()->with([

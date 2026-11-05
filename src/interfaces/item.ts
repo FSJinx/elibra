@@ -50,3 +50,4 @@ export interface Item {
 }
 
 export interface StoreItem extends Partial<Item> {}
+export interface UpdateItem extends Partial<Item> {}

@@ -6,12 +6,17 @@ use App\Http\Requests\StoreAcaRepoRequest;
 use App\Http\Requests\UpdateAcaRepoRequest;
 use App\Models\AcaRepo;
 use App\Services\AcaRepoService;
+use App\Services\ItemService;
 use App\Services\QueryService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AcaRepoController extends Controller
 {
-    public function __construct(private AcaRepoService $acaRepoService) {}
+    public function __construct(
+        protected AcaRepoService $acaRepoService,
+        protected ItemService $itemService
+    ) {}
 
     /**
      * Display a listing of the resource.
@@ -87,6 +92,18 @@ class AcaRepoController extends Controller
             $acaRepo->toArray(),
             200
         );
+    }
+
+    public function catalog(AcaRepo $acarepo, Request $request)
+    {
+        DB::transaction(function () use ($acarepo, $request) {
+            $this->itemService->create([...$request->all(), 'library_id' => $request->input('library_id', $this->user()->librarian->library_id ?? null)]);
+            $this->acaRepoService->update($acarepo, [
+                'on_catalog' => true,
+            ]);
+        });
+
+        return $this->response('success', 'Added to catalog successfully', [], 200);
     }
 
     /**
