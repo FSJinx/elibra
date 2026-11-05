@@ -40,7 +40,6 @@ import EditAccession from '@/app/librarian/collections/catalog/modals/EditAccess
 
 const props = defineProps<{ data: Item }>()
 
-const { fetchResource } = itemStore()
 const options = optionStore()
 const parse = useParser()
 const accessions = accessionStore()

@@ -8,7 +8,6 @@
         <p class="mt-1 text-sm text-foreground-secondary" v-if="subtitle">{{ subtitle }}</p>
       </div>
 
-      <p class="text-muted-foreground text-sm">Showing {{ data?.to ?? 0 }} {{ data?.to > 1 ? `records out of ${data?.total ?? 0}` : 'record' }}</p>
       <slot name="header" v-if="$slots.header" />
     </div>
 
@@ -20,19 +19,23 @@
     </div>
 
     <!-- Table Footer -->
-    <div class="flex items-center justify-between w-full sticky bottom-0 bg-background px-5 py-4 border-t border-border" v-if="$slots.footer">
+    <div class="flex items-center justify-between gap-2 w-full sticky bottom-0 bg-background px-5 py-4 border-t border-border" v-if="$slots.footer">
       <div class="flex items-center justify-end gap-3 text-sm">
-        <span>Show</span>
+        <span>Showing</span>
         <Select class="max-w-max" title="Per Page" v-model="per_page">
           <Option value="25">25</Option>
           <Option value="50">50</Option>
           <Option value="75">75</Option>
           <Option value="100">100</Option>
         </Select>
+        <span class="text-muted-foreground text-sm">{{ data?.to > 1 ? `records out of ${data?.total ?? 0}` : 'record' }}</span>
       </div>
 
       <div class="flex items-center gap-2">
         <Button class="not-disabled:hover:text-primary" :disabled="!data?.prev_page_url" @click="changePage(data?.current_page - 1)">Previous</Button>
+        <Select class="max-w-max" title="Page" v-model="page" @onChange="changePage(page)" v-if="data?.current_page">
+          <Option :value="item" v-for="item in data?.last_page">{{ item }}</Option>
+        </Select>
         <Button class="not-disabled:hover:text-primary" :disabled="!data?.next_page_url" @click="changePage(data?.current_page + 1)">Next</Button>
       </div>
     </div>
@@ -54,6 +57,7 @@ const props = withDefaults(defineProps<Props>(), {
   layout: 'auto',
 })
 
+const page = ref(props.data?.current_page)
 const cols = ref(0)
 const table = ref<HTMLTableElement>()
 const tableWrapper = ref<HTMLElement>()

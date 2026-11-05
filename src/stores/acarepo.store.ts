@@ -23,6 +23,7 @@ export const acaRepoStore = defineStore('acarepo', {
 
     async show(id: number) {
       const res = await get(`${this.url}/${id}`)
+      this.currentData = res.data
       return res
     },
 

@@ -22,6 +22,13 @@
           <Label>Status</Label>
           <Select v-model="form.status">
             <Option value="" disabled>Select status</Option>
+            <Option value="available">Available</Option>
+            <Option value="reserved">Reserved</Option>
+            <Option value="borrowed">Borrowed</Option>
+            <Option value="lost">Lost</Option>
+            <Option value="missing">Missing</Option>
+            <Option value="archived">Archived</Option>
+            <Option value="condemned">Condemned</Option>
           </Select>
         </Control>
       </Form>
@@ -78,11 +85,7 @@ async function submit() {
     pop.load()
     try {
       const res = await accession.update(form.value)
-      pop.success(res.message)
-      reset()
-      nextTick()
-      close()
-      emit('refresh')
+      ;(pop.success(res.message), reset(), nextTick(), close(), emit('refresh'))
     } catch (e: any) {
       pop.error(e.response?.data?.message)
     }

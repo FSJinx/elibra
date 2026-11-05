@@ -19,15 +19,17 @@ class AcaRepoController extends Controller
     public function index(Request $request)
     {
         $user = $this->user();
+
         $filters = QueryService::filters($request);
+
         $filters = array_merge($filters, [
             'submitted_by' => $request->input('submitted_by') ?? null,
             'library_id' => $request->input('library_id') ?? $user->librarian->library_id ?? null,
         ]);
 
         $theses = AcaRepo::query()
-            ->when($filters['library_id'] !== null, fn ($q) => $q->where('library_id', $filters['library_id']))
-            ->when($filters['submitted_by'] !== null, fn ($q) => $q->where('submitted_by', $filters['submitted_by']))
+            // ->when($filters['library_id'] ?? null, fn ($q) => $q->where('library_id', $filters['library_id']))
+            // ->when($filters['submitted_by'] ?? null, fn ($q) => $q->where('submitted_by', $filters['submitted_by']))
             ->with(['language', 'program', 'submitter.user:id,last_name,first_name', 'submitter.program', 'library'])
             ->paginate();
 

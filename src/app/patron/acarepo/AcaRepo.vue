@@ -2,7 +2,7 @@
   <div class="size-full flex flex-col sm:max-w-400 px-5 gap-3 mx-auto overflow-hidden">
     <SectionHeader title="AcaRepo" description="Browse your thesis submissions" icon=""></SectionHeader>
 
-    <div class="flex flex-col gap-3">
+    <div class="flex-1 flex flex-col gap-3 overflow-y-auto">
       <Button class="ml-auto" as="link" :to="{ name: 'patron.acarepo.form' }" variant="primary" left-icon="plus-lg">Submit Manuscript</Button>
       <Table title="My Submissions" subtitle="Browse your thesis submissions">
         <Thead>
@@ -28,6 +28,7 @@
             </Td>
           </Tr>
         </Tbody>
+        <template #footer />
       </Table>
     </div>
   </div>

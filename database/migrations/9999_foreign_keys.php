@@ -142,6 +142,12 @@ return new class extends Migration
         ],
 
         //  5. Authority Control
+        [
+            'name' => 'authors',
+            'foreign_columns' => [
+                ['name' => 'user_id', 'references' => 'id', 'on' => 'users', 'onDelete' => 'set null'],
+            ],
+        ],
 
         //  6. Acquisitions and Accessions
         [
