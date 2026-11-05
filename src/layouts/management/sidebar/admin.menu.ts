@@ -1,5 +1,12 @@
 export const adminMenu = [
   {
+    name: 'Account',
+    children: [
+      { path: 'admin.settings.profile', name: 'Profile', icon: 'person-circle' },
+    ],
+  },
+
+  {
     name: 'Dashboard',
     children: [
       { path: 'admin.overview', name: 'Overview', icon: 'speedometer2' },

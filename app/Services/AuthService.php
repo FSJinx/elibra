@@ -30,6 +30,7 @@ class AuthService
             return [];
         }
 
+        $user->loadMissing('profilePicture');
         $campus = null;
         $library = null;
 
@@ -71,6 +72,7 @@ class AuthService
 
         return [
             ...$data,
+            'profile_picture' => $user->profilePicture?->file_path,
             'campus' => $campus,
             'library' => $library,
         ];
