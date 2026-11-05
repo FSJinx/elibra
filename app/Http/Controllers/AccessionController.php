@@ -27,17 +27,19 @@ class AccessionController extends Controller
 
         $filters = array_merge($filters, [
             'item_id' => $request->input('item_id'),
+            'loanable' => $request->input('loanable') ?? false,
         ]);
 
         $patron = Accession::query()->with(['item.itemType', 'item.coverMedia'])
             ->when($filters['search'] ?? null, fn ($q, $s) => $q->where('accession_number', 'LIKE', "%$s%"))
+            ->when($filters['loanable'], fn ($q, $s) => $q->whereNotNull('accession_number')->where('status', 'available'))
             ->when($filters['item_id'] ?? null, fn ($q, $s) => $q->where('item_id', $s))
             ->paginate(
                 perPage: null
             );
 
         return $this->response(
-            message: $patron->isEmpty() ? 'No patrons found' : 'Patrons found',
+            message: $patron->isEmpty() ? 'No available items found' : 'Patrons found',
             data: $patron
         );
     }

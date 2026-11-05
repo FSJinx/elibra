@@ -25,8 +25,8 @@ class StoreCirculationRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'accession_id' => ['required', 'integer', Rule::exists('accessions', 'id')],
-            'patron_id' => ['required', 'integer', Rule::exists('patrons', 'id')],
+            'accession' => ['required', 'integer', Rule::exists('accessions', 'id')],
+            'patron' => ['required', 'integer', Rule::exists('patrons', 'id')],
             'loan_mode_id' => ['required', 'integer', Rule::exists('loan_modes', 'id')],
         ];
     }

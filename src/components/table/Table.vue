@@ -92,5 +92,11 @@ watch(per_page, (val) => {
   emit('per_page', val)
 })
 
+watch(
+  () => props.data?.current_page,
+  (v) => (page.value = v),
+  { immediate: true },
+)
+
 provide('table', { props, cols })
 </script>
