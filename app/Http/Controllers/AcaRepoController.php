@@ -99,7 +99,7 @@ class AcaRepoController extends Controller
         DB::transaction(function () use ($acarepo, $request) {
             $this->itemService->create([...$request->all(), 'library_id' => $request->input('library_id', $this->user()->librarian->library_id ?? null)]);
             $this->acaRepoService->update($acarepo, [
-                'on_catalog' => true,
+                'on_catalog' => now(),
             ]);
         });
 

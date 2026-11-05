@@ -22,7 +22,7 @@ return new class extends Migration
             
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->string('statusRemark')->nullable();
-            $table->boolean('on_catalog')->default(false);
+            $table->timestamp('on_catalog')->nullable();
             
             $table->unsignedBigInteger('submitted_by');
             $table->unsignedBigInteger('library_id');

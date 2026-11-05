@@ -22,8 +22,11 @@
             </Td>
             <Td class="max-w-xs">
               <template v-if="item.status === 'approved'">
-                <p class="text-wrap" v-if="item.on_catalog">Your thesis is now on the official catalog. You and other users can now browse the manuscript through the OPAC.</p>
+                <p class="text-wrap" v-if="item.on_catalog">Your thesis is now on the official catalog. Everyone can now browse the manuscript through the OPAC.</p>
                 <p class="text-wrap" v-else="item.on_catalog">Your thesis is approved and is pending to be released in the catalog.</p>
+              </template>
+              <template v-else>
+                <p class="text-wrap">{{ item.statusRemark ?? 'Your submission has been rejected' }}</p>
               </template>
             </Td>
           </Tr>
