@@ -30,7 +30,7 @@
           </tr>
         </Thead>
         <Tbody :data="circulation.data" :loading="loading" error-message="No active borrowings yet, lend an item to start managing borrowings.">
-          <Tr v-for="(item, index) in circulation.data" :key="index">
+          <Tr v-for="(item, index) in circulation.data" :key="item.id">
             <Td :data="index + 1" />
             <Td :data="item.accession?.accession_number" />
             <Td :data="item.accession?.item?.title" />
@@ -47,9 +47,9 @@
             <Td :data="item.status" />
             <Td :data="item.fine_charged" />
             <Td>
-              <ReturnButton :data="item" />
-              <RenewButton :data="item" />
-              <DeleteButton :data="item" />
+              <ReturnButton :data="item" @refresh="search" />
+              <RenewButton :data="item" @refresh="search" />
+              <DeleteButton :data="item" @refresh="search" />
             </Td>
           </Tr>
         </Tbody>

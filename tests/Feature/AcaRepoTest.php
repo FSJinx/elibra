@@ -143,6 +143,67 @@ class AcaRepoTest extends TestCase
             ->assertJsonPath('data.data.0.submitter.program.name', 'Computer Science');
     }
 
+    public function test_patron_can_resubmit_their_rejected_submission(): void
+    {
+        (require database_path('migrations/2_create_patrons_table.php'))->up();
+        DB::table('languages')->insert(['id' => 1]);
+        DB::table('users')->insert(['id' => 7, 'role' => 'patron', 'campus_id' => 5]);
+        $patron = Patron::create(['user_id' => 7, 'patron_type_id' => 1, 'program_id' => null]);
+        $record = AcaRepo::create([
+            'title' => 'Rejected submission',
+            'category' => 'ut',
+            'description' => 'Original abstract.',
+            'keywords' => ['original'],
+            'electronic_file' => 'aca-repo/files/manuscript.pdf',
+            'library_id' => 1,
+            'language_id' => 1,
+            'submitted_by' => $patron->id,
+            'status' => 'rejected',
+            'statusRemark' => 'Please revise the abstract.',
+            'on_catalog' => false,
+        ]);
+        $this->actingAs((new User(['role' => 'patron', 'campus_id' => 5]))->forceFill(['id' => 7]), 'api');
+
+        $this->post("/api/acarepo/{$record->id}", [
+            '_method' => 'PUT',
+            'title' => 'Revised submission',
+            'category' => 'gt',
+            'description' => 'Revised abstract.',
+            'keywords' => ['revised', 'research'],
+            'electronic_file' => UploadedFile::fake()->create('revised-manuscript.pdf', 100, 'application/pdf'),
+            'library_id' => 1,
+            'language_id' => 1,
+            'status' => 'approved',
+            'on_catalog' => true,
+        ])->assertOk()
+            ->assertJsonPath('data.title', 'Revised submission')
+            ->assertJsonPath('data.status', 'pending')
+            ->assertJsonPath('data.statusRemark', null)
+            ->assertJsonPath('data.on_catalog', false);
+
+        Storage::disk('public')->assertExists($this->get("/api/acarepo/{$record->id}")->json('data.electronic_file'));
+    }
+
+    public function test_patron_cannot_resubmit_another_patrons_submission(): void
+    {
+        (require database_path('migrations/2_create_patrons_table.php'))->up();
+        DB::table('users')->insert(['id' => 7, 'role' => 'patron', 'campus_id' => 5]);
+        Patron::create(['user_id' => 7, 'patron_type_id' => 1, 'program_id' => null]);
+        $record = AcaRepo::create([
+            'title' => 'Another patron submission',
+            'category' => 'ut',
+            'description' => 'Original abstract.',
+            'keywords' => ['original'],
+            'electronic_file' => 'aca-repo/files/manuscript.pdf',
+            'library_id' => 1,
+            'submitted_by' => 2,
+            'status' => 'rejected',
+        ]);
+        $this->actingAs((new User(['role' => 'patron']))->forceFill(['id' => 7]), 'api');
+
+        $this->putJson("/api/acarepo/{$record->id}", [])->assertForbidden();
+    }
+
     public function test_patron_cannot_manage_submissions(): void
     {
         $record = AcaRepo::create([

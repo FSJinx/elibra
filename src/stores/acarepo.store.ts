@@ -32,7 +32,7 @@ export const acaRepoStore = defineStore('acarepo', {
     },
 
     async update(payload: UpdateAcaRepo) {
-      const res = await put(`${this.url}/${payload.id}`, payload, { headers: { 'Content-Type': 'multipart/form-data' } })
+      const res = await post(`${this.url}/${payload.id}`, { ...payload, _method: 'PUT' }, { headers: { 'Content-Type': 'multipart/form-data' } })
       return res
     },
 

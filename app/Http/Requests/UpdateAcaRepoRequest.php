@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\AcaRepo;
 use Illuminate\Contracts\Validation\ValidationRule;
 
 class UpdateAcaRepoRequest extends StoreAcaRepoRequest
@@ -13,7 +14,21 @@ class UpdateAcaRepoRequest extends StoreAcaRepoRequest
     {
         $user = $this->user();
 
-        return $user !== null && ($user->isSuperAdmin() || $user->isAdmin() || $user->isLibrarian());
+        if ($user === null) {
+            return false;
+        }
+
+        if ($user->isSuperAdmin() || $user->isAdmin() || $user->isLibrarian()) {
+            return true;
+        }
+
+        $acaRepo = $this->route('acaRepo');
+        $patron = $user->isPatron() ? $user->patron : null;
+
+        return $acaRepo instanceof AcaRepo
+            && $patron !== null
+            && (int) $acaRepo->submitted_by === (int) $patron->id
+            && $acaRepo->status === 'rejected';
     }
 
     /**

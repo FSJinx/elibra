@@ -11,10 +11,11 @@
             <Th>Date Submitted</Th>
             <Th>Status</Th>
             <Th>Remarks</Th>
+            <Th>Actions</Th>
           </tr>
         </Thead>
         <Tbody :data="data" :loading="loading">
-          <Tr v-for="(item, index) in data" :key="index">
+          <Tr v-for="item in data" :key="item.id">
             <Td class="text-left text-wrap" :data="item.title" />
             <Td :data="parse.formatDateAgo(item.created_at)" />
             <Td>
@@ -25,6 +26,10 @@
                 <p class="text-wrap" v-if="item.on_catalog">Your thesis is now on the official catalog. You and other users can now browse the manuscript through the OPAC.</p>
                 <p class="text-wrap" v-else="item.on_catalog">Your thesis is approved and is pending to be released in the catalog.</p>
               </template>
+              <p v-else-if="item.status === 'rejected'" class="text-wrap">{{ item.statusRemark }}</p>
+            </Td>
+            <Td>
+              <EditSubmission v-if="item.status === 'rejected'" :data="item" @refresh="fetch" />
             </Td>
           </Tr>
         </Tbody>
@@ -35,10 +40,12 @@
 
 <script setup lang="ts">
 import { AcaRepo } from '@/interfaces/acarepo'
+import EditSubmission from '@/app/patron/acarepo/modals/EditSubmission.vue'
 
 const acarepo = acaRepoStore()
 const parse = useParser()
 const auth = authStore()
+const pop = usePopup()
 
 const data = ref<AcaRepo[] | null>(null)
 const pagination = ref<Pagination>()
@@ -50,6 +57,8 @@ async function fetch() {
     const res = await acarepo.fetch({ submitted_by: auth?.user?.patron?.id })
     data.value = res.data?.data
     pagination.value = res?.data
+  } catch (e: any) {
+    await pop.error(e?.response?.data?.message ?? 'Unable to load your submissions.')
   } finally {
     loading.value = false
   }

@@ -100,7 +100,17 @@ class AcaRepoController extends Controller
      */
     public function update(UpdateAcaRepoRequest $request, AcaRepo $acaRepo)
     {
-        $acaRepo = $this->acaRepoService->update($acaRepo, $request->validated());
+        $data = $request->validated();
+        if ($request->user()->isPatron()) {
+            $data = [
+                ...$data,
+                'status' => 'pending',
+                'statusRemark' => null,
+                'on_catalog' => false,
+            ];
+        }
+
+        $acaRepo = $this->acaRepoService->update($acaRepo, $data);
 
         return $this->response(
             'success',
