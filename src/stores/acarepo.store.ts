@@ -23,11 +23,17 @@ export const acaRepoStore = defineStore('acarepo', {
 
     async show(id: number) {
       const res = await get(`${this.url}/${id}`)
+      this.currentData = res.data
       return res
     },
 
     async create(payload: Partial<StoreAcaRepo>) {
       const res = await post(this.url, payload, { headers: { 'Content-Type': 'multipart/form-data' } })
+      return res
+    },
+
+    async catalog(item: AcaRepo | null, payload: StoreItem) {
+      const res = await post(`${this.url}/${item?.id}/catalog`, payload)
       return res
     },
 

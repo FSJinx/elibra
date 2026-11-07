@@ -41,15 +41,7 @@ class AccessionService
     {
         $accession = DB::transaction(function () use ($accession, $data) {
             $accession->update(
-                Arr::only($data, [
-                    'accession_number',
-                    'status',
-                    'remarks',
-
-                    'item_id',
-                    'section_id',
-                    'acquisition_line_id',
-                ])
+                Arr::only($data, (new Accession)->getFillable())
             );
 
             return $accession->fresh();

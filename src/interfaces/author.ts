@@ -1,3 +1,5 @@
+export interface AuthorParams extends Partial<BaseParams> {}
+
 export interface Author {
   id: any
   last_name: string
@@ -7,5 +9,7 @@ export interface Author {
 
   authorship: Authorship
 
-  [key:string]: any
+  [key: string]: any
 }
+
+export interface StoreAuthor extends Partial<Author> {}

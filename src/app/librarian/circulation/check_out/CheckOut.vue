@@ -21,13 +21,13 @@ import CheckPatron from '@/app/librarian/circulation/check_out/CheckPatron.vue'
 
 const pop = usePopup()
 
-const borrowInfo = (): Borrow => ({
+const borrowInfo = (): CheckOut => ({
   patron: null,
   accessions: null,
   loan_mode_id: ''
 })
 
-const form = ref<Borrow>(borrowInfo())
+const form = ref<CheckOut>(borrowInfo())
 
 function clear() {
   form.value = borrowInfo()

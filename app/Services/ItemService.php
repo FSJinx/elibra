@@ -15,34 +15,17 @@ class ItemService
 {
     public function __construct(private MediaService $mediaService) {}
 
+    protected function fillables(): array
+    {
+        return (new Item)->getFillable();
+    }
+
     public function create(array $data): Item
     {
         return DB::transaction(function () use (&$data): Item {
             $this->saveElectronicFile($data);
 
-            $item = Item::create(Arr::only($data, [
-                'title',
-                'subtitle',
-                'description',
-                'call_number',
-                'electronic_file',
-                'keywords',
-                'edition',
-                'isbn_issn',
-                'doi',
-                'volume',
-                'issue',
-                'pages',
-                'department_id',
-                'item_type_id',
-                'item_type_category_id',
-                'library_id',
-                'language_id',
-                'released',
-                'publisher_id',
-                'publication_year',
-                'place_of_publication',
-            ]));
+            $item = Item::create(Arr::only($data, self::fillables()));
 
             if (isset($data['authors'])) {
                 $item->syncAuthors($data['authors']);
@@ -71,28 +54,7 @@ class ItemService
                 unset($data['electronic_file']);
             }
 
-            $item->update(Arr::only($data, [
-                'title',
-                'subtitle',
-                'description',
-                'call_number',
-                'electronic_file',
-                'keywords',
-                'edition',
-                'isbn_issn',
-                'doi',
-                'volume',
-                'issue',
-                'pages',
-                'department_id',
-                'item_type_id',
-                'item_type_category_id',
-                'language_id',
-                'released',
-                'publisher_id',
-                'publication_year',
-                'place_of_publication',
-            ]));
+            $item->update(Arr::only($data, self::fillables()));
 
             if (array_key_exists('authors', $data) || array_key_exists('authors_present', $data)) {
                 $item->syncAuthors($data['authors'] ?? []);
@@ -102,7 +64,7 @@ class ItemService
 
             IndexCatalogItemJob::dispatch($item->id)->afterCommit();
 
-            return $item->fresh(['coverMedia', 'authors']);
+            return $item->fresh(['coverMedia', 'authors', 'publisher']);
         });
 
         if ($replacingElectronicFile && $oldElectronicFile) {

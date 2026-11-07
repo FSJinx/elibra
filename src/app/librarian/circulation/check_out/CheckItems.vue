@@ -50,6 +50,7 @@ const pagination = ref<Pagination>()
 const loading = ref<boolean>(false)
 const params = ref<Partial<AccessionParams>>({
   query: '',
+  loanable: true,
 })
 
 async function search() {

@@ -40,7 +40,8 @@
               <RejectSubmission :data="item" @refresh="search" />
             </Td>
             <Td v-if="item.status === 'approved'">
-              <Button variant="primary" left-icon="plus-lg" size="sm">Add to Catalog</Button>
+              <p class="text-muted-foreground" v-if="item.on_catalog">Added to Catalog</p>
+              <Button v-else as="link" :to="{ name: 'librarian.collections.acarepo.catalog', params: { id: item.id } }" variant="primary" left-icon="plus-lg" size="sm">Add to Catalog</Button>
             </Td>
             <Td v-if="item.status === 'rejected'" :data="null" />
           </tr>

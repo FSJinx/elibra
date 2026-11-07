@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateAuthorRequest;
 use App\Models\Author;
 use App\Models\Item;
 use App\Services\AuthorService;
+use App\Services\QueryService;
 use Illuminate\Http\Request;
 
 class AuthorController extends Controller
@@ -23,26 +24,15 @@ class AuthorController extends Controller
      */
     public function index(Request $request)
     {
-        $query = trim((string) $request->input('query'));
+        $filters = QueryService::filters($request);
 
         $authors = Author::query()
-            ->when($query !== '', function ($q) use ($query) {
-                $search = "%{$query}%";
-
-                $q->where(function ($q) use ($search) {
-                    $q->where('first_name', 'LIKE', $search)
-                        ->orWhere('last_name', 'LIKE', $search);
-                });
-            })
-            ->get();
-
-        if ($authors->isEmpty()) {
-            return $this->response('error', 'No matching authors. Try adding one.', []);
-        }
+            ->when($filters['search'] ?? null, fn ($q, $s) => $q->where('first_name', 'LIKE', "%$s%")->orWhere('last_name', 'LIKE', "%$s%"))
+            ->paginate();
 
         return $this->response(
             'success',
-            'Authors retrieved successfully',
+            $authors->isEmpty() ? 'No authors retrieved' : 'Authors retrieved successfully',
             $authors->toArray(),
             200
         );
@@ -70,13 +60,12 @@ class AuthorController extends Controller
 
     /**
      * Display the specified resource.
-    */
+     */
     public function show(Request $request)
     {
         $query = trim((string) $request->input('query'));
 
         $item = Item::query();
-        
 
         if ($query === '') {
             return $this->response('error', 'Please enter an author name.', [], 422);

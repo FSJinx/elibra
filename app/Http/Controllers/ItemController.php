@@ -45,8 +45,9 @@ class ItemController extends Controller
                     return $q->where(function ($qq) use ($search) {
                         return $qq->where('title', 'LIKE', "%{$search}%")
                             ->orWhere('subtitle', 'LIKE', "%{$search}%")
-                            ->orWhereHas('accessions', fn ($qq2) => $qq2->where('accession_number', 'LIKE', "%{$search}%")
-                            );
+                            ->orWhere('isbn_issn', 'LIKE', "%{$search}%")
+                            ->orWhereHas('authors', fn ($a) => $a->whereRaw("CONCAT_WS(' ', first_name, last_name) LIKE ?", ["%{$search}%"])->orWhereRaw("CONCAT_WS(' ', last_name, first_name) LIKE ?", ["%{$search}%"]))
+                            ->orWhereHas('accessions', fn ($qq2) => $qq2->where('accession_number', 'LIKE', "%{$search}%"));
                     });
                 });
 
@@ -73,20 +74,6 @@ class ItemController extends Controller
             }
 
         );
-
-        return $this->response(data: $data);
-    }
-
-    public function authors(Item $item)
-    {
-        $data = $item->authors()->get();
-
-        return $this->response(data: $data);
-    }
-
-    public function accessions(Item $item)
-    {
-        $data = $item->accessions()->get();
 
         return $this->response(data: $data);
     }

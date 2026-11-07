@@ -92,13 +92,6 @@ return new class extends Migration
             ],
         ],
         [
-            'name' => 'item_publishers',
-            'foreign_columns' => [
-                ['name' => 'publisher_id', 'references' => 'id', 'on' => 'publishers', 'onDelete' => 'set null'],
-                ['name' => 'item_id', 'references' => 'id', 'on' => 'items', 'onDelete' => 'cascade'],
-            ],
-        ],
-        [
             'name' => 'items',
             'foreign_columns' => [
                 ['name' => 'department_id', 'references' => 'id', 'on' => 'departments', 'onDelete' => 'set null'],
@@ -142,6 +135,12 @@ return new class extends Migration
         ],
 
         //  5. Authority Control
+        [
+            'name' => 'authors',
+            'foreign_columns' => [
+                ['name' => 'user_id', 'references' => 'id', 'on' => 'users', 'onDelete' => 'set null'],
+            ],
+        ],
 
         //  6. Acquisitions and Accessions
         [

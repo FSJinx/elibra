@@ -4,27 +4,76 @@
   <Modal ref="modal" size="large" position="top">
     <ModalHeader use-default-layout title="Add Authors" subtitle="Add authors that contributed into creating this catalog." icon="person-add" />
 
-    <ModalBody class="flex flex-col gap-5 p-5 overflow-hidden!">
-      <Form class="flex items-center justify-end gap-3" @submit="search">
-        <Input id="search-author" class="w-full" type="text" placeholder="Search for author by last name or first name..." required v-model="query" :disabled="loading" />
-        <Button type="submit" variant="primary" :loading="loading">Search</Button>
-      </Form>
+    <ModalBody class="flex flex-col gap-3 p-5 overflow-hidden!">
+      <div class="flex items-center gap-2">
+        <Form class="flex items-center justify-end gap-2 w-full" @submit="search" v-if="!creatingNew">
+          <Input id="search-author" class="w-full" type="text" placeholder="Search for author by last name or first name..." required v-model="params.query" :disabled="loading" />
+          <Button type="submit" :loading="loading">Search</Button>
+        </Form>
+        <Button class="ml-auto" :class="[`hover:text-${creatingNew ? 'danger' : 'primary'}`]" :left-icon="creatingNew ? 'x-lg' : 'plus-lg'" @click="toggleCreate">{{ creatingNew ? 'Cancel' : 'Add New' }}</Button>
+      </div>
 
-      <div class="flex-1 flex flex-col gap-5 overflow-hidden">
-        <div class="" v-if="searchQuery">
+      <Card class="" v-if="creatingNew">
+        <CardHeader>New Author Form</CardHeader>
+        <CardBody>
+          <Form class="flex flex-col gap-3" id="new-author" @submit="submit">
+            <p class="uppercase tracking-wide text-foreground-secondary font-semibold text-sm">Author Information</p>
+            <Control id="author-last_name" col>
+              <Label>Last Name</Label>
+              <Input type="text" placeholder="e.g. Dela Cruz" v-model="form.last_name" />
+            </Control>
+            <Control id="author-first_name" col>
+              <Label>First Name</Label>
+              <Input type="text" placeholder="e.g. Juan" v-model="form.first_name" />
+            </Control>
+            <Control id="author-middle_name" col>
+              <Label>Middle Initial</Label>
+              <Input type="text" placeholder="e.g. A" v-model="form.middle_name" max="2" />
+            </Control>
+            <Control id="author-suffix" col>
+              <Label>Suffix</Label>
+              <Select title="Suffix" v-model="form.suffix">
+                <Option value="" selected>No suffix</Option>
+                <Option value="jr">Jr.</Option>
+                <Option value="sr">Sr.</Option>
+                <Option value="i">I</Option>
+                <Option value="ii">II</Option>
+                <Option value="iii">III</Option>
+              </Select>
+            </Control>
+          </Form>
+        </CardBody>
+        <CardFooter class="flex justify-end">
+          <Button form="new-author" variant="success" type="submit">Create</Button>
+        </CardFooter>
+      </Card>
+
+      <div class="flex-1 flex flex-col gap-5 overflow-hidden" v-else>
+        <div class="" v-if="query">
           <h3 class="text-lg font-semibold">Showing result for</h3>
-          <p class="text-italic">"{{ searchQuery }}"</p>
+          <p class="text-italic">"{{ query }}"</p>
         </div>
 
-        <Card class="flex-1 flex overflow-y-auto p-0!">
-          <div class="flex flex-col w-full divide-y divide-border">
-            <div class="m-auto p-10" v-if="loading"><Spinner /></div>
-            <p class="p-10 text-center text-muted-foreground" v-else-if="!authors?.length">There's nothing here.</p>
-            <template v-for="(a, index) in authors" v-else>
-              <button class="flex p-5 hover:bg-secondary cursor-pointer disabled:bg-muted disabled:pointer-events-none" @click="addAuthor(a)" v-if="!selectedAuthors.includes(a)">{{ (index as number) + 1 }}. {{ a.last_name }}, {{ a.first_name }}</button>
-            </template>
-          </div>
-        </Card>
+        <Table title="List of Authors" subtitle="Select from the list of authors">
+          <Thead>
+            <tr>
+              <Th>No</Th>
+              <Th class="text-left">Name</Th>
+              <Th>Actions</Th>
+            </tr>
+          </Thead>
+          <Tbody :loading="loading" :data="authors.data">
+            <Tr v-for="(item, index) in authors.data" :key="index">
+              <Td :data="pagination?.from + index" />
+              <Td class="text-left" :data="item.name?.full" />
+              <Td>
+                <p v-if="selectedAuthors.some((i) => i.id === item.id)">Selected</p>
+                <Button v-else variant="info" size="sm" @click="addAuthor(item)">Select</Button>
+              </Td>
+            </Tr>
+          </Tbody>
+          <template #footer />
+        </Table>
       </div>
     </ModalBody>
   </Modal>
@@ -33,43 +82,46 @@
 <script setup lang="ts">
 import type Modal from '@/components/my/Modal.vue'
 
+const pop = usePopup()
+const authors = useAuthorStore()
+
 const modal = ref<InstanceType<typeof Modal>>()
+const query = ref()
+const pagination = ref<Pagination>()
+const loading = ref<boolean>(false)
+const params = ref<AuthorParams>({
+  query: '',
+})
 const selectedAuthors = defineModel<Author[]>({ default: () => [] })
 
-const query = ref()
-const searchQuery = ref()
-const loading = ref<boolean>(false)
-const authors = computed(() => {
-  const selectedIds = new Set(selectedAuthors.value.map((s) => s.id))
-  return searchedAuthors.value?.filter((a) => !selectedIds.has(a.id))
+const defaultForm = (): StoreAuthor => ({
+  last_name: '',
+  first_name: '',
+  middle_name: '',
 })
-const searchedAuthors = ref<Author[] | null>()
-
-const pop = usePopup()
-const author = useAuthorStore()
+const form = ref<StoreAuthor>(defaultForm())
+const creatingNew = ref<boolean>(false)
 
 function open() {
   query.value = ''
-  searchQuery.value = ''
-  searchedAuthors.value = null
+  params.value.query = ''
+  Object.assign(form, defaultForm())
+  creatingNew.value = false
+  search()
   modal.value?.open()
 }
 
 async function search() {
-  console.log('Searched')
-
-  searchedAuthors.value = null
   loading.value = true
-  searchQuery.value = query.value
+  query.value = params.value?.query
   try {
-    const res = await get('authors', { query: query.value })
-    searchedAuthors.value = res.data
-    return res
+    const res = await authors.fetch(params.value)
+    pagination.value = res.data
   } catch (e: any) {
     throw e
   } finally {
     loading.value = false
-    query.value = ''
+    params.value.query = ''
   }
 }
 
@@ -80,5 +132,28 @@ async function addAuthor(a: Author) {
     selectedAuthors.value = [...selectedAuthors.value, a]
   }
   modal.value?.close()
+}
+
+async function toggleCreate() {
+  if (creatingNew.value) {
+    creatingNew.value = false
+  } else {
+    creatingNew.value = true
+  }
+}
+
+async function submit() {
+  const confirm = await pop.confirm({ text: "Create new author and add as this catalog's author?" })
+
+  if (confirm.isConfirmed) {
+    pop.load()
+    try {
+      const res = await authors.create(form.value)
+      pop.success(res.message)
+      addAuthor({ ...res.data, authorship_id: '' })
+    } catch (e: any) {
+      pop.error(e.response?.data?.message)
+    }
+  }
 }
 </script>

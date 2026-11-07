@@ -27,7 +27,7 @@ class UpdateAccessionRequest extends BaseRequest
     public function rules(): array
     {
         $rules = [
-            'accession_number' => ['sometimes', 'nullable', 'string', 'max:255', 'unique:accessions,accession_number,'.$this->route('accession')],
+            'accession_number' => ['required', Rule::unique('accessions', 'accession_number')->ignore($this->route('accession'))],
             'status' => ['sometimes', 'required', Rule::in(['available', 'reserved', 'on_load', 'lost', 'missing', 'archived', 'condemned'])],
             'remarks' => ['sometimes', 'nullable', 'string', 'max:255'],
 
