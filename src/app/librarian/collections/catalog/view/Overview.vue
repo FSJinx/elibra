@@ -27,6 +27,9 @@
       <!-- BASIC INFORMATION -->
       <BaseSection v-model="form" :editing="editing" />
 
+      <!-- PUBLICATION INFORMATION -->
+      <PublicationSection v-model="form" :editing="editing" />
+
       <!-- PHYSICAL DESCRIPTION INFORMATION -->
       <PhysicalDescriptionSection v-model="form" :editing="editing" />
 
@@ -59,6 +62,7 @@ import AuthorityControlSection from '@/app/librarian/collections/catalog/forms/s
 import AuthorSection from '@/app/librarian/collections/catalog/forms/sections/AuthorSection.vue'
 import BaseSection from '@/app/librarian/collections/catalog/forms/sections/BaseSection.vue'
 import PhysicalDescriptionSection from '@/app/librarian/collections/catalog/forms/sections/PhysicalDescriptionSection.vue'
+import PublicationSection from '@/app/librarian/collections/catalog/forms/sections/PublicationSection.vue'
 import SerialSection from '@/app/librarian/collections/catalog/forms/sections/SerialSection.vue'
 import book from '@/assets/images/default_book.png'
 

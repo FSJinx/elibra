@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
 
             // ========= DEVELOPMENT SEEDS =========
 
+            PublisherSeeder::class,
             LoanModeSeeder::class,
             CampusSeeder::class,
             LibrarySeeder::class,

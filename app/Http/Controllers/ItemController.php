@@ -19,87 +19,7 @@ class ItemController extends Controller
         $this->itemService = $itemService;
     }
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
-    {
-        $this->authorize('viewAny', Item::class);
-
-        // $user = $request->user();
-        $user = $this->user();
-
-        $filters = QueryService::filters($request);
-
-        $libraryId = $user->isLibrarian()
-            ? $user->librarian?->library_id
-            : null;
-        $campusId = $user->isAdmin() ? $user->campus_id : null;
-
-        $parameters = array_merge(
-            $filters,
-            [
-                'role' => $user->role,
-                'library_id' => $libraryId,
-                'campus_id' => $campusId,
-            ]
-        );
-
-        $items = CacheService::remember(
-            CacheService::ITEMS,
-            $parameters,
-            now()->addMinutes(10),
-            function () use ($user, $libraryId, $campusId, $filters) {
-
-                $query = Item::query();
-                $query->with('coverMedia');
-
-                if ($user->isSuperAdmin()) {
-                    // Super admins can see every item.
-                    $query->withTrashed();
-                } elseif ($user->isAdmin()) {
-                    $query->whereHas('library', function ($query) use ($campusId) {
-                        $query->where('campus_id', $campusId);
-                    });
-                } elseif ($user->isLibrarian()) {
-                    $query->where('library_id', $libraryId);
-                }
-
-                return $query->orderBy('created_at', 'desc')
-                    ->paginate(
-                        $filters['per_page'],
-                        [
-                            'id',
-                            'title',
-                            'subtitle',
-                            'call_number',
-                            'item_type_id',
-                            'released',
-                        ],
-                        'page',
-                        $filters['page']
-                    );
-            }
-        );
-
-        if ($items->isEmpty()) {
-            return $this->response(
-                'success',
-                'No item can be found.',
-                [],
-                200
-            );
-        }
-
-        return $this->response(
-            'success',
-            'Items retrieved successfully.',
-            $items,
-            200
-        );
-    }
-
-    public function indexV2(Request $request)
     {
         $filters = QueryService::filters($request);
 
@@ -129,9 +49,6 @@ class ItemController extends Controller
                             );
                     });
                 });
-                // fn ($i) => $i->where('title', 'LIKE', "%$search%")->orWhere('subtitle', 'LIKE', "%$search%")
-                //     ->orWhereHas('accessions', fn ($i) => $i->accessions->where('accession_number', 'LIKE', "%$search%"))
-                // );
 
                 // ============== Item Type ============
                 $item->when($filters['item_type_id'] ?? null, function ($i, $param) {

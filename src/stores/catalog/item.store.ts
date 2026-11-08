@@ -45,7 +45,7 @@ export const itemStore = defineStore('item', {
       return res
     },
 
-    async create(params: Partial<Item>) {
+    async create(params: StoreItem) {
       const formData = new FormData()
       Object.entries(params).forEach(([key, value]) => appendFormData(formData, key, value))
 

@@ -26,7 +26,7 @@
         <Label>Category</Label>
         <Select id="item-item_type_category_id" v-model="form.item_type_category_id" required :disabled="!editing">
           <Option value="" disabled>{{ form.item_type_id ? 'Select a category' : 'Please select an item type before selecting item category' }}</Option>
-          <Option v-for="category in options.categories?.filter((i) => i.item_type_id == form.item_type_id)" :key="category.id" :value="category.id">{{ category.name }}</Option>
+          <Option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name }}</Option>
         </Select>
       </Control>
 
@@ -91,6 +91,7 @@ withDefaults(
 const form = defineModel<Partial<Form>>({ default: {} })
 const options = optionStore()
 const item_type = computed(() => options.item_types?.find((i) => i.id == form.value?.item_type_id) ?? null)
+const categories = computed(() => options.categories?.filter((i) => i.item_type_id === form.value?.item_type_id))
 
 const supportsElectronicFile = computed(() => {
   const selectedType = options.item_types?.find((itemType) => String(itemType.id) === String(form.value.item_type_id))

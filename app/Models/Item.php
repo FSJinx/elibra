@@ -30,6 +30,9 @@ class Item extends Model
         'pages',
         'department_id',
 
+        'publication_year',
+        'place_of_publication',
+
         'released',
 
         'item_type_id',
@@ -37,6 +40,7 @@ class Item extends Model
         'library_id',
         'language_id',
         'cover_media_id',
+        'publisher_id',
     ];
 
     protected $formatter = [
@@ -83,9 +87,9 @@ class Item extends Model
         $this->authors()->sync($pivotData);
     }
 
-    public function itemPublishers()
+    public function publisher()
     {
-        return $this->hasMany(ItemPublisher::class);
+        return $this->belongsTo(Publisher::class);
     }
 
     public function itemType()
