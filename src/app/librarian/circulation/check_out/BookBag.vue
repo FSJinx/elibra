@@ -13,7 +13,7 @@
       <div class="flex flex-col items-start gap-3" v-else>
         <div class="w-full flex items-center justify-between">
           <Title :level="2">Item Preview</Title>
-          <Button size="sm" class="hover:text-danger" @click="clear">Clear Bag</Button>
+          <Button size="sm" class="hover:text-danger" :disabled="submitting" @click="clear">Clear Bag</Button>
         </div>
         <Card class="p-4!" v-for="item in model?.accessions">
           <CardBody class="flex items-start gap-3">
@@ -30,7 +30,7 @@
                 <span class="text-foreground text-end capitalize">{{ item?.status ?? 'Invalid' }}</span>
               </div>
             </div>
-            <Button class="hover:text-danger ml-auto" icon="trash" size="sm" @click="remove(item)"></Button>
+            <Button class="hover:text-danger ml-auto" icon="trash" size="sm" :disabled="submitting" @click="remove(item)"></Button>
           </CardBody>
         </Card>
       </div>
@@ -55,7 +55,7 @@
           <Control id="borrow-loan-mode" col>
             <Label>Loan Mode</Label>
 
-            <Select v-model="model.loan_mode_id" required>
+            <Select v-model="model.loan_mode_id" required :disabled="submitting">
               <Option value="" selected disabled>Select Loan Mode</Option>
               <Option :value="item.id" v-for="item in options.loan_modes">{{ item.name }}</Option>
             </Select>
@@ -63,8 +63,8 @@
         </Form>
       </div>
       <div class="grid grid-cols-2 gap-2">
-        <Button variant="danger" @click="close">Cancel</Button>
-        <Button variant="success" form="submit-borrow" type="submit">Proceed</Button>
+        <Button variant="danger" :disabled="submitting" @click="close">Cancel</Button>
+        <Button variant="success" form="submit-borrow" type="submit" :loading="submitting" :disabled="!canProceed">Proceed</Button>
       </div>
     </DrawerFooter>
   </Drawer>
@@ -82,6 +82,10 @@ const options = optionStore()
 const circulation = circulationStore()
 
 const drawer = ref<InstanceType<typeof Drawer>>()
+const submitting = ref(false)
+const canProceed = computed(() =>
+  Boolean(model.value?.patron && model.value.accessions?.length && model.value.loan_mode_id && !submitting.value),
+)
 
 function open() {
   drawer.value?.open()
@@ -92,18 +96,52 @@ function close() {
 }
 
 async function submit() {
+  const patron = model.value?.patron
+  const accessions = model.value?.accessions ?? []
+  const loanModeId = Number(model.value?.loan_mode_id)
+
+  if (!patron || accessions.length === 0 || !Number.isInteger(loanModeId) || loanModeId <= 0) {
+    await pop.info('Select a patron, at least one item, and a loan mode before proceeding.')
+    return
+  }
+
   const confirm = await pop.confirm({ text: 'Proceed checkout?' })
 
   if (confirm.isConfirmed) {
+    submitting.value = true
+    const checkedOutIds: Accession['id'][] = []
     pop.load()
+
     try {
-      const res = await circulation.checkOut(model.value)
-      pop.success(res.message)
-      nextTick()
-      clear()
+      for (const accession of accessions) {
+        await circulation.checkOut({
+          accession_id: Number(accession.id),
+          patron_id: Number(patron.id),
+          loan_mode_id: loanModeId,
+        })
+        checkedOutIds.push(accession.id)
+      }
+
+      emit('clear')
       close()
+      pop.unload()
+      pop.success(`${checkedOutIds.length} ${checkedOutIds.length === 1 ? 'item was' : 'items were'} checked out successfully.`)
     } catch (e: any) {
-      pop.error(e.response?.data?.message)
+      if (checkedOutIds.length > 0 && model.value?.accessions) {
+        model.value.accessions = model.value.accessions.filter((item) => !checkedOutIds.includes(item.id))
+      }
+
+      pop.unload()
+      const validationError = e?.response?.data?.errors
+        ? Object.values(e.response.data.errors).flat()[0]
+        : null
+      const message = validationError ?? e?.response?.data?.message ?? 'Unable to complete checkout.'
+      const partialMessage = checkedOutIds.length > 0
+        ? `${checkedOutIds.length} item(s) were checked out; the remaining items are still in the bag. `
+        : ''
+      pop.error(`${partialMessage}${message}`)
+    } finally {
+      submitting.value = false
     }
   }
 }
@@ -125,6 +163,14 @@ async function remove(item: Accession) {
     pop.success('Removed successfully!')
   }
 }
+
+onBeforeMount(async () => {
+  try {
+    await options.fetch('loan_modes')
+  } catch (e: any) {
+    await pop.error(e?.response?.data?.message ?? 'Unable to load loan modes.')
+  }
+})
 </script>
 
 <style scoped></style>

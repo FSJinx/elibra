@@ -3,7 +3,8 @@ export const circulationStore = defineStore('circulation', {
     data: null as Circulation[] | null,
     currentData: null as Circulation | null,
 
-    url: 'circulation',
+    url: 'circulation', 
+    params: {} as CirculationParams,  
   }),
 
   actions: {
@@ -13,18 +14,18 @@ export const circulationStore = defineStore('circulation', {
       return res
     },
 
-    async checkOut(payload?: CheckOut) {
+    async checkOut(payload: CheckOutPayload) {
       const res = await post(`${this.url}`, payload)
       return res
     },
 
     async checkIn(payload: Circulation) {
-      const res = await put(`${this.url}/${payload.id}/return`)
+      const res = await post(`${this.url}/${payload.id}/return`)
       return res
     },
 
     async renew(payload: Circulation) {
-      const res = await put(`${this.url}/${payload.id}/renew`)
+      const res = await post(`${this.url}/${payload.id}/renew`)
       return res
     },
 

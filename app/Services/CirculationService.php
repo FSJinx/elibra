@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
 class CirculationService
@@ -41,6 +42,23 @@ class CirculationService
                 throw ValidationException::withMessages([
                     'loan_mode_id' => ['There is no loan policy for this patron type and loan mode.'],
                 ]);
+            }
+
+            $maxItems = $policy->max_items;
+            if ($maxItems !== null && $maxItems > 0) {
+                $activeLoans = Circulation::query()
+                    ->where('patron_id', $patron->id)
+                    ->where('loan_mode_id', $data['loan_mode_id'])
+                    ->whereIn('status', ['borrowed', 'overdue'])
+                    ->count();
+
+                if ($activeLoans >= $maxItems) {
+                    throw ValidationException::withMessages([
+                        'accession_id' => [
+                            "This patron has reached the maximum of {$maxItems} items for this loan mode.",
+                        ],
+                    ]);
+                }
             }
 
             $borrowedAt = Carbon::now();
@@ -144,9 +162,52 @@ class CirculationService
                 ->lockForUpdate()
                 ->findOrFail($loan->accession_id);
 
+            $returnedAt = Carbon::now();
+            $fineCharged = 0;
+            $loan->loadMissing(['patron', 'loanMode']);
+
+            if ($loan->loanMode?->is_active && $loan->loanMode->charges_fine && $loan->patron) {
+                $policy = PatronTypeLoanPolicy::query()
+                    ->where('patron_type_id', $loan->patron->patron_type_id)
+                    ->where('loan_mode_id', $loan->loan_mode_id)
+                    ->first();
+
+                if ($policy) {
+                    $dueDate = $loan->due_at->copy()->startOfDay();
+                    $returnDate = $returnedAt->copy()->startOfDay();
+                    $overdueDays = $returnDate->greaterThan($dueDate)
+                        ? (int) $dueDate->diffInDays($returnDate)
+                        : 0;
+                    $graceDays = $loan->loanMode->has_grace_period
+                        ? $policy->grace_period
+                        : 0;
+                    $chargeableDays = max(0, $overdueDays - $graceDays);
+
+                    $fineCharged = round($chargeableDays * (float) $policy->fine_per_due, 2); // Calculate the fine amount
+
+                    /**
+                     * Example using the current formula:
+                     * Due date: October 25
+                     * Returned: October 29 → 4 calendar days overdue
+                     * Grace period: 2 days
+                     * Fine rate: ₱3.50 per day
+                     * 
+                     * Chargeable days: 4 − 2 = 2
+                     * Fine: 2 × ₱3.50 = ₱7.00
+                     */
+                } else {
+                    Log::warning('Unable to calculate a circulation fine because its loan policy is missing.', [
+                        'circulation_id' => $loan->id,
+                        'patron_type_id' => $loan->patron->patron_type_id,
+                        'loan_mode_id' => $loan->loan_mode_id,
+                    ]);
+                }
+            }
+
             $loan->update([
                 'status' => 'returned',
-                'returned_at' => Carbon::now(),
+                'returned_at' => $returnedAt,
+                'fine_charged' => $fineCharged,
                 'return_received_by' => $receivedBy->librarian?->id,
             ]);
 

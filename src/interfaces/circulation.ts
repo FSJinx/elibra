@@ -8,6 +8,12 @@ export interface CheckOut {
   loan_mode_id: any
 }
 
+export interface CheckOutPayload {
+  accession_id: number
+  patron_id: number
+  loan_mode_id: number
+}
+
 export interface Circulation {
   id: any
   borrowed_at: string

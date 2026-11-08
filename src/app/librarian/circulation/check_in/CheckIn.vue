@@ -25,6 +25,7 @@
             <Th>Renewal Count</Th>
             <Th>Issued By</Th>
             <Th>Status</Th>
+            <Th>Fine Charged</Th>
             <Th>Action</Th>
           </tr>
         </Thead>
@@ -35,12 +36,16 @@
             <Td :data="item.accession?.item?.title" />
             <Td :data="item.loan_mode?.name" />
             <Td :data="item.patron?.user?.name?.full" />
-            <Td :data="item.borrowed_at" />
-            <Td :data="item.due_at" />
-            <Td :data="item.returned_at" />
+            <Td :data="formatDateTime(item.borrowed_at)" />
+            <Td :data="formatDateTime(item.due_at)" />
+            <Td :data="formatDateTime(item.returned_at)" />
+            <!-- <Td :data="item.borrowed_at" /> -->
+            <!-- <Td :data="item.due_at" /> -->
+            <!-- <Td :data="item.returned_at" /> -->
             <Td :data="item.renewal_count" />
             <Td :data="item.processed_by?.user?.name?.full" />
             <Td :data="item.status" />
+            <Td :data="item.fine_charged" />
             <Td>
               <ReturnButton :data="item" />
               <RenewButton :data="item" />
@@ -58,6 +63,7 @@
 import DeleteButton from '@/app/librarian/circulation/check_in/modals/DeleteButton.vue'
 import RenewButton from '@/app/librarian/circulation/check_in/modals/RenewButton.vue'
 import ReturnButton from '@/app/librarian/circulation/check_in/modals/ReturnButton.vue'
+import { formatDateTime } from '@/utils/date'
 
 const circulation = circulationStore()
 
