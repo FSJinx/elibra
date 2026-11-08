@@ -1,19 +1,8 @@
 <template>
   <div class="size-full flex justify-center gap-3 mx-auto w-full p-5 overflow-hidden">
     <OpacFilter v-model:params="params" @apply="search" @reset="resetFilters" />
-    <!-- <div class="flex flex-col w-full max-w-6xl bg-restore border border-border rounded-xl overflow-hidden">
-      <div class="h-50 bg-background"></div>
-
-      <div class="flex-1 overflow-y-auto">
-        <div class="h-screen"></div>
-      </div>
-    </div> -->
     <OpacMain v-model:params="params" :library-data="libraryData" :total="total" :loading="loading" :error="error" @search="search" />
-    <!-- <div class="w-100 bg-danger">
-      <div class="h-[40vh]"></div>
-    </div> -->
   </div>
-
   <!-- <OpacHistory /> -->
 </template>
 
@@ -30,7 +19,7 @@ const history = opacSearchStore()
 
 const params = reactive({
   search: (route.query.search as string) ?? '',
-  campus: (route.query.campus as string) ?? '',
+  campus_id: (route.query.campus_id as string) ?? '',
   branch: (route.query.branch as string) ?? '',
   sort: (route.query.sort as string) ?? '',
   order: (route.query.order as string) ?? 'asc',
@@ -46,16 +35,17 @@ async function fetchResults() {
   // }
 
   try {
-    await searchOpac({
-      query: params.search,
-      campus_id: params.campus || undefined,
-      branch_id: params.branch || undefined,
-      item_type_id: params.item_type || undefined,
-      item_type_category_id: params.category || undefined,
-      sort: params.sort || undefined,
-      order: params.order || undefined,
-      per_page: 10,
-    })
+    await searchOpac(params)
+    // await searchOpac({
+    //   query: params.search,
+    //   campus_id: params.campus || undefined,
+    //   branch_id: params.branch || undefined,
+    //   item_type_id: params.item_type || undefined,
+    //   item_type_category_id: params.category || undefined,
+    //   sort: params.sort || undefined,
+    //   order: params.order || undefined,
+    //   per_page: 10,
+    // })
   } catch {
     // `error` from useOpacSearch already handles this
   }
@@ -64,15 +54,16 @@ async function fetchResults() {
 async function search() {
   router.replace({
     name: 'opac',
-    query: {
-      search: params.search || undefined,
-      campus: params.campus || undefined,
-      branch: params.branch || undefined,
-      item_type: params.item_type || undefined,
-      category: params.category || undefined,
-      sort: params.sort || undefined,
-      order: params.order || undefined,
-    },
+    query: params,
+    // query: {
+    //   search: params.search || undefined,
+    //   campus: params.campus || undefined,
+    //   branch: params.branch || undefined,
+    //   item_type: params.item_type || undefined,
+    //   category: params.category || undefined,
+    //   sort: params.sort || undefined,
+    //   order: params.order || undefined,
+    // },
   })
 }
 
@@ -93,28 +84,20 @@ function resetFilters() {
 watch(
   () => route.query,
   async (query) => {
-    params.search = (query.search as string) ?? ''
-    params.campus = (query.campus as string) ?? ''
-    params.branch = (query.branch as string) ?? ''
-    params.item_type = (query.item_type as string) ?? ''
-    params.category = (query.category as string) ?? ''
-    params.sort = (query.sort as string) ?? ''
-    params.order = (query.order as string) ?? 'asc'
-
+    // Object.assign(params, query)
     await fetchResults()
   },
   { immediate: true, deep: true },
 )
 
-watch(
-  () => route.query.search,
-  () => {
-    if (route.query.search) {
-      history.addHistory(params.search)
-    }
-  },
-)
-
+// watch(
+//   () => route.query.search,
+//   () => {
+//     if (route.query.search) {
+//       history.addHistory(params.search)
+//     }
+//   },
+// )
 </script>
 
 <style scoped></style>

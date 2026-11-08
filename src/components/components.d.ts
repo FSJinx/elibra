@@ -40,6 +40,7 @@ declare module 'vue' {
     Header: typeof import('./layout/Header.vue')['default']
     Hr: typeof import('./my/Hr.vue')['default']
     Icon: typeof import('./my/Icon.vue')['default']
+    Info: typeof import('./my/Info.vue')['default']
     Input: typeof import('./form/Input.vue')['default']
     InputFile: typeof import('./form/InputFile.vue')['default']
     IsuLogo: typeof import('./brand/IsuLogo.vue')['default']

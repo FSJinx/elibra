@@ -14,8 +14,8 @@
     <Form>
       <template #body>
         <Control direction="col">
-          <Label id="params-campus">Campus</Label>
-          <Select id="params-campus" title="Campus" v-model="params.campus">
+          <Label id="params-campus_id">Campus</Label>
+          <Select id="params-campus_id" title="Campus" v-model="params.campus_id">
             <Option value="">All data</Option>
             <template v-for="item in options.campuses" :key="item.id">
               <Option :value="item.id">{{ item.name }}</Option>
@@ -59,7 +59,7 @@
 <script setup lang="ts">
 interface Params {
   search: string
-  campus: string
+  campus_id: string
   branch: string
   sort: string
   order: string
@@ -77,7 +77,7 @@ defineEmits<{
 const options = optionStore()
 
 watch(
-  () => params.value.campus,
+  () => params.value.campus_id,
   () => {
     params.value.branch = ''
   },
@@ -85,8 +85,8 @@ watch(
 )
 
 const campusBranches = computed(() => {
-  if (params.value.campus) {
-    return (options.libraries ?? []).filter((item) => String(item.campus_id) === String(params.value.campus))
+  if (params.value.campus_id) {
+    return (options.libraries ?? []).filter((item) => String(item.campus_id) === String(params.value.campus_id))
   }
 
   return (options.libraries ?? []).map((b) => {

@@ -1,5 +1,5 @@
 <template>
-  <div class="card-footer -m-5 mt-0 px-5 py-5 border-t border-border">
+  <div class="card-footer -m-5 mt-0 px-5 py-5 border-t border-border bg-slate-50/25">
     <slot />
   </div>
 </template>

@@ -541,8 +541,12 @@ Route::group(['prefix' => '/holding'], function () {
 
 // Public Routes
 Route::get('/try', [TestController::class, 'index']);
-Route::get('opac/search', [OpacSearchController::class, 'search'])->middleware('throttle:read');
-Route::get('opac/item/{itemId}', [OpacSearchController::class, 'show'])->middleware('throttle:read');
+
+// OPAC Routes
+Route::group(['prefix' => '/opac'], function () {
+    Route::get('search', [OpacSearchController::class, 'search'])->middleware('throttle:read');
+    Route::get('item/{itemId}', [OpacSearchController::class, 'show'])->middleware('throttle:read');
+});
 
 // Media Routes
 Route::group(['prefix' => '/media'], function () {

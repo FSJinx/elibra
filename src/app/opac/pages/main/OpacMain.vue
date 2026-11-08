@@ -64,7 +64,7 @@
             <div class="flex-1 min-w-0 py-1">
               <div class="flex items-start gap-3">
                 <div class="min-w-0 flex-1">
-                  <h3 class="font-semibold text-lg leading-snug truncate group-hover:text-primary transition-colors">{{ index + 1 }} {{ item.title }}</h3>
+                  <h3 class="font-semibold text-lg leading-snug truncate group-hover:text-primary transition-colors">{{ index + 1 }}. {{ item.title }}</h3>
                   <p v-if="item.subtitle" class="mt-1 text-sm text-foreground-secondary truncate">
                     {{ item.subtitle }}
                   </p>
@@ -85,8 +85,8 @@
                 </span>
 
                 <span class="inline-flex items-center gap-1.5">
-                  <Icon icon="building-2" />
-                  {{ item.branch || 'Unknown Branch' }}
+                  <Icon icon="building" />
+                  {{ item.library || 'Unknown Branch' }} - {{ item.campus }}
                 </span>
               </div>
             </div>
@@ -108,7 +108,7 @@ import default_book from '@/assets/images/default_book.png'
 
 interface Params {
   search: string
-  campus: string
+  campus_id: string
   branch: string
   sort: string
   order: string
@@ -123,7 +123,7 @@ interface LibraryItem {
   subtitle?: string
   authors?: string[]
   publication_year?: string | number
-  branch?: string
+  library?: string
   campus?: string
   item_type?: string
   itemType?: string

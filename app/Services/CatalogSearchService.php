@@ -15,7 +15,7 @@ class CatalogSearchService
         'itemTypeCategory',
         'library.campus',
         'language',
-        'itemPublishers.publisher',
+        'publisher',
     ];
 
     public function __construct(
@@ -81,7 +81,7 @@ class CatalogSearchService
                             }
                         });
                     });
-                    $matches->orWhereHas('itemPublishers.publisher', function (Builder $publisher) use ($like) {
+                    $matches->orWhereHas('publisher', function (Builder $publisher) use ($like) {
                         $publisher->whereRaw("LOWER(name) LIKE ? ESCAPE '!'", [$like]);
                     });
                 }
@@ -121,9 +121,7 @@ class CatalogSearchService
             }
         }
         if (! empty($filters['publication_year'])) {
-            $items->whereHas('itemPublishers', function (Builder $publisher) use ($filters) {
-                $publisher->where('year_published', $filters['publication_year']);
-            });
+            $items->where('publication_year', $filters['publication_year']);
         }
     }
 
@@ -164,7 +162,7 @@ class CatalogSearchService
         return Item::query()
             ->where('released', true)
             ->with(self::ITEM_RELATIONS)
-            ->withMax('itemPublishers as publication_year', 'year_published')
+            // ->withMax('itemPublishers as publication_year', 'year_published')
             ->withCount([
                 'accessions as copies_count' => fn ($query) => $query->whereNull('deleted_at'),
                 'accessions as available_copies' => fn ($query) => $query->whereNull('deleted_at')->where('status', 'available'),
@@ -173,11 +171,11 @@ class CatalogSearchService
 
     private function formatItem(Item $item): array
     {
-        $publishers = $item->itemPublishers
-            ->pluck('publisher.name')
-            ->filter()
-            ->unique()
-            ->values();
+        $publisher = $item->publisher;
+        // ->pluck('publisher.name')
+        // ->filter()
+        // ->unique()
+        // ->values();
 
         return [
             'id' => $item->id,
@@ -209,8 +207,6 @@ class CatalogSearchService
             'library_id' => $item->library_id,
 
             // Compatibility with existing OPAC location labels and filters.
-            'branch' => $item->library?->name,
-            'branch_id' => $item->library_id,
             'campus' => $item->library?->campus?->name,
             'campus_id' => $item->library?->campus_id,
             'department_id' => $item->department_id,
@@ -218,8 +214,7 @@ class CatalogSearchService
             'language_id' => $item->language_id,
 
             'publication_year' => $item->publication_year === null ? null : (int) $item->publication_year,
-            'publisher' => $publishers->isEmpty() ? null : $publishers->implode(', '),
-            'publishers' => $publishers->all(),
+            'publisher' => $publisher,
             'isbn_issn' => $item->isbn_issn,
             'edition' => $item->edition,
             'doi' => $item->doi,

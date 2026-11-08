@@ -3,7 +3,7 @@
     <SectionHeader title="Check Out" description="Lend items to patrons." icon="bag-plus">
       <div class="flex items-center justify-end gap-2">
         <Chip removable @remove="removePatron" v-if="form.patron">Current Borrower: {{ form.patron?.user?.name?.full }} - {{ form.patron?.user?.username }}</Chip>
-        <BookBag v-model="form" @clear="clear" />
+        <BookBag ref="bookBag" v-model="form" @clear="clear" />
       </div>
     </SectionHeader>
 
@@ -21,6 +21,8 @@ import CheckPatron from '@/app/librarian/circulation/check_out/CheckPatron.vue'
 
 const pop = usePopup()
 
+const bookBag = ref<InstanceType<typeof BookBag>>()
+
 const borrowInfo = (): CheckOut => ({
   patron: null,
   accessions: null,
@@ -29,8 +31,13 @@ const borrowInfo = (): CheckOut => ({
 
 const form = ref<CheckOut>(borrowInfo())
 
-function clear() {
-  form.value = borrowInfo()
+async function clear() {
+  const confirm = await pop.confirm({ text: 'Are you sure you want to clear the current bag?' })
+  
+  if (confirm.isConfirmed) {
+    form.value = borrowInfo()
+    bookBag.value?.close()
+  }
 }
 
 async function removePatron() {
@@ -42,8 +49,8 @@ async function removePatron() {
 }
 
 watch(
-  () => form.value,
-  (val) => console.log('Borrow', val),
+  () => form.value.accessions,
+  (val) => bookBag.value?.open(),
 )
 </script>
 

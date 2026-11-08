@@ -15,21 +15,22 @@
           <Title :level="2">Item Preview</Title>
           <Button size="sm" class="hover:text-danger" @click="clear">Clear Bag</Button>
         </div>
-        <Card class="p-4!" v-for="item in model?.accessions">
-          <CardBody class="flex items-start gap-3">
+        <Card class="w-full p-3!" v-for="item in model?.accessions">
+          <CardBody class="grid grid-cols-[1fr_5fr_1fr] gap-3">
             <div class="max-w-15 border border-border rounded-lg overflow-hidden">
               <img :src="item?.item?.cover_media ? `${storageRoute}/${item?.item?.cover_media}` : book" alt="" class="" />
             </div>
 
-            <div class="flex flex-col gap-3">
+            <div class="flex-1 flex flex-col gap-2">
               <Title>{{ item?.item?.title }}</Title>
-              <div class="grid grid-cols-2 gap-2 text-sm">
+              <div class="grid grid-cols-2 text-xs mt-auto">
                 <p class="text-foreground-secondary line-clamp-1">Accession Number:</p>
                 <span class="text-foreground text-end">{{ item?.accession_number ?? 'Invalid' }}</span>
                 <p class="text-foreground-secondary line-clamp-1">Status:</p>
                 <span class="text-foreground text-end capitalize">{{ item?.status ?? 'Invalid' }}</span>
               </div>
             </div>
+
             <Button class="hover:text-danger ml-auto" icon="trash" size="sm" @click="remove(item)"></Button>
           </CardBody>
         </Card>
@@ -74,8 +75,9 @@
 import Drawer from '@/components/drawer/Drawer.vue'
 import book from '@/assets/images/default_book.png'
 
-const model = defineModel<Borrow>()
+const model = defineModel<CheckOut>()
 const emit = defineEmits(['clear'])
+defineExpose({ close, open })
 
 const pop = usePopup()
 const options = optionStore()

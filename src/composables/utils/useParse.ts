@@ -16,7 +16,7 @@ export function useParser() {
       return { full, formal, initials, authorInitial }
     },
 
-    toCapital(text: string | null) {
+    toCapital(text: string | null | undefined) {
       return text ? text?.charAt(0).toUpperCase() + text.slice(1) : ''
     },
 
@@ -82,7 +82,7 @@ export function useParser() {
       })
     },
 
-    formatDateTime(dateString: string | null) {
+    formatDateTime(dateString: string | null | undefined) {
       if (!dateString) return null
 
       const date = new Date(dateString)
