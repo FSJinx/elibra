@@ -7,40 +7,42 @@
     </SectionHeader>
 
     <div class="flex-1 flex flex-col p-5 gap-5 overflow-hidden">
-      <Card>
-        <Form id="user-search" @submit="search" class="flex items-center gap-2 w-full">
-          <Input id="search-staff" type="text" placeholder="Search by name..." class="max-w-100" />
-          <Button type="submit" variant="info">Refresh</Button>
-        </Form>
-      </Card>
+      <Table title="All Users" subtitle="These are the users under this library" :data="pagination">
+        <template #header>
+          <Form id="user-search" @submit="search" class="flex items-center justify-end gap-2 w-full">
+            <Input id="search-staff" type="text" placeholder="Search by name..." class="max-w-100" />
+            <Button type="submit">Search</Button>
+          </Form>
+        </template>
 
-      <Table title="All Users" subtitle="These are the users under this library" :data-length="users.data?.length ?? 0">
         <Thead>
           <tr>
+            <Th>No</Th>
             <Th class="text-left">Name</Th>
-            <Th>Username</Th>
-            <Th>Sex</Th>
             <Th>Role</Th>
+            <Th>Username / ID Number</Th>
+            <Th>Sex</Th>
             <Th>Registration Status</Th>
             <Th>Actions</Th>
           </tr>
         </Thead>
 
-        <Tbody :data="users.data" :loading="loading" cols="5" :error-message="tableError">
+        <Tbody :data="users.data" :loading="loading">
           <Tr v-for="(user, index) in users.data" :key="index">
+            <Td :data="index + 1" />
             <Td class="text-left">
-              <p class="font-semibold">{{ user.first_name }} {{ user.middle_initial ? user.middle_initial + '.' : '' }} {{ user.last_name }}</p>
+              <p class="font-semibold">{{ user.name?.full }}</p>
               <p class="text-muted-foreground">{{ user.email ?? 'No email provided' }}</p>
+            </Td>
+            <Td>
+              <Status :variant="user.role">{{ user.role }}</Status>
             </Td>
             <Td :data="user.username" />
             <Td>
               <Status :variant="user.sex">{{ user.sex }}</Status>
             </Td>
             <Td>
-              <Status :variant="user.role">{{ user.role }}</Status>
-            </Td>
-            <Td>
-              <Status :variant="user.registration as string">{{ user.registration ?? 'User not created through registration' }}</Status>
+              <Status :variant="user.registration as string">{{ user.registration ?? 'Not applicable' }}</Status>
             </Td>
             <Td class="space-x-2">
               <Button class="hover:text-info" size="sm" @click="viewUser(user)">View</Button>
@@ -48,6 +50,7 @@
             </Td>
           </Tr>
         </Tbody>
+        <template #footer />
       </Table>
     </div>
 
@@ -55,6 +58,10 @@
       <ModalHeader use-default-layout title="User information" :subtitle="selectedUser ? `${selectedUser.first_name} ${selectedUser.last_name}` : ''" icon="person" />
       <ModalBody v-if="selectedUser">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-5">
+          <Dl>
+            <Dt>Full Name</Dt>
+            <Dd>{{ selectedUser.name?.full }}</Dd>
+          </Dl>
           <div>
             <p class="text-xs text-muted-foreground">Full name</p>
             <p>{{ [selectedUser.first_name, selectedUser.middle_initial, selectedUser.last_name].filter(Boolean).join(' ') }}</p>
@@ -127,9 +134,17 @@
 <script setup lang="ts">
 import Modal from '@/components/my/Modal.vue'
 
-const loading = ref<boolean>(false)
-const users = usersStore()
+const users = userStore()
 const pop = usePopup()
+const auth = authStore()
+
+const loading = ref<boolean>(false)
+const pagination = ref<Pagination>()
+const params = reactive<UserParams>({
+  query: '',
+  campus_id: auth.user?.campus_id ?? null,
+})
+
 const tableError = ref()
 const modal = ref<typeof Modal | null>(null)
 const selectedUser = ref<User | null>(null)
@@ -184,18 +199,15 @@ async function deleteUser(user: User) {
 
 async function search() {
   loading.value = true
-  tableError.value = null
   try {
-    await users.fetch()
-  } catch (e: any) {
-    tableError.value = e?.response?.data?.message ?? 'Unable to load users. Please try again.'
-    await pop.error(tableError.value)
+    const res = await users.fetch(params)
+    pagination.value = res.data
   } finally {
     loading.value = false
   }
 }
 
-onBeforeMount(() => search())
+watchDebounced(() => params, search, { debounce: 300, deep: true, immediate: true })
 </script>
 
 <style scoped></style>

@@ -21,6 +21,7 @@
     <!-- Table Footer -->
     <div class="flex items-center justify-between gap-2 w-full sticky bottom-0 bg-background px-5 py-4 border-t border-border" v-if="$slots.footer">
       <p class="text-sm" v-if="data?.total < 25">Showing {{ data?.data?.length ?? 0 }} of {{ data?.total }} items.</p>
+
       <div class="flex items-center justify-end gap-3 text-sm" v-else>
         <span>Showing</span>
         <Select class="max-w-max" title="Per Page" v-model="per_page">

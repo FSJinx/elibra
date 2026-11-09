@@ -1,5 +1,5 @@
 <template>
-  <dl class="text-foreground-secondary">
+  <dl class="font-normal text-sm text-foreground-secondary">
     <slot />
   </dl>
 </template>

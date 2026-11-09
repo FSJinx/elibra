@@ -39,7 +39,7 @@
           <Input id="first_name" required type="text" placeholder="e.g. Juan" v-model="form.first_name" :error="errors.first_name?.[0]" />
 
           <Label id="middle_initial" nullable>Middle Initial</Label>
-          <Input id="middle_initial" nullable class="max-w-75" type="text" placeholder="e.g. A" max="2" v-model="form.middle_initial" :error="errors.middle_initial?.[0]" helper="Please put NA if no middle initial" />
+          <Input id="middle_initial" nullable class="max-w-75" type="text" placeholder="e.g. A" max="2" v-model="form.middle_initial" :error="errors.middle_initial?.[0]" helper="Leave blank if no middle initial" />
 
           <Label id="sex" required>Sex</Label>
           <Select id="sex" class="max-w-75" required title="Sex" v-model="form.sex" :error="errors.sex?.[0]">
@@ -61,7 +61,7 @@
 
           <!-- Username -->
           <Label id="username" required>Username</Label>
-          <Input id="username" type="text" placeholder="e.g. juandelacruz" required v-model="form.username" :error="errors.username?.[0]" />
+          <Input id="username" type="text" placeholder="e.g. juandelacruz" required v-model="form.username" :error="errors.username?.[0]" helper="For patron with ID Number, please use ID Number as username"/>
         </CardBody>
       </Card>
 
@@ -92,11 +92,11 @@ const pop = usePopup()
 const form = reactive(emptyForm())
 const errors = reactive(emptyForm())
 
-const user = usersStore()
+const user = userStore()
 const options = optionStore()
 
-async function submit () {
-  const confirm = await pop.confirm({text: 'Create this user?'})
+async function submit() {
+  const confirm = await pop.confirm({ text: 'Create this user?' })
 
   if (confirm.isConfirmed) {
     pop.load()
@@ -107,7 +107,7 @@ async function submit () {
         return router.back()
       }
     } catch (e: any) {
-      
+      pop.error(e.response?.data?.message)
       throw e
     }
   }

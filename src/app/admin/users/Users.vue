@@ -19,7 +19,7 @@
           </tr>
         </Thead>
 
-        <Tbody :data="users.data" :loading="users.loading" cols="10">
+        <Tbody :data="users.data" :loading="loading" cols="10">
           <tr v-for="(user, index) in users.data" :key="index">
             <Td :data="index + 1" />
             <Td :data="user.last_name" class="text-left" />
@@ -48,12 +48,7 @@
     </div>
 
     <Modal ref="modal" size="large">
-      <ModalHeader
-        use-default-layout
-        title="User information"
-        :subtitle="selectedUser ? `${selectedUser.first_name} ${selectedUser.last_name}` : ''"
-        icon="person"
-      />
+      <ModalHeader use-default-layout title="User information" :subtitle="selectedUser ? `${selectedUser.first_name} ${selectedUser.last_name}` : ''" icon="person" />
       <ModalBody v-if="selectedUser">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-5">
           <div>
@@ -122,12 +117,13 @@
 <script setup lang="ts">
 import Modal from '@/components/my/Modal.vue'
 
-const users = useAdminUserStore()
+const users = userStore()
 const parse = useParser()
 const pop = usePopup()
 const modal = ref<typeof Modal | null>(null)
 const selectedUser = ref<User | null>(null)
 const reviewing = ref(false)
+const loading = ref<boolean>(false)
 
 function viewUser(user: User) {
   selectedUser.value = user
@@ -149,12 +145,9 @@ async function reviewRegistration(action: 'approve' | 'reject') {
   pop.load()
   try {
     const userUuid = selectedUser.value.uuid
-    const result =
-      action === 'approve'
-        ? await users.approveRegistration(selectedUser.value)
-        : await users.rejectRegistration(selectedUser.value)
+    const result = action === 'approve' ? await users.approveRegistration(selectedUser.value) : await users.rejectRegistration(selectedUser.value)
 
-    await users.fetch(true)
+    await users.fetch()
     selectedUser.value = users.data?.find((user) => user.uuid === userUuid) ?? null
     await pop.success(result.message ?? `User registration ${pastTense} successfully.`)
     if (!selectedUser.value) modal.value?.close()
@@ -175,7 +168,7 @@ async function deleteUser(user: User) {
   pop.load()
   try {
     const result = await users.delete(user)
-    await users.fetch(true)
+    await users.fetch()
     if (selectedUser.value?.uuid === user.uuid) {
       selectedUser.value = null
       modal.value?.close()
