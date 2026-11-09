@@ -2,7 +2,7 @@
   <Button size="sm" class="hover:text-warning" @click="open()">Edit</Button>
 
   <Modal ref="modal" size="xlarge" :has-inputs="hasChanges">
-    <ModalHeader use-default-layout :title="data.name" :subtitle="`Currently editing library information of ${data.name}`" icon="building" />
+    <ModalHeader use-default-layout :title="data?.name as string" :subtitle="`Currently editing library information of ${data?.name}`" icon="building" />
 
     <ModalBody>
       <Form id="library-update-form" class="grid grid-cols-2 p-5 gap-5" @submit="submit">
@@ -52,12 +52,13 @@
 import Modal from '@/components/my/Modal.vue'
 
 interface Props {
-  data: Library
+  data: Library | null
 }
 
 const props = defineProps<Props>()
 const modal = ref<typeof Modal | null>(null)
-const form = reactive({ ...props.data })
+
+const form = reactive<UpdateLibrary>({ ...props.data })
 const errors = ref<Record<keyof Library, string[]> | null>(null)
 const pop = usePopup()
 const hasChanges = computed(() => JSON.stringify(form) !== JSON.stringify(props.data))

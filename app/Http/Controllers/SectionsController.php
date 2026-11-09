@@ -35,15 +35,15 @@ class SectionsController extends Controller
             CacheService::SECTIONS,
             $filters,
             now()->addHour(),
-            function () use ($filters) {
-                $section = Sections::query();
-                $section->with(['librarian:id,name']);
-
+            function () use ($filters, $user) {
+                $section = Sections::query()
                 // ============== Search ============
-                $section->when($filters['search'] ?? null, fn ($q, $s) => $q->where(fn ($w) => $w->where('name', 'LIKE', "%$s%")));
-
-                // ============== Search ============
-                $section->when(! empty($filters['library_id']), fn ($q, $f) => $q->where('library_id', $filters['library_id']));
+                    ->when($filters['search'] ?? null, fn ($q, $s) => $q->where(fn ($w) => $w->where('name', 'LIKE', "%$s%")))
+                // ============== Filters ============
+                    ->when($user->isSuperAdmin(), fn ($q) => $q->withTrashed())
+                    ->when(! empty($filters['library_id']), fn ($q, $f) => $q->where('library_id', $filters['library_id']))
+                // ============== Relationship ============
+                    ->with(['librarian.user', 'library']);
 
                 return $section
                     ->orderBy($filters['sort'], $filters['order'])

@@ -2,7 +2,7 @@
   <section class="relative flex-1 flex flex-col bg-background border border-border rounded-xl overflow-hidden scrollbar-none">
     <!-- Table Header -->
     <div class="flex items-center gap-2 border-b border-border/70 px-5 py-4">
-      <div class="mr-auto">
+      <div class="mr-auto shrink-0">
         <h2 class="text-xl font-semibold">{{ title }}</h2>
 
         <p class="mt-1 text-sm text-foreground-secondary" v-if="subtitle">{{ subtitle }}</p>
@@ -20,7 +20,8 @@
 
     <!-- Table Footer -->
     <div class="flex items-center justify-between gap-2 w-full sticky bottom-0 bg-background px-5 py-4 border-t border-border" v-if="$slots.footer">
-      <div class="flex items-center justify-end gap-3 text-sm">
+      <p class="text-sm" v-if="data?.total < 25">Showing {{ data?.data?.length ?? 0 }} of {{ data?.total }} items.</p>
+      <div class="flex items-center justify-end gap-3 text-sm" v-else>
         <span>Showing</span>
         <Select class="max-w-max" title="Per Page" v-model="per_page">
           <Option value="25">25</Option>
@@ -31,7 +32,7 @@
         <span class="text-muted-foreground text-sm">{{ data?.to > 1 ? `records out of ${data?.total ?? 0}` : 'record' }}</span>
       </div>
 
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-2" v-if="data?.last_page !== 1">
         <Button class="not-disabled:hover:text-primary" :disabled="!data?.prev_page_url" @click="changePage(data?.current_page - 1)">Previous</Button>
         <Select class="max-w-max" title="Page" v-model="page" @onChange="changePage(page)" v-if="data?.current_page">
           <Option :value="item" v-for="item in data?.last_page">{{ item }}</Option>

@@ -11,21 +11,11 @@
         </Control>
         <Control :id="`section-head-${data.id}`" col>
           <Label>Section Head</Label>
-          <Select
-            :id="`section-head-select-${data.id}`"
-            v-model="form.librarian_id"
-            :error="errors?.librarian_id?.[0]"
-            :disabled="loadingLibrarians"
-            placeholder="Unassigned"
-          >
+          <Select v-model="form.librarian_id" :error="errors?.librarian_id?.[0]" :disabled="loadingLibrarians" placeholder="Unassigned">
             <Option value="">Unassigned</Option>
-            <Option v-for="librarian in librarians" :key="librarian.id" :value="librarian.id">
-              {{ librarianName(librarian) }}
-            </Option>
+            <Option v-for="librarian in librarians" :key="librarian.id" :value="librarian.id" :label="librarian.user?.name?.full" :description="parse.toCapital(librarian.user?.role)"></Option>
           </Select>
-          <p v-if="!loadingLibrarians && librarians.length === 0" class="text-sm text-warning">
-            No librarians are assigned to this library yet.
-          </p>
+          <p v-if="!loadingLibrarians && librarians.length === 0" class="text-sm text-warning">No librarians are assigned to this library yet.</p>
         </Control>
       </Form>
     </ModalBody>
@@ -43,6 +33,8 @@ import Modal from '@/components/my/Modal.vue'
 const props = defineProps<{ data: Section }>()
 const sections = sectionStore()
 const pop = usePopup()
+const parse = useParser()
+
 const modal = ref<InstanceType<typeof Modal>>()
 const emit = defineEmits(['refresh'])
 const original = reactive<{ name: string; librarian_id: number | string | null }>({
@@ -57,16 +49,10 @@ const errors = ref<Record<string, string[]> | null>(null)
 const librarians = ref<Librarian[]>([])
 const loadingLibrarians = ref(false)
 const formId = computed(() => `update-section-${props.data.id}`)
-const hasChanges = computed(
-  () => form.name !== original.name || String(form.librarian_id ?? '') !== String(original.librarian_id ?? ''),
-)
-
-function librarianName(librarian: Librarian): string {
-  const user = librarian.user
-  return user ? `${user.first_name} ${user.last_name}`.trim() : `Librarian #${librarian.id}`
-}
+const hasChanges = computed(() => form.name !== original.name || String(form.librarian_id ?? '') !== String(original.librarian_id ?? ''))
 
 async function open() {
+  pop.load()
   original.name = props.data.name
   original.librarian_id = props.data.librarian_id ?? ''
   form.name = original.name
@@ -90,6 +76,7 @@ async function open() {
     }
   }
 
+  pop.unload()
   modal.value?.open()
 }
 

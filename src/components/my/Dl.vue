@@ -1,5 +1,5 @@
 <template>
-  <dl class="space-y-4">
+  <dl>
     <slot />
   </dl>
 </template>

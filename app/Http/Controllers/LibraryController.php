@@ -6,6 +6,8 @@ use App\Http\Requests\StoreLibraryRequest;
 use App\Http\Requests\UpdateLibraryRequest;
 use App\Models\Library;
 use App\Services\CacheService;
+use App\Services\QueryService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -14,13 +16,14 @@ class LibraryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $library = Library::query();
+        $filters = QueryService::filters($request);
+        $library = Library::query()
+            ->with(['campus'])
+            ->paginate();
 
-        return $this->response(
-            data: $library->get()
-        );
+        return $this->response(data: $library);
     }
 
     /**

@@ -1,3 +1,5 @@
+export interface LibraryParams extends Partial<BaseParams> {}
+
 export interface Library {
   id: number
   name: string
@@ -16,3 +18,6 @@ export interface Library {
 
   [key: string]: any
 }
+
+export interface StoreLibrary extends Partial<Library> {}
+export interface UpdateLibrary extends Partial<Library> {}

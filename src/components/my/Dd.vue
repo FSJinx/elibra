@@ -1,5 +1,5 @@
 <template>
-  <dl class="font-medium mt-1">
+  <dl class="font-medium mt-2">
     <slot />
   </dl>
 </template>

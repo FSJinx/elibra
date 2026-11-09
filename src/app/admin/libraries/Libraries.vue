@@ -1,46 +1,45 @@
 <template>
   <div class="flex flex-col size-full overflow-hidden">
-    <SectionHeader title="Libraries" description="Manage libraries in the Isabela State University" icon="building" />
+    <SectionHeader title="Libraries" description="Manage libraries in the Isabela State University" icon="building">
+      <div class="flex items center justify-end">
+        <AddNewLibraryModal />
+      </div>
+    </SectionHeader>
 
     <div class="flex-1 flex flex-col gap-3 p-5">
-      <Card>
-        <CardBody class="grid grid-cols-2 gap-2">
-          <div class="flex items-center gap-5">
+      <Table title="Library Table" subtitle="List of libraries in ISU" :data="pagination">
+        <template #header>
+          <Form class="w-full flex items-center justify-end gap-2" id="search-library" @submit="search">
             <Input id="search-library" class="max-w-100" placeholder="Search by library name" />
-          </div>
-
-          <div class="flex items-center justify-end gap-2">
-            <Button @click="loadLibraries(true)">Refresh</Button>
-            <AddNewLibraryModal />
-          </div>
-        </CardBody>
-      </Card>
-      <Table title="Library Table" subtitle="List of libraries in ISU">
+            <Button @click="search">Refresh</Button>
+          </Form>
+        </template>
         <Thead>
           <tr>
             <th>No.</th>
             <th class="text-left">Name</th>
-            <th>Campus</th>
+            <th>Email</th>
             <th>Phone</th>
-            <th class="text-left">Email</th>
+            <th>Campus</th>
             <th>Last Modified</th>
             <th>Actions</th>
           </tr>
         </Thead>
-        <Tbody :data="library.data" :loading="library.loading" cols="7">
-          <Tr :to="{ name: 'admin.libraries.view', params: { id: b.id } }" v-for="(b, index) in library.data" :key="index">
+        <Tbody :data="library.data" :loading="loading">
+          <Tr :to="{ name: 'admin.libraries.view', params: { id: item.id } }" v-for="(item, index) in library.data" :key="index">
             <Td :data="index + 1" />
-            <Td class="text-left" :data="b?.name" />
-            <Td :data="campus.getCampus(b?.campus_id)?.name ?? null" />
-            <Td :data="b?.phone" />
-            <Td :data="b.email ?? null" class="text-left"></Td>
-            <Td :data="parse.formatDateAgo(b?.updated_at)" />
+            <Td class="text-left" :data="item?.name" />
+            <Td :data="item.email ?? null"></Td>
+            <Td :data="item?.phone" />
+            <Td :data="item.campus?.name ?? null" />
+            <Td :data="parse.formatDateAgo(item?.updated_at)" />
             <Td class="space-x-2">
-              <EditLibraryModal :data="b" />
-              <Button size="sm" class="hover:text-danger!" @click="remove(b)">Delete</Button>
+              <EditLibraryModal :data="item" />
+              <Button size="sm" class="hover:text-danger!" @click="remove(item)">Delete</Button>
             </Td>
           </Tr>
         </Tbody>
+        <template #footer />
       </Table>
     </div>
   </div>
@@ -55,16 +54,18 @@ const campus = useCampusStore()
 const parse = useParser()
 const pop = usePopup()
 
-async function loadLibraries(force = false) {
+const loading = ref<boolean>(false)
+const pagination = ref<Pagination>()
+
+async function search() {
+  loading.value = true
   try {
-    await campus.fetch()
-    await library.fetch(force)
-  } catch (error: any) {
-    await pop.error(error?.response?.data?.message ?? 'Unable to load library records. Please try again.')
+    const res = await library.fetch()
+    pagination.value = res.data
+  } finally {
+    loading.value = false
   }
 }
-
-onBeforeMount(() => loadLibraries(true))
 
 async function remove(c: Library) {
   const res = await pop.confirm({ text: `Are you sure you want to delete ${c?.name}?` })
@@ -79,6 +80,8 @@ async function remove(c: Library) {
     }
   }
 }
+
+onBeforeMount(search)
 </script>
 
 <style scoped></style>

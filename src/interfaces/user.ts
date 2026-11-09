@@ -31,5 +31,10 @@ export interface User {
   updated_at: string
   deleted_at: string
 
+  name: {
+    full: string
+    formal: string
+  }
+
   [key: string]: any
 }

@@ -275,7 +275,7 @@ Route::group(['prefix' => '/items'], function () {
 
     // Post
     Route::post('', [ItemController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin,librarian');
-    
+
     // Put
     Route::put('{item}', [ItemController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin,librarian');
 });
@@ -399,16 +399,24 @@ Route::group(['prefix' => '/section', 'middleware' => 'jwt.auth'], function () {
  *
  *      all while as long as they are on the same campus.
  */
-Route::group(['prefix' => '/librarian', 'middleware' => ['jwt.auth', 'role:admin,librarian']], function () {
+Route::group(['prefix' => '/librarian', 'middleware' => ['jwt.auth', 'role:super_admin,admin,librarian']], function () {
 
     // ============== LIBRARIAN RESOURCE ROUTE ==================
+
+    // Get
     Route::get('', [LibrarianController::class, 'index'])->middleware('throttle:read');
+    
+    // Post
     Route::post('', [LibrarianController::class, 'store'])->middleware('throttle:write');
+    
+    // Put
     Route::put('{librarian}', [LibrarianController::class, 'update'])->middleware('throttle:write');
+    
+    // Delete
     Route::delete('{librarian}', [LibrarianController::class, 'destroy'])->middleware('throttle:delete');
 
     // ============== DASHBOARD ROUTE ==================
-    Route::group(['prefix' => 'dashboard'], function () {
+    Route::group(['prefix' => 'dashboard'], function () {;
         // Get
         Route::get('total-collections', [DashboardController::class, 'totalCollections']);
 

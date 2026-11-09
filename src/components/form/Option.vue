@@ -1,7 +1,12 @@
 <template>
-  <button type="button" class="text-left px-4 py-2 hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground transition-all duration-100 flex items-center rounded disabled:bg-disabled disabled:text-muted-foreground disabled:cursor-not-allowed" :class="{ 'bg-primary text-primary-foreground': isSelected }" :disabled="disabled" @click="select.setSelected(value, labelText)">
-    <span v-if="labelText" class="flex-1">
-      {{ labelText }}
+  <button type="button" class="group text-left px-4 py-2 hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground transition-all duration-100 flex items-center rounded disabled:bg-disabled disabled:text-muted-foreground disabled:cursor-not-allowed" :class="{ 'bg-primary text-primary-foreground': isSelected }" :disabled="disabled" @click="select.setSelected(value, labelText)">
+    <div v-if="label">
+      <p>{{ label }}</p>
+      <p class="text-sm text-muted-foreground group-hover:text-primary-foreground/75" :class="{ 'text-primary-foreground/75': isSelected }" v-if="description">{{ description }}</p>
+    </div>
+
+    <span v-else-if="labelText" class="flex-1">
+      <p>{{ labelText }}</p>
     </span>
 
     <slot v-else />
@@ -14,10 +19,13 @@ interface Props {
   value: any
   disabled?: boolean
   selected?: boolean
+
+  label?: string
+  description?: string
 }
 
 const select = inject<any>('select')
-const labelText = computed(() => content || '')
+const labelText = computed(() => props.label || content || '')
 const slots = useSlots()
 const content = computed(() => slots.default?.()[0].children ?? [])
 
