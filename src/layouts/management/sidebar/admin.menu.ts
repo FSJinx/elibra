@@ -20,7 +20,7 @@ export const adminMenu = [
   {
     name: 'Users & Access',
     children: [
-      { path: '', name: 'Accounts', icon: 'people' },
+      { path: 'admin.users', name: 'Accounts', icon: 'people' },
       { path: '', name: 'Roles & Permissions', icon: 'person-lock' },
       { path: '', name: 'Login Activity', icon: 'clock-history' },
     ],

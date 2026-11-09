@@ -1,5 +1,6 @@
 export interface UserParams extends Partial<BaseParams> {
   campus_id: any
+  role: string
 }
 
 export interface User {
@@ -35,10 +36,14 @@ export interface User {
   updated_at: string
   deleted_at: string
 
+  // Appended Values
+
   name: {
     full: string
     formal: string
   }
+
+  role_text: string
 
   [key: string]: any
 }

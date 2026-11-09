@@ -25,9 +25,9 @@ interface Props {
 }
 
 const select = inject<any>('select')
-const labelText = computed(() => props.label || content || '')
+const labelText = computed(() => content || '')
 const slots = useSlots()
-const content = computed(() => slots.default?.()[0].children ?? [])
+const content = computed(() => props.label ?? slots.default?.()[0].children ?? [])
 
 const props = withDefaults(defineProps<Props>(), {
   disabled: false,

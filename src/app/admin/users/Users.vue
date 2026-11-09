@@ -1,17 +1,42 @@
 <template>
-  <div class="size-full flex-1 flex flex-col gap-5">
-    <SectionHeader title="Users" description="Manage all users of the system" icon="people"></SectionHeader>
+  <div class="size-full flex-1 flex flex-col overflow-hidden">
+    <SectionHeader title="Users" description="Manage all users of the system" icon="people">
+      <div class="flex items-center justify-end">
+        <Button left-icon="plus-lg" variant="primary" as="link" :to="{ name: 'librarian.users.new' }">New User</Button>
+      </div>
+    </SectionHeader>
 
-    <div class="flex-1 flex flex-col gap-5 p-5">
-      <Table title="User Records" subtitle="List of all e-Libra users" data-length="25">
+    <div class="flex-1 flex flex-col gap-5 p-5 overflow-y-auto">
+      <Card class="">
+        <CardBody class="flex items-center gap-2">
+          <Select title="Campuses" v-model="params.campus_id" class="max-w-max">
+            <Option value="">All Campus</Option>
+            <Option :value="campus.id" v-for="campus in options.campuses" :label="campus.name" />
+          </Select>
+          <Select title="Role" v-model="params.role" class="max-w-max">
+            <Option value="">All Roles</Option>
+            <Option value="super_admin" label="Super Admin" />
+            <Option value="admin" label="Admin" />
+            <Option value="librarian" label="Librarian" />
+            <Option value="patron" label="Patron" />
+          </Select>
+          <Button class="ml-auto" @click="reset">Reset Filters</Button>
+        </CardBody>
+      </Card>
+      <Table title="All Users" subtitle="List of all e-Libra users" :data="pagination">
+        <template #header>
+          <Form id="search-users" @submit="search" class="flex items-center justify-end w-full gap-2">
+            <Input class="max-w-125" id="search-query" type="text" placeholder="Search by user's name, username, email, or id number" v-model="params.query" enable-clear />
+            <Button type="submit">Search</Button>
+          </Form>
+        </template>
         <Thead>
           <tr>
             <th>No</th>
-            <th class="text-left">Last Name</th>
-            <th class="text-left">First Name</th>
-            <th>Middle Initial</th>
-            <th>Sex</th>
+            <th class="text-left">Name</th>
+            <th>Role</th>
             <th>Username</th>
+            <th>Sex</th>
             <th class="text-left">Email</th>
             <th>Status</th>
             <th>Registration</th>
@@ -22,13 +47,14 @@
         <Tbody :data="users.data" :loading="loading" cols="10">
           <tr v-for="(user, index) in users.data" :key="index">
             <Td :data="index + 1" />
-            <Td :data="user.last_name" class="text-left" />
-            <Td :data="user.first_name" class="text-left" />
-            <Td :data="user.middle_initial" />
+            <Td :data="user.name?.formal" class="text-left" />
+            <Td>
+              <Status :variant="parse.status(user.role)">{{ user.role_text }}</Status>
+            </Td>
+            <Td :data="user.username" />
             <Td>
               <Status :variant="parse.status(user.sex)">{{ user.sex }}</Status>
             </Td>
-            <Td :data="user.username" />
             <Td :data="user.email" class="text-left" />
             <Td>
               <Status :variant="parse.status(user.status)">{{ user.status }}</Status>
@@ -44,6 +70,7 @@
             </Td>
           </tr>
         </Tbody>
+        <template #footer />
       </Table>
     </div>
 
@@ -120,10 +147,34 @@ import Modal from '@/components/my/Modal.vue'
 const users = userStore()
 const parse = useParser()
 const pop = usePopup()
+const options = optionStore()
+
 const modal = ref<typeof Modal | null>(null)
 const selectedUser = ref<User | null>(null)
 const reviewing = ref(false)
 const loading = ref<boolean>(false)
+const pagination = ref<Pagination>()
+const defaultParams = (): Partial<UserParams> => ({
+  query: '',
+  sort: 'last_name',
+  campus_id: '',
+})
+const params = reactive<Partial<UserParams>>(defaultParams())
+
+async function reset() {
+  Object.assign(params, defaultParams())
+  nextTick(search)
+}
+
+async function search() {
+  loading.value = true
+  try {
+    const res = await users.fetch(params)
+    pagination.value = res.data
+  } finally {
+    loading.value = false
+  }
+}
 
 function viewUser(user: User) {
   selectedUser.value = user
@@ -179,11 +230,7 @@ async function deleteUser(user: User) {
   }
 }
 
-onBeforeMount(() => {
-  if (users.data === null) {
-    users.fetch()
-  }
-})
+watchDebounced(params, search, { debounce: 300, deep: 300, immediate: true })
 </script>
 
 <style scoped></style>

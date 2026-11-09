@@ -18,7 +18,7 @@ class QueryService
         $perPage = max(1, min($perPage, $maxPerPage));
 
         return [
-            'search' => trim($request->query('query', '')),
+            'search' => trim($request->query('query', null)),
             'sort' => $sort !== '' ? $sort : 'created_at',
             'order' => in_array($order, ['asc', 'desc'], true) ? $order : 'asc',
             'page' => $request->integer('page', 1),

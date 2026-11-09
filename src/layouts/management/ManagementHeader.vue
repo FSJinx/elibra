@@ -38,7 +38,7 @@ const subHeading = computed(() => {
   } else {
     library.value = 'Not assigned to any library'
   }
-  return `${library.value ?? 'Not assigned to a library library'}, ${parse.toCapital(auth.displayRole || 'Unknown')}`
+  return `${library.value ?? 'Not assigned to a library library'}, ${parse.toCapital(auth.user?.role_text || 'Unknown')}`
 })
 
 const heading = computed(() => {

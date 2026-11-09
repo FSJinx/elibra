@@ -16,7 +16,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 {
     use AutoFormatter, HasFactory, Notifiable, SoftDeletes;
 
-    protected $appends = ['name'];
+    protected $appends = ['name', 'role_text'];
 
     protected $fillable = [
         // Personal Information
@@ -76,6 +76,11 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
             'full' => "{$this->first_name} {$this->last_name}",
             'formal' => "{$this->last_name}, {$this->first_name}",
         ]);
+    }
+
+    protected function roleText(): Attribute
+    {
+        return Attribute::get(fn () => $this->isSuperAdmin() ? 'Super Admin' : $this->role);
     }
 
     protected static function booted()

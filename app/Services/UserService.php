@@ -129,51 +129,27 @@ class UserService
 
     public function index(array $filters, User $user)
     {
-        $isSuperAdmin = $user->isSuperAdmin();
-        $campusId = match (true) {
-            $isSuperAdmin => null,
-            $user->isLibrarian() => $user->librarian?->library?->campus_id,
-            default => $user->campus_id,
-        };
-
         return CacheService::remember(
             CacheService::USERS,
-            array_merge($filters, [
-                'campus_id' => $campusId,
-                'is_super_admin' => $isSuperAdmin,
-            ]),
+            $filters,
             now()->addHour(),
-            function () use ($filters, $campusId, $isSuperAdmin) {
-                $users = User::query();
-
-                if (! $isSuperAdmin) {
-                    if ($campusId === null) {
-                        $users->whereRaw('1 = 0');
-                    } else {
-                        $users->where('campus_id', $campusId);
-                    }
-                }
-
-                $users->when(! empty($filters['query']),
-                    function ($u) use ($filters) {
-                        $query = '%'.$filters['query'].'%';
-
-                        $u->where(function ($q) use ($query) {
-                            $q->where('last_name', 'LIKE', $query)
-                                ->orWhere('first_name', 'LIKE', $query)
-                                ->orWhere('username', 'LIKE', $query)
-                                ->orWhere('email', 'LIKE', $query);
-                        });
-                    }
-                );
-
-                $users->when(! empty($filters['role']),
-                    function ($u) use ($filters) {
-                        $u->where('role', '=', $filters['role']);
-                    }
-                );
-
-                return $users
+            function () use ($filters, $user) {
+                $users = User::query()
+                // Role-Based Filters
+                    ->when($user->isSuperAdmin(), function ($q) use ($user) {
+                        return $q->where('id', '!=', $user->id);
+                    })
+                    ->when($user->isAdmin() || $user->isLibrarian(), function ($q) use ($user) {
+                        return $q->where('campus_id', $user->campus_id);
+                    })
+                // Searching
+                    ->when($filters['search'], fn ($q, $s) => $q->where('last_name', 'LIKE', "%$s%")
+                        ->orWhere('first_name', 'LIKE', "%$s%")
+                        ->orWhere('username', 'LIKE', "%$s%")
+                        ->orWhere('email', 'LIKE', "%$s%"))
+                // Filters
+                    ->when($filters['role'], fn ($q, $r) => $q->where('role', $r))
+                // Relationship and Pagination
                     ->with(['campus', 'library', 'librarian.library', 'patron.program', 'patron.patronType'])
                     ->orderBy($filters['sort'], $filters['order'])
                     ->paginate(
@@ -182,6 +158,8 @@ class UserService
                         'page',
                         $filters['page'] ?? 1
                     );
+
+                return $users;
             }
         );
     }

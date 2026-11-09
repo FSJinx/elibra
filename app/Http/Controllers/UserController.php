@@ -28,12 +28,9 @@ class UserController extends Controller
     {
         $user = $this->user();
         $filters = QueryService::filters($request);
-        $filters = array_merge(
-            $filters,
-            [
-                'role' => $request->query('role'),
-            ],
-        );
+        $filters = array_merge($filters, [
+            'role' => $request->query('role'),
+        ]);
 
         return $this->response(data: $this->service->index($filters, $user));
     }

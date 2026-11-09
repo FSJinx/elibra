@@ -17,18 +17,6 @@ class LibrarianSeeder extends Seeder
         collect([
             [
                 'uuid' => Str::uuid()->toString(),
-                'last_name' => 'tobias',
-                'first_name' => 'eugene_librarian',
-                'middle_initial' => 'd',
-                'username' => 'eugene_pogi',
-                'sex' => 'male',
-                'role' => 'librarian',
-                'email' => 'librarian_eugene@isu.edu.ph',
-                'password' => bcrypt('elibra2026'),
-                'campus_id' => 1,
-            ],
-            [
-                'uuid' => Str::uuid()->toString(),
                 'last_name' => 'christian',
                 'first_name' => 'christian',
                 'middle_initial' => 'd',
