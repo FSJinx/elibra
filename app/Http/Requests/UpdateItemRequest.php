@@ -58,8 +58,7 @@ class UpdateItemRequest extends BaseRequest
             'electronic_file' => [
                 Rule::prohibitedIf(fn (): bool => ! $this->supportsElectronicFile()),
                 'nullable',
-                'file',
-                'mimes:pdf,doc,docx',
+                Rule::when($this->hasFile('electronic_file'), ['file', 'mimes:pdf,doc,docx'], ['string']),
             ],
             'cover_image' => ['sometimes', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'item_type_id' => ['sometimes', 'required', Rule::exists((new ItemType)->getTable(), 'id')],

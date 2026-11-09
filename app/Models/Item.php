@@ -92,6 +92,11 @@ class Item extends Model
         return $this->belongsTo(Publisher::class);
     }
 
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
+
     public function itemType()
     {
         return $this->belongsTo(ItemType::class);

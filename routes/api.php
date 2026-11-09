@@ -28,6 +28,7 @@ use App\Http\Controllers\LibrarianController;
 use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\LoanModeController;
 use App\Http\Controllers\MediaController;
+use App\Http\Controllers\Opac\OpacController;
 use App\Http\Controllers\OpacSearchController;
 use App\Http\Controllers\PatronController;
 use App\Http\Controllers\PatronTypeController;
@@ -544,6 +545,8 @@ Route::get('/try', [TestController::class, 'index']);
 
 // OPAC Routes
 Route::group(['prefix' => '/opac'], function () {
+    Route::get('', [OpacController::class, 'index']);
+    Route::get('{item}', [OpacController::class, 'show']);
     Route::get('search', [OpacSearchController::class, 'search'])->middleware('throttle:read');
     Route::get('item/{itemId}', [OpacSearchController::class, 'show'])->middleware('throttle:read');
 });

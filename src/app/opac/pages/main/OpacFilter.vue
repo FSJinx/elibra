@@ -24,16 +24,6 @@
         </Control>
 
         <Control direction="col">
-          <Label id="params-branch">Branch</Label>
-          <Select id="params-branch" title="Branch" v-model="params.branch">
-            <Option value="">All branches</Option>
-            <template v-for="item in campusBranches" :key="item.id">
-              <Option :value="item.id">{{ item.name }}</Option>
-            </template>
-          </Select>
-        </Control>
-
-        <Control direction="col">
           <Label id="params-sort">Sort results</Label>
           <Select id="params-sort" title="Sort By" v-model="params.sort">
             <Option value="">Relevance</Option>
@@ -57,46 +47,8 @@
 </template>
 
 <script setup lang="ts">
-interface Params {
-  search: string
-  campus_id: string
-  branch: string
-  sort: string
-  order: string
-  item_type: string
-  category: string
-}
+const params = defineModel<Partial<OpacParams>>('params', { required: true })
 
-const params = defineModel<Params>('params', { required: true })
-
-defineEmits<{
-  apply: []
-  reset: []
-}>()
-
+const emit = defineEmits(['apply', 'reset'])
 const options = optionStore()
-
-watch(
-  () => params.value.campus_id,
-  () => {
-    params.value.branch = ''
-  },
-  { flush: 'sync' },
-)
-
-const campusBranches = computed(() => {
-  if (params.value.campus_id) {
-    return (options.libraries ?? []).filter((item) => String(item.campus_id) === String(params.value.campus_id))
-  }
-
-  return (options.libraries ?? []).map((b) => {
-    const c = options.campuses?.find((i) => String(i.id) === String(b.campus_id))
-    return {
-      ...b,
-      name: c ? `${b.name} - ${c.name}` : b.name,
-    }
-  })
-})
 </script>
-
-<style scoped></style>

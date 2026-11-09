@@ -24,6 +24,7 @@ class ItemType extends Model
     ];
 
     protected $casts = [
+        'loanable' => 'boolean',
         'has_electronic_file' => 'boolean',
     ];
 }

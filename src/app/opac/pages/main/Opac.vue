@@ -1,7 +1,7 @@
 <template>
   <div class="size-full flex justify-center gap-3 mx-auto w-full p-5 overflow-hidden">
-    <OpacFilter v-model:params="params" @apply="search" @reset="resetFilters" />
-    <OpacMain v-model:params="params" :library-data="libraryData" :total="total" :loading="loading" :error="error" @search="search" />
+    <OpacFilter v-model:params="params" @apply="search" @reset="reset" />
+    <OpacMain v-model:params="params" :data="pagination" :loading="loading" :error="error" @search="search" />
   </div>
   <!-- <OpacHistory /> -->
 </template>
@@ -11,93 +11,40 @@ import OpacFilter from '@/app/opac/pages/main/OpacFilter.vue'
 import OpacMain from '@/app/opac/pages/main/OpacMain.vue'
 
 const route = useRoute()
-const router = useRouter()
+const opac = opacStore()
 
-const { results: libraryData, total, loading, error, search: searchOpac } = useOpacSearch()
-
-const history = opacSearchStore()
-
-const params = reactive({
-  search: (route.query.search as string) ?? '',
-  campus_id: (route.query.campus_id as string) ?? '',
-  branch: (route.query.branch as string) ?? '',
-  sort: (route.query.sort as string) ?? '',
-  order: (route.query.order as string) ?? 'asc',
-  item_type: (route.query.item_type as string) ?? '',
-  category: (route.query.category as string) ?? '',
+const defaultParams = (): Partial<OpacParams> => ({
+  query: '',
+  order: 'desc',
+  per_page: '25',
 })
 
-async function fetchResults() {
-  // if (!params.search) {
-  //   libraryData.value = []
-  //   total.value = 0
-  //   return
-  // }
+const params = ref<Partial<OpacParams>>(defaultParams())
+const loading = ref<boolean>(false)
+const pagination = ref<Pagination>()
+const error = ref()
 
+async function search() {
+  loading.value = true
   try {
-    await searchOpac(params)
-    // await searchOpac({
-    //   query: params.search,
-    //   campus_id: params.campus || undefined,
-    //   branch_id: params.branch || undefined,
-    //   item_type_id: params.item_type || undefined,
-    //   item_type_category_id: params.category || undefined,
-    //   sort: params.sort || undefined,
-    //   order: params.order || undefined,
-    //   per_page: 10,
-    // })
-  } catch {
-    // `error` from useOpacSearch already handles this
+    const res = await opac.fetch(params.value)
+    if (res.status === 'error') return (error.value = res.message)
+    pagination.value = res.data
+  } catch (e: any) {
+    error.value = e.response?.data?.message
+    throw e
+  } finally {
+    loading.value = false
   }
 }
 
-async function search() {
-  router.replace({
-    name: 'opac',
-    query: params,
-    // query: {
-    //   search: params.search || undefined,
-    //   campus: params.campus || undefined,
-    //   branch: params.branch || undefined,
-    //   item_type: params.item_type || undefined,
-    //   category: params.category || undefined,
-    //   sort: params.sort || undefined,
-    //   order: params.order || undefined,
-    // },
-  })
-}
-
-function resetFilters() {
-  Object.assign(params, {
-    search: '',
-    campus: '',
-    branch: '',
-    item_type: '',
-    category: '',
-    sort: '',
-    order: 'asc',
-  })
+function reset() {
+  Object.assign(params.value, defaultParams())
 
   router.push({ name: 'opac' })
 }
 
-watch(
-  () => route.query,
-  async (query) => {
-    // Object.assign(params, query)
-    await fetchResults()
-  },
-  { immediate: true, deep: true },
-)
-
-// watch(
-//   () => route.query.search,
-//   () => {
-//     if (route.query.search) {
-//       history.addHistory(params.search)
-//     }
-//   },
-// )
+watch(() => route.query, search, { immediate: true, deep: true })
 </script>
 
 <style scoped></style>

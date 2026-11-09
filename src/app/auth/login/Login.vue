@@ -66,8 +66,6 @@ async function handleSubmit() {
   setStatus(defaultStatus)
   const res = await auth.login({ username: credentials.username, password: credentials.password })
 
-  console.log(res)
-
   if (!res.success) {
     setStatus({
       status: res.data?.status,

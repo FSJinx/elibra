@@ -30,6 +30,7 @@ export function useParser() {
         completed: 'success',
         approved: 'success',
         returned: 'success',
+        thesis: 'success',
         true: 'success',
         1: 'success',
 
@@ -41,7 +42,7 @@ export function useParser() {
 
         // ====== WARNING =======
         warning: 'warning',
-        serial: 'warning',
+        serials: 'warning',
         pending: 'warning',
 
         // ====== ERROR =======

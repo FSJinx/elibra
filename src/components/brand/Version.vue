@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-const version = ref('Alpha')
+const version = ref('Beta')
 </script>
 
 <style scoped></style>

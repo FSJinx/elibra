@@ -1,7 +1,7 @@
 <template>
-  <div class="space-y-2">
-    <h5 class="uppercase font-semibold text-xs tracking-wider text-muted-foreground" v-if="label">{{ label }}</h5>
-    <p class="font-semibold">
+  <div class="flex flex-col gap-2 h-full">
+    <h5 class="text-xs tracking-wide text-muted-foreground" v-if="label">{{ label }}</h5>
+    <p class="font-semibold mt-auto">
       <slot>{{ value ?? '-' }}</slot>
     </p>
   </div>

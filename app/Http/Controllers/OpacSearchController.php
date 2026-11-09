@@ -54,7 +54,7 @@ class OpacSearchController extends Controller
             'message' => 'Search Results Retrieved Successfully!',
             'data' => [
                 'query' => $query,
-                'results' => $results,
+                'data' => $results,
             ],
         ]);
     }
