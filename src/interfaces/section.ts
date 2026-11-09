@@ -9,8 +9,8 @@ export interface Section {
   library_id: any
   librarian_id: any
 
-  library: Library
-  librarian: Librarian
+  library: Library | null
+  librarian: Librarian | null
 
   created_at: string
   updated_at: string
