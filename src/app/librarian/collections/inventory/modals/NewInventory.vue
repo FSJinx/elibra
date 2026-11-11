@@ -8,8 +8,8 @@
       <Form class="p-5 space-y-3" id="new-inventory" @submit="submit">
         <Control id="inventory-section" required col>
           <Label>Shelf Status</Label>
-          <Select title="Sections" v-model="form.shelved">
-            <Option value="" selected disabled>Select shelf status</Option>
+          <Select title="Sections" v-model="form.shelved" placeholder="Select a shelf status">
+            <!-- <Option value="" selected disabled>Select shelf status</Option> -->
             <Option :value="true" label="On Shelf" />
             <Option :value="false" label="Unshelved" />
           </Select>
@@ -19,8 +19,7 @@
             <Label> Section </Label>
             <p class="text-muted-foreground text-sm">Select a section to inventory</p>
           </div>
-          <Select title="Sections" v-model="form.section_id">
-            <Option value="" selected disabled>Select a section to inventory</Option>
+          <Select title="Sections" v-model="form.section_id" placeholder="Select a section to perform inventory">
             <Option :value="section.id" v-for="section in options.sections?.filter((i) => i.library_id === auth.user?.library?.id)">{{ section.name }}</Option>
           </Select>
         </Control>
@@ -53,11 +52,11 @@ const modal = ref<InstanceType<typeof Modal>>()
 const form = ref<StoreInventory>(defaultForm())
 
 function open() {
+  Object.assign(form.value, defaultForm())
   modal.value?.open()
 }
 
 function close() {
-  Object.assign(form, defaultForm())
   modal.value?.close()
 }
 
@@ -73,6 +72,8 @@ async function submit() {
       close()
     } catch (e: any) {
       pop.error(e?.response?.data?.message ?? 'Something went wrong, please try again')
+    } finally {
+      close()
     }
   }
 }

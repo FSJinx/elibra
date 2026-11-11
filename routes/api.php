@@ -259,8 +259,8 @@ Route::group(['prefix' => '/inventory-line'], function () {
 
     // Update
     Route::put('{inventoryLine}', [InventoryLineController::class, 'update'])->middleware('throttle:write');
-    Route::put('{inventoryLine}/verify', [InventoryLineController::class, 'verify'])->middleware('throttle:write');
-    Route::put('{inventoryLine}/unverify', [InventoryLineController::class, 'unverify'])->middleware('throttle:write');
+    Route::put('{inventoryLine}/verify', [InventoryLineController::class, 'verify'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
+    Route::put('{inventoryLine}/unverify', [InventoryLineController::class, 'unverify'])->middleware('jwt.auth', 'throttle:write');
 
     // Delete
     Route::delete('{inventoryLine}', [InventoryLineController::class, 'destroy'])->middleware('throttle:delete');
@@ -405,18 +405,18 @@ Route::group(['prefix' => '/librarian', 'middleware' => ['jwt.auth', 'role:super
 
     // Get
     Route::get('', [LibrarianController::class, 'index'])->middleware('throttle:read');
-    
+
     // Post
     Route::post('', [LibrarianController::class, 'store'])->middleware('throttle:write');
-    
+
     // Put
     Route::put('{librarian}', [LibrarianController::class, 'update'])->middleware('throttle:write');
-    
+
     // Delete
     Route::delete('{librarian}', [LibrarianController::class, 'destroy'])->middleware('throttle:delete');
 
     // ============== DASHBOARD ROUTE ==================
-    Route::group(['prefix' => 'dashboard'], function () {;
+    Route::group(['prefix' => 'dashboard'], function () {
         // Get
         Route::get('total-collections', [DashboardController::class, 'totalCollections']);
 

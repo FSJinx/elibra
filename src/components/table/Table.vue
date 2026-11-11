@@ -81,14 +81,6 @@ function changePage(num: Number) {
   tableWrapper.value?.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
-onMounted(() => {
-  count()
-  mo = new MutationObserver(count)
-  mo.observe(table.value!, { childList: true, subtree: true })
-})
-
-onBeforeUnmount(() => mo?.disconnect())
-
 watch(per_page, (val) => {
   changePage(1)
   emit('per_page', val)
@@ -99,6 +91,20 @@ watch(
   (v) => (page.value = v),
   { immediate: true },
 )
+
+watch(
+  () => props.data?.data,
+  () => tableWrapper.value?.scrollTo({ top: 0, behavior: 'smooth' }),
+  { deep: true, immediate: true },
+)
+
+onMounted(() => {
+  count()
+  mo = new MutationObserver(count)
+  mo.observe(table.value!, { childList: true, subtree: true })
+})
+
+onBeforeUnmount(() => mo?.disconnect())
 
 provide('table', { props, cols })
 </script>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreInventoryRequest;
 use App\Http\Requests\UpdateInventoryRequest;
+use App\Models\Accession;
 use App\Models\Inventory;
 use App\Services\InventoryLineService;
 use App\Services\QueryService;
@@ -24,9 +25,9 @@ class InventoryController extends Controller
         $filters = QueryService::filters($request);
 
         $inventories = Inventory::query()
-            ->when($filters['search'], fn ($i, $s) => $i->where('inventory_code', 'LIKE', "%$s%"))->with(['librarian.user', 'section']);
-
-        $inventories = $inventories->paginate(null, ['*']);
+            ->when($filters['search'], fn ($i, $s) => $i->where('inventory_code', 'LIKE', "%$s%"))->with(['librarian.user', 'section'])
+            ->orderBy($filters['sort'], $filters['order'])
+            ->paginate();
 
         return $this->response('success', 'Inventories retrieved successfully', $inventories, 200);
     }
@@ -50,14 +51,17 @@ class InventoryController extends Controller
             return $this->response('error', 'This section has an on-going inventory. Select other sections or finish the pending before creating one again', [], 409);
         }
 
+        $hasItems = Accession::query()->whereHas('item', fn ($query) => $query->where('library_id', $user->library_id))->where('section_id', $request->boolean('shelved') ? $request->input('section_id') : null)->exists();
+
+        if (! $hasItems) {
+            return $this->response('error', 'No items stored in this section yet', null, 422);
+        }
+
         $inventory = DB::transaction(function () use ($user, $request) {
 
             $lastInventory = Inventory::latest('id')->first();
-
             $nextNumber = $lastInventory ? $lastInventory->id + 1 : 1;
-
             $inventoryCode = 'INV-'.now()->year.'-'.str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
-
             $inventory = Inventory::create([
                 'inventory_code' => $inventoryCode,
                 'section_id' => $request->input('section_id'),

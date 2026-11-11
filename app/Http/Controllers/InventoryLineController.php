@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreInventory_LineRequest;
+use App\Http\Requests\StoreInventoryLineRequest;
+use App\Http\Requests\UpdateInventoryLineRequest;
 use App\Models\Inventory;
 use App\Models\InventoryLine;
 use App\Services\InventoryLineService;
@@ -34,7 +35,7 @@ class InventoryLineController extends Controller
             ->where('inventory_id', $filters['inventory_id'])
             ->when(! is_null($filters['verified']), fn ($q) => $q->{$filters['verified'] ? 'whereNotNull' : 'whereNull'}('verified_at'))
             ->when($filters['status'], fn ($q, $status) => $q->where('current_status', $status))
-            ->with(['accession.item'])
+            ->with(['accession.item.itemType'])
             ->paginate($filters['per_page']);
 
         $stats = InventoryLine::where('inventory_id', $filters['inventory_id'])
@@ -68,7 +69,7 @@ class InventoryLineController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreInventory_LineRequest $request)
+    public function store(StoreInventoryLineRequest $request)
     {
         $inventory = Inventory::with('librarian')->findOrFail($request->integer('inventory_id'));
 
@@ -134,61 +135,14 @@ class InventoryLineController extends Controller
     /**
      * Verify an inventory line.
      */
-    public function verify(InventoryLine $inventoryLine)
+    public function verify(InventoryLine $inventoryLine, UpdateInventoryLineRequest $request)
     {
         $user = $this->user();
-
-        /*
-         * Load the parent inventory so we can
-         * verify ownership.
-         */
-        $inventoryLine->load('inventory');
-
-        $inventory = $inventoryLine->inventory;
-
-        if ($inventory->librarian_id !== $user->id) {
-            return $this->response(
-                'error',
-                'You are not authorized to verify this inventory line',
-                null,
-                403
-            );
-        }
-
-        /*
-         * Do not allow verification after the
-         * inventory has already been completed.
-         */
-        if ($inventory->is_completed) {
-            return $this->response(
-                'error',
-                'Completed inventory cannot be modified',
-                null,
-                422
-            );
-        }
-
-        /*
-         * Set the authenticated librarian as
-         * the person who verified the accession.
-         */
-        $inventoryLine->update([
-            'verified_by' => $user->id,
+        $data = array_merge($request->validated(), [
+            'verified_at' => now(),
+            'verifier_id' => $user->librarian->id ?? null,
         ]);
-
-        /*
-         * Check whether every inventory line
-         * has now been verified.
-         */
-        $unverifiedCount = $inventory->lines()
-            ->whereNull('verified_by')
-            ->count();
-
-        if ($unverifiedCount === 0) {
-            $inventory->update([
-                'is_completed' => true,
-            ]);
-        }
+        $this->inventoryLineService->update($inventoryLine, $data);
 
         return $this->response(
             'success',

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 
-class StoreInventory_LineRequest extends BaseRequest
+class StoreInventoryLineRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.

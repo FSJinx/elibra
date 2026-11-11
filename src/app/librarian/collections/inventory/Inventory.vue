@@ -8,11 +8,13 @@
     </SectionHeader>
 
     <div class="flex-1 flex flex-col gap-4 p-5 overflow-y-auto scroll">
-      <!-- <Card>
-        <CardBody> </CardBody>
-      </Card> -->
-
       <Table title="Recent Inventory Tracking" subtitle="Track your inventory history here." :data="pagination">
+        <template #header>
+          <Form class="w-full flex items-center justify-end gap-2" id="search-inventory" @submit="search">
+            <Input class="max-w-125" id="search-query" type="text" placeholder="Search by inventory id..." v-model="params.query" />
+            <Button type="submit">Search</Button>
+          </Form>
+        </template>
         <Thead>
           <Th>No.</Th>
           <Th>Inventory Code</Th>
@@ -32,10 +34,11 @@
             <Td :data="parse.formatDateAgo(item.created_at)"></Td>
 
             <Td>
-              <Status variant="pending">pending</Status>
+              <Status :variant="item.status">{{ item.status }}</Status>
             </Td>
-            <Td>
-              <Button class="hover:text-primary" size="sm">End</Button>
+            <Td class="space-x-2">
+              <Button class="hover:text-primary" size="sm">Finish</Button>
+              <Button class="hover:text-danger" size="sm">Delete</Button>
             </Td>
           </Tr>
         </Tbody>
@@ -52,11 +55,12 @@ const parse = useParser()
 
 const loading = ref<boolean>(false)
 const pagination = ref<Pagination>()
+const params = reactive<Partial<InventoryParams>>({})
 
 async function search() {
   loading.value = true
   try {
-    const res = await inventory.fetch()
+    const res = await inventory.fetch(params)
     pagination.value = res.data
   } finally {
     loading.value = false

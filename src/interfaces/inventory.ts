@@ -1,9 +1,4 @@
-export interface InventoryParams {
-  sort: string
-  page: number
-  per_page: number
-  order: 'asc' | 'desc'
-}
+export interface InventoryParams extends BaseParams {}
 
 export interface Inventory {
   id: any

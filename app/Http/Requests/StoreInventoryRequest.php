@@ -25,7 +25,7 @@ class StoreInventoryRequest extends BaseRequest
     {
         return [
             'shelved' => 'boolean',
-            'section_id' => 'sometimes|nullable|exists:sections,id'
+            'section_id' => 'required_if:shelved,true|nullable|exists:sections,id',
         ];
     }
 }
