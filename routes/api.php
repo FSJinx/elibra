@@ -239,7 +239,7 @@ Route::group(['prefix' => '/inventory'], function () {
     Route::get('{inventory}', [InventoryController::class, 'show']);
 
     // Post
-    Route::post('', [InventoryController::class, 'store'])->middleware('throttle:write');
+    Route::post('', [InventoryController::class, 'store'])->middleware('jwt.auth', 'throttle:write');
 
     // Update
     Route::put('{inventory}', [InventoryController::class, 'update'])->middleware('throttle:write');

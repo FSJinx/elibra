@@ -27,7 +27,7 @@
           <Tr v-for="(item, index) in inventory.data" :key="item.id" :to="{ name: 'librarian.collections.inventory.view', params: { id: item.id } }">
             <Td :data="index + 1"></Td>
             <Td :data="item.inventory_code"></Td>
-            <Td :data="item.section?.name"></Td>
+            <Td :data="item.section ? item.section?.name : 'Unshelved'"></Td>
             <Td :data="item.librarian?.user?.name?.full"></Td>
             <Td :data="parse.formatDateAgo(item.created_at)"></Td>
 

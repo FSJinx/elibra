@@ -30,7 +30,7 @@
           <Option value="75">75</Option>
           <Option value="100">100</Option>
         </Select>
-        <span class="text-muted-foreground text-sm">{{ data?.to > 1 ? `records out of ${data?.total ?? 0}` : 'record' }}</span>
+        <span class="text-muted-foreground text-sm">{{ data?.to > 1 ? `from ${data?.to} of ${data?.total ?? 0} records` : 'record' }}</span>
       </div>
 
       <div class="flex items-center gap-2" v-if="data?.last_page !== 1">

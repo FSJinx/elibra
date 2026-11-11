@@ -5,12 +5,17 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreInventoryRequest;
 use App\Http\Requests\UpdateInventoryRequest;
 use App\Models\Inventory;
+use App\Services\InventoryLineService;
 use App\Services\QueryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class InventoryController extends Controller
 {
+    public function __construct(
+        protected InventoryLineService $line
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
@@ -53,12 +58,15 @@ class InventoryController extends Controller
 
             $inventoryCode = 'INV-'.now()->year.'-'.str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
 
-            return Inventory::create([
+            $inventory = Inventory::create([
                 'inventory_code' => $inventoryCode,
                 'section_id' => $request->input('section_id'),
                 'librarian_id' => $user->id,
-
             ]);
+
+            $this->line->create($inventory, $request->validated());
+
+            return $inventory;
         });
 
         return $this->response(
@@ -75,17 +83,6 @@ class InventoryController extends Controller
     public function show(Inventory $inventory)
     {
         // $user = $this->user();
-
-        // $lines = $inventory->lines()
-        //     ->whereHas('accession', function ($query) use ($user) {
-        //         $query->where('library_id', $user->library_id);
-        //     })
-        //     ->with([
-        //         'accession.item',
-        //         'accession.section',
-        //         'verifiedBy',
-        //     ])
-        //     ->get();
 
         return $this->response(
             'success',

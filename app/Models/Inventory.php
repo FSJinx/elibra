@@ -37,6 +37,6 @@ class Inventory extends Model
 
     public function lines()
     {
-        return $this->hasMany(Inventory_Line::class, 'inventory_id');
+        return $this->hasMany(InventoryLine::class, 'inventory_id');
     }
 }

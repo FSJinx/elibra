@@ -2,44 +2,56 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Inventory_Line;
 use App\Http\Requests\StoreInventory_LineRequest;
-use App\Http\Requests\UpdateInventory_LineRequest;
 use App\Models\Inventory;
+use App\Models\InventoryLine;
+use App\Services\InventoryLineService;
+use App\Services\QueryService;
+use Illuminate\Http\Request;
 
 class InventoryLineController extends Controller
 {
+    public function __construct(
+        protected InventoryLineService $inventoryLineService
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
-    public function index(Inventory $inventory)
+    public function index(Request $request)
     {
         $user = $this->user();
 
-        /*
-         * Make sure the inventory belongs to
-         * the authenticated librarian.
-         */
-        if ($inventory->librarian_id !== $user->id) {
-            return $this->response(
-                'error',
-                'You are not authorized to view this inventory',
-                null,
-                403
-            );
-        }
+        $filters = QueryService::filters($request);
 
-        $lines = $inventory->lines()
-            ->with([
-                'accession',
-                'verifiedBy',
-            ])
-            ->get();
+        $filters = array_merge($filters, [
+            'inventory_id' => $request->input('inventory_id'),
+            'verified' => $request->has('verified') ? $request->boolean('verified') : null,
+            'status' => $request->input('status') ?? null,
+        ]);
+
+        $data = InventoryLine::query()
+            ->where('inventory_id', $filters['inventory_id'])
+            ->when(! is_null($filters['verified']), fn ($q) => $q->{$filters['verified'] ? 'whereNotNull' : 'whereNull'}('verified_at'))
+            ->when($filters['status'], fn ($q, $status) => $q->where('current_status', $status))
+            ->with(['accession.item'])
+            ->paginate($filters['per_page']);
+
+        $stats = InventoryLine::where('inventory_id', $filters['inventory_id'])
+            ->selectRaw("
+            count(*) as total,
+            count(verified_at) as verified,
+            count(*) - count(verified_at) as pending,
+            coalesce(sum(current_status = 'missing'), 0) as missing
+        ")->first();
+
+        // $data = [...$data, 'stats' => $stats];
+        $data = array_merge($data->toArray(), ['stats' => $stats]);
 
         return $this->response(
             'success',
             'Inventory lines retrieved successfully',
-            $lines->toArray(),
+            $data,
             200
         );
 
@@ -58,13 +70,40 @@ class InventoryLineController extends Controller
      */
     public function store(StoreInventory_LineRequest $request)
     {
-        //
+        $inventory = Inventory::with('librarian')->findOrFail($request->integer('inventory_id'));
+
+        if ($inventory->librarian_id !== $this->user()->librarian?->id) {
+            return $this->response(
+                'error',
+                'You are not authorized to modify this inventory',
+                null,
+                403
+            );
+        }
+
+        if ($inventory->status !== 'pending') {
+            return $this->response(
+                'error',
+                'Completed inventory cannot be modified',
+                null,
+                422
+            );
+        }
+
+        $lines = $this->inventoryLineService->create($inventory, $request->validated());
+
+        return $this->response(
+            'success',
+            'Inventory lines created successfully',
+            $lines->load(['accession.item', 'verifiedBy'])->toArray(),
+            201
+        );
     }
 
     /**
      * Display a specific inventory line.
      */
-    public function show(Inventory_Line $inventoryLine)
+    public function show(InventoryLine $inventoryLine)
     {
         $user = $this->user();
 
@@ -95,7 +134,7 @@ class InventoryLineController extends Controller
     /**
      * Verify an inventory line.
      */
-    public function verify(Inventory_Line $inventoryLine)
+    public function verify(InventoryLine $inventoryLine)
     {
         $user = $this->user();
 
@@ -166,7 +205,7 @@ class InventoryLineController extends Controller
     /**
      * Unverify an inventory line.
      */
-    public function unverify(Inventory_Line $inventoryLine)
+    public function unverify(InventoryLine $inventoryLine)
     {
         $user = $this->user();
 
@@ -215,7 +254,7 @@ class InventoryLineController extends Controller
     /**
      * Delete an inventory line.
      */
-    public function destroy(Inventory_Line $inventoryLine)
+    public function destroy(InventoryLine $inventoryLine)
     {
         $user = $this->user();
 
@@ -250,5 +289,4 @@ class InventoryLineController extends Controller
             200
         );
     }
-
 }

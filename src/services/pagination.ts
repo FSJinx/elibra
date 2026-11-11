@@ -20,4 +20,6 @@ export interface Pagination {
   prev_page_url: string
   to: any
   total: any
+
+  [key:string]:any
 }

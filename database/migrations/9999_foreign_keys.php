@@ -112,11 +112,13 @@ return new class extends Migration
             ],
         ],
         [
-            'name' => 'inventory__lines',
+            'name' => 'inventory_lines',
             'foreign_columns' => [
                 ['name' => 'inventory_id', 'references' => 'id', 'on' => 'inventories', 'onDelete' => 'cascade'],
                 ['name' => 'accession_id', 'references' => 'id', 'on' => 'accessions', 'onDelete' => 'cascade'],
-                ['name' => 'verified_by', 'references' => 'id', 'on' => 'librarians', 'onDelete' => 'set null'],
+                ['name' => 'current_section_id', 'references' => 'id', 'on' => 'sections', 'onDelete' => 'set null'],
+                ['name' => 'new_section_id', 'references' => 'id', 'on' => 'sections', 'onDelete' => 'set null'],
+                ['name' => 'verifier_id', 'references' => 'id', 'on' => 'librarians', 'onDelete' => 'set null'],
             ],
         ],
 

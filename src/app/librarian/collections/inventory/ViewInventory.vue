@@ -1,72 +1,94 @@
 <template>
   <div class="size-full flex flex-col overflow-hidden">
-    <!-- Top Header Navigation -->
-    <header class="flex items-center gap-3 p-4 border-b border-border bg-container">
-      <Button @click="router.back()" variant="text" icon="arrow-left" aria-label="Go back" />
-      <Title :level="2" class="text-lg font-bold">
-        Inventory ID: <span class="text-primary">{{ inventory.currentData?.inventory_code }}</span>
-      </Title>
-    </header>
+    <SectionHeader :title="`${inventory.currentData?.inventory_code} • ${inventory.currentData?.section?.name ?? 'Unshelved'} (${parse.toCapital(inventory.currentData?.status)})`" :description="`Started: ${parse.formatDate(inventory.currentData?.created_at)} by ${inventory.currentData?.librarian?.user?.first_name}`" icon="journal" />
 
     <!-- Main Content Area -->
-    <main class="flex-1 flex flex-col gap-3 p-3 overflow-y-auto">
-      <!-- Inventory Meta Information -->
-      <Card class="grid grid-cols-3">
-        <Control col>
-          <p class="text-xs text-muted-foreground uppercase tracking-wider font-medium">Section</p>
-          <p class="text-base font-semibold text-foreground">{{ inventory.currentData?.section?.name }}</p>
-        </Control>
-        <Control col>
-          <p class="text-xs text-muted-foreground uppercase tracking-wider font-medium">Initiated By</p>
-          <p class="text-base font-semibold text-foreground">{{ inventory.currentData?.librarian?.user?.name?.full }}</p>
-        </Control>
-        <Control col>
-          <p class="text-xs text-muted-foreground uppercase tracking-wider font-medium">Status</p>
-          <Status class="max-w-max" :variant="inventory.currentData?.status">{{ inventory.currentData?.status }}</Status>
-        </Control>
-      </Card>
+    <main class="flex-1 flex flex-col gap-3 p-5 overflow-y-auto">
+      <div class="grid sm:grid-cols-6 items-center gap-3">
+        <StatCard :loading :label="item.label" :value="item.data" v-for="item in stats" :value-color="item.variant"></StatCard>
+      </div>
 
-      <Card class="">
-        <Form class="flex-1 flex items-center gap-2" id="search-item" @submit="">
-          <Input type="text" placeholder="Search by title" class="max-w-100" />
-          <Button form="search-item" type="submit" variant="info">Search</Button>
-        </Form>
-      </Card>
+      <div class="flex items-center gap-2 text-sm">
+        <p class="px-4 py-1 rounded-lg cursor-pointer" @click="params.verified = false" :class="[params.verified === false && 'border border-primary bg-background text-primary']">Pending</p>
+        <p class="px-4 py-1 rounded-lg cursor-pointer" @click="params.verified = true" :class="[params.verified === true && 'border border-primary bg-background text-primary']">Verified</p>
+        <p class="px-4 py-1 rounded-lg cursor-pointer" @click="params.verified = null" :class="[params.verified === null && 'border border-primary bg-background text-primary']">All</p>
+      </div>
 
       <!-- Items Table -->
-      <Table title="Items" subtitle="Verify items in this inventory">
+      <Table title="Items" subtitle="Verify items in this inventory" :data="pagination" @page="params.page = $event" @per_page="params.per_page = $event">
+        <template #header>
+          <Form class="flex-1 flex items-center justify-end gap-2" id="search-item" @submit="search">
+            <Input type="text" placeholder="Search by title" class="max-w-100" />
+            <Button form="search-item" type="submit">Search</Button>
+          </Form>
+        </template>
         <Thead>
           <tr>
+            <Th>No</Th>
+            <Th>Accession</Th>
             <Th class="text-left">Title</Th>
-            <Th class="text-center">Copies</Th>
-            <Th class="text-right">Actions</Th>
+            <Th>Status</Th>
+            <Th>Location</Th>
+            <Th>Actions</Th>
           </tr>
         </Thead>
-        <!-- <tbody>
-          <tr v-for="item in []" :key="item.id" class="border-b border-border hover:bg-muted/30 transition-colors">
-            <Td class="text-left font-medium">{{ item.title }}</Td>
-            <Td>{{ item.copies }}</Td>
-            <Td class="text-right">
-              <Button size="sm" variant="info" @click="verifyItem(item.id)"> Verify </Button>
+        <Tbody :loading :data="lines.data">
+          <tr v-for="(item, index) in lines.data" :key="item.id" class="border-b border-border hover:bg-muted/30 transition-colors">
+            <Td :data="pagination?.from + index" />
+            <Td :data="item.accession?.accession_number ?? null" />
+            <Td class="text-left" :data="item.accession?.item?.title" />
+            <Td>
+              <Status :variant="item.current_status">{{ item.current_status }}</Status>
+            </Td>
+            <Td :data="item.current_section?.name ?? 'Not on the shelf'" />
+            <Td>
+              <Button size="sm" variant="info"> Verify </Button>
             </Td>
           </tr>
-          <tr v-if="items.length === 0">
-            <Td colspan="3" class="text-center py-8 text-muted-foreground"> No items found in this inventory. </Td>
-          </tr>
-        </tbody> -->
+        </Tbody>
+        <template #footer />
       </Table>
     </main>
   </div>
 </template>
 
 <script setup lang="ts">
-import { popScopeId, ref } from 'vue'
-import { useRouter } from 'vue-router'
-
-const route = useRoute()
 const pop = usePopup()
+const parse = useParser()
 const inventory = inventoryStore()
+const lines = inventoryLineStore()
 
+const defaultParams = (): Partial<InventoryLineParams> => ({
+  query: '',
+  inventory_id: inventory?.currentData?.id ?? null,
+  verified: false,
+})
+const params = reactive(defaultParams())
+const loading = ref<boolean>(false)
+const pagination = ref<Pagination>()
+
+const stats = computed(() => {
+  return [
+    { label: 'Total', data: pagination.value?.stats.total },
+    { label: 'Verified', data: pagination.value?.stats.verified, variant: 'text-success!' },
+    { label: 'Pending', data: pagination.value?.stats.pending, variant: 'text-info' },
+    { label: 'Missing', data: pagination.value?.stats.missing, variant: 'text-danger!' },
+  ]
+})
+
+async function search() {
+  if (loading.value) return
+
+  loading.value = true
+  try {
+    const res = await lines.fetch(params)
+    pagination.value = res.data
+  } finally {
+    loading.value = false
+  }
+}
+
+watchDebounced(params, search, { deep: true, immediate: true, debounce: 300 })
 onBeforeUnmount(() => (inventory.currentData = null))
 </script>
 

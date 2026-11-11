@@ -36,4 +36,9 @@ class Accession extends Model
             'acquisition_line_id'
         );
     }
+
+    public function inventoryLines()
+    {
+        return $this->hasMany(InventoryLine::class, 'accession_id');
+    }
 }

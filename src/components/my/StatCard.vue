@@ -1,6 +1,6 @@
 <template>
   <article class="flex min-h-22 flex-col gap-2 rounded-xl border border-border bg-white p-5 transition-colors duration-150" :data-title="`${label}: ${value ? value.toLocaleString() : 'No data'}`">
-    <div v-if="isLoading" class="flex flex-col gap-3">
+    <div v-if="loading" class="flex flex-col gap-3">
       <div class="h-3 w-2/5 animate-shimmer rounded bg-linear-to-r from-gray-200 via-gray-100 to-gray-200 bg-size-[200%_100%]" />
       <div class="h-6 w-3/5 animate-shimmer rounded bg-linear-to-r from-gray-200 via-gray-100 to-gray-200 bg-size-[200%_100%]" />
     </div>
@@ -22,9 +22,7 @@
           {{ Math.abs(trend) }}%
         </span>
 
-        <h3 class="m-0 text-[1.75rem] font-semibold leading-tight text-gray-900 ml-auto">
-          {{ valueFormatted }}
-        </h3>
+        <h3 class="m-0 text-[1.75rem] font-semibold leading-tight text-gray-900 ml-auto" :class="[valueColor]">{{ value }}</h3>
       </div>
     </template>
   </article>
@@ -37,16 +35,20 @@ import { computed } from 'vue'
 
 interface Props {
   label: string
+  labelColor?: string
+
   value: any
+  valueColor?: string
+
   icon?: string | object
   trend?: number
   variant?: Variants
-  isLoading?: boolean
+  loading?: boolean
   currency?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  isLoading: false,
+  loading: false,
   variant: 'default',
 })
 
