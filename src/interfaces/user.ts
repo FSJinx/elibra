@@ -21,6 +21,8 @@ export interface User {
   registration: 'approved' | 'pending' | 'rejected' | null
   login_attempts: string
   profile_picture_id: any
+  profile_picture?: string | null
+  profilePicture?: { file_path?: string } | null
   campus_id: any
   remember_token: any
 

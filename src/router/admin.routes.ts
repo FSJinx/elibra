@@ -1,4 +1,11 @@
 export const adminRoutes = [
+  {
+    path: 'settings/profile',
+    name: 'admin.settings.profile',
+    meta: { title: 'Profile', breadcrumb: 'Profile' },
+    component: () => import('@/app/librarian/settings/Settings.vue'),
+  },
+
   // Dashboard Routes
   ...adminOverviewRoutes,
 

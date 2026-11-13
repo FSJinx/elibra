@@ -20,11 +20,12 @@
             <Th>Date Borrowed</Th>
             <Th>Due Date</Th>
             <Th>Status</Th>
+            <Th>Fine Charged</Th>
             <Th>Action</Th>
           </tr>
         </Thead>
         <Tbody :data="circulation.data" :loading="loading" error-message="No active borrowings yet, lend an item to start managing borrowings.">
-          <Tr v-for="(item, index) in circulation.data" :key="index">
+          <Tr v-for="(item, index) in circulation.data" :key="item.id">
             <Td :data="index + 1" />
             <Td :data="item.accession?.accession_number" />
             <Td :class="[{ 'text-danger!': Number.parseFloat(item.fine_charged) > 0 }]" class="text-left" :data="item.accession?.item?.title" />
@@ -52,6 +53,7 @@
 import DeleteButton from '@/app/librarian/circulation/check_in/modals/DeleteButton.vue'
 import RenewButton from '@/app/librarian/circulation/check_in/modals/RenewButton.vue'
 import ReturnButton from '@/app/librarian/circulation/check_in/modals/ReturnButton.vue'
+import { formatDateTime } from '@/utils/date'
 
 const circulation = circulationStore()
 const parse = useParser()
