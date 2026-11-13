@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-const campus = useCampusStore()
+const campus = campusStore()
 
 const route = useRoute()
 

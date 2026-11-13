@@ -1,87 +1,39 @@
-
-
-const url = 'campus'
-
-export const useCampusStore = defineStore('campus', {
+export const campusStore = defineStore('campus', {
   state: () => ({
     data: null as Campus[] | null,
     currentData: null as Campus | null,
-    loading: false as true | false,
-    pop: usePopup(),
-    auth: authStore(),
+
+    url: 'campus',
   }),
 
-  getters: {
-    getCampus() {
-      return (id: any) => this.data?.find((i) => i.id === id)
-    },
-  },
-
   actions: {
-    // =========== SETTERS ============
-    pushData(data: Campus) {
-      this.data?.push(data)
-    },
-
-    updateData(data: Campus) {
-      this.data = (this.data as Campus[]).filter((i) => i.id !== data.id)
-      nextTick(() => this.data?.push(data))
-    },
-
-    removeData(data: Campus) {
-      this.data = (this.data as Campus[]).filter((i) => i.id !== data.id)
-    },
-
-    setData(data: Campus[]) {
-      this.data = data
-    },
-
-    setCurrentData(data: Campus) {
-      this.currentData = data
-    },
-
     // =========== ACTIONS ============
-    async fetch(forced = false) {
-      if (this.data && !forced) return
-
-      this.loading = true
-      const res = await get(url)
-      this.setData(res.data)
-      this.loading = false
-
+    async fetch(params?: CampusParams) {
+      const res = await get(this.url, params)
+      this.data = res.data.data
       return res
     },
 
     async show(id: any) {
-      const res = await get(`${url}/${id}`)
-      this.setCurrentData(res?.data)
+      const res = await get(`${this.url}/${id}`)
+      this.currentData = res.data
       return res
     },
 
     async create(params: Partial<Campus>) {
-      const res = await post(url, params)
-      this.pushData(res.data)
-
-      return res
+      return await post(this.url, params)
     },
 
     async update(params: Campus) {
-      const res = await put(`${url}/${params.id}`, params)
-      this.updateData(res.data)
-      this.setCurrentData(res.data)
-      return res
+      return await put(`${this.url}/${params.id}`, params)
     },
 
     async remove(params: Campus) {
-      const res = await del(`${url}/${params?.id}`)
-      this.removeData(params)
-      return res
+      return await del(`${this.url}/${params?.id}`)
     },
 
     async restore(params: Campus) {
-      const res = await patch(`${url}/${params?.id}`)
-      this.pushData(res.data)
-      return res
+      return await patch(`${this.url}/${params?.id}`)
     },
   },
 })

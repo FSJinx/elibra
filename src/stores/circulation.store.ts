@@ -19,12 +19,12 @@ export const circulationStore = defineStore('circulation', {
     },
 
     async checkIn(payload: Circulation) {
-      const res = await put(`${this.url}/${payload.id}/return`)
+      const res = await post(`${this.url}/${payload.id}/return`)
       return res
     },
 
     async renew(payload: Circulation) {
-      const res = await put(`${this.url}/${payload.id}/renew`)
+      const res = await post(`${this.url}/${payload.id}/renew`)
       return res
     },
 

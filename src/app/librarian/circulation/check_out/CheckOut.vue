@@ -9,7 +9,7 @@
 
     <div class="flex-1 flex flex-col p-5 gap-3 overflow-y-auto">
       <CheckPatron v-model="form.patron" v-if="!form.patron" />
-      <CheckItems v-model="form.accessions" v-if="form.patron" />
+      <CheckItems v-model="form.accessions" v-if="form.patron" @openBag="bookBag?.open"/>
     </div>
   </div>
 </template>
@@ -26,18 +26,13 @@ const bookBag = ref<InstanceType<typeof BookBag>>()
 const borrowInfo = (): CheckOut => ({
   patron: null,
   accessions: null,
-  loan_mode_id: ''
+  loan_mode_id: '',
 })
 
 const form = ref<CheckOut>(borrowInfo())
 
 async function clear() {
-  const confirm = await pop.confirm({ text: 'Are you sure you want to clear the current bag?' })
-  
-  if (confirm.isConfirmed) {
-    form.value = borrowInfo()
-    bookBag.value?.close()
-  }
+  form.value = borrowInfo()
 }
 
 async function removePatron() {
@@ -48,10 +43,6 @@ async function removePatron() {
   }
 }
 
-watch(
-  () => form.value.accessions,
-  (val) => bookBag.value?.open(),
-)
 </script>
 
 <style scoped></style>

@@ -66,7 +66,7 @@ const defaultBranch = (): Partial<Library> => ({
 
 const modal = ref<typeof Modal | null>(null)
 const library = libraryStore()
-const campus = useCampusStore()
+const campus = campusStore()
 const pop = usePopup()
 const form = reactive(defaultBranch())
 const hasInputs = computed(() => Object.values(form).some((value) => value != null && String(value).length > 0))

@@ -101,9 +101,10 @@ async function submit() {
     try {
       const res = await circulation.checkOut(model.value)
       pop.success(res.message)
-      nextTick()
-      clear()
-      close()
+      nextTick(() => {
+        emit('clear')
+        close()
+      })
     } catch (e: any) {
       pop.error(e.response?.data?.message)
     }

@@ -4,6 +4,7 @@
 
 <script setup lang="ts">
 const props = defineProps<{ data: Circulation }>()
+const emit = defineEmits(['refresh'])
 
 const circulation = circulationStore()
 const pop = usePopup()
@@ -16,6 +17,7 @@ async function submit() {
     try {
       const res = await circulation.checkIn(props.data)
       pop.success(res.message)
+      emit('refresh')
     } catch (e: any) {
       pop.error(e.response?.data?.message)
     }

@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-const campus = useCampusStore()
+const campus = campusStore()
 const branch = useAdminBranchStore()
 const parse = useParser()
 

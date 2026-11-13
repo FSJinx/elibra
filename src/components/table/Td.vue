@@ -1,10 +1,10 @@
 <template>
-  <td v-if="props.data !== undefined" :class="{ 'text-muted-foreground/50': data === null || data.length === 0 }">
+  <td class="text-wrap space-y-2 leading-relaxed" v-if="props.data !== undefined" :class="{ 'text-muted-foreground/50': data === null || data.length === 0 }">
     {{ data ?? nullMessage }}
   </td>
 
   <!-- Slot fallback kapag undefined ang data prop -->
-  <td :class="[alignClass]" v-else>
+  <td class="space-y-2" :class="[alignClass]" v-else>
     <slot />
   </td>
 </template>

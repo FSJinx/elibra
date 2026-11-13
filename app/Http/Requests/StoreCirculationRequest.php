@@ -25,22 +25,28 @@ class StoreCirculationRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'accession' => ['required', 'integer', Rule::exists('accessions', 'id')],
-            'patron' => ['required', 'integer', Rule::exists('patrons', 'id')],
+            'patron' => ['required', 'array'],
+            'patron.id' => ['required', 'integer', Rule::exists('patrons', 'id')],
             'loan_mode_id' => ['required', 'integer', Rule::exists('loan_modes', 'id')],
+
+            'accessions' => ['required', 'array', 'min:1'],
+            'accessions.*' => ['required', 'array'],
+            'accessions.*.id' => ['required', 'integer', 'distinct', Rule::exists('accessions', 'id')],
         ];
     }
 
     public function messages(): array
     {
         return [
-            'accession_id.required' => 'The accession is required.',
-            'accession_id.integer' => 'The accession ID must be a valid integer.',
-            'accession_id.exists' => 'The selected accession does not exist.',
+            'accessions.required' => 'At least one accession is required.',
+            'accessions.min' => 'At least one accession is required.',
+            'accessions.*.id.required' => 'The accession is required.',
+            'accessions.*.id.integer' => 'The accession ID must be a valid integer.',
+            'accessions.*.id.exists' => 'The selected accession does not exist.',
 
-            'patron_id.required' => 'The patron is required.',
-            'patron_id.integer' => 'The patron ID must be a valid integer.',
-            'patron_id.exists' => 'The selected patron profile does not exist.',
+            'patron.id.required' => 'The patron is required.',
+            'patron.id.integer' => 'The patron ID must be a valid integer.',
+            'patron.id.exists' => 'The selected patron profile does not exist.',
 
             'loan_mode_id.required' => 'The loan mode is required.',
             'loan_mode_id.integer' => 'The loan mode ID must be a valid integer.',

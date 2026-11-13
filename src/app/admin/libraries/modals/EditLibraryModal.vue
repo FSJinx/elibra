@@ -63,7 +63,7 @@ const errors = ref<Record<keyof Library, string[]> | null>(null)
 const pop = usePopup()
 const hasChanges = computed(() => JSON.stringify(form) !== JSON.stringify(props.data))
 const library = libraryStore()
-const campus = useCampusStore()
+const campus = campusStore()
 
 async function submit() {
   const res = await pop.confirm({ text: 'Are you sure you want to keep this changes?' })

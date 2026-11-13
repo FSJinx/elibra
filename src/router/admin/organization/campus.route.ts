@@ -15,7 +15,7 @@ export const adminCampusRoutes = [
     redirect: { name: 'admin.campus.show.overview' },
     component: () => import('@/app/admin/campus/ViewCampus.vue'),
     beforeEnter: async (to: any) => {
-      const campus = useCampusStore()
+      const campus = campusStore()
       const pop = usePopup()
       const breadcrumb = useBreadcrumbStore()
 

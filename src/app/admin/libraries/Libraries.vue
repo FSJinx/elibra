@@ -50,7 +50,7 @@ import AddNewLibraryModal from '@/app/admin/libraries/modals/AddNewLibraryModal.
 import EditLibraryModal from '@/app/admin/libraries/modals/EditLibraryModal.vue'
 
 const library = libraryStore()
-const campus = useCampusStore()
+const campus = campusStore()
 const parse = useParser()
 const pop = usePopup()
 

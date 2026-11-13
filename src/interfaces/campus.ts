@@ -1,3 +1,5 @@
+export interface CampusParams extends Partial<BaseParams> {}
+
 export interface Campus {
   id: any
   name: string

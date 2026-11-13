@@ -10,6 +10,7 @@ use App\Models\Patron;
 use App\Models\User;
 use App\Services\CirculationService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CirculationController extends Controller
 {
@@ -119,12 +120,25 @@ class CirculationController extends Controller
      */
     public function store(StoreCirculationRequest $request)
     {
-        $circulation = $this->circulationService->checkout($request->validated(), $request->user());
+        $validated = $request->validated();
+        $circulations = DB::transaction(function () use ($validated, $request) {
+            $created = [];
+
+            foreach ($validated['accessions'] as $accession) {
+                $created[] = $this->circulationService->checkout([
+                    'patron_id' => $validated['patron']['id'],
+                    'accession_id' => $accession['id'],
+                    'loan_mode_id' => $validated['loan_mode_id'],
+                ], $request->user());
+            }
+
+            return $created;
+        });
 
         return $this->response(
             'success',
-            'Circulation created successfully.',
-            $circulation->toArray(),
+            'Circulations created successfully.',
+            array_map(fn (Circulation $circulation) => $circulation->toArray(), $circulations),
             201
         );
     }

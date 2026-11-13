@@ -41,7 +41,7 @@ const defaultCampus = (): Partial<Campus> => ({
 })
 
 const modal = ref<typeof Modal | null>(null)
-const campus = useCampusStore()
+const campus = campusStore()
 const pop = usePopup()
 const form = reactive(defaultCampus())
 const errors = ref<Campus | null>(null)

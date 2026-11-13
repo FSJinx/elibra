@@ -15,116 +15,90 @@ class CampusController extends Controller
 {
     public function index(Request $request)
     {
-        [
-            'search' => $search,
-            'sort' => $sort,
-            'order' => $order,
-        ] = QueryService::filters($request);
+        $filters = QueryService::filters($request);
 
         $campuses = CacheService::remember(
             CacheService::CAMPUSES,
-            [
-                'search' => $search,
-                'sort' => $sort,
-                'order' => $order,
-            ],
+            $filters,
             now()->addMinutes(10),
-            function () use ($search, $sort, $order) {
-
+            function () use ($filters) {
                 $allowedSortFields = ['name', 'code'];
 
-                $query = Campus::query();
+                $query = Campus::query()
+                    ->when($filters['search'], fn ($q, $s) => $q->where('name', 'LIKE', "%$s%")->orWhere('code', 'LIKE', "%$s%"))
+                    ->orderBy($filters['sort'], $filters['order'])
+                    ->paginate();
 
-                if (! empty($search)) {
-                    $query->where(function ($query) use ($search) {
-                        $query->where('name', 'LIKE', "%{$search}%")
-                            ->orWhere('code', 'LIKE', "%{$search}%");
-                    });
-                }
-
-                if (is_array($sort) && ! empty($sort)) {
-                    foreach ($sort as $field) {
-                        if (in_array($field, $allowedSortFields, true)) {
-                            $query->orderBy(
-                                $field,
-                                $order === 'desc' ? 'desc' : 'asc'
-                            );
-                        }
-                    }
-                } else {
-                    $query->orderBy('name');
-                }
-
-                return $query->get();
+                return $query;
             }
         );
 
         // No exact match found
-        if ($campuses->isEmpty() && ! empty($search)) {
+        // if ($campuses->isEmpty() && ! empty($search)) {
 
-            $search = strtolower(trim($search));
+        //     $search = strtolower(trim($search));
 
-            $suggestions = Campus::all()
-                ->map(function ($campus) use ($search) {
+        //     $suggestions = Campus::all()
+        //         ->map(function ($campus) use ($search) {
 
-                    // Remove "Campus" from the name
-                    $cleanName = strtolower(
-                        str_replace(' campus', '', $campus->name)
-                    );
+        //             // Remove "Campus" from the name
+        //             $cleanName = strtolower(
+        //                 str_replace(' campus', '', $campus->name)
+        //             );
 
-                    // Compare against every word
-                    $distance = collect(explode(' ', $cleanName))
-                        ->map(fn ($word) => levenshtein($search, $word))
-                        ->min();
+        //             // Compare against every word
+        //             $distance = collect(explode(' ', $cleanName))
+        //                 ->map(fn ($word) => levenshtein($search, $word))
+        //                 ->min();
 
-                    similar_text($search, $cleanName, $similarity);
+        //             similar_text($search, $cleanName, $similarity);
 
-                    $campus->distance = $distance;
-                    $campus->similarity = $similarity;
+        //             $campus->distance = $distance;
+        //             $campus->similarity = $similarity;
 
-                    return $campus;
-                })
-                ->filter(function ($campus) {
-                    return $campus->distance <= 2
-                        || $campus->similarity >= 70;
-                })
-                ->sort(function ($a, $b) {
+        //             return $campus;
+        //         })
+        //         ->filter(function ($campus) {
+        //             return $campus->distance <= 2
+        //                 || $campus->similarity >= 70;
+        //         })
+        //         ->sort(function ($a, $b) {
 
-                    if ($a->distance === $b->distance) {
-                        return $b->similarity <=> $a->similarity;
-                    }
+        //             if ($a->distance === $b->distance) {
+        //                 return $b->similarity <=> $a->similarity;
+        //             }
 
-                    return $a->distance <=> $b->distance;
-                })
-                ->take(3)
-                ->values()
-                ->map(function ($campus) {
-                    unset($campus->distance);
-                    unset($campus->similarity);
+        //             return $a->distance <=> $b->distance;
+        //         })
+        //         ->take(3)
+        //         ->values()
+        //         ->map(function ($campus) {
+        //             unset($campus->distance);
+        //             unset($campus->similarity);
 
-                    return $campus;
-                });
+        //             return $campus;
+        //         });
 
-            if ($suggestions->isNotEmpty()) {
-                return $this->response(
-                    'You may have mistyped the campus name.',
-                    'Campus not found. Did you mean one of these?',
-                    $suggestions->toArray(),
-                    404
-                );
-            }
+        //     if ($suggestions->isNotEmpty()) {
+        //         return $this->response(
+        //             'You may have mistyped the campus name.',
+        //             'Campus not found. Did you mean one of these?',
+        //             $suggestions->toArray(),
+        //             404
+        //         );
+        //     }
 
-            return $this->response(
-                'error',
-                data: ['campus' => 'Not Found'],
-                statusCode: 404
-            );
-        }
+        //     return $this->response(
+        //         'error',
+        //         data: ['campus' => 'Not Found'],
+        //         statusCode: 404
+        //     );
+        // }
 
         return $this->response(
             'success',
             'Campuses retrieved successfully.',
-            $campuses->toArray(),
+            $campuses,
             200
         );
     }
