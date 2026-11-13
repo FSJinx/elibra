@@ -43,9 +43,11 @@ export interface Item {
 
   // Relationships
 
-  authors: Author[]
-  publisher: Publisher
-  accessions: Accession[]
+  authors: Author[] | null
+  publisher: Publisher | null
+  accessions: Accession[] | null
+  item_type: ItemType | null
+  item_type_category: ItemCategory | null
 
   [key: string]: any
 }

@@ -83,11 +83,11 @@ function close() {
         el.classList.remove('shake')
       }, 500)
     }
-
     return
   }
 
   isOpen.value = false
+  emit('closing')
 }
 
 function handleKeydown(event: KeyboardEvent) {

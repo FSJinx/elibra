@@ -1,15 +1,12 @@
 <template>
   <!-- Searching Patron -->
-  <Card>
-    <CardBody>
-      <Form class="flex items-center gap-2 w-full" id="search-patron" @submit="search">
-        <Input class="max-w-150" type="text" enable-clear placeholder="Search by Patron Name, ID Number, or EBC Number" v-model="searchPatron" />
-        <Button form="search-patron" variant="success" type="submit">Search</Button>
-      </Form>
-    </CardBody>
-  </Card>
-
   <Table title="Patrons" subtitle="Preview patron's information for this borrow" :data="pagination">
+    <template #header>
+      <Form class="flex items-center justify-end gap-2 w-full" id="search-patron" @submit="search">
+        <Input class="max-w-150" type="text" enable-clear placeholder="Search by Patron Name, ID Number, or EBC Number" v-model="searchPatron" />
+        <Button form="search-patron" type="submit">Search</Button>
+      </Form>
+    </template>
     <Thead>
       <tr>
         <Th>No</Th>
@@ -32,6 +29,7 @@
         </Td>
       </Tr>
     </Tbody>
+    <template #footer />
   </Table>
 </template>
 

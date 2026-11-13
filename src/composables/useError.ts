@@ -41,11 +41,11 @@ export const useError = () => {
     })
   }
 
-  function forbidden() {
+  function forbidden(message?: string) {
     open({
       code: '403',
       title: 'Access Denied',
-      message: "You don't have the required permissions to access this page, please try again later. If you think this is an error, please contact your administrator.",
+      message: message ?? "You don't have the required permissions to access this page, please try again later. If you think this is an error, please contact your administrator.",
     })
   }
 

@@ -6,7 +6,6 @@ use App\Models\Accession;
 use App\Models\AcquisitionLines;
 use App\Models\Item;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use RuntimeException;
 
@@ -17,24 +16,17 @@ class AccessionService
         return (new Accession)->getFillable();
     }
 
-    public function create(array $data): Collection
+    public function create(array $payload): Accession
     {
-        $quantity = max(1, (int) ($data['quantity'] ?? 1));
-        $attributes = Arr::only($data, self::fields());
+        $payload = Arr::only($payload, self::fields());
 
-        $accessions = DB::transaction(function () use ($quantity, $attributes) {
-            $created = collect();
-
-            for ($i = 0; $i < $quantity; $i++) {
-                $created->push(Accession::create($attributes));
-            }
-
-            return $created;
+        $data = DB::transaction(function () use ($payload) {
+            return Accession::create($payload);
         });
 
         CacheService::invalidate(CacheService::ACCESSION);
 
-        return $accessions;
+        return $data;
     }
 
     public function update(Accession $accession, array $data): Accession

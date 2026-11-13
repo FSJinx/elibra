@@ -24,14 +24,6 @@ class LibrarySeeder extends Seeder
                 'opening_hour' => '08:00:00',
                 'closing_hour' => '17:30:00',
             ],
-            [
-                'name' => 'CCSICT Research Room',
-                'campus' => 'ISU-E',
-                'phone' => '09000000002',
-                'email' => 'isu.e.ccsict@isu.edu.ph',
-                'opening_hour' => '08:00:00',
-                'closing_hour' => '17:30:00',
-            ],
 
             // Angadanan Campus Branches
             [
@@ -39,14 +31,6 @@ class LibrarySeeder extends Seeder
                 'campus' => 'ISU-AC',
                 'phone' => '09000000003',
                 'email' => 'isu.ac.library@isu.edu.ph',
-                'opening_hour' => '08:00:00',
-                'closing_hour' => '17:30:00',
-            ],
-            [
-                'name' => 'CCJE Library',
-                'campus' => 'ISU-AC',
-                'phone' => '09000000004',
-                'email' => 'isu.ac.ccje@isu.edu.ph',
                 'opening_hour' => '08:00:00',
                 'closing_hour' => '17:30:00',
             ],

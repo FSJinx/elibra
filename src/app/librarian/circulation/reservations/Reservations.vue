@@ -2,8 +2,14 @@
   <div class="size-full flex flex-col gap 5 overflow-hidden">
     <SectionHeader title="Holds & Reservations" description="Manage reservations for items in your library" icon=""></SectionHeader>
 
-    <div class="flex-1 flex flex-col p-5">
-      <Table title="Pending Holdings" subtitle="Here are the reservations made by patrons">
+    <div class="flex-1 flex flex-col p-5 overflow-hidden">
+      <Table title="Pending Holdings" subtitle="Here are the reservations made by patrons" :data="pagination">
+        <template #header>
+          <Form class="flex flex-wrap items-center justify-end w-full gap-2" id="holding-form" @submit="search">
+            <Input class="max-w-120" id="holding-query" type="text" placeholder="Search by accession number, reservation id, or patron" v-model="params.query" />
+            <Button type="submit">Search</Button>
+          </Form>
+        </template>
         <Thead>
           <tr>
             <Th>No</Th>
@@ -15,23 +21,20 @@
             <Th>Actions</Th>
           </tr>
         </Thead>
-        <Tbody :data="holding.data" :loading="holding.loading" cols="7">
+        <Tbody :data="holding.data" :loading>
           <Tr v-for="(item, index) in holding.data" :key="item.id">
             <Td :data="index + 1" />
             <Td :data="item.accession?.accession_number" />
             <Td class="text-left" :data="item.accession?.item?.title" />
             <Td class="text-left" :data="item.reserver?.user?.name?.full" />
-            <Td :data="parse.formatDateTime(item.pickup_date)" />
+            <Td :data="parse.formatDateTime(item.expected_pickup_date)" />
             <Td>
-              <Status :variant="item.picked_up_at ? 'success' : 'warning'">{{ item.picked_up_at ? 'Completed' : 'Pending' }}</Status>
+              <Status :variant="item.status">{{ item.status }}</Status>
             </Td>
             <Td class="space-x-2">
-              <Complete v-if="!item.picked_up_at" :data="item" @refresh="fetchReservations" />
+              <Complete v-if="item.status !== 'completed' && !item.pickup_date" :data="item" @refresh="search" />
               <Button class="hover:text-danger" size="sm" :loading="deletingId === item.id" :disabled="deletingId !== null" @click="deleteReservation(item)">Delete</Button>
             </Td>
-          </Tr>
-          <Tr v-if="holding.data?.length === 0">
-            <Td colspan="7" class="px-5 py-10 text-center text-sm">No reservations found.</Td>
           </Tr>
         </Tbody>
       </Table>
@@ -47,11 +50,17 @@ const pop = usePopup()
 const parse = useParser()
 const deletingId = ref<Holding['id'] | null>(null)
 
-async function fetchReservations() {
+const loading = ref<boolean>(false)
+const pagination = ref<Pagination>()
+const params = reactive<Partial<HoldingParams>>({})
+
+async function search() {
+  loading.value = true
   try {
-    await holding.fetch()
-  } catch (error: any) {
-    await pop.error(error?.response?.data?.message ?? 'Unable to load reservations. Please try again.')
+    const res = await holding.fetch()
+    pagination.value = res.data
+  } finally {
+    loading.value = false
   }
 }
 
@@ -74,7 +83,7 @@ async function deleteReservation(h: Holding) {
   }
 }
 
-onBeforeMount(fetchReservations)
+watchDebounced(() => params, search, { deep: true, immediate: true, debounce: 300 })
 </script>
 
 <style scoped></style>

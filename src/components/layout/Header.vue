@@ -25,9 +25,9 @@
 
         <Button as="link" :to="{ name: 'home' }" variant="text" class="hover:bg-primary/10 transition-all duration-300" data-title="Home" v-if="$route.name !== 'home'">Home</Button>
         <Button as="link" :to="{ name: 'opac' }" variant="text" class="hover:bg-primary/10 transition-all duration-300" data-title="Online Public Access Catalog" v-if="!$route.name?.toString().includes('opac')">OPAC</Button>
-        <Button variant="text" class="hover:bg-primary/10 transition-all duration-300" data-title="Book Bag">
+        <!-- <Button variant="text" class="hover:bg-primary/10 transition-all duration-300" data-title="Book Bag">
           <Icon icon="bag-fill" class="text-xl" />
-        </Button>
+        </Button> -->
       </div>
     </nav>
   </header>

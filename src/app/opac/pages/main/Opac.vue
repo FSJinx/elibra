@@ -1,7 +1,7 @@
 <template>
   <div class="size-full flex justify-center gap-3 mx-auto w-full p-5 overflow-hidden">
-    <OpacFilter v-model:params="params" @apply="search" @reset="reset" />
-    <OpacMain v-model:params="params" :data="pagination" :loading="loading" :error="error" @search="search" />
+    <OpacFilter v-model:params="params" @apply="fetch" @reset="reset" />
+    <OpacMain v-model:params="params" :data="pagination" :loading="loading" :error="error" @search="fetch" />
   </div>
   <!-- <OpacHistory /> -->
 </template>
@@ -14,9 +14,7 @@ const route = useRoute()
 const opac = opacStore()
 
 const defaultParams = (): Partial<OpacParams> => ({
-  query: '',
-  order: 'desc',
-  per_page: '25',
+  query: (route.query.query as string) ?? '',
 })
 
 const params = ref<Partial<OpacParams>>(defaultParams())
@@ -29,6 +27,7 @@ async function search() {
   try {
     const res = await opac.fetch(params.value)
     if (res.status === 'error') return (error.value = res.message)
+
     pagination.value = res.data
   } catch (e: any) {
     error.value = e.response?.data?.message
@@ -38,13 +37,25 @@ async function search() {
   }
 }
 
+function fetch() {
+  router.push({ name: 'opac', query: params.value })
+  search()
+}
+
 function reset() {
-  Object.assign(params.value, defaultParams())
+  // Object.assign(params.value, defaultParams())
 
   router.push({ name: 'opac' })
 }
 
-watch(() => route.query, search, { immediate: true, deep: true })
+onMounted(search)
+watch(
+  () => params.value.query,
+  () => {
+    if (!params.value.query) fetch()
+  },
+  { immediate: true, deep: true },
+)
 </script>
 
 <style scoped></style>

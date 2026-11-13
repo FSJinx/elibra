@@ -2,21 +2,20 @@ export const holdingStore = defineStore('holding', {
   state: () => ({
     data: null as Holding[] | null,
     currentData: null as Holding | null,
-    loading: false,
 
     url: 'holding',
   }),
 
   actions: {
-    async fetch() {
-      this.loading = true
-      try {
-        const res = await get(this.url)
-        this.data = res.data?.data ?? []
-        return res
-      } finally {
-        this.loading = false
-      }
+    async fetch(params?: Partial<HoldingParams>) {
+      const res = await get(this.url, params)
+      this.data = res.data?.data
+      return res
+    },
+
+    async create(payload: StoreHolding) {
+      const res = await post(`${this.url}`, payload)
+      return res
     },
 
     async complete(id: Holding['id'], loanModeId: number) {

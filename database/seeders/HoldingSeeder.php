@@ -8,7 +8,6 @@ use App\Models\Librarian;
 use App\Models\LoanMode;
 use App\Models\Patron;
 use App\Models\PatronTypeLoanPolicy;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -42,6 +41,7 @@ class HoldingSeeder extends Seeder
 
             $accessions = Accession::query()
                 ->where('status', 'available')
+                ->whereNotNull('accession_number')
                 ->whereHas('item', fn ($query) => $query->when(
                     $librarianLibraryId,
                     fn ($libraryQuery) => $libraryQuery->where('library_id', $librarianLibraryId)
@@ -81,9 +81,9 @@ class HoldingSeeder extends Seeder
                 $accession->update(['status' => 'reserved']);
 
                 Holding::create([
-                    'reserved_by' => $patron->id,
+                    'reserver_id' => $patron->id,
                     'accession_id' => $accession->id,
-                    'pickup_date' => Carbon::now()->addDays(($index % 7) + 1),
+                    'expected_pickup_date' => Carbon::now()->addDays(rand(1, 3)),
                 ]);
             }
         });

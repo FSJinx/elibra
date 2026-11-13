@@ -12,9 +12,9 @@ class ItemSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            SerialSeeder::class,
             AcademicSeeder::class,
             BookSeeder::class,
-            SerialSeeder::class,
         ]);
     }
 }

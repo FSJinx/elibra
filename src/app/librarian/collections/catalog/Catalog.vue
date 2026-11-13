@@ -7,18 +7,16 @@
     </SectionHeader>
 
     <div class="flex-1 flex flex-col gap-4 p-5 overflow-y-auto scroll">
-      <Card>
-        <Form @submit="search()" class="flex items-center gap-2">
-          <div class="flex-1 flex items-center gap-2">
-            <Input id="catalog-query" v-model="params.query" placeholder="Search for an item in the catalog by title or accession number..." class="max-w-100" enable-clear />
-            <Button type="submit" icon="search">Search</Button>
-          </div>
-          <CatalogFilter :params="params" @filterApplied="apply" />
-          <Button @click="reset">Reset</Button>
-        </Form>
-      </Card>
-
       <Table title="Catalog List" subtitle="List of all library materials." :data="pagination" @per_page="apply({ per_page: $event })" @page="apply({ page: $event })">
+        <template #header>
+          <Form @submit="search" class="flex items-center justify-end gap-2 w-full">
+            <Input id="catalog-query" v-model="params.query" placeholder="Search for an item in the catalog by title or accession number..." class="max-w-150" enable-clear />
+            <Button type="submit" icon="search">Search</Button>
+            <CatalogFilter :params="params" @filterApplied="apply" />
+            <Button @click="reset">Reset</Button>
+          </Form>
+
+        </template>
         <Thead>
           <tr>
             <Th>No</Th>

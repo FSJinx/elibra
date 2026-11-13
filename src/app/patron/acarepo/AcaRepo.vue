@@ -3,7 +3,7 @@
     <SectionHeader title="AcaRepo" description="Browse your thesis submissions" icon=""></SectionHeader>
 
     <div class="flex-1 flex flex-col gap-3 overflow-y-auto">
-      <Button class="ml-auto" as="link" :to="{ name: 'patron.acarepo.form' }" variant="primary" left-icon="plus-lg">Submit Manuscript</Button>
+      <NewSubmission />
       <Table title="My Submissions" subtitle="Browse your thesis submissions">
         <Thead>
           <tr>
@@ -38,6 +38,7 @@
 </template>
 
 <script setup lang="ts">
+import NewSubmission from '@/app/patron/acarepo/NewSubmission.vue'
 import { AcaRepo } from '@/interfaces/acarepo'
 
 const acarepo = acaRepoStore()

@@ -13,12 +13,16 @@ return new class extends Migration
     {
         Schema::create('holdings', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('reserved_by');
+            $table->unsignedBigInteger('reserver_id');
             $table->unsignedBigInteger('accession_id');
-            $table->unsignedBigInteger('processed_by')->nullable();
-            $table->dateTime('pickup_date');
+            $table->unsignedBigInteger('processor_id')->nullable();
 
-            $table->timestamp('picked_up_at')->nullable();
+            $table->enum('status', ['completed', 'pending', 'cancelled'])->default('pending');
+            $table->string('status_remark')->nullable();
+
+            $table->dateTime('expected_pickup_date');
+            $table->dateTime('pickup_date')->nullable();
+
             $table->timestamps();
         });
     }

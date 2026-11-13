@@ -24,7 +24,7 @@
       <Form @submit="search" class="flex h-10 sm:h-16 w-full max-w-4xl mx-auto rounded-xl border border-border focus-within:border-primary focus-within:ring-5 focus-within:ring-primary/20 overflow-hidden transition-all duration-300">
         <Button class="rounded-none! bg-slate-50 h-full sm:text-lg hover:text-primary" variant="text" left-icon="sliders2"> Advanced </Button>
 
-        <input required id="opac-search" v-model="opac.search" type="text" class="flex-1 px-5 sm:text-lg bg-background leading-0 border-x border-border outline-none" placeholder="Search for title, author, or call number..." autocomplete="off" />
+        <input required id="opac-search" v-model="opac.query" type="text" class="flex-1 px-5 sm:text-lg bg-background leading-0 border-x border-border outline-none" placeholder="Search for title, author, or call number..." autocomplete="off" />
 
         <Button type="submit" class="rounded-none! bg-slate-50 h-full sm:text-lg hover:text-primary" variant="text" left-icon="search">Search</Button>
       </Form>
@@ -49,11 +49,7 @@ import isu from '@/assets/images/isu.png'
 let searchIndex = 0
 let searchInterval: ReturnType<typeof setInterval> | null = null
 const quickSearch = ref('')
-const opac = reactive({
-  search: '',
-  campus: '',
-  item_type: '',
-})
+const opac = reactive<Partial<OpacParams>>({})
 
 const possibleSearches = ['books about programming', 'researches about fish', 'books about Philippine history', 'novels by Filipino authors', 'books about information technology']
 
@@ -63,7 +59,7 @@ function search() {
 
 function searchFromQuickSearch() {
   Object.assign(opac, {
-    search: quickSearch,
+    query: quickSearch,
   })
   search()
 }

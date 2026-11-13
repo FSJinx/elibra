@@ -34,7 +34,7 @@
 
         <Control direction="col">
           <Label id="params-order">Order</Label>
-          <Select id="params-order" v-model="params.order">
+          <Select id="params-order" v-model="params.order" placeholder="Default">
             <Option value="asc">Ascending</Option>
             <Option value="desc">Descending</Option>
           </Select>

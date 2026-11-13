@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use Illuminate\Auth\Access\Response;
 use App\Models\Accession;
 use App\Models\User;
 
@@ -37,7 +36,7 @@ class AccessionPolicy
      */
     public function update(User $user, Accession $accession): bool
     {
-        return false;
+        return $user->isSuperAdmin() || $user->isAdmin() || $user->isLibrarian();
     }
 
     /**

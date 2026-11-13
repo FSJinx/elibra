@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Holding;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class HoldingPolicy
 {
@@ -29,7 +28,7 @@ class HoldingPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->isSuperAdmin() || $user->isAdmin() || $user->isLibrarian() || $user->isPatron();
     }
 
     /**

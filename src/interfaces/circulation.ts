@@ -1,5 +1,6 @@
 export interface CirculationParams extends BaseParams {
   library_id: any
+  patron_id: any
 }
 
 export interface CheckOut {
