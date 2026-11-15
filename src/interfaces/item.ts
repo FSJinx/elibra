@@ -45,6 +45,7 @@ export interface Item {
 
   authors: Author[]
   publisher: Publisher
+  accessions: Accession[]
 
   [key: string]: any
 }

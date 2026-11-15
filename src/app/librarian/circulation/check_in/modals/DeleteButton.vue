@@ -1,5 +1,5 @@
 <template>
-  <Button class="hover:text-danger" size="sm" @click="submit">Delete</Button>
+  <Button class="hover:text-danger" size="sm" @click="submit" >Delete</Button>
 </template>
 
 <script setup lang="ts">

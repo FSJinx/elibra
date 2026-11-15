@@ -4,13 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreInventoryRequest;
 use App\Http\Requests\UpdateInventoryRequest;
+use App\Models\Accession;
 use App\Models\Inventory;
+use App\Services\InventoryLineService;
 use App\Services\QueryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class InventoryController extends Controller
 {
+    public function __construct(
+        protected InventoryLineService $line
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
@@ -19,9 +25,9 @@ class InventoryController extends Controller
         $filters = QueryService::filters($request);
 
         $inventories = Inventory::query()
-            ->when($filters['search'], fn ($i, $s) => $i->where('inventory_code', 'LIKE', "%$s%"))->with(['librarian.user', 'section']);
-
-        $inventories = $inventories->paginate(null, ['*']);
+            ->when($filters['search'], fn ($i, $s) => $i->where('inventory_code', 'LIKE', "%$s%"))->with(['librarian.user', 'section'])
+            ->orderBy($filters['sort'], $filters['order'])
+            ->paginate();
 
         return $this->response('success', 'Inventories retrieved successfully', $inventories, 200);
     }
@@ -45,20 +51,26 @@ class InventoryController extends Controller
             return $this->response('error', 'This section has an on-going inventory. Select other sections or finish the pending before creating one again', [], 409);
         }
 
+        $hasItems = Accession::query()->whereHas('item', fn ($query) => $query->where('library_id', $user->library_id))->where('section_id', $request->boolean('shelved') ? $request->input('section_id') : null)->exists();
+
+        if (! $hasItems) {
+            return $this->response('error', 'No items stored in this section yet', null, 422);
+        }
+
         $inventory = DB::transaction(function () use ($user, $request) {
 
             $lastInventory = Inventory::latest('id')->first();
-
             $nextNumber = $lastInventory ? $lastInventory->id + 1 : 1;
-
             $inventoryCode = 'INV-'.now()->year.'-'.str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
-
-            return Inventory::create([
+            $inventory = Inventory::create([
                 'inventory_code' => $inventoryCode,
                 'section_id' => $request->input('section_id'),
                 'librarian_id' => $user->id,
-
             ]);
+
+            $this->line->create($inventory, $request->validated());
+
+            return $inventory;
         });
 
         return $this->response(
@@ -75,17 +87,6 @@ class InventoryController extends Controller
     public function show(Inventory $inventory)
     {
         // $user = $this->user();
-
-        // $lines = $inventory->lines()
-        //     ->whereHas('accession', function ($query) use ($user) {
-        //         $query->where('library_id', $user->library_id);
-        //     })
-        //     ->with([
-        //         'accession.item',
-        //         'accession.section',
-        //         'verifiedBy',
-        //     ])
-        //     ->get();
 
         return $this->response(
             'success',

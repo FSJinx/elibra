@@ -4,14 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 
-class UpdateInventory_LineRequest extends BaseRequest
+class StoreInventoryLineRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->user()?->isLibrarian() || $this->user()?->isAdmin() || $this->user()?->isSuperAdmin();
     }
 
     /**
@@ -22,7 +22,9 @@ class UpdateInventory_LineRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            //
+            'inventory_id' => ['required', 'integer', 'exists:inventories,id'],
+            'shelved' => ['required', 'boolean'],
+            'section_id' => ['required_if:shelved,false', 'nullable', 'integer', 'exists:sections,id'],
         ];
     }
 }

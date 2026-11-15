@@ -35,9 +35,9 @@ class UpdatePatronTypeLoanPolicyRequest extends BaseRequest
             ],
             'description' => ['sometimes', 'nullable', 'string', 'max:255'],
 
-            'loan_period_days' => ['sometimes', 'integer', 'min:1'],
+            'loan_period_days' => ['sometimes', 'integer', 'min:0'],
 
-            'max_items' => ['sometimes', 'nullable', 'integer', 'min:1'],
+            'max_items' => ['sometimes', 'nullable', 'integer', 'min:0'],
             'max_renewals' => ['sometimes', 'nullable', 'integer', 'min:0'],
             'fine_per_due' => ['sometimes', 'numeric', 'min:0'],
             'grace_period' => ['sometimes', 'integer', 'min:0'],

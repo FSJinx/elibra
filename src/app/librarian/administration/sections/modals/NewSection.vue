@@ -19,20 +19,16 @@
             </Option>
           </Select>
         </Control>
-        <p v-if="isAdmin && !form.library_id && availableLibraries.length === 0" class="text-sm text-warning">
-          No libraries are available for your campus.
-        </p>
+        <p v-if="isAdmin && !form.library_id && availableLibraries.length === 0" class="text-sm text-warning">No libraries are available for your campus.</p>
         <Control id="section-head" nullable col>
           <Label>Section Head</Label>
           <Select v-model="form.librarian_id" :error="errors?.librarian_id?.[0]" :disabled="loadingLibrarians || !form.library_id">
-            <Option value="">Use library head by default</Option>
+            <Option value="">None</Option>
             <Option v-for="librarian in librarians" :key="librarian.id" :value="librarian.id">
               {{ librarianName(librarian) }}
             </Option>
           </Select>
-          <p v-if="form.library_id && !loadingLibrarians && librarians.length === 0" class="text-sm text-warning">
-            No librarians are assigned to this library.
-          </p>
+          <p v-if="form.library_id && !loadingLibrarians && librarians.length === 0" class="text-sm text-warning">No librarians are assigned to this library.</p>
         </Control>
       </Form>
     </ModalBody>
@@ -46,15 +42,18 @@
 <script setup lang="ts">
 import Modal from '@/components/my/Modal.vue'
 
-const modal = ref<InstanceType<typeof Modal>>()
 const section = sectionStore()
 const pop = usePopup()
 const auth = authStore()
+
 const emit = defineEmits(['refresh'])
+
+const modal = ref<InstanceType<typeof Modal>>()
 const errors = ref<Record<string, string[]> | null>(null)
 const librarians = ref<Librarian[]>([])
 const availableLibraries = ref<Library[]>([])
 const loadingLibrarians = ref(false)
+
 const isAdmin = computed(() => auth.user?.role === 'admin' || auth.user?.role === 'super_admin')
 
 const form = reactive({
@@ -83,7 +82,11 @@ async function loadLibrarians(libraryId: string | number) {
   }
 }
 
-watch(() => form.library_id, (libraryId) => loadLibrarians(libraryId), { immediate: true })
+watch(
+  () => form.library_id,
+  (libraryId) => loadLibrarians(libraryId),
+  { immediate: true },
+)
 
 async function open() {
   form.name = ''

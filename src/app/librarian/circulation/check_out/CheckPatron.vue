@@ -60,7 +60,7 @@ async function assignBorrower(patron: Patron) {
 
   if (confirm.isConfirmed) {
     model.value = patron
-    pop.success('Patron assigned successfully!')
+    // pop.success('Patron assigned successfully!')
   }
 }
 

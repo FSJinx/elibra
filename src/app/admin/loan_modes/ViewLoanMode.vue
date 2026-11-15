@@ -33,8 +33,8 @@
             <Td :data="index + 1" />
             <Td :data="item.patron_type?.name" />
             <Td :data="item.loan_period_days" />
-            <Td :data="item.max_items ?? 'Unlimited'" />
-            <Td :data="item.max_renewals ?? 'Unlimited'" />
+            <Td :data="item.max_items ?? 'No Limit'" />
+            <Td :data="item.max_renewals ?? 'No Limit'" />
             <Td :data="item.fine_per_due" />
             <Td :data="item.grace_period" />
             <Td class="text-left" :data="item.notes" />

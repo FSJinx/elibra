@@ -37,10 +37,5 @@ export const inventoryStore = defineStore('inventory', {
       const res = await del(`${this.url}/${params?.id}`)
       return res
     },
-
-    async restore(params: Inventory) {
-      const res = await patch(`${this.url}/${params?.id}`)
-      return res
-    },
   },
 })

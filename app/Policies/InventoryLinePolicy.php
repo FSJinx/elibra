@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\Inventory_Line;
+use App\Models\InventoryLine;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
@@ -19,7 +19,7 @@ class InventoryLinePolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Inventory_Line $inventoryLine): bool
+    public function view(User $user, InventoryLine $inventoryLine): bool
     {
         return false;
     }
@@ -35,15 +35,15 @@ class InventoryLinePolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Inventory_Line $inventoryLine): bool
+    public function update(User $user, InventoryLine $inventoryLine): bool
     {
-        return false;
+        return $user->isSuperAdmin() || $user->isAdmin() || $user->isLibrarian();
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Inventory_Line $inventoryLine): bool
+    public function delete(User $user, InventoryLine $inventoryLine): bool
     {
         return false;
     }
@@ -51,7 +51,7 @@ class InventoryLinePolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Inventory_Line $inventoryLine): bool
+    public function restore(User $user, InventoryLine $inventoryLine): bool
     {
         return false;
     }
@@ -59,7 +59,7 @@ class InventoryLinePolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Inventory_Line $inventoryLine): bool
+    public function forceDelete(User $user, InventoryLine $inventoryLine): bool
     {
         return false;
     }

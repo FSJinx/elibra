@@ -42,6 +42,7 @@
 
 <script setup lang="ts">
 const model = defineModel<Accession[] | null>({ default: () => [] })
+const emit = defineEmits(['openBag'])
 
 const accession = accessionStore()
 const pop = usePopup()
@@ -68,7 +69,8 @@ async function add(item: Accession) {
 
   if (confirm.isConfirmed) {
     model.value = [...(model.value ?? []), item]
-    pop.success('Item added to bag successfully!')
+    emit('openBag')
+    // pop.success('Item added to bag successfully!')
   }
 }
 

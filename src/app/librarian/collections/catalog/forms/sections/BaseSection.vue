@@ -100,8 +100,6 @@ const supportsElectronicFile = computed(() => {
 
 watch(
   () => form.value.item_type_id,
-  () => {
-    form.value.item_type_category_id = ''
-  },
+  (_, old) => old && (form.value.item_type_category_id = ''),
 )
 </script>

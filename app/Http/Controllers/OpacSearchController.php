@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CatalogSearchRequest;
+use App\Models\Item;
 use App\Services\CatalogSearchService;
 use Illuminate\Http\JsonResponse;
 
@@ -43,12 +44,17 @@ class OpacSearchController extends Controller
             $request->integer('per_page', 10)
         );
 
+        // $results = Item::query()
+        //     ->with(['itemType', 'authors', 'itemTypeCategory'])
+        //     ->when($request->input('query', null), fn ($q, $s) => $q->where('title', 'LIKE', "%$s%"))
+        //     ->paginate();
+
         return response()->json([
             'status' => 'success',
             'message' => 'Search Results Retrieved Successfully!',
             'data' => [
                 'query' => $query,
-                'results' => $results,
+                'data' => $results,
             ],
         ]);
     }

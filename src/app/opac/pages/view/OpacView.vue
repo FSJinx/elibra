@@ -14,19 +14,25 @@
     <!-- Main Content -->
     <main class="p-6 sm:p-10">
       <!-- Book Overview -->
-      <section class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8 lg:gap-12">
+      <section class="grid grid-cols-1 lg:grid-cols-[1fr_3fr] gap-5 lg:gap-12">
         <!-- Cover -->
-        <div class="flex justify-center lg:justify-start max-w-100 shrink-0">
+        <div class="flex flex-col items-center gap-5 justify-center lg:justify-start shrink-0">
           <div class="relative w-full h-max rounded-2xl border-2 border-border shadow-lg overflow-hidden group contain-content">
-            <img :src="default_book" :alt="`${opac.currentData?.title ?? 'Item'} cover`" class="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105" />
+            <img :src="opac.currentData?.cover_media?.file_path ? `${storageRoute}/${opac?.currentData.cover_media?.file_path}` : default_book" :alt="`${opac.currentData?.title ?? 'Item'} cover`" class="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105" />
 
             <!-- Availability Badge -->
             <div class="absolute top-0 left-0 size-full group hover:bg-backdrop/50 transition-all duration-300">
-                <span class="inline-flex items-center gap-2 px-3 py-1.5 m-5 rounded-full bg-background/95 backdrop-blur text-sm font-medium shadow opacity-0 group-hover:opacity-100 transition-all duration-300">
+              <span class="inline-flex items-center gap-2 px-3 py-1.5 m-5 rounded-full bg-background/95 backdrop-blur text-sm font-medium shadow opacity-0 group-hover:opacity-100 transition-all duration-300">
                 <span class="size-2 rounded-full bg-green-500"></span>
                 {{ opac.currentData?.status ?? 'Available' }}
               </span>
             </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex justify-center flex-wrap gap-3">
+            <Button left-icon="heart"> Add to Favorites </Button>
+            <Button left-icon="share-fill" variant="text"> Share </Button>
           </div>
         </div>
 
@@ -35,14 +41,13 @@
           <!-- Title -->
           <div class="mb-6">
             <div class="flex flex-wrap items-center gap-2 mb-3">
-              <span class="px-2.5 py-1 rounded-md bg-primary/10 text-primary text-xs font-semibold uppercase"> {{ opac.currentData?.item_type ?? 'Item' }} </span>
+              <Status :variant="opac.currentData?.item_type?.slug">{{ opac.currentData?.item_type?.name }}</Status>
 
-              <span v-if="opac.currentData?.item_type_category" class="px-2.5 py-1 rounded-md bg-background border border-border text-xs"> {{ opac.currentData.item_type_category }} </span>
+              <span v-if="opac.currentData?.item_type_category" class="px-2.5 py-1 rounded-md bg-background border border-border text-xs"> {{ opac.currentData.item_type_category?.name }} </span>
             </div>
 
-            <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight leading-tight">{{ opac.currentData?.title }}</h1>
-
-            <p v-if="opac.currentData?.subtitle" class="mt-2 text-xl text-foreground-secondary">{{ opac.currentData.subtitle }}</p>
+            <Title class="text-4xl!">{{ opac?.currentData?.title }}</Title>
+            <p class="mt-2 text-foreground-secondary">{{ opac.currentData?.subtitle ?? 'This item has no secondary title' }}</p>
 
             <p v-if="opac.currentData?.authors?.length" class="mt-4 text-sm">
               by
@@ -52,78 +57,10 @@
 
           <!-- Quick Metadata -->
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-7">
-            <div class="p-4 rounded-xl border border-border bg-background-secondary">
-              <p class="text-xs text-foreground-secondary mb-1">Publication</p>
-              <p class="font-medium">{{ opac.currentData?.publication_year ?? 'Unknown' }}</p>
-            </div>
-
-            <div class="p-4 rounded-xl border border-border bg-background-secondary">
-              <p class="text-xs text-foreground-secondary mb-1">Publisher</p>
-              <p class="font-medium">{{ itemDetails.publisher ?? 'Unknown' }}</p>
-            </div>
-
-            <div class="p-4 rounded-xl border border-border bg-background-secondary">
-              <p class="text-xs text-foreground-secondary mb-1">Pages</p>
-              <p class="font-medium">{{ itemDetails.pages ?? 'Unknown' }}</p>
-            </div>
-
-            <div class="p-4 rounded-xl border border-border bg-background-secondary">
-              <p class="text-xs text-foreground-secondary mb-1">Language</p>
-              <p class="font-medium">{{ opac.currentData?.language ?? 'Unknown' }}</p>
-            </div>
-          </div>
-
-          <!-- Availability -->
-          <div class="rounded-xl border border-border p-5 mb-6">
-            <div class="flex items-center justify-between mb-4">
-              <div>
-                <h3 class="font-semibold text-lg">Availability</h3>
-
-                <p class="text-sm text-foreground-secondary">Current copies in the library</p>
-              </div>
-
-              <span class="text-sm font-medium text-green-600"> {{ opac.currentData?.status ?? 'Available' }} </span>
-            </div>
-
-            <div class="space-y-3">
-              <div class="flex items-center justify-between p-3 rounded-lg bg-background-secondary">
-                <div class="flex items-center gap-3">
-                  <span class="size-9 rounded-lg bg-green-500/10 text-green-600 flex items-center justify-center">
-                    <i class="icon-book-open text-sm"></i>
-                  </span>
-
-                  <div>
-                    <p class="font-medium text-sm">{{ opac.currentData?.branch ?? 'Unknown branch' }}</p>
-
-                    <p class="text-xs text-foreground-secondary">{{ opac.currentData?.item_type_category ?? 'Collection' }}</p>
-                  </div>
-                </div>
-
-                <span class="text-xs font-medium text-green-600"> {{ opac.currentData?.status ?? 'Available' }} </span>
-              </div>
-
-              <div v-if="opac.currentData?.branch" class="flex items-center justify-between p-3 rounded-lg bg-background-secondary">
-                <div class="flex items-center gap-3">
-                  <span class="size-9 rounded-lg bg-green-500/10 text-green-600 flex items-center justify-center">
-                    <i class="icon-book-open text-sm"></i>
-                  </span>
-                  <div>
-                    <p class="font-medium text-sm">{{ opac.currentData.branch }}</p>
-                    <p class="text-xs text-foreground-secondary">{{ opac.currentData.call_number ?? 'No call number' }}</p>
-                  </div>
-                </div>
-                <span class="text-xs font-medium text-green-600"> {{ opac.currentData.status ?? 'Available' }} </span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Actions -->
-          <div class="flex flex-wrap gap-3">
-            <Button left-icon="bookmark" variant="primary"> Reserve Book </Button>
-
-            <Button left-icon="heart"> Add to Favorites </Button>
-
-            <Button left-icon="share-2" variant="text"> Share </Button>
+            <Info class="p-4 border border-border rounded-lg" label="Year Published" :value="opac.currentData?.publication_year" />
+            <Info class="p-4 border border-border rounded-lg" label="ISBN/ISSN" :value="opac.currentData?.isbn_issn" />
+            <Info class="p-4 border border-border rounded-lg" label="Call Number" :value="opac.currentData?.call_number" />
+            <Info class="p-4 border border-border rounded-lg" label="Language" :value="opac.currentData?.language?.name" />
           </div>
         </div>
       </section>
@@ -132,80 +69,21 @@
       <div class="border-t border-border my-10"></div>
 
       <!-- Breadcrumb -->
-      <div class="flex items-center gap-2 text-sm text-foreground-secondary my-10">
-        <router-link class="" to="">Details</router-link>
-        <router-link class="" to="">Copies</router-link>
+      <div class="flex items-center gap-2 text-sm text-foreground-secondary">
+        <button class="px-2 py-1 cursor-pointer hover:text-primary" size="sm" variant="text" v-for="item in pages" @click="activePage = item.path" :class="[{ 'text-primary': activePage === item.path }]">{{ item.name }}</button>
       </div>
 
       <!-- Details -->
-      <section class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Description -->
-        <div class="lg:col-span-2">
-          <h2 class="text-2xl font-semibold mb-4">About this item</h2>
+      <OpacDetails :data="opac.currentData" v-if="activePage === ''" />
 
-          <p class="leading-7 text-foreground-secondary">{{ opac.currentData?.description ?? 'No description available.' }}</p>
-
-          <!-- Subjects -->
-          <div class="mt-7">
-            <h3 class="font-semibold mb-3">Subjects</h3>
-
-            <div class="flex flex-wrap gap-2">
-              <span v-for="keyword in opac.currentData?.keywords ?? []" :key="keyword" class="px-3 py-1.5 rounded-lg border border-border text-sm"> {{ keyword }} </span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Bibliographic Information -->
-        <aside>
-          <div class="rounded-xl border border-border p-5">
-            <h3 class="font-semibold text-lg mb-5">Bibliographic Information</h3>
-
-            <dl class="space-y-4 text-sm">
-              <div>
-                <dt class="text-foreground-secondary">ISBN</dt>
-
-                <dd class="font-medium mt-1">{{ itemDetails.isbn ?? 'Not available' }}</dd>
-              </div>
-
-              <div>
-                <dt class="text-foreground-secondary">Call Number</dt>
-
-                <dd class="font-medium mt-1">{{ opac.currentData?.call_number ?? 'Not available' }}</dd>
-              </div>
-
-              <div>
-                <dt class="text-foreground-secondary">Accession Number</dt>
-
-                <dd class="font-medium mt-1">{{ opac.currentData?.accessions?.map((copy: { accession_number?: string | null }) => copy.accession_number).filter(Boolean).join(', ') || 'Not available' }}</dd>
-              </div>
-
-              <div>
-                <dt class="text-foreground-secondary">Classification</dt>
-
-                <dd class="font-medium mt-1">{{ opac.currentData?.item_type_category ?? 'Not available' }}</dd>
-              </div>
-
-              <div>
-                <dt class="text-foreground-secondary">Material Type</dt>
-
-                <dd class="font-medium mt-1">{{ opac.currentData?.item_type ?? 'Not available' }}</dd>
-              </div>
-
-              <div>
-                <dt class="text-foreground-secondary">Collection</dt>
-
-                <dd class="font-medium mt-1">{{ opac.currentData?.branch ?? 'Not available' }}</dd>
-              </div>
-            </dl>
-          </div>
-        </aside>
-      </section>
+      <!-- Copies -->
+      <OpacCopies :data="opac.currentData" v-if="activePage === 'copies'" />
 
       <!-- Footer Note -->
       <div class="mt-10 p-5 rounded-xl bg-primary/5 border border-primary/10">
         <div class="flex gap-3">
-          <span class="shrink-0 size-9 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
-            <i class="icon-info text-sm"></i>
+          <span class="shrink-0 size-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+            <Icon icon="info-circle" />
           </span>
 
           <div>
@@ -220,30 +98,16 @@
 </template>
 
 <script setup lang="ts">
+import OpacCopies from '@/app/opac/pages/view/OpacCopies.vue'
+import OpacDetails from '@/app/opac/pages/view/OpacDetails.vue'
 import default_book from '@/assets/images/default_book.png'
 
-const opac = useOpacStore()
+const opac = opacStore()
 
-const route = useRoute()
-
-const itemDetails = computed(() => {
-  const data = opac.currentData
-  return {
-    isbn: data?.isbn_issn,
-    pages: data?.pages,
-    publisher: data?.publisher,
-  }
-})
-
-onMounted(() => {
-  if (route.params.id) {
-    opac.show(route.params.id)
-  }
-})
-
+const activePage = ref('')
 const pages = ref([
   { name: 'Details', path: '' },
-  { name: 'Copies', path: '' },
+  { name: 'Copies', path: 'copies' },
 ])
 </script>
 

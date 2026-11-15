@@ -3,13 +3,13 @@
     <SectionHeader title="Check Out" description="Lend items to patrons." icon="bag-plus">
       <div class="flex items-center justify-end gap-2">
         <Chip removable @remove="removePatron" v-if="form.patron">Current Borrower: {{ form.patron?.user?.name?.full }} - {{ form.patron?.user?.username }}</Chip>
-        <BookBag v-model="form" @clear="clear" />
+        <BookBag ref="bookBag" v-model="form" @clear="clear" />
       </div>
     </SectionHeader>
 
     <div class="flex-1 flex flex-col p-5 gap-3 overflow-y-auto">
       <CheckPatron v-model="form.patron" v-if="!form.patron" />
-      <CheckItems v-model="form.accessions" v-if="form.patron" />
+      <CheckItems v-model="form.accessions" v-if="form.patron" @openBag="bookBag?.open"/>
     </div>
   </div>
 </template>
@@ -21,15 +21,17 @@ import CheckPatron from '@/app/librarian/circulation/check_out/CheckPatron.vue'
 
 const pop = usePopup()
 
+const bookBag = ref<InstanceType<typeof BookBag>>()
+
 const borrowInfo = (): CheckOut => ({
   patron: null,
   accessions: null,
-  loan_mode_id: ''
+  loan_mode_id: '',
 })
 
 const form = ref<CheckOut>(borrowInfo())
 
-function clear() {
+async function clear() {
   form.value = borrowInfo()
 }
 
@@ -40,11 +42,6 @@ async function removePatron() {
     form.value.patron = null
   }
 }
-  
-watch(
-  () => form.value,
-  (val) => console.log('Borrow', val),
-)
 </script>
 
 <style scoped></style>

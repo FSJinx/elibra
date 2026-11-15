@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Models\Circulation;
 use App\Models\Accession;
+use App\Models\Circulation;
 use App\Models\Patron;
 use App\Models\PatronTypeLoanPolicy;
 use App\Models\User;
@@ -74,7 +74,7 @@ class CirculationService
                 'loan_mode_id' => $data['loan_mode_id'],
             ]);
 
-            $accession->update(['status' => 'on_load']);
+            $accession->update(['status' => 'borrowed']);
 
             return $circulation;
         });
@@ -103,7 +103,7 @@ class CirculationService
                     'renewal_count',
                     'fine_charged',
                     'notes',
-                    
+
                     'processed_by',
                     'accession_id',
                     'patron_id',
@@ -211,7 +211,7 @@ class CirculationService
                 'return_received_by' => $receivedBy->librarian?->id,
             ]);
 
-            if ($accession->status === 'on_load') {
+            if (in_array($accession->status, ['borrowed'], true)) {
                 $accession->update(['status' => 'available']);
             }
 
@@ -268,7 +268,7 @@ class CirculationService
                 ]);
             }
 
-            if ($loan->renewal_count >= $policy->max_renewals) {
+            if ($loan->renewal_count >= $policy->max_renewals && $policy->max_renewals !== null) {
                 throw ValidationException::withMessages([
                     'renewal_count' => ['This loan has reached the maximum number of renewals.'],
                 ]);
@@ -309,7 +309,7 @@ class CirculationService
 
             if (
                 $accession
-                && $accession->status === 'on_load'
+                && in_array($accession->status, ['borrowed'], true)
             ) {
                 $accession->update(['status' => 'available']);
             }

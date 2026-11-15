@@ -7,19 +7,24 @@ export const collectionsInventory = [
   {
     path: ':id',
     name: 'librarian.collections.inventory.view',
+    meta: { title: 'Inventory' },
     component: () => import('@/app/librarian/collections/inventory/ViewInventory.vue'),
-    beforeEnter: async (to: any) => {
+    beforeEnter: async (to: any, from: any) => {
       const inventory = inventoryStore()
       const pop = usePopup()
+      const crumb = useBreadcrumbStore()
 
-      pop.load()
-      try {
-        await inventory.show(to.params?.id)
-        pop.unload()
-        return true
-      } catch (e: any) {
-        pop.error(e.response?.data?.message)
-        return false
+      if (!inventory.currentData) {
+        pop.load()
+        try {
+          const res = await inventory.show(to.params?.id)
+          crumb.set(`${to.name}:${to.params.id}`, res.data?.inventory_code as string)
+          pop.unload()
+          return true
+        } catch (e: any) {
+          pop.error(e.response?.data?.message)
+          return from.name ? false : router.back()
+        }
       }
     },
   },

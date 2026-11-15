@@ -12,6 +12,9 @@ export const adminRoutes = [
   // Organization Routes
   ...adminOrganizationRoutes,
 
+  // Users and Access Routes
+  ...adminUsers,
+
   // Standard Routes
   ...adminStandard,
 

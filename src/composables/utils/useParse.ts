@@ -16,7 +16,7 @@ export function useParser() {
       return { full, formal, initials, authorInitial }
     },
 
-    toCapital(text: string | null) {
+    toCapital(text: string | null | undefined) {
       return text ? text?.charAt(0).toUpperCase() + text.slice(1) : ''
     },
 
@@ -30,6 +30,7 @@ export function useParser() {
         completed: 'success',
         approved: 'success',
         returned: 'success',
+        thesis: 'success',
         true: 'success',
         1: 'success',
 
@@ -41,7 +42,7 @@ export function useParser() {
 
         // ====== WARNING =======
         warning: 'warning',
-        serial: 'warning',
+        serials: 'warning',
         pending: 'warning',
 
         // ====== ERROR =======
@@ -82,7 +83,7 @@ export function useParser() {
       })
     },
 
-    formatDateTime(dateString: string | null) {
+    formatDateTime(dateString: string | null | undefined) {
       if (!dateString) return null
 
       const date = new Date(dateString)

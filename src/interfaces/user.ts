@@ -1,3 +1,8 @@
+export interface UserParams extends Partial<BaseParams> {
+  campus_id: any
+  role: string
+}
+
 export interface User {
   id: any
   uuid: string
@@ -22,16 +27,25 @@ export interface User {
   remember_token: any
 
   // RELATIONSHIPS
-  library?: Partial<Library>
-  campus: Partial<Campus>
-  department?: Partial<Department>
-  // program?: Partial<Program>
-  librarian: Partial<Librarian>
-  patron: Partial<Patron>
+  library: Library | null
+  campus: Campus | null
+  department: Department | null
+  program: Program | null
+  librarian: Librarian | null
+  patron: Patron | null
 
   created_at: string
   updated_at: string
   deleted_at: string
+
+  // Appended Values
+
+  name: {
+    full: string
+    formal: string
+  }
+
+  role_text: string
 
   [key: string]: any
 }

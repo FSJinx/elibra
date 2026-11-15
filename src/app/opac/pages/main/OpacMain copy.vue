@@ -167,9 +167,9 @@ const parse = useParser()
 
 const itemType = useItemTypeStore()
 const itemCategory = useItemCategoriesStore()
-const { campuses } = useCampusStore()
+const campus = campusStore()
 
-const selectedCampus = computed(() => campuses?.find((i) => String(i.id) === params.value.campus)?.name)
+const selectedCampus = computed(() => campus.data?.find((i) => String(i.id) === params.value.campus)?.name)
 const itemTypeCategories = computed(() => itemCategory.itemCategories.filter((item) => String(item.item_type_id) === String(params.value.item_type)))
 </script>
 

@@ -3,8 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Campus;
-use App\Models\Patron;
-use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
@@ -39,14 +37,14 @@ class PatronSeeder extends Seeder
                 'role' => 'patron',
                 'email' => 'jef@isu.edu.ph',
                 'password' => bcrypt('elibra2026'),
-                ],
-                [
-                    'uuid' => Str::uuid()->toString(),
-                    'last_name' => 'tobias',
-                    'first_name' => 'eugene_patron',
-                    'middle_initial' => 'g',
-                    'username' => '22-1188',
-                    'sex' => 'male',
+            ],
+            [
+                'uuid' => Str::uuid()->toString(),
+                'last_name' => 'tobias',
+                'first_name' => 'eugene',
+                'middle_initial' => 'g',
+                'username' => '22-1188',
+                'sex' => 'male',
                 'role' => 'patron',
                 'email' => 'eugene@isu.edu.ph',
                 'password' => bcrypt('elibra2026'),
