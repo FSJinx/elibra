@@ -35,11 +35,13 @@ use App\Http\Controllers\PatronTypeController;
 use App\Http\Controllers\PatronTypeLoanPolicyController;
 use App\Http\Controllers\ProgramsController;
 use App\Http\Controllers\PublisherController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SectionsController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UI\OptionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserPermissionController;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -60,6 +62,8 @@ Route::group(['prefix' => '/auth'], function () {
         Route::put('/me', [AuthController::class, 'updateMe']);
     });
 });
+
+Route::get('test-pdf',  fn () => Pdf::loadHtml('<h1>Hello PDF</h1>')->stream('test.pdf'));
 
 /**
  *      Public Routes
@@ -363,6 +367,16 @@ Route::group(['prefix' => '/publisher'], function () {
     // Post
     Route::post('', [PublisherController::class, 'store'])->middleware('throttle:write');
     Route::post('show', [PublisherController::class, 'show'])->middleware('throttle:write');
+
+});
+
+// ============== REPORTS ROUTE ==================
+Route::group(['prefix' => '/report'], function () {
+    // Get
+    Route::get('', [ReportController::class, 'index'])->middleware('throttle:read');
+
+    // Post
+    Route::post('', [ReportController::class, 'store'])->middleware('jwt.auth', 'throttle:write');
 
 });
 

@@ -13,7 +13,9 @@ use Illuminate\Support\Facades\Storage;
 
 class ItemService
 {
-    public function __construct(private MediaService $mediaService) {}
+    public function __construct(
+        private MediaService $mediaService
+        ) {}
 
     protected function fillables(): array
     {

@@ -3,19 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCirculationRequest;
+use App\Http\Requests\StoreReportRequest;
 use App\Http\Requests\UpdateCirculationRequest;
 use App\Models\Accession;
 use App\Models\Circulation;
 use App\Models\Patron;
 use App\Models\User;
 use App\Services\CirculationService;
+use App\Services\ReportService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class CirculationController extends Controller
 {
     public function __construct(
-        protected CirculationService $circulationService
+        protected CirculationService $circulationService,
+        protected ReportService $report,
     ) {}
 
     /**
@@ -64,31 +67,6 @@ class CirculationController extends Controller
             ->select(['id', 'last_name', 'first_name', 'username', 'middle_initial', 'email'])
             ->with(['patron.patronType:id,name', 'patron.program:id,name,department_id','patron.program.department:id,name'])
             ->first();
-
-        // $patron = Patron::query()
-        //     ->select(['id', 'ebc_number', 'user_id', 'patron_type_id', 'program_id'])
-        //     ->with([
-        //         'user:id,first_name,middle_initial,last_name,username',
-        //         'patronType:id,name',
-        //         'program:id,name,department_id',
-        //         'program.department:id,name',
-        //     ])
-        //     ->where(function ($query) use ($patronIdentifier) {
-        //         $query->where('ebc_number', $patronIdentifier);
-
-        //         if (ctype_digit($patronIdentifier)) {
-        //             $query->orWhere('id', (int) $patronIdentifier);
-        //         }
-
-        //         $query->orWhereHas('user', function ($userQuery) use ($patronIdentifier) {
-        //             $userQuery->where('username', $patronIdentifier);
-
-        //             if (ctype_digit($patronIdentifier)) {
-        //                 $userQuery->orWhere('id', (int) $patronIdentifier);
-        //             }
-        //         });
-        //     })
-        //     ->first();
 
         if (! $patron) {
             return $this->response('error', 'Patron not found.', null, 404);
@@ -225,5 +203,13 @@ class CirculationController extends Controller
             null,
             200
         );
+    }
+
+    public function generateReport(StoreReportRequest $request) 
+    {
+        $params = $request->all();
+        $data = Circulation::query()
+        ->where(fn ($q) => $q->where('created_at', ));
+        $report = $this->report->create([]);
     }
 }

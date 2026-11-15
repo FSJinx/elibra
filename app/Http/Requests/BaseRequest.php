@@ -26,7 +26,7 @@ class BaseRequest extends FormRequest
         throw new HttpResponseException(
             response()->json([
                 'status' => 'error',
-                'message' => 'The given data was invalid.',
+                'message' => $validator->errors()->first() ?? 'The given data was invalid.',
                 // .errors() ay magbabalik ng key-value pair (e.g., 'username' => ['The username has already been taken.'])
                 'errors' => $validator->errors(),
             ], 422) // 422 ang standard code para sa Validation Errors
