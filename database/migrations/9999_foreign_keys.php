@@ -207,9 +207,9 @@ return new class extends Migration
         [
             'name' => 'holdings',
             'foreign_columns' => [
-                ['name' => 'reserved_by', 'references' => 'id', 'on' => 'patrons', 'onDelete' => 'cascade'],
+                ['name' => 'reserver_id', 'references' => 'id', 'on' => 'patrons', 'onDelete' => 'cascade'],
                 ['name' => 'accession_id', 'references' => 'id', 'on' => 'accessions', 'onDelete' => 'cascade'],
-                ['name' => 'processed_by', 'references' => 'id', 'on' => 'librarians', 'onDelete' => 'set null'],
+                ['name' => 'processor_id', 'references' => 'id', 'on' => 'librarians', 'onDelete' => 'set null'],
             ],
         ],
         [

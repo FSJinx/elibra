@@ -1,6 +1,7 @@
 <template>
   <main class="min-h-full px-5 pb-24 pt-7 text-slate-900 sm:px-8 sm:pb-12">
     <div class="mx-auto max-w-7xl space-y-6">
+      <!-- Welcome Banner -->
       <section class="overflow-hidden rounded-3xl bg-linear-to-br from-emerald-800 via-emerald-700 to-teal-700 px-6 py-8 text-white shadow-xl shadow-emerald-950/10 sm:px-8 lg:flex lg:items-end lg:justify-between">
         <div class="max-w-2xl">
           <p class="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-100">My library</p>
@@ -14,28 +15,8 @@
         </router-link>
       </section>
 
-      <section class="overflow-hidden rounded-3xl bg-linear-to-br from-emerald-700 via-emerald-600 to-teal-700 px-6 py-8 text-white shadow-xl shadow-emerald-900/10 sm:px-8 lg:flex lg:items-end lg:justify-between">
-        <div class="max-w-2xl">
-          <p class="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-100">Academic repository</p>
-          <h2 class="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Digital manuscript submission</h2>
-          <p class="mt-3 max-w-xl text-sm leading-6 text-emerald-50 sm:text-base">Share your research with the library. Submit your thesis or manuscript to the academic repository for review.</p>
-        </div>
-        <router-link :to="{ name: 'patron.acarepo' }" class="mt-6 inline-flex items-center gap-2 self-start rounded-xl bg-white px-4 py-3 text-sm font-semibold text-emerald-700 shadow-sm transition hover:bg-emerald-50 lg:mt-0">
-          <Icon icon="journal-text" />
-          Submit a manuscript
-        </router-link>
-      </section>
-
       <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label="Account summary">
-        <article v-for="stat in stats" :key="stat.label" class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <div class="flex items-start justify-between gap-4">
-            <span class="grid size-11 place-items-center rounded-xl" :class="stat.color">
-              <Icon :icon="stat.icon" />
-            </span>
-            <span class="text-2xl font-bold text-slate-950">{{ stat.value }}</span>
-          </div>
-          <p class="mt-4 text-sm font-medium text-slate-500">{{ stat.label }}</p>
-        </article>
+        <StatCard v-for="stat in stats" :label="stat.label" :value="stat.value" :icon="stat.icon" :variant="stat.color as Variants"/>
       </section>
 
       <section class="grid gap-6 lg:grid-cols-[1.35fr_0.65fr]">
@@ -93,10 +74,10 @@
 const auth = authStore()
 
 const stats = [
-  { icon: 'book', value: 3, label: 'Books currently borrowed', color: 'bg-emerald-50 text-emerald-700' },
-  { icon: 'clock', value: 1, label: 'Due this week', color: 'bg-amber-50 text-amber-700' },
-  { icon: 'bookmark', value: 8, label: 'Saved titles', color: 'bg-sky-50 text-sky-700' },
-  { icon: 'check-circle', value: 12, label: 'Books read this year', color: 'bg-violet-50 text-violet-700' },
+  { icon: 'book', value: 3, label: 'Books currently borrowed', color: 'success' },
+  { icon: 'clock', value: 1, label: 'Due this week', color: 'warning' },
+  { icon: 'bookmark', value: 8, label: 'Saved titles', color: 'info' },
+  { icon: 'check-circle', value: 12, label: 'Books read this year', color: 'restore' },
 ]
 
 const loans = [
@@ -107,7 +88,8 @@ const loans = [
 
 const services = [
   { icon: 'search', title: 'Search the catalog', description: 'Find books, journals, and more', name: 'opac' },
-  { icon: 'user', title: 'Manage your profile', description: 'Update your account details', name: 'patron.profile' },
+  { icon: 'person', title: 'Manage your profile', description: 'Update your account details', name: 'patron.profile' },
+  { icon: 'journal-plus', title: 'Submit your thesis', description: 'Submit an electronic copy of your manuscript', name: 'patron.acarepo' },
 ]
 </script>
 

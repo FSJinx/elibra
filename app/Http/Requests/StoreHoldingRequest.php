@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Holding;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Override;
 
 class StoreHoldingRequest extends BaseRequest
 {
@@ -11,7 +13,7 @@ class StoreHoldingRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->user()->can('create', Holding::class);
     }
 
     /**
@@ -22,7 +24,9 @@ class StoreHoldingRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            //
+            'reserver_id' => 'nullable|exists:patrons,id',
+            'accession_id' => 'nullable|exists:accessions,id',
+            'expected_pickup_date' => 'required|date|after_or_equal:today',
         ];
     }
 }

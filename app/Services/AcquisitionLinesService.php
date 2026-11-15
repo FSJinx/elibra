@@ -37,11 +37,13 @@ class AcquisitionLinesService
                 ])
             );
 
-            $this->accessionService->create([
-                'item_id' => $data['item_id'],
-                'acquisition_line_id' => $acquisitionLine->id,
-                'quantity' => (int) $data['quantity'] ?? 0,
-            ]);
+            for ($i = 0; $i < (int) $data['quantity' ?? 1]; $i++) {
+                $this->accessionService->create([
+                    'accession_number' => $data['accession_number'] ?? null,
+                    'item_id' => $data['item_id'],
+                    'acquisition_line_id' => $acquisitionLine->id,
+                ]);
+            }
 
             return $acquisitionLine->fresh([
                 'item',
@@ -128,7 +130,7 @@ class AcquisitionLinesService
             /*
              * Delete acquisition line.
              */
-        $acquisitionLine->delete();
+            $acquisitionLine->delete();
 
             return true;
         }, 5);

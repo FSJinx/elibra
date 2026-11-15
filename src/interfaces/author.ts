@@ -9,6 +9,13 @@ export interface Author {
 
   authorship: Authorship
 
+  name?: {
+    full: string
+    formal: string
+    author: string
+    author_reversed: string
+  }
+
   [key: string]: any
 }
 

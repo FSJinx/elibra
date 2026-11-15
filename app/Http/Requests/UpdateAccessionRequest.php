@@ -15,8 +15,7 @@ class UpdateAccessionRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->hasPermission('accession.update') && ($this->user()->isLibrarian() && $this->user()->librarian->branch)
-            || $this->user()->isAdmin();
+        return $this->user()->can('update', $this->route('accession'));
     }
 
     /**
@@ -27,7 +26,7 @@ class UpdateAccessionRequest extends BaseRequest
     public function rules(): array
     {
         $rules = [
-            'accession_number' => ['required', Rule::unique('accessions', 'accession_number')->ignore($this->route('accession'))],
+            'accession_number' => ['sometimes', 'nullable', Rule::unique('accessions', 'accession_number')->ignore($this->route('accession'))],
             'status' => ['sometimes', 'required', Rule::in(['available', 'reserved', 'on_load', 'lost', 'missing', 'archived', 'condemned'])],
             'remarks' => ['sometimes', 'nullable', 'string', 'max:255'],
 

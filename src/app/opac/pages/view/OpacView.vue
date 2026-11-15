@@ -51,7 +51,7 @@
 
             <p v-if="opac.currentData?.authors?.length" class="mt-4 text-sm">
               by
-              <span class="font-medium text-primary"> {{ opac.currentData.authors.join(', ') }} </span>
+              <span class="font-medium text-primary"> {{ opac.currentData.authors[0]?.name?.author }} <template v-if="opac.currentData.authors?.length > 1">et al.</template></span>
             </p>
           </div>
 
@@ -66,11 +66,11 @@
       </section>
 
       <!-- Divider -->
-      <div class="border-t border-border my-10"></div>
+      <!-- <div class="border-t border-border my-10"></div> -->
 
       <!-- Breadcrumb -->
-      <div class="flex items-center gap-2 text-sm text-foreground-secondary">
-        <button class="px-2 py-1 cursor-pointer hover:text-primary" size="sm" variant="text" v-for="item in pages" @click="activePage = item.path" :class="[{ 'text-primary': activePage === item.path }]">{{ item.name }}</button>
+      <div class="flex items-center gap-2 text-foreground-secondary my-5">
+        <button class="py-1 cursor-pointer hover:text-primary" size="sm" variant="text" v-for="item in pages" @click="activePage = item.path" :class="[{ 'text-primary font-semibold': activePage === item.path }]">{{ item.name }}</button>
       </div>
 
       <!-- Details -->

@@ -6,6 +6,8 @@ use App\Http\Requests\StoreAttendanceLogsRequest;
 use App\Http\Requests\UpdateAttendanceLogsRequest;
 use App\Models\AttendanceLogs;
 use App\Services\AttendanceLogsService;
+use App\Services\QueryService;
+use Illuminate\Http\Request;
 
 class AttendanceLogsController extends Controller
 {
@@ -19,9 +21,27 @@ class AttendanceLogsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return AttendanceLogs::with(['patron', 'branch', 'section'])->get();
+        $filters = QueryService::filters($request);
+
+        $filters = array_merge($filters, [
+            'patron_id' => $request->input('patron_id', null),
+            'library_id' => $request->input('library_id', null),
+            'section_id' => $request->input('section_id', null),
+        ]);
+
+        $data = AttendanceLogs::query()
+            ->when($filters['patron_id'], fn ($q, $p) => $q->where('patron_id', $p))
+            ->with(['patron', 'library', 'section'])
+            ->paginate(
+                $filters['per_page'],
+                ['*'],
+                'page',
+                $filters['page']
+            );
+
+        return $this->response(data: $data);
     }
 
     /**

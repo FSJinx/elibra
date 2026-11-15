@@ -479,7 +479,7 @@ Route::group(['prefix' => '/patron-type-loan-policy'], function () {
 });
 
 Route::group(['prefix' => '/attendance'], function () {
-    Route::get('', [AttendanceLogsController::class, 'index'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
+    Route::get('', [AttendanceLogsController::class, 'index'])->middleware('jwt.auth', 'throttle:read');
     Route::get('{attendanceLogs}', [AttendanceLogsController::class, 'show'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
 
     Route::post('', [AttendanceLogsController::class, 'store'])->withoutMiddleware(['jwt.auth', 'role:super_admin,admin,librarian'])->middleware('throttle:write');
@@ -489,7 +489,7 @@ Route::group(['prefix' => '/attendance'], function () {
 });
 
 Route::group(['prefix' => '/circulation'], function () {
-    Route::get('', [CirculationController::class, 'index'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
+    Route::get('', [CirculationController::class, 'index'])->middleware('jwt.auth', 'throttle:read');
     Route::get('review', [CirculationController::class, 'preview'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
     Route::get('{circulation}', [CirculationController::class, 'show'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
 
@@ -533,8 +533,12 @@ Route::group(['prefix' => '/fines-transaction'], function () {
 });
 
 Route::group(['prefix' => '/holding'], function () {
-    Route::get('', [HoldingController::class, 'index'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
+    Route::get('', [HoldingController::class, 'index'])->middleware('jwt.auth', 'throttle:read');
+
+    Route::post('', [HoldingController::class, 'store'])->middleware('jwt.auth');
+
     Route::post('{holding}/complete', [HoldingController::class, 'complete'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
+
     Route::delete('{holding}', [HoldingController::class, 'destroy'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:delete');
 });
 

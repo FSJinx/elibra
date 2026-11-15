@@ -8,21 +8,21 @@
     <template v-else>
       <div class="flex items-start justify-between gap-2 mb-3">
         <p class="m-0 text-[13px] font-medium text-muted-foreground">{{ label }}</p>
-        <div v-if="icon" class="flex shrink-0 items-center justify-center size-13 rounded-full" :class="[iconDesign]">
+        <span v-if="trend !== undefined && trend !== null" class="rounded-md px-1.5 py-0.5 text-[0.8125rem] font-medium" :class="trendClasses">
+          {{ trendDirection === 'up' ? '↑' : trendDirection === 'down' ? '↓' : '' }}
+          {{ Math.abs(trend) }}%
+        </span>
+      </div>
+
+      <div class="flex flex-wrap items-end gap-2 mt-auto">
+        <div v-if="icon" class="flex shrink-0 items-center justify-center size-11 rounded-lg mr-auto" :class="[iconDesign]">
           <component :is="icon" v-if="typeof icon === 'object'" />
           <span :class="`text-${variant}`" v-else>
             <Icon :icon="icon" />
           </span>
         </div>
-      </div>
 
-      <div class="flex flex-wrap items-baseline gap-2 mt-auto">
-        <span v-if="trend !== undefined && trend !== null" class="rounded-md px-1.5 py-0.5 text-[0.8125rem] font-medium" :class="trendClasses">
-          {{ trendDirection === 'up' ? '↑' : trendDirection === 'down' ? '↓' : '' }}
-          {{ Math.abs(trend) }}%
-        </span>
-
-        <h3 class="m-0 text-[1.75rem] font-semibold leading-tight text-gray-900 ml-auto" :class="[valueColor]">{{ value }}</h3>
+        <h3 class="m-0 text-[1.75rem] font-semibold leading-tight text-gray-900" :class="[valueColor]">{{ value }}</h3>
       </div>
     </template>
   </article>

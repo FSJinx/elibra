@@ -30,6 +30,11 @@
 
     <Alert v-if="error" variant="danger">{{ error }}</Alert>
 
+    <p v-if="route.query.query?.length && !loading">
+      {{ props.data?.total ?? 0 }} record(s) found for "<span class="font-bold">{{ route.query.query }}</span
+      >"
+    </p>
+
     <div class="flex-1 flex flex-col overflow-y-auto border border-border divide-y divide-border rounded-xl shadow">
       <!-- SEARCHING -->
       <section v-if="loading" class="flex-1 flex flex-col items-center justify-center min-h-100 bg-secondary text-center">
@@ -58,39 +63,36 @@
             </div>
 
             <div class="flex-1 min-w-0 py-1">
+              <!-- Item Title -->
               <div class="flex items-start gap-3">
                 <div class="min-w-0 flex-1">
-                  <h3 class="font-semibold text-lg leading-snug truncate group-hover:text-primary transition-colors">{{ data?.from + index }}. {{ item.title }}</h3>
-                  <p class="mt-1 text-sm text-foreground-secondary truncate">
-                    {{ item.subtitle ?? item.description ?? 'No additional information for this item' }}
-                  </p>
+                  <h3 class="font-semibold text-lg leading-snug truncate group-hover:text-primary transition-colors">{{ (data?.from ?? 1) + index }}. {{ item.title }}</h3>
+                  <span class="inline-flex items-center text-sm gap-1.5">
+                    by
+                    <template v-if="item.authors">{{ item.authors?.[0].name?.author }}{{ item.authors.length > 1 ? ', et al' : '' }}</template>
+                    <template v-else>No author</template>
+
+                    <span class="inline-flex items-center gap-1.5" v-if="item.publication_year">
+                      <Icon icon="calendar" />
+                      <span class="font-semibold">{{ item.publication_year || 'Unknown Publication Year' }}</span>
+                    </span>
+                  </span>
                 </div>
 
                 <Icon icon="arrow-up-right" class="hidden sm:block shrink-0 text-foreground-secondary opacity-0 group-hover:opacity-100 group-hover:text-primary transition-all" />
               </div>
 
-              <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mt-4 text-xs text-foreground-secondary">
-                <span class="inline-flex items-center gap-1.5">
-                  <Icon icon="user" />
-                  {{ item.authors?.join(', ') || 'No Author' }}
-                </span>
-
-                <span class="inline-flex items-center gap-1.5" v-if="item.publication_year">
-                  <Icon icon="calendar" />
-                  {{ item.publication_year || 'Unknown Publication Year' }}
-                </span>
-
-                <span class="inline-flex items-center gap-1.5">
-                  <Icon icon="building" />
-                  {{ item.library?.name || 'Unknown Library' }} - {{ item.library?.campus?.name }}
-                </span>
+              <div class="mt-5 text-[0.85rem] space-y-1 text-foreground-secondary">
+                <p>
+                  Item Type: <span class="font-semibold">{{ item.item_type?.name }} - {{ item.item_type_category?.name }}</span>
+                </p>
+                <p>
+                  Call Number: <span class="font-semibold">{{ item.call_number }}</span>
+                </p>
+                <p>
+                  Location: <span class="font-semibold">{{ item.library?.name || 'Unknown Library' }} - {{ item.library?.campus?.name }}</span>
+                </p>
               </div>
-            </div>
-
-            <div class="hidden sm:block shrink-0 pt-1">
-              <Status class="text-xs capitalize px-3 py-1.5 rounded-full border border-current/30" :variant="parse.status(item.item_type?.slug as string)">
-                {{ item.item_type?.name }}
-              </Status>
             </div>
           </div>
         </router-link>

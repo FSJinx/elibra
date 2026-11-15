@@ -38,8 +38,7 @@ class DatabaseSeeder extends Seeder
             ItemSeeder::class,
             AcquisitionSeeder::class,
             AcquisitionLinesSeeder::class,
-            AccessionSeeder::class,
-            HoldingSeeder::class,
+            // HoldingSeeder::class,
         ]);
-    } 
+    }
 }

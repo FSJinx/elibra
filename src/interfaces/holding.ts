@@ -1,11 +1,18 @@
+export interface HoldingParams extends BaseParams {
+  patron_id: any
+}
+
 export interface Holding {
   id: any
-  reserved_by: any
+  reserver_id: any
   accession_id: any
-  processed_by: any
+  processer_id: any
 
   pickup_date: string
-  picked_up_at: string
+  expected_pickup_date: string
+
+  status: string
+  status_remarks: string
 
   reserver: Partial<Patron>
   accession: Partial<Accession>
@@ -13,3 +20,6 @@ export interface Holding {
 
   [key: string]: any
 }
+
+export interface StoreHolding extends Partial<Holding> {}
+export interface UpdateHolding extends Partial<Holding> {}

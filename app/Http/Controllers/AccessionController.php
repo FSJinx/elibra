@@ -8,6 +8,7 @@ use App\Models\Accession;
 use App\Services\AccessionService;
 use App\Services\QueryService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AccessionController extends Controller
 {
@@ -32,7 +33,8 @@ class AccessionController extends Controller
 
         $patron = Accession::query()->with(['item.itemType', 'item.coverMedia'])
             ->when($filters['search'] ?? null, fn ($q, $s) => $q->where('accession_number', 'LIKE', "%$s%"))
-            ->when($filters['loanable'], fn ($q, $s) => $q->whereNotNull('accession_number')->where('status', 'available'))
+            // ->when($filters['loanable'], fn ($q, $s) => $q->whereNotNull('accession_number')->where('status', 'available'))
+            ->when($filters['loanable'], fn ($q, $s) => $q->whereNotNull('accession_number')->whereIn('status', ['available', 'borrowed', 'reserved']))
             ->when($filters['item_id'] ?? null, fn ($q, $s) => $q->where('item_id', $s))
             ->paginate(
                 perPage: null
@@ -60,12 +62,21 @@ class AccessionController extends Controller
         $data = array_merge($request->validated(), [
             'quantity' => $request->input('quantity'),
         ]);
-        $accession = $this->accessionService->create($data);
+
+        $accession = DB::transaction(function () use ($data){
+            $accessions = collect();
+            for ($i = 0; $i < (int) $data['quantity'] ?? 0; $i++) {
+                $accessions->push($this->accessionService->create($data));
+            }
+
+            return $accessions;
+        });
+
 
         return $this->response(
             'success',
             'Accession created successfully',
-            $accession->toArray(),
+            $accession,
             201
         );
     }

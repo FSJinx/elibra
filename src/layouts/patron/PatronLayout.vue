@@ -1,20 +1,21 @@
 <template>
   <div class="min-h-dvh bg-secondary text-slate-900">
-    <header class="sticky top-0 z-20 border-b border-slate-200/80 bg-background backdrop-blur">
-      <div class="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8">
+    <header class="sticky top-0 z-20 sm:border-b border-slate-200/80 sm:bg-background backdrop-blur">
+      <div class="mx-auto grid grid-cols-[1fr_2fr_1fr] max-w-7xl items-center px-5 py-4 sm:px-0">
         <router-link :to="{ name: 'home' }" class="flex items-center gap-3">
           <span class="grid size-10 place-items-center rounded-xl bg-primary text-white shadow-sm"><Icon icon="book" /></span>
           <span><strong class="block text-lg tracking-tight">e-Libra</strong><span class="hidden text-xs text-slate-500 sm:block">Your library, in your hands</span></span>
         </router-link>
-        <nav class="hidden items-center gap-1 md:flex" aria-label="Patron navigation">
+        <!-- Navigation Routes -->
+        <nav class="hidden sm:flex items-center justify-center gap-2 ml-5" aria-label="Patron navigation">
           <router-link v-for="item in navigation" :key="item.name" :to="{ name: item.name }" class="rounded-lg px-3 py-2 text-sm font-semibold text-muted-foreground transition hover:bg-primary hover:text-primary-foreground" exact-active-class="bg-primary text-primary-foreground! shadow-sm">{{ item.label }}</router-link>
         </nav>
-        <router-link :to="{ name: 'patron.profile' }" class="grid size-10 place-items-center rounded-full bg-primary-soft/50 text-sm font-bold text-primary border border-primary/25" aria-label="Open profile">{{ auth.getInitials || 'RD' }}</router-link>
+        <router-link :to="{ name: 'patron.profile' }" class="grid col-3 ml-auto size-10 place-items-center rounded-full bg-primary-soft/50 text-sm font-bold text-primary border border-primary/25" aria-label="Open profile">{{ auth.getInitials || 'RD' }}</router-link>
       </div>
     </header>
     <router-view />
     <nav class="fixed inset-x-0 bottom-0 z-20 flex justify-around border-t border-slate-200 bg-white/95 px-2 py-2 shadow-[0_-8px_30px_rgba(15,23,42,0.08)] backdrop-blur md:hidden" aria-label="Mobile navigation">
-      <router-link v-for="item in navigation" :key="item.name" :to="{ name: item.name }" class="flex min-w-18 flex-col items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-semibold text-slate-400" active-class="bg-emerald-50 text-emerald-700"><Icon :icon="item.icon" class="text-base" />{{ item.label }}</router-link>
+      <router-link v-for="item in navigation" :key="item.name" :to="{ name: item.name }" class="flex min-w-18 flex-col items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-semibold text-slate-400" exact-active-class="bg-emerald-50 text-emerald-700"><Icon :icon="item.icon" class="text-base" />{{ item.label }}</router-link>
     </nav>
   </div>
 </template>
@@ -26,6 +27,7 @@ const navigation = [
   { name: 'opac', label: 'Discover', icon: 'search' },
   { name: 'patron.acarepo', label: 'AcaRepo', icon: 'mortarboard' },
   { name: 'patron.services', label: 'Services', icon: 'grid' },
+  { name: 'patron.history', label: 'History', icon: 'clock' },
   { name: 'patron.profile', label: 'Profile', icon: 'person' },
 ]
 </script>
