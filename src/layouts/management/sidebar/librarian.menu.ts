@@ -64,7 +64,7 @@ export const librarianMenu = [
     name: 'Reports',
     children: [
       { path: 'librarian.reports.circulation', name: 'Circulation', icon: 'bar-chart-line' },
-      // circulation_reports: { path: 'librarian.reports.circulation', name: 'Circulation', icon: 'bar-chart-line' },
+      { path: 'librarian.reports.user', name: 'Users', icon: 'people' },
       // collection_reports: { path: 'librarian.reports.collection', name: 'Collection', icon: 'pie-chart' },
       // overdue_reports: { path: 'librarian.reports.overdue', name: 'Overdue', icon: 'exclamation-triangle' },
       // inventory_reports: { path: 'librarian.reports.inventory', name: 'Inventory', icon: 'graph-up-arrow' },

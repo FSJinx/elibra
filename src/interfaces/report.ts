@@ -1,25 +1,25 @@
 export interface ReportParams extends BaseParams {
-    type: string
+  type: string
 }
 
 export interface Report {
-    id: any
-    reference: string
-    type: string
-    format: string
-    filters: object
-    data: object
-
-    Attachment_id: number
-    generator_id: number
-    library_id: number
-
-    file: Attachment | null
-    generator:  Librarian | null
+  id: any
+  reference: string
+  type: string
+  format: string
+  filters: Record<string, any>
+  data: object
+  
+  Attachment_id: number
+  generator_id: number
+  library_id: number
+  
+  file: Attachment | null
+  generator: Librarian | null
 }
 
 export interface StoreReport extends Partial<Report> {
-    created_from: string
-    created_to: string
-    columns: string[]
+  created_from: string
+  created_to: string
+  filters: Record<string, any>
 }

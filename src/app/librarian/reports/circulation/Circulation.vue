@@ -42,7 +42,9 @@ const report = reportStore()
 
 const pagination = ref<Pagination>()
 const loading = ref<boolean>(false)
-const params = reactive<Partial<ReportParams>>({})
+const params = reactive<Partial<ReportParams>>({
+  type: 'circulation',
+})
 
 async function search() {
   loading.value = true
