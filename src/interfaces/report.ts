@@ -9,17 +9,16 @@ export interface Report {
   format: string
   filters: Record<string, any>
   data: object
-  
+
   Attachment_id: number
   generator_id: number
   library_id: number
-  
+
   file: Attachment | null
   generator: Librarian | null
 }
 
-export interface StoreReport extends Partial<Report> {
-  created_from: string
-  created_to: string
+export interface StoreReport {
+  format: string
   filters: Record<string, any>
 }

@@ -9,24 +9,24 @@
           <Label>Format</Label>
           <Select v-model="form.format" title="Formats" placeholder="Select report format">
             <Option value="pdf" label="PDF" />
-            <Option value="xcs" label="Excel" />
+            <Option value="xlsx" label="Excel" />
           </Select>
         </Control>
 
-        <Control id="report-date-range" col required>
+        <Control id="report-date-range" col>
           <Label>Date Created</Label>
 
           <div class="flex items-center gap-5" id="">
             <Label>From</Label>
-            <DatePicker v-model="form.created_from" :max="form.created_to ?? today" />
+            <DatePicker v-model="form.filters.created_from" :max="form.filters.created_to.length ? form.filters.created_to : today" />
             <Label>To</Label>
-            <DatePicker v-model="form.created_to" :min="form.created_from" :max="today" />
+            <DatePicker v-model="form.filters.created_to" :min="form.filters.created_from" :max="today" />
           </div>
         </Control>
 
         <Control id="report-columns" col>
           <Label>Columns Included</Label>
-          <MultiSelect v-model="form.columns" title="Columns" placeholder="Select columns included">
+          <MultiSelect v-model="form.filters.columns" title="Columns" placeholder="Select columns included">
             <MultiOption value="renewal_count" label="renewal_count" />
             <MultiOption value="fine_charged" label="fine_charged" />
             <MultiOption value="notes" label="notes" />
@@ -45,17 +45,26 @@
 import Modal from '@/components/my/Modal.vue'
 
 const pop = usePopup()
-const report = reportStore()
+const circulation = circulationStore()
+const attachment = attachmentStore()
 
 // Default Values
-const defaultForm = (): Partial<StoreReport> => ({})
+const defaultForm = (): StoreReport => ({
+  format: 'pdf',
+  filters: {
+    columns: [],
+    created_from: '',
+    created_to: '',
+  },
+})
 const today = ref(new Date().toLocaleDateString('en-CA'))
 
 const modal = ref<InstanceType<typeof Modal>>()
-const form = reactive<Partial<StoreReport>>({})
+const form = reactive(defaultForm())
+const emit = defineEmits(['refresh'])
 
 function open() {
-  Object.assign(form, null)
+  Object.assign(form, defaultForm())
   modal.value?.open()
 }
 
@@ -66,8 +75,10 @@ function close() {
 async function submit() {
   pop.load()
   try {
-    const res = await report.store(form)
+    const res = await circulation.generateReport(form)
     pop.success(res.message)
+    emit('refresh')
+    close()
   } catch (e: any) {
     pop.error(e.response?.data?.message)
     throw e

@@ -35,5 +35,9 @@ export const userStore = defineStore('users', {
     async delete(user: User) {
       return await del(`${this.url}/${user.uuid}`)
     },
+
+    async generateReport(params: StoreReport) {
+      return await get(`${this.url}/generateReport`, params)
+    }
   },
 })

@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ReportType;
+use App\Http\Requests\StoreReportRequest;
 use App\Http\Requests\StoreUsersRequest;
 use App\Http\Requests\UpdateUsersRequest;
 use App\Models\User;
 use App\Services\CacheService;
 use App\Services\QueryService;
+use App\Services\ReportQueryService;
+use App\Services\ReportService;
 use App\Services\UserService;
 use Exception;
 use Illuminate\Http\Request;
@@ -18,7 +22,8 @@ use Throwable;
 class UserController extends Controller
 {
     public function __construct(
-        private UserService $service
+        private UserService $service,
+        protected ReportService $report,
     ) {}
 
     /**
@@ -246,5 +251,43 @@ class UserController extends Controller
         CacheService::invalidate(CacheService::USERS);
 
         return $this->response('success', 'User record deleted successfully.');
+    }
+
+    public function generateReport(StoreReportRequest $request)
+    {
+        $user = $this->user();
+
+        $filters = ReportQueryService::filters(ReportType::User, $request);
+
+        $data = User::query()
+            ->when($filters['created_from'], fn ($q, $d) => $q->whereDate('created_at', '>=', $d))
+            ->when($filters['created_to'], fn ($q, $d) => $q->whereDate('created_at', '<=', $d))
+            ->when($filters['roles'] ?? null, fn ($q, $roles) => $q->whereIn('role', $roles))
+            ->where('campus_id', $user->campus_id)
+            // ->with(['patron', 'librarian'])
+            ->orderBy('last_name', 'asc')
+            ->get()
+            ->map(fn ($u) => [
+                'id' => $u->id,
+                'last_name' => $u->last_name,
+                'first_name' => $u->first_name,
+                'middle_initial' => $u->middle_initial,
+                'sex' => $u->sex,
+                'role' => $u->role,
+
+                // additional columns
+                'status' => $u->status,
+                'username' => $u->username,
+                'email' => $u->email,
+                'created_at' => $u->created_at->toDateString(),
+            ])->all();
+
+        if (empty($data)) {
+            return $this->response('error', 'No data in user yet!');
+        }
+
+        $report = $this->report->create(ReportType::User, $filters, $data, $this->user());
+
+        return $this->response('success', 'Report generated successfully!', $report);
     }
 }

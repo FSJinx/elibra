@@ -4,6 +4,7 @@ use App\Http\Controllers\AcaRepoController;
 use App\Http\Controllers\AccessionController;
 use App\Http\Controllers\AcquisitionController;
 use App\Http\Controllers\AcquisitionLinesController;
+use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\AttendanceLogsController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
@@ -144,6 +145,19 @@ Route::group(['prefix' => '/acquisition-lines'], function () {
 
     // Delete
     Route::delete('/{id}', [AcquisitionLinesController::class, 'destroy'])->middleware('throttle:write');
+});
+
+// ============== ATTACHMENTS ROUTE ==================
+Route::group(['prefix' => '/attachment'], function () {
+    // Get
+    Route::get('{attachment}', [AttachmentController::class, 'show'])->middleware('throttle:write');
+    Route::get('{attachment}/download', [AttachmentController::class, 'download'])->middleware('throttle:write');
+
+    // Post
+
+    // Update
+
+    // Delete
 });
 
 // ============== AUTHORS ROUTE ==================
@@ -449,6 +463,8 @@ Route::group(['prefix' => '/librarian', 'middleware' => ['jwt.auth', 'role:super
 
 // User Routes
 Route::group(['prefix' => '/user', 'middleware' => ['jwt.auth', 'role:super_admin,admin']], function () {
+    Route::get('generateReport', [UserController::class, 'generateReport']);
+
     Route::post('', [UserController::class, 'create'])->middleware('throttle:write');
     Route::put('{user}', [UserController::class, 'update'])->middleware('throttle:write');
 });
@@ -505,6 +521,8 @@ Route::group(['prefix' => '/attendance'], function () {
 Route::group(['prefix' => '/circulation'], function () {
     Route::get('', [CirculationController::class, 'index'])->middleware('jwt.auth', 'throttle:read');
     Route::get('review', [CirculationController::class, 'preview'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
+    Route::get('generateReport', [CirculationController::class, 'generateReport'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
+    
     Route::get('{circulation}', [CirculationController::class, 'show'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
 
     Route::post('', [CirculationController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');

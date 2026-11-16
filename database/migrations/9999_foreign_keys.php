@@ -259,8 +259,8 @@ return new class extends Migration
         [
             'name' => 'reports',
             'foreign_columns' => [
-                ['name' => 'file_id', 'references' => 'id', 'on' => 'media', 'onDelete' => 'set null'],
-                ['name' => 'generator_id', 'references' => 'id', 'on' => 'librarians', 'onDelete' => 'set null'],
+                ['name' => 'file_id', 'references' => 'id', 'on' => 'attachments', 'onDelete' => 'set null'],
+                ['name' => 'generator_id', 'references' => 'id', 'on' => 'users', 'onDelete' => 'set null'],
                 ['name' => 'library_id', 'references' => 'id', 'on' => 'libraries', 'onDelete' => 'cascade'],
             ],
         ],

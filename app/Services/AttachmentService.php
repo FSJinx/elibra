@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Enums\Enums\AttachmentEnums;
+use App\Enums\AttachmentType;
 use App\Models\Attachment;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
@@ -10,10 +10,10 @@ use Illuminate\Support\Facades\Validator;
 
 class AttachmentService
 {
-    public function store(AttachmentEnums $type, UploadedFile $file): Attachment
+    public function store(AttachmentType $type, UploadedFile $file): Attachment
     {
-        Validator::validate($file, $type->rules());
-        
+        Validator::validate(['file' => $file], ['file' => $type->rules()]);
+
         return Attachment::create([
             'disk' => $type->disk(),
             'collections' => $type->value,

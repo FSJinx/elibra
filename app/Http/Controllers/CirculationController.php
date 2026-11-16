@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ReportType;
 use App\Http\Requests\StoreCirculationRequest;
 use App\Http\Requests\StoreReportRequest;
 use App\Http\Requests\UpdateCirculationRequest;
 use App\Models\Accession;
 use App\Models\Circulation;
-use App\Models\Patron;
 use App\Models\User;
 use App\Services\CirculationService;
+use App\Services\ReportQueryService;
 use App\Services\ReportService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -27,7 +28,7 @@ class CirculationController extends Controller
     public function index()
     {
         $circulations = Circulation::with([
-            'processedBy.user',
+            'processor.user',
             'patron.user',
             'patron.patronType',
             'accession.item',
@@ -41,7 +42,7 @@ class CirculationController extends Controller
             $circulations->toArray(),
             200
         );
-        
+
     }
 
     public function preview(Request $request)
@@ -65,7 +66,7 @@ class CirculationController extends Controller
                     });
             })
             ->select(['id', 'last_name', 'first_name', 'username', 'middle_initial', 'email'])
-            ->with(['patron.patronType:id,name', 'patron.program:id,name,department_id','patron.program.department:id,name'])
+            ->with(['patron.patronType:id,name', 'patron.program:id,name,department_id', 'patron.program.department:id,name'])
             ->first();
 
         if (! $patron) {
@@ -127,8 +128,8 @@ class CirculationController extends Controller
     public function show(Circulation $circulation)
     {
         $circulation->load([
-            'processedBy',
-            'patron',
+            'processor.user',
+            'patron.user',
             'accession',
             'loanMode',
             'returnReceivedBy',
@@ -205,11 +206,33 @@ class CirculationController extends Controller
         );
     }
 
-    public function generateReport(StoreReportRequest $request) 
+    public function generateReport(StoreReportRequest $request)
     {
-        $params = $request->all();
+        $filters = ReportQueryService::filters(ReportType::Circulation, $request);
+
         $data = Circulation::query()
-        ->where(fn ($q) => $q->where('created_at', ));
-        $report = $this->report->create([]);
+            ->when($filters['created_from'], fn ($q, $d) => $q->whereDate('created_at', '>=', $d))
+            ->when($filters['created_to'], fn ($q, $d) => $q->whereDate('created_at', '<=', $d))
+            ->with(['accession.item', 'patron.user', 'patron.patronType', 'processor.user'])
+            ->get()
+            ->map(fn ($c) => [
+                'id' => $c->id,
+                'accession_number' => $c->accession->accession_number,
+                'title' => $c->accession->item->title,
+                'borrower' => "{$c->patron->user->first_name} {$c->patron->user->last_name}",
+                'patron_type' => $c->patron->patronType->name,
+                'borrowed_at' => $c->borrowed_at,
+                'due_at' => $c->due_at,
+                'returned_at' => $c->returned_at,
+                'status' => $c->status,
+            ])->all();
+
+        if (empty($data)) {
+            return $this->response('error', 'No data in circulation yet!');
+        }
+
+        $report = $this->report->create(ReportType::Circulation, $filters, $data, $this->user());
+
+        return $this->response('success', 'Report generated successfully!', $report);
     }
 }

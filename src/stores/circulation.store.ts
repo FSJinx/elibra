@@ -3,8 +3,8 @@ export const circulationStore = defineStore('circulation', {
     data: null as Circulation[] | null,
     currentData: null as Circulation | null,
 
-    url: 'circulation', 
-    params: {} as CirculationParams,  
+    url: 'circulation',
+    params: {} as CirculationParams,
   }),
 
   actions: {
@@ -31,6 +31,11 @@ export const circulationStore = defineStore('circulation', {
 
     async remove(payload: Circulation) {
       const res = await del(`${this.url}/${payload.id}`)
+      return res
+    },
+
+    async generateReport(payload: StoreReport) {
+      const res = await get(`${this.url}/generateReport`, payload)
       return res
     },
   },

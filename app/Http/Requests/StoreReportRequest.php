@@ -23,6 +23,8 @@ class StoreReportRequest extends BaseRequest
     public function rules(): array
     {
         return [
+            'format' => 'required|in:pdf,xlsx,xcs',
+            'filters' => 'sometimes|array',
             'created_from' => 'sometimes|nullable|date_format:Y-m-d|before_or_equal:'.($this->filled('created_to') ? 'created_to' : 'today'),
             'created_to' => 'sometimes|nullable|date_format:Y-m-d|before_or_equal:today|after_or_equal:created_from',
         ];

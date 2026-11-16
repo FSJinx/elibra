@@ -15,9 +15,9 @@ use Illuminate\Validation\ValidationException;
 
 class CirculationService
 {
-    public function checkout(array $data, User $processedBy): Circulation
+    public function checkout(array $data, User $processor): Circulation
     {
-        $circulation = DB::transaction(function () use ($data, $processedBy) {
+        $circulation = DB::transaction(function () use ($data, $processor) {
             $accession = Accession::query()
                 ->lockForUpdate()
                 ->findOrFail($data['accession_id']);
@@ -68,7 +68,7 @@ class CirculationService
                 'status' => 'borrowed',
                 'renewal_count' => 0,
                 'fine_charged' => 0,
-                'processed_by' => $processedBy->librarian?->id,
+                'processed_by' => $processor->librarian?->id,
                 'accession_id' => $accession->id,
                 'patron_id' => $patron->id,
                 'loan_mode_id' => $data['loan_mode_id'],
@@ -82,7 +82,7 @@ class CirculationService
         CacheService::invalidate(CacheService::CIRCULATIONS);
 
         return $circulation->load([
-            'processedBy.user',
+            'processor.user',
             'patron.user',
             'patron.patronType',
             'accession.item',
@@ -118,7 +118,7 @@ class CirculationService
         CacheService::invalidate(CacheService::CIRCULATIONS);
 
         return $circulation->load([
-            'processedBy',
+            'processor',
             'patron',
             'accession',
             'loanMode',
@@ -137,7 +137,7 @@ class CirculationService
         CacheService::invalidate(CacheService::CIRCULATIONS);
 
         return $updated->fresh([
-            'processedBy',
+            'processor',
             'patron',
             'accession',
             'loanMode',
@@ -191,7 +191,7 @@ class CirculationService
                      * Returned: October 29 → 4 calendar days overdue
                      * Grace period: 2 days
                      * Fine rate: ₱3.50 per day
-                     * 
+                     *
                      * Chargeable days: 4 − 2 = 2
                      * Fine: 2 × ₱3.50 = ₱7.00
                      */
@@ -221,7 +221,7 @@ class CirculationService
         CacheService::invalidate(CacheService::CIRCULATIONS);
 
         return $returned->fresh([
-            'processedBy.user',
+            'processor.user',
             'patron.user',
             'patron.patronType',
             'accession.item',
@@ -289,7 +289,7 @@ class CirculationService
         CacheService::invalidate(CacheService::CIRCULATIONS);
 
         return $renewed->fresh([
-            'processedBy.user',
+            'processor.user',
             'patron.user',
             'patron.patronType',
             'accession.item',

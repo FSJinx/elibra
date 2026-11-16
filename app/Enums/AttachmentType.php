@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Enums\Enums;
+namespace App\Enums;
 
-enum AttachmentEnums: string
+enum AttachmentType: string
 {
     case ProfilePicture = 'profile_picture';
     case CoverPhoto = 'cover_photo';
     case ElectronicFile = 'electronic_file';
-    case CirculationReport = 'reports/circulation';
+    case Report = 'report';
 
     /**
      * Returns the disk of the attachment
@@ -18,7 +18,6 @@ enum AttachmentEnums: string
             self::ProfilePicture,
             self::CoverPhoto,
             self::ElectronicFile,
-            self::CirculationReport,
         ], true) ? 'public' : 'local';
     }
 
@@ -33,6 +32,7 @@ enum AttachmentEnums: string
             self::ProfilePicture => ['required', 'image', 'mimes:jpg,png,webp', 'max:2048'],
             self::CoverPhoto => ['required', 'image', 'mimes:jpg,png,webp', 'max:2048'],
             self::ElectronicFile => ['required', 'file', 'mimes:pdf', 'max:51200'],
+            default => [],
         };
     }
 }
