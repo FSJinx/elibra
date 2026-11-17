@@ -57,6 +57,8 @@ declare module 'vue' {
     ModalBody: typeof import('./my/ModalBody.vue')['default']
     ModalFooter: typeof import('./my/ModalFooter.vue')['default']
     ModalHeader: typeof import('./my/ModalHeader.vue')['default']
+    MultiOption: typeof import('./form/MultiOption.vue')['default']
+    MultiSelect: typeof import('./form/MultiSelect.vue')['default']
     NewFeature: typeof import('./my/NewFeature.vue')['default']
     Option: typeof import('./form/Option.vue')['default']
     PageConstruction: typeof import('./PageConstruction.vue')['default']

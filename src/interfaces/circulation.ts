@@ -26,7 +26,7 @@ export interface Circulation {
   fine_charged: any
   notes: string
 
-  processed_by: any
+  processor_id: any
   accession_id: any
   patron_id: any
   loan_mode_id: any

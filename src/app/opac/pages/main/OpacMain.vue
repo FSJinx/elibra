@@ -101,7 +101,7 @@
     <div class="flex items-center gap-2">
       <div class="flex-1 flex items-center gap-3 mr-auto shrink-0">
         Showing
-        <Select class="max-w-max" title="Item Per Page" v-model="params.per_page" @onChange="emit('search')">
+        <Select class="max-w-max" title="Item Per Page" v-model="params.per_page" @onChange="(emit('search'), (params.page = undefined))">
           <Option value="25">25</Option>
           <Option value="50">50</Option>
           <Option value="75">75</Option>

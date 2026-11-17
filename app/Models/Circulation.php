@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\CirculationFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Circulation extends Model
 {
-    /** @use HasFactory<\Database\Factories\CirculationFactory> */
+    /** @use HasFactory<CirculationFactory> */
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
@@ -37,7 +38,7 @@ class Circulation extends Model
         'fine_charged' => 'decimal:2',
     ];
 
-    public function processedBy(): BelongsTo
+    public function processor(): BelongsTo
     {
         return $this->belongsTo(Librarian::class, 'processed_by');
     }

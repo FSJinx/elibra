@@ -4,6 +4,7 @@ use App\Http\Controllers\AcaRepoController;
 use App\Http\Controllers\AccessionController;
 use App\Http\Controllers\AcquisitionController;
 use App\Http\Controllers\AcquisitionLinesController;
+use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\AttendanceLogsController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
@@ -35,11 +36,13 @@ use App\Http\Controllers\PatronTypeController;
 use App\Http\Controllers\PatronTypeLoanPolicyController;
 use App\Http\Controllers\ProgramsController;
 use App\Http\Controllers\PublisherController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SectionsController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UI\OptionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserPermissionController;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -60,6 +63,8 @@ Route::group(['prefix' => '/auth'], function () {
         Route::put('/me', [AuthController::class, 'updateMe']);
     });
 });
+
+Route::get('test-pdf',  fn () => Pdf::loadHtml('<h1>Hello PDF</h1>')->stream('test.pdf'));
 
 /**
  *      Public Routes
@@ -140,6 +145,19 @@ Route::group(['prefix' => '/acquisition-lines'], function () {
 
     // Delete
     Route::delete('/{id}', [AcquisitionLinesController::class, 'destroy'])->middleware('throttle:write');
+});
+
+// ============== ATTACHMENTS ROUTE ==================
+Route::group(['prefix' => '/attachment'], function () {
+    // Get
+    Route::get('{attachment}', [AttachmentController::class, 'show'])->middleware('throttle:write');
+    Route::get('{attachment}/download', [AttachmentController::class, 'download'])->middleware('throttle:write');
+
+    // Post
+
+    // Update
+
+    // Delete
 });
 
 // ============== AUTHORS ROUTE ==================
@@ -366,6 +384,16 @@ Route::group(['prefix' => '/publisher'], function () {
 
 });
 
+// ============== REPORTS ROUTE ==================
+Route::group(['prefix' => '/report'], function () {
+    // Get
+    Route::get('', [ReportController::class, 'index'])->middleware('throttle:read');
+
+    // Post
+    Route::post('', [ReportController::class, 'store'])->middleware('jwt.auth', 'throttle:write');
+
+});
+
 // ============== SECTION ROUTE ==================
 Route::group(['prefix' => '/section', 'middleware' => 'jwt.auth'], function () {
     // Get
@@ -435,6 +463,8 @@ Route::group(['prefix' => '/librarian', 'middleware' => ['jwt.auth', 'role:super
 
 // User Routes
 Route::group(['prefix' => '/user', 'middleware' => ['jwt.auth', 'role:super_admin,admin']], function () {
+    Route::get('generateReport', [UserController::class, 'generateReport']);
+
     Route::post('', [UserController::class, 'create'])->middleware('throttle:write');
     Route::put('{user}', [UserController::class, 'update'])->middleware('throttle:write');
 });
@@ -491,6 +521,8 @@ Route::group(['prefix' => '/attendance'], function () {
 Route::group(['prefix' => '/circulation'], function () {
     Route::get('', [CirculationController::class, 'index'])->middleware('jwt.auth', 'throttle:read');
     Route::get('review', [CirculationController::class, 'preview'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
+    Route::get('generateReport', [CirculationController::class, 'generateReport'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
+    
     Route::get('{circulation}', [CirculationController::class, 'show'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
 
     Route::post('', [CirculationController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');

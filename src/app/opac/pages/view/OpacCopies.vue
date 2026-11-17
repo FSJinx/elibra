@@ -20,7 +20,7 @@
           <Status :variant="item.status">{{ item.status }}</Status>
         </Td>
         <Td>
-          <Button @click="openReservation(item)" variant="info" size="sm" v-if="item?.status === 'available'">Reserve</Button>
+          <Button @click="openReservation(item)" variant="info" size="sm" v-if="item?.status === 'available' && auth.user?.role === 'patron'">Reserve</Button>
           <p v-else>No actions available</p>
         </Td>
       </Tr>

@@ -255,6 +255,22 @@ return new class extends Migration
             ],
         ],
 
+        // 100. Reports
+        [
+            'name' => 'reports',
+            'foreign_columns' => [
+                ['name' => 'file_id', 'references' => 'id', 'on' => 'attachments', 'onDelete' => 'set null'],
+                ['name' => 'generator_id', 'references' => 'id', 'on' => 'users', 'onDelete' => 'set null'],
+                ['name' => 'library_id', 'references' => 'id', 'on' => 'libraries', 'onDelete' => 'cascade'],
+            ],
+        ],
+
+        [
+            'name' => 'attachments',
+            'foreign_columns' => [
+                ['name' => 'uploader_id', 'references' => 'id', 'on' => 'users', 'onDelete' => 'set null'],
+            ],
+        ],
     ];
 
     // ============= LINKS RELATIONSHIPS ===============

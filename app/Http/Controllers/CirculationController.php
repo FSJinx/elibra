@@ -2,20 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ReportType;
 use App\Http\Requests\StoreCirculationRequest;
+use App\Http\Requests\StoreReportRequest;
 use App\Http\Requests\UpdateCirculationRequest;
 use App\Models\Accession;
 use App\Models\Circulation;
-use App\Models\Patron;
 use App\Models\User;
 use App\Services\CirculationService;
+use App\Services\ReportQueryService;
+use App\Services\ReportService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class CirculationController extends Controller
 {
     public function __construct(
-        protected CirculationService $circulationService
+        protected CirculationService $circulationService,
+        protected ReportService $report,
     ) {}
 
     /**
@@ -24,7 +28,7 @@ class CirculationController extends Controller
     public function index()
     {
         $circulations = Circulation::with([
-            'processedBy.user',
+            'processor.user',
             'patron.user',
             'patron.patronType',
             'accession.item',
@@ -38,7 +42,7 @@ class CirculationController extends Controller
             $circulations->toArray(),
             200
         );
-        
+
     }
 
     public function preview(Request $request)
@@ -62,33 +66,8 @@ class CirculationController extends Controller
                     });
             })
             ->select(['id', 'last_name', 'first_name', 'username', 'middle_initial', 'email'])
-            ->with(['patron.patronType:id,name', 'patron.program:id,name,department_id','patron.program.department:id,name'])
+            ->with(['patron.patronType:id,name', 'patron.program:id,name,department_id', 'patron.program.department:id,name'])
             ->first();
-
-        // $patron = Patron::query()
-        //     ->select(['id', 'ebc_number', 'user_id', 'patron_type_id', 'program_id'])
-        //     ->with([
-        //         'user:id,first_name,middle_initial,last_name,username',
-        //         'patronType:id,name',
-        //         'program:id,name,department_id',
-        //         'program.department:id,name',
-        //     ])
-        //     ->where(function ($query) use ($patronIdentifier) {
-        //         $query->where('ebc_number', $patronIdentifier);
-
-        //         if (ctype_digit($patronIdentifier)) {
-        //             $query->orWhere('id', (int) $patronIdentifier);
-        //         }
-
-        //         $query->orWhereHas('user', function ($userQuery) use ($patronIdentifier) {
-        //             $userQuery->where('username', $patronIdentifier);
-
-        //             if (ctype_digit($patronIdentifier)) {
-        //                 $userQuery->orWhere('id', (int) $patronIdentifier);
-        //             }
-        //         });
-        //     })
-        //     ->first();
 
         if (! $patron) {
             return $this->response('error', 'Patron not found.', null, 404);
@@ -149,8 +128,8 @@ class CirculationController extends Controller
     public function show(Circulation $circulation)
     {
         $circulation->load([
-            'processedBy',
-            'patron',
+            'processor.user',
+            'patron.user',
             'accession',
             'loanMode',
             'returnReceivedBy',
@@ -225,5 +204,35 @@ class CirculationController extends Controller
             null,
             200
         );
+    }
+
+    public function generateReport(StoreReportRequest $request)
+    {
+        $filters = ReportQueryService::filters(ReportType::Circulation, $request);
+
+        $data = Circulation::query()
+            ->when($filters['created_from'], fn ($q, $d) => $q->whereDate('created_at', '>=', $d))
+            ->when($filters['created_to'], fn ($q, $d) => $q->whereDate('created_at', '<=', $d))
+            ->with(['accession.item', 'patron.user', 'patron.patronType', 'processor.user'])
+            ->get()
+            ->map(fn ($c) => [
+                'id' => $c->id,
+                'accession_number' => $c->accession->accession_number,
+                'title' => $c->accession->item->title,
+                'borrower' => "{$c->patron->user->first_name} {$c->patron->user->last_name}",
+                'patron_type' => $c->patron->patronType->name,
+                'borrowed_at' => $c->borrowed_at,
+                'due_at' => $c->due_at,
+                'returned_at' => $c->returned_at,
+                'status' => $c->status,
+            ])->all();
+
+        if (empty($data)) {
+            return $this->response('error', 'No data in circulation yet!');
+        }
+
+        $report = $this->report->create(ReportType::Circulation, $filters, $data, $this->user());
+
+        return $this->response('success', 'Report generated successfully!', $report);
     }
 }
