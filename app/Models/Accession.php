@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Accession extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'accession_number',
@@ -34,5 +35,10 @@ class Accession extends Model
             AcquisitionLines::class,
             'acquisition_line_id'
         );
+    }
+
+    public function inventoryLines()
+    {
+        return $this->hasMany(InventoryLine::class, 'accession_id');
     }
 }

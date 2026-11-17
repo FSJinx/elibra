@@ -1,21 +1,25 @@
 <template>
-  <aside class="hidden xl:block w-100 p-5 bg-background border border-border rounded-xl overflow-y-auto">
+  <!-- <aside class="hidden xl:block w-100 p-5 bg-background border border-border rounded-xl overflow-y-auto">
     <div class="flex items-start justify-between">
       <div>
         <p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-foreground-secondary">Filters</p>
         <h2 class="mt-1 text-xl font-semibold tracking-tight">Refine results</h2>
       </div>
-
-      <button type="button" class="text-xs text-foreground-secondary hover:text-danger transition-colors" @click="$emit('reset')">Reset</button>
     </div>
 
     <div class="h-px bg-border my-5"></div>
+  </aside> -->
 
-    <Form>
-      <template #body>
-        <Control direction="col">
-          <Label id="params-campus">Campus</Label>
-          <Select id="params-campus" title="Campus" v-model="params.campus">
+  <Button class="bg-default" variant="text" left-icon="sliders" @click="open">Filter</Button>
+
+  <Modal ref="modal">
+    <ModalHeader use-default-layout title="Filters" subtitle="Refine your quest for knowledge" icon="sliders" />
+
+    <ModalBody class="p-5">
+      <Form class="grid grid-cols-2 gap-3" id="opac-form" @submit="apply">
+        <Control col class="col-span-2">
+          <Label>Campus</Label>
+          <Select title="Campus" v-model="params.campus_id">
             <Option value="">All data</Option>
             <template v-for="item in options.campuses" :key="item.id">
               <Option :value="item.id">{{ item.name }}</Option>
@@ -23,80 +27,69 @@
           </Select>
         </Control>
 
-        <Control direction="col">
-          <Label id="params-branch">Branch</Label>
-          <Select id="params-branch" title="Branch" v-model="params.branch">
-            <Option value="">All branches</Option>
-            <template v-for="item in campusBranches" :key="item.id">
-              <Option :value="item.id">{{ item.name }}</Option>
-            </template>
+        <Control id="opac-item-type" col>
+          <Label>Item Type</Label>
+          <Select v-model="params.item_type_id">
+            <Option value="">All Item Type</Option>
+            <Option :value="item.id" v-for="item in options.item_types">{{ item.name }}</Option>
           </Select>
         </Control>
 
-        <Control direction="col">
-          <Label id="params-sort">Sort results</Label>
-          <Select id="params-sort" title="Sort By" v-model="params.sort">
+        <Control id="opac-item-category" col>
+          <Label>Item Category </Label>
+          <Select v-model="params.item_type_category_id">
+            <Option value="">All Categories</Option>
+            <Option :value="item.id" v-for="item in options.categories?.filter((i) => i.item_type_id === params.item_type_id)">{{ item.name }}</Option>
+          </Select>
+        </Control>
+
+        <Control class="col-span-2" col>
+          <Label>Sort By</Label>
+          <Select title="Sort By" v-model="params.sort">
             <Option value="">Relevance</Option>
             <Option value="title">Title</Option>
             <Option value="publication_year">Publication year</Option>
           </Select>
         </Control>
 
-        <Control direction="col">
-          <Label id="params-order">Order</Label>
-          <Select id="params-order" v-model="params.order">
+        <Control class="col-span-2" col>
+          <Label>Order</Label>
+          <Select v-model="params.order" placeholder="Default">
             <Option value="asc">Ascending</Option>
             <Option value="desc">Descending</Option>
           </Select>
         </Control>
-
-        <Button class="w-full mt-3" variant="primary" @click="$emit('apply')"> Apply filters </Button>
-      </template>
-    </Form>
-  </aside>
+      </Form>
+    </ModalBody>
+    <ModalFooter class="gap-2">
+      <Button @click="emit('reset')">Reset</Button>
+      <Button variant="primary" @click="apply"> Apply filters </Button>
+    </ModalFooter>
+  </Modal>
 </template>
 
 <script setup lang="ts">
-interface Params {
-  search: string
-  campus: string
-  branch: string
-  sort: string
-  order: string
-  item_type: string
-  category: string
-}
+import Modal from '@/components/my/Modal.vue'
 
-const params = defineModel<Params>('params', { required: true })
-
-defineEmits<{
-  apply: []
-  reset: []
-}>()
+const model = defineModel<Partial<OpacParams>>('params', { required: true })
+const emit = defineEmits(['apply', 'reset'])
 
 const options = optionStore()
 
-watch(
-  () => params.value.campus,
-  () => {
-    params.value.branch = ''
-  },
-  { flush: 'sync' },
-)
+const modal = ref<InstanceType<typeof Modal>>()
+const params = reactive<Partial<OpacParams>>(model.value)
 
-const campusBranches = computed(() => {
-  if (params.value.campus) {
-    return (options.libraries ?? []).filter((item) => String(item.campus_id) === String(params.value.campus))
-  }
+function open() {
+  // Object.assign(params, model.value)
+  modal.value?.open()
+}
 
-  return (options.libraries ?? []).map((b) => {
-    const c = options.campuses?.find((i) => String(i.id) === String(b.campus_id))
-    return {
-      ...b,
-      name: c ? `${b.name} - ${c.name}` : b.name,
-    }
-  })
-})
+function close() {
+  modal.value?.close()
+}
+
+function apply() {
+  emit('apply', params)
+  close()
+}
 </script>
-
-<style scoped></style>

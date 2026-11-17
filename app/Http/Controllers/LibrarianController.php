@@ -6,6 +6,7 @@ use App\Http\Requests\StoreLibrarianRequest;
 use App\Http\Requests\UpdateLibrarianRequest;
 use App\Models\Librarian;
 use App\Services\LibrarianService;
+use App\Services\QueryService;
 use Illuminate\Http\Request;
 
 class LibrarianController extends Controller
@@ -24,22 +25,18 @@ class LibrarianController extends Controller
     {
         $user = $this->user();
 
-        $query = Librarian::query()->with([
-            'user',
-            'library',
+        $filters = QueryService::filters($request);
+
+        $filters = array_merge($filters, [
+            'library_id' => $user->isSuperAdmin() ? $request->input('library_id') : ($user->isAdmin() || $user->isLibrarian() ? $user->librarian->library_id : null),
         ]);
 
-        if ($user->isAdmin()) {
-            $query->whereHas('library', function ($query) use ($user) {
-                $query->where('campus_id', $user->campus_id);
-            });
-        } elseif ($user->isLibrarian()) {
-            $query->where('library_id', $user->librarian?->library_id);
-        }
-
-        if ($request->filled('library_id')) {
-            $query->where('library_id', $request->query('library_id'));
-        }
+        $query = Librarian::query()
+            ->when($filters['library_id'] ?? null, fn ($q, $l) => $q->where('library_id', $l))
+            ->with([
+                'user',
+                'library',
+            ]);
 
         return $this->response(data: $query->get());
 

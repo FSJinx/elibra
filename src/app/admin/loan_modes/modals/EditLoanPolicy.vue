@@ -24,7 +24,7 @@
 
         <Control id="policy-max-renewals" col required>
           <Label>Max Renewals</Label>
-          <Input id="policy-max-renewals" v-model="form.max_renewals" type="number" :placeholder="unlimited.item ? 'No limit' : 'Enter maximum renewals'" :error="errors?.max_renewals?.[0]" />
+          <Input id="policy-max-renewals" v-model="form.max_renewals" type="number" :placeholder="unlimited.item ? 'No limit' : 'Enter maximum renewals'" :error="errors?.max_renewals?.[0]" :disabled="unlimited.renewal" />
         </Control>
         <Checkbox label="No limit" v-model="unlimited.renewal" @update:model-value="(u) => (form.max_renewals = u ? null : props.data?.max_renewals)" />
 
@@ -71,6 +71,10 @@ const unlimited = ref({
 
 function open() {
   Object.assign(form, toRaw(props.data))
+  Object.assign(unlimited.value, {
+    item: form.max_items === null ? true : false,
+    renewal: form.max_renewals === null ? true : false,
+  })
   errors.value = null
   modal.value?.open()
 }

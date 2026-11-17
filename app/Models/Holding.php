@@ -11,21 +11,24 @@ class Holding extends Model
     use HasFactory;
 
     protected $fillable = [
-        'reserved_by',
+        'reserver_id',
         'accession_id',
         'processed_by',
+        'expected_pickup_date',
         'pickup_date',
-        'picked_up_at',
+
+        'status',
+        'status_remark'
     ];
 
     protected $casts = [
+        'expected_pickup_date' => 'datetime',
         'pickup_date' => 'datetime',
-        'picked_up_at' => 'datetime',
     ];
 
     public function reserver(): BelongsTo
     {
-        return $this->belongsTo(Patron::class, 'reserved_by');
+        return $this->belongsTo(Patron::class, 'reserver_id');
     }
 
     public function accession(): BelongsTo

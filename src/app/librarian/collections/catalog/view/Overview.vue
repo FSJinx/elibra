@@ -27,6 +27,9 @@
       <!-- BASIC INFORMATION -->
       <BaseSection v-model="form" :editing="editing" />
 
+      <!-- PUBLICATION INFORMATION -->
+      <PublicationSection v-model="form" :editing="editing" />
+
       <!-- PHYSICAL DESCRIPTION INFORMATION -->
       <PhysicalDescriptionSection v-model="form" :editing="editing" />
 
@@ -59,19 +62,20 @@ import AuthorityControlSection from '@/app/librarian/collections/catalog/forms/s
 import AuthorSection from '@/app/librarian/collections/catalog/forms/sections/AuthorSection.vue'
 import BaseSection from '@/app/librarian/collections/catalog/forms/sections/BaseSection.vue'
 import PhysicalDescriptionSection from '@/app/librarian/collections/catalog/forms/sections/PhysicalDescriptionSection.vue'
+import PublicationSection from '@/app/librarian/collections/catalog/forms/sections/PublicationSection.vue'
 import SerialSection from '@/app/librarian/collections/catalog/forms/sections/SerialSection.vue'
 import book from '@/assets/images/default_book.png'
 
 const props = defineProps<{ data: Item }>()
 const option = optionStore()
 const pop = usePopup()
+const items = itemStore()
 
-const item_type = computed(() => option.item_types?.find((a) => a.id === props.data.item_type_id) ?? null)
+const item_type = computed(() => option.item_types?.find((a) => a.id === props.data.item_type_id))
 
 const editing = ref<boolean>(false)
 const form = ref<Item>({} as Item)
 const hasChanges = computed(() => JSON.stringify(form.value) !== JSON.stringify(props.data))
-const items = useItemStore()
 const coverImage = computed(() => {
   const path = props.data.cover_media?.file_path
   return path ? `${storageRoute}/${path}` : book

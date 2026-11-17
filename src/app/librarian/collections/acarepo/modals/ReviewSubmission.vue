@@ -41,28 +41,25 @@
         </Control>
         <Control id="submission-keywords" col class="sm:col-span-2">
           <Label>Keywords</Label>
-          <Card class="shadow">
-            <CardBody class="flex flex-wrap gap-1">
-              <p class="italic text-muted-foreground" v-if="!form.keywords.length">No keywords</p>
-              <Chip v-for="item in form.keywords">{{ item }}</Chip>
-            </CardBody>
-          </Card>
-        </Control>
-        <Control id="submission-remarks" col class="sm:col-span-2">
-          <Label>Status remarks</Label>
-          <Textarea v-model="form.statusRemark" rows="3" readonly />
-        </Control>
-        <Control id="submission-created" col>
-          <Label>Submitted</Label>
-          <Input :model-value="parse.formatDateAgo(form.created_at) || ''" readonly />
-        </Control>
-        <Control id="submission-updated" col>
-          <Label>Last updated</Label>
-          <Input :model-value="parse.formatDateAgo(form.updated_at) || ''" readonly />
+          <div class="flex flex-wrap gap-2">
+            <p class="italic text-muted-foreground" v-if="!form.keywords.length">No keywords</p>
+            <Chip v-for="item in form.keywords">{{ item }}</Chip>
+          </div>
         </Control>
 
         <a class="underline text-sm text-primary" :href="form.doi as string" target="_blank" rel="noopener noreferrer" v-if="form.doi">View Digital Object Identifier (DOI)</a>
         <a class="underline text-sm text-primary" :href="`${storageRoute}/${form.electronic_file}` as string" target="_blank" rel="noopener noreferrer" v-if="form.electronic_file">View submitted PDF</a>
+
+        <Control class="mt-5">
+          <div class="flex flex-col gap-2">
+            <p class="uppercase tracking-wider text-foreground-secondary text-xs">Date Submitted</p>
+            <Title>{{ parse.formatDateAgo(form.created_at) }}</Title>
+          </div>
+          <div class="flex flex-col gap-2">
+            <p class="uppercase tracking-wider text-foreground-secondary text-xs">Last Modified</p>
+            <Title>{{ parse.formatDateAgo(form.created_at) }}</Title>
+          </div>
+        </Control>
       </div>
 
       <Form id="approve-thesis" @submit="submit">

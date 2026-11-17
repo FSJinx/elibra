@@ -57,7 +57,7 @@
 import UpdateCampusModal from '@/app/admin/campus/modals/UpdateCampusModal.vue'
 
 const pop = usePopup()
-const campus = useCampusStore()
+const campus = campusStore()
 const parse = useParser()
 
 async function remove() {

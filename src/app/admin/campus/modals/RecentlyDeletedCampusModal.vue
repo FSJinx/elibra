@@ -30,7 +30,7 @@ const modal = ref<typeof Modal | null>(null)
 const loading = ref<boolean>(false)
 const data = ref<Campus[] | null>(null)
 const pop = usePopup()
-const campus = useCampusStore()
+const campus = campusStore()
 
 async function fetch() {
   loading.value = true

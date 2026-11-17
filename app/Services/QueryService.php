@@ -8,21 +8,23 @@ class QueryService
 {
     public static function filters(
         Request $request,
-        int $defaultPerPage = 25,
-        int $maxPerPage = 100
+        mixed $page = 1,
+        mixed $perPage = 25,
+        mixed $maxPerPage = 100,
+        ?string $sort = 'created_at',
+        ?string $order = 'desc',
     ): array {
-        $perPage = $request->integer('per_page', $defaultPerPage);
-        $sort = trim((string) $request->query('sort', ''));
-        $order = strtolower((string) $request->query('order', 'asc'));
+        $reqOrder = $request->string('order')->trim()->lower()->toString();
+        $per_page = max(1, min($request->integer('per_page', $perPage), $maxPerPage));
 
-        $perPage = max(1, min($perPage, $maxPerPage));
-
-        return [
-            'search' => trim($request->query('query', '')),
-            'sort' => $sort !== '' ? $sort : 'created_at',
-            'order' => in_array($order, ['asc', 'desc'], true) ? $order : 'desc',
-            'page' => $request->integer('page', 1),
-            'per_page' => $perPage,
-        ];
+        return array_merge($request->all(),
+            [
+                'search' => $request->string('query')->trim()->toString() ?: null,
+                'sort' => $request->string('sort')->trim()->toString() ?: $sort,
+                'order' => in_array($reqOrder, ['asc', 'desc'], true) ? $reqOrder : $order,
+                'page' => $request->integer('page', null) ?: $page,
+                'per_page' => $per_page,
+            ]
+        );
     }
 }

@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreHoldingRequest;
+use App\Http\Requests\UpdateHoldingRequest;
 use App\Models\Accession;
 use App\Models\Circulation;
 use App\Models\Holding;
-use App\Http\Requests\UpdateHoldingRequest;
 use App\Models\PatronTypeLoanPolicy;
 use App\Models\User;
+use App\Services\QueryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -17,12 +19,49 @@ class HoldingController extends Controller
 {
     public function index(Request $request)
     {
-        $holdings = $this->visibleHoldings($request->user())
-            ->with(['reserver.user', 'accession.item', 'processor.user'])
-            ->latest('created_at')
-            ->paginate($request->integer('per_page', 25));
+        $user = $this->user();
 
-        return $this->response('success', 'Reservations retrieved successfully.', $holdings);
+        $filters = QueryService::filters($request);
+        $filters = array_merge($filters, [
+            'patron_id' => $request->input('patron_id', null),
+        ]);
+
+        $data = Holding::query()
+            ->when($user->isSuperAdmin(), function ($q) {})
+            ->when($user->isAdmin() || $user->isLibrarian(), function ($q) {
+                return $q
+                    ->with(['accession.item', 'processor.user', 'reserver.user']);
+            })
+            ->when($user->isPatron(), function ($q) use ($user) {
+                return $q
+                    ->where('reserver_id', $user->patron->id)
+                    ->with(['accession.item', 'processor']);
+            })
+            ->paginate(
+                $filters['per_page'],
+                ['*'],
+                'page',
+                $filters['page']
+            );
+
+        return $this->response(data: $data);
+    }
+
+    public function store(StoreHoldingRequest $request)
+    {
+        $validated = $request->validated();
+
+        if (Holding::where('accession_id', $validated['accession_id'])) {
+
+        }
+        $data = DB::transaction(function () use ($validated) {
+            $hold = Holding::create($validated);
+            $hold->accession->update(['status' => 'reserved']);
+
+            return $hold;
+        });
+
+        return $this->response('success', 'Reservation completed successfully!', data: $data);
     }
 
     public function complete(UpdateHoldingRequest $request, Holding $holding)
@@ -37,6 +76,7 @@ class HoldingController extends Controller
             }
 
             $accession = Accession::query()->lockForUpdate()->findOrFail($reservation->accession_id);
+
             if ($accession->status !== 'reserved') {
                 throw ValidationException::withMessages([
                     'accession_id' => ['The reserved item is no longer available for pickup.'],
@@ -46,7 +86,7 @@ class HoldingController extends Controller
             $patron = $reservation->reserver()->with('patronType')->first();
             if (! $patron) {
                 throw ValidationException::withMessages([
-                    'reserved_by' => ['The patron associated with this reservation could not be found.'],
+                    'reserver_id' => ['The patron associated with this reservation could not be found.'],
                 ]);
             }
 
@@ -75,10 +115,11 @@ class HoldingController extends Controller
             ]);
 
             $reservation->update([
-                'picked_up_at' => $borrowedAt,
-                'processed_by' => $request->user()->librarian?->id,
+                'status'=> 'completed',
+                'pickup_date' => $borrowedAt,
+                'processor_id' => $request->user()->librarian?->id,
             ]);
-            $accession->update(['status' => 'on_load']);
+            $accession->update(['status' => 'borrowed']);
 
             return $loan;
         });
@@ -115,5 +156,4 @@ class HoldingController extends Controller
     {
         abort_unless($this->visibleHoldings($user)->whereKey($holding->id)->exists(), 404);
     }
-
 }

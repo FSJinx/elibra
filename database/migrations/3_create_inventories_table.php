@@ -17,7 +17,7 @@ return new class extends Migration
             $table->enum('status', ['completed', 'pending', 'closed'])->default('pending');
 
             $table->unsignedBigInteger('librarian_id')->nullable();
-            $table->unsignedBigInteger('section_id');
+            $table->unsignedBigInteger('section_id')->nullable();
             $table->dateTime('closed_at')->nullable();
             $table->json('logs')->nullable();
             $table->timestamps();

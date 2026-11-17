@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Patron extends Model
@@ -42,5 +43,10 @@ class Patron extends Model
     public function program()
     {
         return $this->belongsTo(Programs::class, 'program_id')->withTrashed();
+    }
+
+    public function circulation()
+    {
+        return $this->belongsTo(Circulation::class, 'patron_id', 'id');
     }
 }

@@ -24,7 +24,8 @@ class StoreInventoryRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'section_id' => 'required|exists:sections,id'
+            'shelved' => 'boolean',
+            'section_id' => 'required_if:shelved,true|nullable|exists:sections,id',
         ];
     }
 }

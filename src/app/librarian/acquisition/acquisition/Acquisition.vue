@@ -7,32 +7,31 @@
     </SectionHeader>
 
     <div class="flex-1 flex flex-col p-5 gap-3 overflow-hidden">
-      <Card class="">
-        <CardBody class="flex items-center gap-2">
-          <Input id="search" type="text" class="max-w-100" placeholder="Search by dealer..." enable-clear v-model="params.query" />
-          <Button type="submit">Search</Button>
-          <Select title="Acquisition Mode" class="max-w-max ml-auto" v-model="params.acquisition_mode">
-            <Option value="" selected disabled>Select acquisition mode</Option>
-            <Option value="donation">Donation</Option>
-            <Option value="exchange">Exchange</Option>
-            <Option value="gift">Gift</Option>
-            <Option value="purchase">Purchase</Option>
-          </Select>
-          <Select title="Sort By" class="max-w-max" v-model="params.sort">
-            <Option value="">Default</Option>
-            <Option value="reference">Reference</Option>
-            <Option value="acquisition_date">Acquisition Date</Option>
-            <Option value="updated_at">Last Modified</Option>
-          </Select>
-          <Select title="Order" class="max-w-max" v-model="params.order">
-            <Option value="asc">Ascending</Option>
-            <Option value="desc">Descending</Option>
-          </Select>
-        </CardBody>
-      </Card>
-      <Table class="" title="Recent Acquisitions" subtitle="These are your library's recent acquisitions." :data="pagination" @per_page="params.per_page = $event">
+      <!-- FILTERS -->
+      <Table class="" title="Recent Acquisitions" subtitle="These are your library's recent acquisitions." :data="pagination" @per_page="params.per_page = $event" @page="params.page = $event">
+        <template #header>
+          <Form class="w-full flex items-center justify-end gap-2" id="search-acquisition" @submit="search">
+            <Input id="search" type="text" class="max-w-100" placeholder="Search by dealer or reference number..." enable-clear v-model="params.query" />
+            <Button type="submit">Search</Button>
+            <Select title="Acquisition Mode" class="max-w-max" v-model="params.acquisition_mode_id">
+              <Option value="">All</Option>
+              <Option :value="item.id" v-for="item in options.acquisition_modes">{{ item.name }}</Option>
+            </Select>
+            <Select title="Sort By" class="max-w-max" v-model="params.sort">
+              <Option value="">Default</Option>
+              <Option value="reference">Reference</Option>
+              <Option value="acquisition_date">Acquisition Date</Option>
+              <Option value="updated_at">Last Modified</Option>
+            </Select>
+            <Select title="Order" class="max-w-max" v-model="params.order">
+              <Option value="asc">Ascending</Option>
+              <Option value="desc">Descending</Option>
+            </Select>
+          </Form>
+        </template>
         <Thead>
           <tr>
+            <Th>No.</Th>
             <Th>Reference No.</Th>
             <Th class="text-left">Dealer</Th>
             <Th>Mode of Acquisition</Th>
@@ -41,9 +40,10 @@
             <Th>Last Updated</Th>
           </tr>
         </Thead>
-        <Tbody :data="acquisition.data" :loading="acquisition.loading" cols="6">
-          <router-link v-for="a in acquisition.data" :to="{ name: 'librarian.acquisition.lines', params: { id: a.id } }" custom v-slot="{ navigate }">
+        <Tbody :data="acquisition.data" :loading="loading" cols="6">
+          <router-link v-for="(a, index) in acquisition.data" :to="{ name: 'librarian.acquisition.lines', params: { id: a.id } }" custom v-slot="{ navigate }">
             <tr class="hover cursor-pointer" @click="navigate" role="button">
+              <Td :data="pagination?.from + index"></Td>
               <Td :data="a.reference"></Td>
               <Td class="text-left" :data="a.dealer"></Td>
               <Td class="capitalize" :data="a.acquisition_mode?.name"></Td>
@@ -64,18 +64,22 @@ import AddNewAcquisitionButton from '@/app/librarian/acquisition/acquisition/mod
 import SectionHeader from '@/components/my/SectionHeader.vue'
 
 const parse = useParser()
-const pop = usePopup()
-const acquisition = useAcquisitionStore()
+const acquisition = acquisitionStore()
+const options = optionStore()
 
 const params = reactive(acquisition.params)
+const loading = ref<boolean>(false)
 const pagination = ref<Pagination>()
 
 async function search() {
+  loading.value = true
   try {
     const res = await acquisition.fetch(params)
     pagination.value = res.data
   } catch (e: any) {
     throw e
+  } finally {
+    loading.value = false
   }
 }
 

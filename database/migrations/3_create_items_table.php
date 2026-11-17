@@ -28,14 +28,18 @@ return new class extends Migration
             $table->string('issue')->nullable(); // Serials
             $table->string('doi')->nullable()->nullable(); // Theses, Serials
             $table->unsignedBigInteger('department_id')->nullable(); // Theses
-            
+
+            $table->year('publication_year')->nullable();
+            $table->string('place_of_publication')->nullable();
+
             $table->boolean('released')->default(false);
 
             $table->unsignedBigInteger('item_type_id');
             $table->unsignedBigInteger('item_type_category_id');
+            $table->unsignedBigInteger('cover_media_id')->nullable();
             $table->unsignedBigInteger('language_id')->nullable();
             $table->unsignedBigInteger('library_id');
-            $table->unsignedBigInteger('cover_media_id')->nullable();
+            $table->unsignedBigInteger('publisher_id')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

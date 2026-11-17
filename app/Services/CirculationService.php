@@ -2,21 +2,22 @@
 
 namespace App\Services;
 
-use App\Models\Circulation;
 use App\Models\Accession;
+use App\Models\Circulation;
 use App\Models\Patron;
 use App\Models\PatronTypeLoanPolicy;
 use App\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
 class CirculationService
 {
-    public function checkout(array $data, User $processedBy): Circulation
+    public function checkout(array $data, User $processor): Circulation
     {
-        $circulation = DB::transaction(function () use ($data, $processedBy) {
+        $circulation = DB::transaction(function () use ($data, $processor) {
             $accession = Accession::query()
                 ->lockForUpdate()
                 ->findOrFail($data['accession_id']);
@@ -43,6 +44,30 @@ class CirculationService
                 ]);
             }
 
+            $maxItems = $policy->max_items;
+
+            if ($maxItems !== null) {
+                if ($maxItems === 0) {
+                    throw ValidationException::withMessages([
+                        'accession_id' => ['This loan mode is not available for this patron type.'],
+                    ]);
+                }
+
+                $activeLoans = Circulation::query()
+                    ->where('patron_id', $patron->id)
+                    ->where('loan_mode_id', $data['loan_mode_id'])
+                    ->whereIn('status', ['borrowed', 'overdue'])
+                    ->count();
+
+                if ($activeLoans >= $maxItems) {
+                    throw ValidationException::withMessages([
+                        'accession_id' => [
+                            "This patron has reached the maximum of {$maxItems} items for this loan mode.",
+                        ],
+                    ]);
+                }
+            }
+
             $borrowedAt = Carbon::now();
             $circulation = Circulation::create([
                 'borrowed_at' => $borrowedAt,
@@ -50,13 +75,13 @@ class CirculationService
                 'status' => 'borrowed',
                 'renewal_count' => 0,
                 'fine_charged' => 0,
-                'processed_by' => $processedBy->librarian?->id,
+                'processed_by' => $processor->librarian?->id,
                 'accession_id' => $accession->id,
                 'patron_id' => $patron->id,
                 'loan_mode_id' => $data['loan_mode_id'],
             ]);
 
-            $accession->update(['status' => 'on_load']);
+            $accession->update(['status' => 'borrowed']);
 
             return $circulation;
         });
@@ -64,7 +89,7 @@ class CirculationService
         CacheService::invalidate(CacheService::CIRCULATIONS);
 
         return $circulation->load([
-            'processedBy.user',
+            'processor.user',
             'patron.user',
             'patron.patronType',
             'accession.item',
@@ -85,7 +110,7 @@ class CirculationService
                     'renewal_count',
                     'fine_charged',
                     'notes',
-                    
+
                     'processed_by',
                     'accession_id',
                     'patron_id',
@@ -100,7 +125,7 @@ class CirculationService
         CacheService::invalidate(CacheService::CIRCULATIONS);
 
         return $circulation->load([
-            'processedBy',
+            'processor',
             'patron',
             'accession',
             'loanMode',
@@ -119,7 +144,7 @@ class CirculationService
         CacheService::invalidate(CacheService::CIRCULATIONS);
 
         return $updated->fresh([
-            'processedBy',
+            'processor',
             'patron',
             'accession',
             'loanMode',
@@ -144,13 +169,56 @@ class CirculationService
                 ->lockForUpdate()
                 ->findOrFail($loan->accession_id);
 
+            $returnedAt = Carbon::now();
+            $fineCharged = 0;
+            $loan->loadMissing(['patron', 'loanMode']);
+
+            if ($loan->loanMode?->is_active && $loan->loanMode->charges_fine && $loan->patron) {
+                $policy = PatronTypeLoanPolicy::query()
+                    ->where('patron_type_id', $loan->patron->patron_type_id)
+                    ->where('loan_mode_id', $loan->loan_mode_id)
+                    ->first();
+
+                if ($policy) {
+                    $dueDate = $loan->due_at->copy()->startOfDay();
+                    $returnDate = $returnedAt->copy()->startOfDay();
+                    $overdueDays = $returnDate->greaterThan($dueDate)
+                        ? (int) $dueDate->diffInDays($returnDate)
+                        : 0;
+                    $graceDays = $loan->loanMode->has_grace_period
+                        ? $policy->grace_period
+                        : 0;
+                    $chargeableDays = max(0, $overdueDays - $graceDays);
+
+                    $fineCharged = round($chargeableDays * (float) $policy->fine_per_due, 2); // Calculate the fine amount
+
+                    /**
+                     * Example using the current formula:
+                     * Due date: October 25
+                     * Returned: October 29 → 4 calendar days overdue
+                     * Grace period: 2 days
+                     * Fine rate: ₱3.50 per day
+                     *
+                     * Chargeable days: 4 − 2 = 2
+                     * Fine: 2 × ₱3.50 = ₱7.00
+                     */
+                } else {
+                    Log::warning('Unable to calculate a circulation fine because its loan policy is missing.', [
+                        'circulation_id' => $loan->id,
+                        'patron_type_id' => $loan->patron->patron_type_id,
+                        'loan_mode_id' => $loan->loan_mode_id,
+                    ]);
+                }
+            }
+
             $loan->update([
                 'status' => 'returned',
-                'returned_at' => Carbon::now(),
+                'returned_at' => $returnedAt,
+                'fine_charged' => $fineCharged,
                 'return_received_by' => $receivedBy->librarian?->id,
             ]);
 
-            if ($accession->status === 'on_load') {
+            if (in_array($accession->status, ['borrowed'], true)) {
                 $accession->update(['status' => 'available']);
             }
 
@@ -160,7 +228,7 @@ class CirculationService
         CacheService::invalidate(CacheService::CIRCULATIONS);
 
         return $returned->fresh([
-            'processedBy.user',
+            'processor.user',
             'patron.user',
             'patron.patronType',
             'accession.item',
@@ -207,7 +275,7 @@ class CirculationService
                 ]);
             }
 
-            if ($loan->renewal_count >= $policy->max_renewals) {
+            if ($loan->renewal_count >= $policy->max_renewals && $policy->max_renewals !== null) {
                 throw ValidationException::withMessages([
                     'renewal_count' => ['This loan has reached the maximum number of renewals.'],
                 ]);
@@ -228,7 +296,7 @@ class CirculationService
         CacheService::invalidate(CacheService::CIRCULATIONS);
 
         return $renewed->fresh([
-            'processedBy.user',
+            'processor.user',
             'patron.user',
             'patron.patronType',
             'accession.item',
@@ -248,7 +316,7 @@ class CirculationService
 
             if (
                 $accession
-                && $accession->status === 'on_load'
+                && in_array($accession->status, ['borrowed'], true)
             ) {
                 $accession->update(['status' => 'available']);
             }

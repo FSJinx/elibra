@@ -10,6 +10,9 @@
       <!-- BASIC INFORMATION -->
       <BaseSection v-model="form" :errors="errors" />
 
+      <!-- PUBLICATION INFORMATION -->
+      <PublicationSection v-model="form" :errors="errors" />
+
       <!-- PHYSICAL DESCRIPTION INFORMATION -->
       <PhysicalDescriptionSection v-model="form" :errors="errors" />
 
@@ -42,14 +45,15 @@ import AuthorSection from '@/app/librarian/collections/catalog/forms/sections/Au
 import BaseSection from '@/app/librarian/collections/catalog/forms/sections/BaseSection.vue'
 import PhysicalDescriptionSection from '@/app/librarian/collections/catalog/forms/sections/PhysicalDescriptionSection.vue'
 import SerialSection from '@/app/librarian/collections/catalog/forms/sections/SerialSection.vue'
-import ViewItemDrafts from '@/app/librarian/collections/catalog/modals/ViewItemDrafts.vue'
+import ViewItemDrafts from '@/app/librarian/collections/catalog/forms/modals/ViewItemDrafts.vue'
+import PublicationSection from '@/app/librarian/collections/catalog/forms/sections/PublicationSection.vue'
 
 const pop = usePopup()
-const item = useItemStore()
+const item = itemStore()
 const drafts = draftStore()
 const route = useRoute()
 
-const form = reactive(emptyForm())
+const form = ref<StoreItem>(emptyForm())
 const errors = reactive<Record<string, unknown>>({})
 const hasInputs = computed(() => {
   return Object.entries(form).some(([field, value]) => {
@@ -68,11 +72,11 @@ async function submit() {
       pop.load()
 
       try {
-        const res = await item.create(form)
+        const res = await item.create(form.value)
 
         if (route.query.acquisition) {
           try {
-            const acq = await useAcquisitionLinesStore().create({ item_id: res.data.id, acquisition_id: route.query.acquisition_id, quantity: 1 })
+            const acq = await acquisitionLinesStore().create({ item_id: res.data.id, acquisition_id: route.query.acquisition_id })
             pop.success(acq.message)
             return router.back()
           } catch (e: any) {
@@ -113,10 +117,16 @@ watch(
         pop.error('Draft not found.')
         router.push({ name: 'librarian.collections.catalog.new' })
       } else {
-        Object.assign(form, emptyForm(), { ...draft?.data, cover_image: null })
+        Object.assign(form.value, emptyForm(), { ...draft?.data, cover_image: null })
       }
     }
   },
+  { deep: true, immediate: true },
+)
+
+watch(
+  () => form.value?.publisher,
+  (val) => (form.value.publisher_id = val?.id),
   { deep: true, immediate: true },
 )
 </script>

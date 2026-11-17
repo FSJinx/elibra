@@ -29,7 +29,7 @@ export const publicRoute = [
         meta: { breadcrumb: '' },
         component: () => import('@/app/opac/pages/view/OpacView.vue'),
         beforeEnter: async (to: any) => {
-          const opac = useOpacStore()
+          const opac = opacStore()
           const pop = usePopup()
 
           if (!opac.currentData) {

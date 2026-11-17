@@ -1,15 +1,17 @@
 <template>
-  <component :is="`h${level}`" :class="[titleClass, $attrs.class]">
+  <component :is="`h${level}`" :class="[titleClass]">
     <slot />
   </component>
 </template>
 
 <script setup lang="ts">
 interface Props {
-  level: 1 | 2 | 3 | 4 | 5 | 6
+  level?: 1 | 2 | 3 | 4 | 5 | 6
 }
 
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  level: 4,
+})
 
 const titleClass = computed(() => {
   const sizes: Record<any, string> = {

@@ -1,0 +1,40 @@
+export interface CirculationParams extends BaseParams {
+  library_id: any
+  patron_id: any
+}
+
+export interface CheckOut {
+  patron: Patron | null
+  accessions: Accession[] | null
+  loan_mode_id: any
+}
+
+export interface CheckOutPayload {
+  accession_id: number
+  patron_id: number
+  loan_mode_id: number
+}
+
+export interface Circulation {
+  id: any
+  borrowed_at: string
+  due_at: string
+  returned_at: string
+
+  status: string
+  renewal_count: any
+  fine_charged: any
+  notes: string
+
+  processor_id: any
+  accession_id: any
+  patron_id: any
+  loan_mode_id: any
+  return_received_by: any
+
+  processor: Librarian
+  accession: Accession
+  patron: Patron
+  loan_mode: LoanMode
+  return_received: Librarian
+}

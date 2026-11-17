@@ -16,18 +16,16 @@ class AccessionSeeder extends Seeder
     public function run(): void
     {
         DB::transaction(function (): void {
-            $existingAccessions = Accession::query()
-                ->get(['item_id', 'accession_number']);
-            $itemsWithAccessions = $existingAccessions
-                ->pluck('item_id')
+            $existingNumbers = Accession::withTrashed()
+                ->whereNotNull('accession_number')
+                ->pluck('accession_number')
                 ->all();
             $nextSequences = [];
+            $accessionsByItem = Accession::query()
+                ->get()
+                ->groupBy('item_id');
 
-            foreach (Item::query()->with('itemTypeCategory')->orderBy('id')->get() as $item) {
-                if (in_array($item->id, $itemsWithAccessions, true)) {
-                    continue;
-                }
-
+            $generateNumber = function (Item $item) use (&$existingNumbers, &$nextSequences): string {
                 $categoryCode = strtoupper(trim($item->itemTypeCategory?->code ?? ''));
 
                 if ($categoryCode === '') {
@@ -36,15 +34,19 @@ class AccessionSeeder extends Seeder
                     );
                 }
 
+                if ($item->library_id === null) {
+                    throw new RuntimeException("Item {$item->id} does not have a library.");
+                }
+
                 $prefix = $categoryCode.str_pad((string) $item->library_id, 3, '0', STR_PAD_LEFT);
 
                 if (! array_key_exists($prefix, $nextSequences)) {
                     $lastSequence = 0;
 
-                    foreach ($existingAccessions as $accession) {
+                    foreach ($existingNumbers as $accessionNumber) {
                         if (preg_match(
                             '/^'.preg_quote($prefix, '/').'([0-9]+)$/',
-                            (string) $accession->accession_number,
+                            (string) $accessionNumber,
                             $matches
                         )) {
                             $lastSequence = max($lastSequence, (int) $matches[1]);
@@ -60,14 +62,32 @@ class AccessionSeeder extends Seeder
                     '0',
                     STR_PAD_LEFT
                 );
-
-                Accession::create([
-                    'accession_number' => $accessionNumber,
-                    'status' => 'available',
-                    'item_id' => $item->id,
-                ]);
-
                 $nextSequences[$prefix]++;
+                $existingNumbers[] = $accessionNumber;
+
+                return $accessionNumber;
+            };
+
+            foreach (Item::query()->with('itemTypeCategory')->orderBy('id')->get() as $item) {
+                $itemAccessions = $accessionsByItem->get($item->id, collect());
+
+                if ($itemAccessions->isEmpty()) {
+                    Accession::create([
+                        'accession_number' => $generateNumber($item),
+                        'status' => 'available',
+                        'item_id' => $item->id,
+                    ]);
+
+                    continue;
+                }
+
+                foreach ($itemAccessions as $accession) {
+                    if (trim((string) $accession->accession_number) === '') {
+                        $accession->update([
+                            'accession_number' => $generateNumber($item),
+                        ]);
+                    }
+                }
             }
         });
     }

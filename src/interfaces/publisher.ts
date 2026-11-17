@@ -1,3 +1,5 @@
+export interface PublisherParams extends Partial<BaseParams> {}
+
 export interface Publisher {
     id: any
     name: string

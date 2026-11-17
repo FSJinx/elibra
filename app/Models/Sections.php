@@ -3,25 +3,19 @@
 namespace App\Models;
 
 use App\Traits\AutoFormatter;
-use Database\Factories\SectionsFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Sections extends Model
 {
-    use HasFactory, SoftDeletes, AutoFormatter;
+    use AutoFormatter, HasFactory, SoftDeletes;
 
     protected $fillable = ['name', 'library_id', 'librarian_id'];
 
-    protected $formatter =[
-        'name' => 'capitalize'
+    protected $formatter = [
+        'name' => 'capitalize',
     ];
-
-    public function branchSections()
-    {
-        return $this->hasMany('App\\Models\\BranchSection', 'section_id');
-    }
 
     public function library()
     {

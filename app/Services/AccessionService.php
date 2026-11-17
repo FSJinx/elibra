@@ -11,41 +11,29 @@ use RuntimeException;
 
 class AccessionService
 {
-    public function create(array $data): Accession
+    protected function fields(): array
     {
-        $accession = DB::transaction(function () use ($data) {
-            return Accession::create(
-                Arr::only($data, [
-                    'accession_number',
-                    'status',
-                    'remarks',
+        return (new Accession)->getFillable();
+    }
 
-                    'item_id',
-                    'section_id',
-                    'acquisition_line_id',
-                ])
-            );
+    public function create(array $payload): Accession
+    {
+        $payload = Arr::only($payload, self::fields());
 
+        $data = DB::transaction(function () use ($payload) {
+            return Accession::create($payload);
         });
 
         CacheService::invalidate(CacheService::ACCESSION);
 
-        return $accession;
+        return $data;
     }
 
     public function update(Accession $accession, array $data): Accession
     {
         $accession = DB::transaction(function () use ($accession, $data) {
             $accession->update(
-                Arr::only($data, [
-                    'accession_number',
-                    'status',
-                    'remarks',
-
-                    'item_id',
-                    'section_id',
-                    'acquisition_line_id',
-                ])
+                Arr::only($data, (new Accession)->getFillable())
             );
 
             return $accession->fresh();
@@ -78,12 +66,6 @@ class AccessionService
                 'acquisition_line_id' => $acquisition_line->id,
             ]);
         }
-        // for ($i = 0; $i < $quantity; $i++) {
-        //     Accession::create([
-        //         'item_id' => $item->id,
-        //         'acquisition_line_id' => $acquisition_line->id ?? null,
-        //     ]);
-        // }
     }
 
     private function getAccessionPrefix(Item $item): string

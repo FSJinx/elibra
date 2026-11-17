@@ -1,120 +1,59 @@
 <template>
-  <div class="size-full flex justify-center gap-3 mx-auto w-full p-5 overflow-hidden">
-    <OpacFilter v-model:params="params" @apply="search" @reset="resetFilters" />
-    <!-- <div class="flex flex-col w-full max-w-6xl bg-restore border border-border rounded-xl overflow-hidden">
-      <div class="h-50 bg-background"></div>
-
-      <div class="flex-1 overflow-y-auto">
-        <div class="h-screen"></div>
-      </div>
-    </div> -->
-    <OpacMain v-model:params="params" :library-data="libraryData" :total="total" :loading="loading" :error="error" @search="search" />
-    <!-- <div class="w-100 bg-danger">
-      <div class="h-[40vh]"></div>
-    </div> -->
+  <div class="size-full flex justify-center gap-3 mx-auto p-5 overflow-hidden">
+    <OpacMain v-model:params="params" :data="pagination" :loading="loading" :error="error" @search="fetch" @reset="reset" />
   </div>
-
   <!-- <OpacHistory /> -->
 </template>
 
 <script setup lang="ts">
-import OpacFilter from '@/app/opac/pages/main/OpacFilter.vue'
 import OpacMain from '@/app/opac/pages/main/OpacMain.vue'
 
 const route = useRoute()
-const router = useRouter()
+const opac = opacStore()
 
-const { results: libraryData, total, loading, error, search: searchOpac } = useOpacSearch()
-
-const history = opacSearchStore()
-
-const params = reactive({
-  search: (route.query.search as string) ?? '',
-  campus: (route.query.campus as string) ?? '',
-  branch: (route.query.branch as string) ?? '',
-  sort: (route.query.sort as string) ?? '',
-  order: (route.query.order as string) ?? 'asc',
-  item_type: (route.query.item_type as string) ?? '',
-  category: (route.query.category as string) ?? '',
+const defaultParams = (): Partial<OpacParams> => ({
+  query: (route.query.query as string) ?? '',
 })
 
-async function fetchResults() {
-  // if (!params.search) {
-  //   libraryData.value = []
-  //   total.value = 0
-  //   return
-  // }
+const params = ref<Partial<OpacParams>>(defaultParams())
+const loading = ref<boolean>(false)
+const pagination = ref<Pagination>()
+const error = ref()
 
+async function search() {
+  loading.value = true
   try {
-    await searchOpac({
-      query: params.search,
-      campus_id: params.campus || undefined,
-      branch_id: params.branch || undefined,
-      item_type_id: params.item_type || undefined,
-      item_type_category_id: params.category || undefined,
-      sort: params.sort || undefined,
-      order: params.order || undefined,
-      per_page: 10,
-    })
-  } catch {
-    // `error` from useOpacSearch already handles this
+    const res = await opac.fetch(params.value)
+    if (res.status === 'error') return (error.value = res.message)
+
+    pagination.value = res.data
+  } catch (e: any) {
+    error.value = e.response?.data?.message
+    throw e
+  } finally {
+    loading.value = false
   }
 }
 
-async function search() {
-  router.replace({
-    name: 'opac',
-    query: {
-      search: params.search || undefined,
-      campus: params.campus || undefined,
-      branch: params.branch || undefined,
-      item_type: params.item_type || undefined,
-      category: params.category || undefined,
-      sort: params.sort || undefined,
-      order: params.order || undefined,
-    },
-  })
+function fetch() {
+  router.push({ name: 'opac', query: params.value })
+  search()
 }
 
-function resetFilters() {
-  Object.assign(params, {
-    search: '',
-    campus: '',
-    branch: '',
-    item_type: '',
-    category: '',
-    sort: '',
-    order: 'asc',
-  })
+function reset() {
+  // Object.assign(params.value, defaultParams())
 
   router.push({ name: 'opac' })
 }
 
+onMounted(search)
 watch(
-  () => route.query,
-  async (query) => {
-    params.search = (query.search as string) ?? ''
-    params.campus = (query.campus as string) ?? ''
-    params.branch = (query.branch as string) ?? ''
-    params.item_type = (query.item_type as string) ?? ''
-    params.category = (query.category as string) ?? ''
-    params.sort = (query.sort as string) ?? ''
-    params.order = (query.order as string) ?? 'asc'
-
-    await fetchResults()
+  () => params.value.query,
+  () => {
+    if (!params.value.query) fetch()
   },
   { immediate: true, deep: true },
 )
-
-watch(
-  () => route.query.search,
-  () => {
-    if (route.query.search) {
-      history.addHistory(params.search)
-    }
-  },
-)
-
 </script>
 
 <style scoped></style>

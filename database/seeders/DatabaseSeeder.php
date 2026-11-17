@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
 
             // ========= DEVELOPMENT SEEDS =========
 
+            PublisherSeeder::class,
             LoanModeSeeder::class,
             CampusSeeder::class,
             LibrarySeeder::class,
@@ -37,7 +38,7 @@ class DatabaseSeeder extends Seeder
             ItemSeeder::class,
             AcquisitionSeeder::class,
             AcquisitionLinesSeeder::class,
-            HoldingSeeder::class,
+            // HoldingSeeder::class,
         ]);
-    } 
+    }
 }

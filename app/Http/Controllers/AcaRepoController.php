@@ -6,12 +6,17 @@ use App\Http\Requests\StoreAcaRepoRequest;
 use App\Http\Requests\UpdateAcaRepoRequest;
 use App\Models\AcaRepo;
 use App\Services\AcaRepoService;
+use App\Services\ItemService;
 use App\Services\QueryService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AcaRepoController extends Controller
 {
-    public function __construct(private AcaRepoService $acaRepoService) {}
+    public function __construct(
+        protected AcaRepoService $acaRepoService,
+        protected ItemService $itemService
+    ) {}
 
     /**
      * Display a listing of the resource.
@@ -19,15 +24,17 @@ class AcaRepoController extends Controller
     public function index(Request $request)
     {
         $user = $this->user();
+
         $filters = QueryService::filters($request);
+
         $filters = array_merge($filters, [
             'submitted_by' => $request->input('submitted_by') ?? null,
             'library_id' => $request->input('library_id') ?? $user->librarian->library_id ?? null,
         ]);
 
         $theses = AcaRepo::query()
-            ->when($filters['library_id'] !== null, fn ($q) => $q->where('library_id', $filters['library_id']))
-            ->when($filters['submitted_by'] !== null, fn ($q) => $q->where('submitted_by', $filters['submitted_by']))
+            // ->when($filters['library_id'] ?? null, fn ($q) => $q->where('library_id', $filters['library_id']))
+            ->when($filters['submitted_by'] ?? null, fn ($q) => $q->where('submitted_by', $filters['submitted_by']))
             ->with(['language', 'program', 'submitter.user:id,last_name,first_name', 'submitter.program', 'library'])
             ->paginate();
 
@@ -87,6 +94,18 @@ class AcaRepoController extends Controller
         );
     }
 
+    public function catalog(AcaRepo $acarepo, Request $request)
+    {
+        DB::transaction(function () use ($acarepo, $request) {
+            $this->itemService->create([...$request->all(), 'library_id' => $request->input('library_id', $this->user()->librarian->library_id ?? null)]);
+            $this->acaRepoService->update($acarepo, [
+                'on_catalog' => now(),
+            ]);
+        });
+
+        return $this->response('success', 'Added to catalog successfully', [], 200);
+    }
+
     /**
      * Show the form for editing the specified resource.
      */
@@ -100,7 +119,17 @@ class AcaRepoController extends Controller
      */
     public function update(UpdateAcaRepoRequest $request, AcaRepo $acaRepo)
     {
-        $acaRepo = $this->acaRepoService->update($acaRepo, $request->validated());
+        $data = $request->validated();
+        if ($request->user()->isPatron()) {
+            $data = [
+                ...$data,
+                'status' => 'pending',
+                'statusRemark' => null,
+                'on_catalog' => false,
+            ];
+        }
+
+        $acaRepo = $this->acaRepoService->update($acaRepo, $data);
 
         return $this->response(
             'success',

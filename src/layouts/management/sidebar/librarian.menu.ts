@@ -11,7 +11,8 @@ export const librarianMenu = [
   {
     name: 'Circulation',
     children: [
-      { path: 'librarian.circulation.loans', name: 'Loans', icon: 'bag-plus' },
+      { path: 'librarian.circulation.check-out', name: 'Check Out', icon: 'journal-arrow-up' },
+      { path: 'librarian.circulation.check-in', name: 'Check In & Renewals', icon: 'ui-checks' },
       { path: 'librarian.circulation.holdings', name: 'Holds & Reservations', icon: 'bookmark-check' },
       { path: 'librarian.circulation.attendance', name: 'Attendance', icon: 'person-check' },
 
@@ -59,17 +60,18 @@ export const librarianMenu = [
   //   },
   // },
 
-  // reports: {
-  //   name: 'Reports & Analytics',
-  //   children: {
-  //     circulation_reports: { path: 'librarian.reports.circulation', name: 'Circulation', icon: 'bar-chart-line' },
-  //     collection_reports: { path: 'librarian.reports.collection', name: 'Collection', icon: 'pie-chart' },
-  //     overdue_reports: { path: 'librarian.reports.overdue', name: 'Overdue', icon: 'exclamation-triangle' },
-  //     inventory_reports: { path: 'librarian.reports.inventory', name: 'Inventory', icon: 'graph-up-arrow' },
-  //     patrons_reports: { path: 'librarian.reports.patrons', name: 'Patrons', icon: 'person-lines-fill' },
-  //     acquisitions_reports: { path: 'librarian.reports.acquisitions', name: 'Acquisitions', icon: 'file-earmark-bar-graph' },
-  //   },
-  // },
+  {
+    name: 'Reports',
+    children: [
+      { path: 'librarian.reports.circulation', name: 'Circulation', icon: 'bar-chart-line' },
+      { path: 'librarian.reports.user', name: 'Users', icon: 'people' },
+      // collection_reports: { path: 'librarian.reports.collection', name: 'Collection', icon: 'pie-chart' },
+      // overdue_reports: { path: 'librarian.reports.overdue', name: 'Overdue', icon: 'exclamation-triangle' },
+      // inventory_reports: { path: 'librarian.reports.inventory', name: 'Inventory', icon: 'graph-up-arrow' },
+      // patrons_reports: { path: 'librarian.reports.patrons', name: 'Patrons', icon: 'person-lines-fill' },
+      // acquisitions_reports: { path: 'librarian.reports.acquisitions', name: 'Acquisitions', icon: 'file-earmark-bar-graph' },
+    ],
+  },
 
   {
     name: 'Administration',

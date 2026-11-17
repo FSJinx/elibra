@@ -7,15 +7,16 @@
     </SectionHeader>
 
     <div class="flex-1 flex flex-col overflow-y-auto p-5 gap-3">
-      <Card class="">
-        <Button class="ml-auto" @click="search">Refresh</Button>
-      </Card>
-
       <Table title="Loan Modes" subtitle="These are the current loan modes your library accomodate" :data="paginatedData" cols="5">
+        <template #header>
+          <Form id="search-loan-mode" @submit="">
+            <Button class="ml-auto" type="submit">Refresh</Button>
+          </Form>
+        </template>
         <Thead>
           <tr>
             <Th>No</Th>
-            <Th class="text-left">Name</Th>
+          <Th class="text-left">Name</Th>
             <Th>Key</Th>
             <Th class="text-left">Description</Th>
             <Th>Renewable</Th>

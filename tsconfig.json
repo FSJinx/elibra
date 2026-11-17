@@ -4,6 +4,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["./src/**/*.ts", "./src/**/*.vue", "./src/auto-imports.d.ts"],
+  "include": ["./src/**/*.ts", "./src/**/*.vue", "./src/auto-imports.d.ts", "src/router/librarian/reports/index/.route.ts"],
   "exclude": ["node_modules", "public", "storage"]
 }

@@ -5,7 +5,7 @@
         <Icon :icon="leftIcon" />
       </span> -->
 
-      <input ref="input" :id="id ?? control.id" :name="id ?? control.id" v-model="model" :type="type" :placeholder="placeholder" :required="required ?? control.required" :disabled="disabled" :readonly="readonly" :min="min" :max="max" :step="step" :autocomplete="autocomplete" class="h-full w-full flex-1 text-slate-900 transition-all duration-150 focus:outline-none disabled:cursor-not-allowed" :class="[sizeConfig.input, 'pl-2', hasSuffixActions ? 'pr-2' : 'pr-4']" @keydown="handleKeydown" />
+      <input ref="input" :id="id ?? control.id" :name="id ?? control.id" v-model="model" :type="type" :placeholder="placeholder" :required="control.required ?? required" :disabled="disabled" :readonly="readonly" :min="min" :max="max" :step="step" :autocomplete="autocomplete" class="h-full w-full flex-1 text-slate-900 transition-all duration-150 focus:outline-none disabled:cursor-not-allowed" :class="[sizeConfig.input, 'pl-2', hasSuffixActions ? 'pr-2' : 'pr-4']" @keydown="handleKeydown" />
 
       <div v-if="hasSuffixActions" class="flex items-center h-full shrink-0">
         <button v-if="enableClear && hasValue && !disabled && !readonly" type="button" class="flex h-full items-center justify-center px-3 text-slate-500 hover:text-slate-800 focus:outline-none border-l border-border transition-colors" aria-label="Clear date" @click="clear">

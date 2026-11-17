@@ -12,10 +12,14 @@ class RateLimitService
     {
         // -> Limit Login attempt
         RateLimiter::for('login', function (Request $request) {
+            $username = $request->input('username');
+            $username = is_string($username) ? mb_strtolower(trim($username)) : '';
+
             return Limit::perMinute(5)
-                ->by($request->ip());
-            });
-            
+                ->by($request->ip().':'.hash('sha256', $username))
+                ->after(fn ($response) => $response->getStatusCode() === 403);
+        });
+
         // -> Limit regustration attempt
         RateLimiter::for('registration', function (Request $request) {
             return Limit::perMinute(5)

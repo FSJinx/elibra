@@ -42,6 +42,7 @@ class AcademicSeeder extends Seeder
                 'library_id' => $library->id,
                 'language_id' => 1,
                 'released' => fake()->boolean(90),
+                'publication_year' => rand(1990,2026),
             ]);
 
             $item->syncAuthors($authorIds->random(rand(1, min(3, $authorIds->count())))->map(fn ($id) => ['id' => $id, 'authorship_id' => $authorshipIds->random()])->all());

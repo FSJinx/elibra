@@ -1,3 +1,7 @@
+export interface SectionParams extends BaseParams {
+  library_id: any
+}
+
 export interface Section {
   id: any
   name: string
@@ -5,8 +9,8 @@ export interface Section {
   library_id: any
   librarian_id: any
 
-  library: Library
-  // librarian: Librarian
+  library: Library | null
+  librarian: Librarian | null
 
   created_at: string
   updated_at: string

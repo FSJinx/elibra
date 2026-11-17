@@ -92,13 +92,6 @@ return new class extends Migration
             ],
         ],
         [
-            'name' => 'item_publishers',
-            'foreign_columns' => [
-                ['name' => 'publisher_id', 'references' => 'id', 'on' => 'publishers', 'onDelete' => 'set null'],
-                ['name' => 'item_id', 'references' => 'id', 'on' => 'items', 'onDelete' => 'cascade'],
-            ],
-        ],
-        [
             'name' => 'items',
             'foreign_columns' => [
                 ['name' => 'department_id', 'references' => 'id', 'on' => 'departments', 'onDelete' => 'set null'],
@@ -108,6 +101,7 @@ return new class extends Migration
                 ['name' => 'language_id', 'references' => 'id', 'on' => 'languages', 'onDelete' => 'set null'],
                 ['name' => 'library_id', 'references' => 'id', 'on' => 'libraries', 'onDelete' => 'restrict'],
                 ['name' => 'cover_media_id', 'references' => 'id', 'on' => 'media', 'onDelete' => 'set null'],
+                ['name' => 'publisher_id', 'references' => 'id', 'on' => 'publishers', 'onDelete' => 'set null'],
             ],
         ],
         [
@@ -118,11 +112,13 @@ return new class extends Migration
             ],
         ],
         [
-            'name' => 'inventory__lines',
+            'name' => 'inventory_lines',
             'foreign_columns' => [
                 ['name' => 'inventory_id', 'references' => 'id', 'on' => 'inventories', 'onDelete' => 'cascade'],
                 ['name' => 'accession_id', 'references' => 'id', 'on' => 'accessions', 'onDelete' => 'cascade'],
-                ['name' => 'verified_by', 'references' => 'id', 'on' => 'librarians', 'onDelete' => 'set null'],
+                ['name' => 'current_section_id', 'references' => 'id', 'on' => 'sections', 'onDelete' => 'set null'],
+                ['name' => 'new_section_id', 'references' => 'id', 'on' => 'sections', 'onDelete' => 'set null'],
+                ['name' => 'verifier_id', 'references' => 'id', 'on' => 'librarians', 'onDelete' => 'set null'],
             ],
         ],
 
@@ -141,6 +137,12 @@ return new class extends Migration
         ],
 
         //  5. Authority Control
+        [
+            'name' => 'authors',
+            'foreign_columns' => [
+                ['name' => 'user_id', 'references' => 'id', 'on' => 'users', 'onDelete' => 'set null'],
+            ],
+        ],
 
         //  6. Acquisitions and Accessions
         [
@@ -205,9 +207,9 @@ return new class extends Migration
         [
             'name' => 'holdings',
             'foreign_columns' => [
-                ['name' => 'reserved_by', 'references' => 'id', 'on' => 'patrons', 'onDelete' => 'cascade'],
+                ['name' => 'reserver_id', 'references' => 'id', 'on' => 'patrons', 'onDelete' => 'cascade'],
                 ['name' => 'accession_id', 'references' => 'id', 'on' => 'accessions', 'onDelete' => 'cascade'],
-                ['name' => 'processed_by', 'references' => 'id', 'on' => 'librarians', 'onDelete' => 'set null'],
+                ['name' => 'processor_id', 'references' => 'id', 'on' => 'librarians', 'onDelete' => 'set null'],
             ],
         ],
         [
@@ -253,6 +255,22 @@ return new class extends Migration
             ],
         ],
 
+        // 100. Reports
+        [
+            'name' => 'reports',
+            'foreign_columns' => [
+                ['name' => 'file_id', 'references' => 'id', 'on' => 'attachments', 'onDelete' => 'set null'],
+                ['name' => 'generator_id', 'references' => 'id', 'on' => 'users', 'onDelete' => 'set null'],
+                ['name' => 'library_id', 'references' => 'id', 'on' => 'libraries', 'onDelete' => 'cascade'],
+            ],
+        ],
+
+        [
+            'name' => 'attachments',
+            'foreign_columns' => [
+                ['name' => 'uploader_id', 'references' => 'id', 'on' => 'users', 'onDelete' => 'set null'],
+            ],
+        ],
     ];
 
     // ============= LINKS RELATIONSHIPS ===============

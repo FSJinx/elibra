@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Services\PublisherService;
 use Illuminate\Database\Seeder;
 
 class PublisherSeeder extends Seeder
@@ -10,8 +10,13 @@ class PublisherSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(): void
+    public function run(PublisherService $service): void
     {
-        //
+        for ($i = 0; $i < 50; $i++) {
+            $service->create([
+                'name' => fake()->name(),
+                'address' => fake()->address(),
+            ]);
+        }
     }
 }

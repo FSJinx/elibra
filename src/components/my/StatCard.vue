@@ -1,6 +1,6 @@
 <template>
   <article class="flex min-h-22 flex-col gap-2 rounded-xl border border-border bg-white p-5 transition-colors duration-150" :data-title="`${label}: ${value ? value.toLocaleString() : 'No data'}`">
-    <div v-if="isLoading" class="flex flex-col gap-3">
+    <div v-if="loading" class="flex flex-col gap-3">
       <div class="h-3 w-2/5 animate-shimmer rounded bg-linear-to-r from-gray-200 via-gray-100 to-gray-200 bg-size-[200%_100%]" />
       <div class="h-6 w-3/5 animate-shimmer rounded bg-linear-to-r from-gray-200 via-gray-100 to-gray-200 bg-size-[200%_100%]" />
     </div>
@@ -8,23 +8,21 @@
     <template v-else>
       <div class="flex items-start justify-between gap-2 mb-3">
         <p class="m-0 text-[13px] font-medium text-muted-foreground">{{ label }}</p>
-        <div v-if="icon" class="flex shrink-0 items-center justify-center size-13 rounded-full" :class="[iconDesign]">
+        <span v-if="trend !== undefined && trend !== null" class="rounded-md px-1.5 py-0.5 text-[0.8125rem] font-medium" :class="trendClasses">
+          {{ trendDirection === 'up' ? '↑' : trendDirection === 'down' ? '↓' : '' }}
+          {{ Math.abs(trend) }}%
+        </span>
+      </div>
+
+      <div class="flex flex-wrap items-end gap-2 mt-auto">
+        <div v-if="icon" class="flex shrink-0 items-center justify-center size-11 rounded-lg mr-auto" :class="[iconDesign]">
           <component :is="icon" v-if="typeof icon === 'object'" />
           <span :class="`text-${variant}`" v-else>
             <Icon :icon="icon" />
           </span>
         </div>
-      </div>
 
-      <div class="flex flex-wrap items-baseline gap-2 mt-auto">
-        <span v-if="trend !== undefined && trend !== null" class="rounded-md px-1.5 py-0.5 text-[0.8125rem] font-medium" :class="trendClasses">
-          {{ trendDirection === 'up' ? '↑' : trendDirection === 'down' ? '↓' : '' }}
-          {{ Math.abs(trend) }}%
-        </span>
-
-        <h3 class="m-0 text-[1.75rem] font-semibold leading-tight text-gray-900 ml-auto">
-          {{ valueFormatted }}
-        </h3>
+        <h3 class="m-0 text-[1.75rem] font-semibold leading-tight text-gray-900" :class="[valueColor]">{{ value }}</h3>
       </div>
     </template>
   </article>
@@ -37,16 +35,20 @@ import { computed } from 'vue'
 
 interface Props {
   label: string
+  labelColor?: string
+
   value: any
+  valueColor?: string
+
   icon?: string | object
   trend?: number
   variant?: Variants
-  isLoading?: boolean
+  loading?: boolean
   currency?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  isLoading: false,
+  loading: false,
   variant: 'default',
 })
 

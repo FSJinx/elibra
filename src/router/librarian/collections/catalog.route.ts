@@ -11,6 +11,17 @@ export const collectionsCatalog = [
     name: 'librarian.collections.catalog.view',
     redirect: { name: 'librarian.collections.catalog.view.overview' },
     component: () => import('@/app/librarian/collections/catalog/ViewCatalog.vue'),
+    beforeEnter: async (to: any) => {
+      const pop = usePopup()
+      const item = itemStore()
+
+      pop.load()
+      try {
+        await item.show(to.params.id)
+      } finally {
+        pop.unload()
+      }
+    },
     children: [
       { path: '', meta: { title: 'Overview', breadcrumb: 'Overview' }, name: 'librarian.collections.catalog.view.overview', component: () => import('@/app/librarian/collections/catalog/view/Overview.vue') },
       { path: 'authors', meta: { breadcrumb: 'Authors' }, name: 'librarian.collections.catalog.view.authors', component: () => import('@/app/librarian/collections/catalog/view/authors/Authors.vue') },

@@ -11,6 +11,11 @@ export const patronRoutes = [
     component: () => import('@/layouts/patron/PatronLayout.vue'),
     children: [
       {
+        path: '',
+        name: 'patron.dashboard',
+        component: () => import('@/app/patron/dashboard/Dashboard.vue'),
+      },
+      {
         path: 'digital-manuscript-submission',
         meta: { title: 'AcaRepo' },
         children: [
@@ -22,14 +27,13 @@ export const patronRoutes = [
           {
             path: 'form',
             name: 'patron.acarepo.form',
+            meta: { requiresFlow: true },
             component: () => import('@/app/patron/acarepo/AcaRepoForm.vue'),
-          }
-        ]
-      },
-      {
-        path: '',
-        name: 'patron.dashboard',
-        component: () => import('@/app/patron/dashboard/Dashboard.vue'),
+            beforeEnter: (from: any) => {
+              if (!from.name) return false
+            },
+          },
+        ],
       },
       {
         path: 'profile',
@@ -41,6 +45,32 @@ export const patronRoutes = [
         name: 'patron.services',
         meta: { title: 'Library Services' },
         component: () => import('@/app/patron/services/Services.vue'),
+      },
+      {
+        path: 'history',
+        meta: { title: 'History' },
+        children: [
+          {
+            path: '',
+            name: 'patron.history',
+            component: () => import('@/app/patron/history/History.vue'),
+          },
+          {
+            path: 'borrowing',
+            name: 'patron.borrowing',
+            component: () => import('@/app/patron/history/borrowing/Borrowing.vue'),
+          },
+          {
+            path: 'reservation',
+            name: 'patron.reservation',
+            component: () => import('@/app/patron/history/reservation/Reservation.vue'),
+          },
+          {
+            path: 'attendance',
+            name: 'patron.attendance',
+            component: () => import('@/app/patron/history/attendance/Attendance.vue'),
+          },
+        ],
       },
     ],
   },

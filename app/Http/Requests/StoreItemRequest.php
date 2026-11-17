@@ -61,6 +61,11 @@ class StoreItemRequest extends BaseRequest
             'authors.*.id' => ['nullable', 'integer', Rule::exists((new Author)->getTable(), 'id')->whereNull('deleted_at')],
             'authors.*.authorship_id' => ['nullable', 'integer', Rule::exists((new Authorship)->getTable(), 'id')],
 
+            'publication_year' => ['sometimes', 'nullable', 'integer', 'between:1000,'.now()->year],
+            'place_of_publication' => ['sometimes', 'string'],
+            'publisher_id' => ['sometimes', 'nullable', 'exists:publishers,id'],
+            'publisher' => ['sometimes'],
+
             'released' => ['sometimes', 'boolean'],
         ];
     }

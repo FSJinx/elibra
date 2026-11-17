@@ -110,13 +110,8 @@ const updatePosition = () => {
   }
 }
 
-watch(
-  selectedOption,
-  () => {
-    model.value = selectedOption.value
-  },
-  { deep: true, immediate: true },
-)
+watch(selectedOption, () => (model.value = selectedOption.value), { deep: true, immediate: true })
+watch(() => model, () => selectedOption.value = model.value, {deep: true, immediate: true})
 
 const toggle = () => {
   if (!props.disabled) {

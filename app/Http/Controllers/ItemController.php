@@ -19,87 +19,7 @@ class ItemController extends Controller
         $this->itemService = $itemService;
     }
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
-    {
-        $this->authorize('viewAny', Item::class);
-
-        // $user = $request->user();
-        $user = $this->user();
-
-        $filters = QueryService::filters($request);
-
-        $libraryId = $user->isLibrarian()
-            ? $user->librarian?->library_id
-            : null;
-        $campusId = $user->isAdmin() ? $user->campus_id : null;
-
-        $parameters = array_merge(
-            $filters,
-            [
-                'role' => $user->role,
-                'library_id' => $libraryId,
-                'campus_id' => $campusId,
-            ]
-        );
-
-        $items = CacheService::remember(
-            CacheService::ITEMS,
-            $parameters,
-            now()->addMinutes(10),
-            function () use ($user, $libraryId, $campusId, $filters) {
-
-                $query = Item::query();
-                $query->with('coverMedia');
-
-                if ($user->isSuperAdmin()) {
-                    // Super admins can see every item.
-                    $query->withTrashed();
-                } elseif ($user->isAdmin()) {
-                    $query->whereHas('library', function ($query) use ($campusId) {
-                        $query->where('campus_id', $campusId);
-                    });
-                } elseif ($user->isLibrarian()) {
-                    $query->where('library_id', $libraryId);
-                }
-
-                return $query->orderBy('created_at', 'desc')
-                    ->paginate(
-                        $filters['per_page'],
-                        [
-                            'id',
-                            'title',
-                            'subtitle',
-                            'call_number',
-                            'item_type_id',
-                            'released',
-                        ],
-                        'page',
-                        $filters['page']
-                    );
-            }
-        );
-
-        if ($items->isEmpty()) {
-            return $this->response(
-                'success',
-                'No item can be found.',
-                [],
-                200
-            );
-        }
-
-        return $this->response(
-            'success',
-            'Items retrieved successfully.',
-            $items,
-            200
-        );
-    }
-
-    public function indexV2(Request $request)
     {
         $filters = QueryService::filters($request);
 
@@ -125,13 +45,12 @@ class ItemController extends Controller
                     return $q->where(function ($qq) use ($search) {
                         return $qq->where('title', 'LIKE', "%{$search}%")
                             ->orWhere('subtitle', 'LIKE', "%{$search}%")
-                            ->orWhereHas('accessions', fn ($qq2) => $qq2->where('accession_number', 'LIKE', "%{$search}%")
-                            );
+                            ->orWhere('isbn_issn', 'LIKE', "%{$search}%")
+                            ->orWhere('call_number', 'LIKE', "%{$search}%")
+                            ->orWhereHas('authors', fn ($a) => $a->whereRaw("CONCAT_WS(' ', first_name, last_name) LIKE ?", ["%{$search}%"])->orWhereRaw("CONCAT_WS(' ', last_name, first_name) LIKE ?", ["%{$search}%"]))
+                            ->orWhereHas('accessions', fn ($qq2) => $qq2->where('accession_number', 'LIKE', "%{$search}%"));
                     });
                 });
-                // fn ($i) => $i->where('title', 'LIKE', "%$search%")->orWhere('subtitle', 'LIKE', "%$search%")
-                //     ->orWhereHas('accessions', fn ($i) => $i->accessions->where('accession_number', 'LIKE', "%$search%"))
-                // );
 
                 // ============== Item Type ============
                 $item->when($filters['item_type_id'] ?? null, function ($i, $param) {
@@ -160,25 +79,12 @@ class ItemController extends Controller
         return $this->response(data: $data);
     }
 
-    public function authors(Item $item)
-    {
-        $data = $item->authors()->get();
-
-        return $this->response(data: $data);
-    }
-
-    public function accessions(Item $item)
-    {
-        $data = $item->accessions()->get();
-
-        return $this->response(data: $data);
-    }
-
     public function acquisitions(Item $item)
     {
         $data = $item->acquisitions()->with([
             'receiver:last_name,first_name',
             'acquisition_lines' => fn ($q) => $q->where('item_id', $item->id)->withCount('accessions as quantity'),
+            'acquisition_mode',
         ])->get()->makeHidden('pivot');
 
         return $this->response(data: $data);

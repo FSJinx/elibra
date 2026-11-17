@@ -57,7 +57,7 @@ const emptyForm = (): Partial<Acquisition> => ({
 })
 
 const modal = ref<typeof Modal | null>()
-const acquisition = useAcquisitionStore()
+const acquisition = acquisitionStore()
 
 const errors = reactive<Partial<Acquisition>>(emptyForm())
 const form = reactive<Partial<Acquisition>>(emptyForm())

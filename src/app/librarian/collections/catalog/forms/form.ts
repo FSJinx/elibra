@@ -1,12 +1,8 @@
-export interface Form extends Item {
-  //   Author
-  authors: Author[]
-  year_published: ''
-}
+export interface Form extends Item {}
 
 const auth = authStore()
 
-export const emptyForm = (): Partial<Form> => ({
+export const emptyForm = (): StoreItem => ({
   title: '',
   subtitle: '',
   description: '',
@@ -19,9 +15,13 @@ export const emptyForm = (): Partial<Form> => ({
   item_type_id: '',
   item_type_category_id: '',
   library_id: auth.user?.library?.id ?? '',
+
+  publication_year: '',
+  place_of_publication: '',
+  publisher_id: null,
+
   released: false,
 
-  year_published: '',
   edition: '',
   volume: '',
   issue: '',

@@ -6,6 +6,6 @@
     },
     "ignoreDeprecations": "6.0"
   },
-  "include": ["src/**/*", "src/**/*.d.ts", "src/assets/icon/**/*.d.ts"],
+  "include": ["src/**/*", "src/**/*.d.ts", "src/assets/icon/**/*.d.ts", "src/router/librarian/reports/index/.route.ts"],
   "exclude": ["node_modules", "public"]
 }

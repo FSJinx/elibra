@@ -1,5 +1,5 @@
 <template>
-  <main class="flex flex-col p-10 gap-5 w-full max-w-6xl bg-background border border-border rounded-xl overflow-hidden">
+  <main class="flex flex-col p-10 pb-5 gap-5 w-full max-w-7xl bg-background border border-border rounded-xl overflow-hidden">
     <section class="flex flex-col gap-5">
       <div class="max-w-2xl">
         <p class="text-[11px] font-semibold uppercase tracking-widest text-primary">Online Public Access Catalog</p>
@@ -9,21 +9,10 @@
 
       <Form class="" @submit="$emit('search')">
         <div class="flex items-center gap-3">
-          <Input id="params-search" :placeholder="`Try searching '${typedText}|'`" v-model="params.search" enable-clear />
+          <OpacFilter v-model:params="params" @apply="apply" @reset="emit('reset')" />
 
-          <Select id="opac-item-type" v-model="params.item_type" class="max-w-max">
-            <Option value="">All Item Type</Option>
-            <template v-for="item in item_types" :key="item.id">
-              <Option :value="item.id">{{ item.name }}</Option>
-            </template>
-          </Select>
+          <Input id="params-search" :placeholder="`Try searching ${typedText}|`" v-model="params.query" enable-clear />
 
-          <Select id="opac-category" v-model="params.category" class="max-w-max">
-            <Option value="">All Categories</Option>
-            <template v-for="item in itemTypeCategories" :key="item.id">
-              <Option :value="item.id">{{ item.name }}</Option>
-            </template>
-          </Select>
 
           <Button type="submit" icon="search" variant="primary">
             <span class="hidden sm:inline">Search</span>
@@ -34,7 +23,12 @@
 
     <Alert v-if="error" variant="danger">{{ error }}</Alert>
 
-    <div class="flex-1 flex flex-col overflow-y-auto border border-border divide-y divide-border rounded-xl">
+    <p v-if="route.query.query?.length && !loading">
+      {{ props.data?.total ?? 0 }} record(s) found for "<span class="font-bold">{{ route.query.query }}</span
+      >"
+    </p>
+
+    <div class="flex-1 flex flex-col overflow-y-auto border border-border divide-y divide-border rounded-xl shadow">
       <!-- SEARCHING -->
       <section v-if="loading" class="flex-1 flex flex-col items-center justify-center min-h-100 bg-secondary text-center">
         <div class="flex items-center justify-center size-16 rounded-xl bg-primary/10 text-primary mb-5">
@@ -45,7 +39,7 @@
       </section>
 
       <!-- NO RESULT -->
-      <section v-else-if="!error && libraryData.length === 0" class="flex-1 flex flex-col items-center justify-center min-h-100 bg-secondary text-center px-5">
+      <section v-else-if="!error && opac.data?.length === 0" class="flex-1 flex flex-col items-center justify-center min-h-100 bg-secondary text-center px-5">
         <div class="flex items-center justify-center size-16 rounded-xl bg-danger-soft text-danger mb-5">
           <Icon icon="search" class="text-2xl" />
         </div>
@@ -55,100 +49,106 @@
       </section>
 
       <template v-else>
-        <router-link v-for="(item, index) in libraryData" :key="item.id ?? index" :to="{ name: 'opac.view', params: { id: item.item_id } }">
+        <router-link v-for="(item, index) in opac.data" :key="item.id ?? index" :to="{ name: 'opac.view', params: { id: item.id } }" @click="opac.currentData = item">
           <div class="group flex items-start p-5 gap-5 hover:bg-primary-soft/35 transition-all duration-300">
-            <div class="border border-border rounded-xl contain-content">
-              <img :src="default_book" alt="" class="max-w-25" />
+            <div class="border border-border rounded-xl contain-content w-25">
+              <img :src="image(item.cover_media?.file_path)" :alt="`Item cover for ${item.title}`" class="w-full" loading="lazy" />
             </div>
 
             <div class="flex-1 min-w-0 py-1">
+              <!-- Item Title -->
               <div class="flex items-start gap-3">
                 <div class="min-w-0 flex-1">
-                  <h3 class="font-semibold text-lg leading-snug truncate group-hover:text-primary transition-colors">{{ index + 1 }} {{ item.title }}</h3>
-                  <p v-if="item.subtitle" class="mt-1 text-sm text-foreground-secondary truncate">
-                    {{ item.subtitle }}
-                  </p>
+                  <h3 class="font-semibold text-lg leading-snug truncate group-hover:text-primary transition-colors">{{ (data?.from ?? 1) + index }}. {{ item.title }}</h3>
+                  <span class="inline-flex items-center text-sm gap-1.5">
+                    by
+                    <template v-if="item.authors">{{ item.authors?.[0].name?.author }}{{ item.authors.length > 1 ? ', et al' : '' }}</template>
+                    <template v-else>No author</template>
+
+                    <span class="inline-flex items-center gap-1.5" v-if="item.publication_year">
+                      <Icon icon="calendar" />
+                      <span class="font-semibold">{{ item.publication_year || 'Unknown Publication Year' }}</span>
+                    </span>
+                  </span>
                 </div>
 
                 <Icon icon="arrow-up-right" class="hidden sm:block shrink-0 text-foreground-secondary opacity-0 group-hover:opacity-100 group-hover:text-primary transition-all" />
               </div>
 
-              <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mt-4 text-xs text-foreground-secondary">
-                <span class="inline-flex items-center gap-1.5">
-                  <Icon icon="user" />
-                  {{ item.authors?.join(', ') || 'No Author' }}
-                </span>
-
-                <span class="inline-flex items-center gap-1.5">
-                  <Icon icon="calendar" />
-                  {{ item.publication_year || 'Unknown Year' }}
-                </span>
-
-                <span class="inline-flex items-center gap-1.5">
-                  <Icon icon="building-2" />
-                  {{ item.branch || 'Unknown Branch' }}
-                </span>
+              <div class="mt-5 text-[0.85rem] space-y-1 text-foreground-secondary">
+                <p>
+                  Item Type: <span class="font-semibold">{{ item.item_type?.name }} - {{ item.item_type_category?.name }}</span>
+                </p>
+                <p>
+                  Call Number: <span class="font-semibold">{{ item.call_number }}</span>
+                </p>
+                <p>
+                  Location: <span class="font-semibold">{{ item.library?.name || 'Unknown Library' }} - {{ item.library?.campus?.name }}</span>
+                </p>
               </div>
-            </div>
-
-            <div class="hidden sm:block shrink-0 pt-1">
-              <Status class="text-xs capitalize px-3 py-1.5 rounded-full border border-current/30" :variant="parse.status(item.itemType as string)">
-                {{ item.item_type }}
-              </Status>
             </div>
           </div>
         </router-link>
       </template>
     </div>
+    <div class="flex items-center gap-2">
+      <div class="flex-1 flex items-center gap-3 mr-auto shrink-0">
+        Showing
+        <Select class="max-w-max" title="Item Per Page" v-model="params.per_page" @onChange="(emit('search'), (params.page = undefined))">
+          <Option value="25">25</Option>
+          <Option value="50">50</Option>
+          <Option value="75">75</Option>
+          <Option value="100">100</Option>
+        </Select>
+        item of {{ data?.total }}
+      </div>
+
+      <Button @click="page(data?.current_page - 1)" v-if="props.data?.prev_page_url">Previous</Button>
+      <Button @click="page(data?.current_page + 1)" v-if="props.data?.next_page_url">Next</Button>
+    </div>
   </main>
 </template>
 
 <script setup lang="ts">
+import OpacFilter from '@/app/opac/pages/main/OpacFilter.vue'
 import default_book from '@/assets/images/default_book.png'
 
-interface Params {
-  search: string
-  campus: string
-  branch: string
-  sort: string
-  order: string
-  item_type: string
-  category: string
-}
-
-interface LibraryItem {
-  id?: string | number
-  item_id: string | number
-  title: string
-  subtitle?: string
-  authors?: string[]
-  publication_year?: string | number
-  branch?: string
-  campus?: string
-  item_type?: string
-  itemType?: string
-}
-
-defineProps<{
-  libraryData: LibraryItem[]
-  total: number
-  loading: boolean
-  error?: string | null
-}>()
-
-defineEmits<{
-  search: []
-}>()
-
-const params = defineModel<Params>('params', { required: true })
-
-const { typedText } = useSearchTyping()
 const route = useRoute()
 const parse = useParser()
-
+const opac = opacStore()
 const options = optionStore()
-const item_types = computed(() => options.item_types ?? [])
-const itemTypeCategories = computed(() => (options.categories ?? []).filter((item) => String(item.item_type_id) === String(params.value.item_type)))
+const { typedText } = useSearchTyping()
+
+const emit = defineEmits(['search', 'reset'])
+const props = withDefaults(
+  defineProps<{
+    loading: boolean
+    error?: string
+    data: Pagination | undefined
+  }>(),
+  {
+    loading: false,
+  },
+)
+
+const params = defineModel<Partial<OpacParams>>('params', { required: true })
+const image = computed(() => (media: any) => (media ? `${storageRoute}/${media}` : default_book))
+
+function page(page = 0) {
+  params.value.page = page
+  emit('search')
+}
+
+function apply(value: OpacParams) {
+  Object.assign(params, value)
+  emit('search')
+}
+
+watch(
+  () => params,
+  () => console.log('main', params),
+  { deep: true },
+)
 </script>
 
 <style scoped>

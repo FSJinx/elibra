@@ -1,3 +1,5 @@
+export interface PatronParams extends BaseParams {}
+
 export interface Patron {
   id: any
   ebc_number: string

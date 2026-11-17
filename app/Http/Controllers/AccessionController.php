@@ -2,25 +2,48 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Accession;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAccessionRequest;
 use App\Http\Requests\UpdateAccessionRequest;
+use App\Models\Accession;
 use App\Services\AccessionService;
+use App\Services\QueryService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AccessionController extends Controller
 {
     protected AccessionService $accessionService;
+
     public function __construct(AccessionService $accessionService)
     {
         $this->accessionService = $accessionService;
     }
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        
+        $filters = QueryService::filters($request);
+
+        $filters = array_merge($filters, [
+            'item_id' => $request->input('item_id'),
+            'loanable' => $request->input('loanable') ?? false,
+        ]);
+
+        $patron = Accession::query()->with(['item.itemType', 'item.coverMedia'])
+            ->when($filters['search'] ?? null, fn ($q, $s) => $q->where('accession_number', 'LIKE', "%$s%"))
+            // ->when($filters['loanable'], fn ($q, $s) => $q->whereNotNull('accession_number')->where('status', 'available'))
+            ->when($filters['loanable'], fn ($q, $s) => $q->whereNotNull('accession_number')->whereIn('status', ['available', 'borrowed', 'reserved']))
+            ->when($filters['item_id'] ?? null, fn ($q, $s) => $q->where('item_id', $s))
+            ->paginate(
+                perPage: null
+            );
+
+        return $this->response(
+            message: $patron->isEmpty() ? 'No available items found' : 'Patrons found',
+            data: $patron
+        );
     }
 
     /**
@@ -36,12 +59,24 @@ class AccessionController extends Controller
      */
     public function store(StoreAccessionRequest $request)
     {
-        $accession = $this->accessionService->create($request->validated());
+        $data = array_merge($request->validated(), [
+            'quantity' => $request->input('quantity'),
+        ]);
+
+        $accession = DB::transaction(function () use ($data){
+            $accessions = collect();
+            for ($i = 0; $i < (int) $data['quantity'] ?? 0; $i++) {
+                $accessions->push($this->accessionService->create($data));
+            }
+
+            return $accessions;
+        });
+
 
         return $this->response(
             'success',
             'Accession created successfully',
-            $accession->toArray(),
+            $accession,
             201
         );
     }

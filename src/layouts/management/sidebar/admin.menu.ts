@@ -1,5 +1,12 @@
 export const adminMenu = [
   {
+    name: 'Account',
+    children: [
+      { path: 'admin.settings.profile', name: 'Profile', icon: 'person-circle' },
+    ],
+  },
+
+  {
     name: 'Dashboard',
     children: [
       { path: 'admin.overview', name: 'Overview', icon: 'speedometer2' },
@@ -20,7 +27,7 @@ export const adminMenu = [
   {
     name: 'Users & Access',
     children: [
-      { path: '', name: 'Accounts', icon: 'people' },
+      { path: 'admin.users', name: 'Accounts', icon: 'people' },
       { path: '', name: 'Roles & Permissions', icon: 'person-lock' },
       { path: '', name: 'Login Activity', icon: 'clock-history' },
     ],

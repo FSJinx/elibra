@@ -7,9 +7,9 @@
     </div>
 
     <div class="flex-1 flex flex-col overflow-y-auto p-5 gap-4">
-      <Card class="items-end">
+      <div class="flex justify-end items-center">
         <NewPatronLoanPolicy @refresh="fetch" />
-      </Card>
+      </div>
       <Table title="Patrons Loan Policy" subtitle="These are the current loan modes your library accomodate" :data="paginatedData" cols="5">
         <Thead>
           <tr>
@@ -29,15 +29,15 @@
         </Thead>
 
         <Tbody :data="policy.data" :loading="loading">
-          <Tr v-for="(item, index) in policy.data" :key="index">  
+          <Tr v-for="(item, index) in policy.data" :key="index">
             <Td :data="index + 1" />
             <Td :data="item.patron_type?.name" />
-            <Td :data="item.loan_period_days" />  
-            <Td :data="item.max_items" />
-            <Td :data="item.max_renewals" />
+            <Td :data="item.loan_period_days" />
+            <Td :data="item.max_items ?? 'No Limit'" />
+            <Td :data="item.max_renewals ?? 'No Limit'" />
             <Td :data="item.fine_per_due" />
             <Td :data="item.grace_period" />
-            <Td class="text-left line-clamp-1" :data="item.notes" />
+            <Td class="text-left" :data="item.notes" />
             <Td>
               <EditLoanPolicy :data="item" @refresh="fetch" />
             </Td>
@@ -89,4 +89,4 @@ onBeforeUnmount(() => {
 })
 </script>
 
-<style scoped></style>  
+<style scoped></style>

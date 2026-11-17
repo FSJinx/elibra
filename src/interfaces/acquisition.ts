@@ -1,10 +1,14 @@
+export interface AcquisitionParams extends BaseParams {
+  acquisition_mode_id: any
+  item_id: any
+}
 export interface Acquisition {
   id: any
   reference?: string
   dealer: string
   acquisition_date: string
   remarks: string
-  
+
   acquisition_mode_id: any
   receiver_id: any
 
@@ -15,6 +19,5 @@ export interface Acquisition {
   acquisition_lines: AcquisitionLine
   receiver: User
 }
-
 
 export interface StoreAcquisition extends Partial<Acquisition> {}

@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('suffix')->nullable();
             $table->softDeletes();
             $table->timestamps();
+
+            $table->unsignedBigInteger('user_id')->unique()->nullable()->default(null);
         });
     }
 

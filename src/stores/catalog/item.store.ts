@@ -1,8 +1,3 @@
-export interface ItemParams extends BaseParams {
-  item_type_id: any
-  item_type_category_id: any
-}
-
 function appendFormData(formData: FormData, key: string, value: unknown): void {
   if (value == null) return
 
@@ -29,23 +24,28 @@ function appendFormData(formData: FormData, key: string, value: unknown): void {
   formData.append(key, String(value))
 }
 
-export const useItemStore = defineStore('item', {
+export const itemStore = defineStore('item', {
   state: () => ({
-    url: '/items',
+    data: null as Item[] | null,
+    currentData: null as Item | null,
+
+    url: 'items',
   }),
 
   actions: {
     async fetch(params: Partial<ItemParams>) {
       const res = await get(this.url, params)
+      this.data = res.data.data
       return res
     },
 
     async show(id: any) {
       const res = await get(`${this.url}/${id}`)
+      this.currentData = res.data
       return res
     },
 
-    async create(params: Partial<Item>) {
+    async create(params: StoreItem) {
       const formData = new FormData()
       Object.entries(params).forEach(([key, value]) => appendFormData(formData, key, value))
 
@@ -53,26 +53,14 @@ export const useItemStore = defineStore('item', {
       return res
     },
 
-    async update(id: string | number, params: Partial<Item>) {
+    async update(id: string | number, params: UpdateItem) {
       const formData = new FormData()
-      const fields = ['title', 'subtitle', 'description', 'call_number', 'electronic_file', 'cover_image', 'keywords', 'edition', 'isbn_issn', 'doi', 'volume', 'issue', 'pages', 'department_id', 'released', 'item_type_id', 'item_type_category_id', 'language_id', 'authors']
-
-      fields.forEach((field) => {
-        const value = params[field]
-        if ((field === 'electronic_file' || field === 'cover_image') && !(value instanceof File)) {
-          return
-        }
-        if (field === 'authors' && Array.isArray(value) && value.length === 0) {
-          formData.append('authors', '[]')
-        } else if (field === 'keywords' && Array.isArray(value) && value.length === 0) {
-          formData.append('keywords', '[]')
-        } else if (value !== undefined) {
-          appendFormData(formData, field, value)
-        }
-      })
+      Object.entries(params).forEach(([key, value]) => appendFormData(formData, key, value))
       formData.append('_method', 'PUT')
 
-      return await post(`${this.url}/${id}`, formData)
+      const res = await post(`${this.url}/${id}`, formData)
+      this.currentData = res.data
+      return res
     },
 
     /**

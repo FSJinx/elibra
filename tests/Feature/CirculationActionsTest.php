@@ -60,11 +60,17 @@ class CirculationActionsTest extends TestCase
             $table->id();
             $table->string('name');
             $table->boolean('renewable')->default(false);
+            $table->boolean('charges_fine')->default(false);
+            $table->boolean('has_grace_period')->default(false);
+            $table->boolean('is_active')->default(true);
         });
         Schema::create('patron_type_loan_policies', function (Blueprint $table) {
             $table->id();
             $table->integer('loan_period_days');
+            $table->integer('max_items')->nullable();
             $table->integer('max_renewals');
+            $table->decimal('fine_per_due', 10, 2)->default(0);
+            $table->integer('grace_period')->default(0);
             $table->unsignedBigInteger('patron_type_id');
             $table->unsignedBigInteger('loan_mode_id');
         });
@@ -117,6 +123,178 @@ class CirculationActionsTest extends TestCase
         $this->assertSame('2026-10-29 10:00:00', $returned->returned_at->format('Y-m-d H:i:s'));
         $this->assertSame(1, $returned->return_received_by);
         $this->assertSame('available', DB::table('accessions')->where('id', 1)->value('status'));
+        $this->assertSame('0.00', $returned->fine_charged);
+    }
+
+    public function test_checkout_marks_accession_on_load(): void
+    {
+        Carbon::setTestNow('2026-10-29 10:00:00');
+        DB::table('accessions')->where('id', 1)->update(['status' => 'available']);
+        DB::table('patron_type_loan_policies')->insert([
+            'loan_period_days' => 14,
+            'max_renewals' => 1,
+            'patron_type_id' => 1,
+            'loan_mode_id' => 1,
+        ]);
+
+        $loan = app(CirculationService::class)->checkout([
+            'accession_id' => 1,
+            'patron_id' => 1,
+            'loan_mode_id' => 1,
+        ], User::findOrFail(1));
+
+        $this->assertSame('borrowed', $loan->status);
+        $this->assertSame('on_load', DB::table('accessions')->where('id', 1)->value('status'));
+    }
+
+    public function test_checkout_enforces_the_policy_maximum_for_active_loans_in_the_same_loan_mode(): void
+    {
+        Carbon::setTestNow('2026-10-29 10:00:00');
+        DB::table('accessions')->where('id', 1)->update(['status' => 'available']);
+        DB::table('accessions')->insert([
+            'id' => 2,
+            'accession_number' => 'ACC-2',
+            'status' => 'available',
+            'item_id' => 1,
+        ]);
+        DB::table('patron_type_loan_policies')->insert([
+            'loan_period_days' => 14,
+            'max_items' => 2,
+            'max_renewals' => 1,
+            'patron_type_id' => 1,
+            'loan_mode_id' => 1,
+        ]);
+        $service = app(CirculationService::class);
+        $librarian = User::findOrFail(1);
+
+        $service->checkout([
+            'accession_id' => 1,
+            'patron_id' => 1,
+            'loan_mode_id' => 1,
+        ], $librarian);
+        $service->checkout([
+            'accession_id' => 2,
+            'patron_id' => 1,
+            'loan_mode_id' => 1,
+        ], $librarian);
+
+        $this->assertSame(2, Circulation::where('patron_id', 1)->where('loan_mode_id', 1)->count());
+
+        DB::table('accessions')->insert([
+            'id' => 3,
+            'accession_number' => 'ACC-3',
+            'status' => 'available',
+            'item_id' => 1,
+        ]);
+
+        try {
+            $service->checkout([
+                'accession_id' => 3,
+                'patron_id' => 1,
+                'loan_mode_id' => 1,
+            ], $librarian);
+            $this->fail('Checkout should be rejected after the patron reaches the policy item limit.');
+        } catch (ValidationException $exception) {
+            $this->assertStringContainsString(
+                'maximum of 2 items',
+                $exception->errors()['accession_id'][0]
+            );
+        }
+
+        $this->assertSame('available', DB::table('accessions')->where('id', 3)->value('status'));
+        $this->assertSame(2, Circulation::where('patron_id', 1)->where('loan_mode_id', 1)->count());
+    }
+
+    public function test_return_charges_per_calendar_day_after_the_policy_grace_period(): void
+    {
+        Carbon::setTestNow('2026-10-29 10:00:00');
+        DB::table('loan_modes')->where('id', 1)->update([
+            'renewable' => false,
+            'charges_fine' => true,
+            'has_grace_period' => true,
+            'is_active' => true,
+        ]);
+        DB::table('patron_type_loan_policies')->insert([
+            'loan_period_days' => 14,
+            'max_renewals' => 1,
+            'fine_per_due' => 3.50,
+            'grace_period' => 2,
+            'patron_type_id' => 1,
+            'loan_mode_id' => 1,
+        ]);
+        $loanId = $this->createLoan(dueAt: '2026-10-25 23:59:00');
+
+        $returned = app(CirculationService::class)->returnLoan(
+            Circulation::findOrFail($loanId),
+            User::findOrFail(1)
+        );
+
+        $this->assertSame('7.00', $returned->fine_charged);
+    }
+
+    public function test_return_does_not_charge_fines_for_inactive_or_non_fine_charging_modes(): void
+    {
+        Carbon::setTestNow('2026-10-29 10:00:00');
+        DB::table('loan_modes')->where('id', 1)->update([
+            'charges_fine' => true,
+            'has_grace_period' => false,
+            'is_active' => false,
+        ]);
+        DB::table('patron_type_loan_policies')->insert([
+            'loan_period_days' => 14,
+            'max_renewals' => 1,
+            'fine_per_due' => 3.50,
+            'grace_period' => 0,
+            'patron_type_id' => 1,
+            'loan_mode_id' => 1,
+        ]);
+        $loanId = $this->createLoan(dueAt: '2026-10-25 10:00:00');
+
+        $returned = app(CirculationService::class)->returnLoan(
+            Circulation::findOrFail($loanId),
+            User::findOrFail(1)
+        );
+
+        $this->assertSame('0.00', $returned->fine_charged);
+
+        DB::table('loan_modes')->where('id', 1)->update([
+            'charges_fine' => false,
+            'is_active' => true,
+        ]);
+        $secondLoanId = $this->createLoan(dueAt: '2026-10-25 10:00:00');
+
+        $secondReturned = app(CirculationService::class)->returnLoan(
+            Circulation::findOrFail($secondLoanId),
+            User::findOrFail(1)
+        );
+
+        $this->assertSame('0.00', $secondReturned->fine_charged);
+    }
+
+    public function test_return_ignores_policy_grace_days_when_loan_mode_has_no_grace_period(): void
+    {
+        Carbon::setTestNow('2026-10-29 10:00:00');
+        DB::table('loan_modes')->where('id', 1)->update([
+            'charges_fine' => true,
+            'has_grace_period' => false,
+            'is_active' => true,
+        ]);
+        DB::table('patron_type_loan_policies')->insert([
+            'loan_period_days' => 14,
+            'max_renewals' => 1,
+            'fine_per_due' => 3.50,
+            'grace_period' => 2,
+            'patron_type_id' => 1,
+            'loan_mode_id' => 1,
+        ]);
+        $loanId = $this->createLoan(dueAt: '2026-10-25 23:59:00');
+
+        $returned = app(CirculationService::class)->returnLoan(
+            Circulation::findOrFail($loanId),
+            User::findOrFail(1)
+        );
+
+        $this->assertSame('14.00', $returned->fine_charged);
     }
 
     public function test_renewal_extends_due_date_by_policy_and_respects_maximum(): void

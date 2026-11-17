@@ -10,7 +10,7 @@
           <Label>Quantity</Label>
           <Input id="" type="number" placeholder="Enter quantity..." v-model="form.quantity" />
         </Control>
-        <Control id="" col>
+        <Control id="" col v-if="acquisition.acquisition_mode?.has_price">
           <Label>Unit Price</Label>
           <Input id="" type="number" placeholder="Enter unit price..." v-model="form.unit_price" />
         </Control>
@@ -26,14 +26,16 @@
 <script setup lang="ts">
 import Modal from '@/components/my/Modal.vue'
 
-const pop = usePopup()
+const props = withDefaults(defineProps<{ data: any; acquisition: Acquisition }>(), {})
+const emit = defineEmits(['refresh'])
 
-const props = withDefaults(defineProps<{ data: any }>(), {})
+const pop = usePopup()
+const lines = acquisitionLinesStore()
 
 const modal = ref<InstanceType<typeof Modal>>()
 const form = ref({
   quantity: props?.data?.quantity ?? '',
-  unit_price: props?.data?.unit_price ?? 0,
+  unit_price: props.acquisition.acquisition_mode?.has_price ? props?.data?.unit_price : null,
 })
 
 function open() {
@@ -45,8 +47,12 @@ function close() {
 }
 
 async function submit() {
-  // updating item
-  pop.info("Oops, this feature isn't up yet. Please come back later.")
+  pop.load()
+  try {
+    const res = await lines.update({ ...props.data, ...form.value })
+    pop.success(res.message)
+    return emit('refresh')
+  } catch (e: any) {}
 }
 </script>
 

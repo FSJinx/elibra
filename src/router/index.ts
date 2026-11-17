@@ -68,6 +68,7 @@ router.beforeEach(async (to, from) => {
   const matched = to.matched
 
   const requiresAuth = matched.some((route) => route.meta.requiresAuth)
+  const requiresFlow = matched.some((route) => route.meta.requiresFlow)
   const role = matched.find((route) => route.meta.role)?.meta.role
   const permission = matched.find((route) => route.meta.permission)?.meta.permission
   const maintenance = matched.find((route) => route.meta.maintenance)?.meta.maintenance
@@ -110,6 +111,11 @@ router.beforeEach(async (to, from) => {
   if (requiresAuth && !accessRoles.split(',').includes(String(store.user?.role ?? ''))) {
     error.forbidden()
     router.resolve(from)
+    return false
+  }
+
+  if (requiresFlow && !from.name) {
+    error.forbidden('Oops, that jump is prohibited.')
     return false
   }
 

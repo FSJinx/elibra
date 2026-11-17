@@ -41,6 +41,7 @@ class BookSeeder extends Seeder
                 'item_type_category_id' => $categoryIds->random(),
                 'library_id' => $library->id,
                 'language_id' => 1,
+                'publication_year' => rand(1990,2026),
                 'released' => fake()->boolean(90),
             ]);
 
