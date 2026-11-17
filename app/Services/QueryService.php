@@ -17,12 +17,14 @@ class QueryService
         $reqOrder = $request->string('order')->trim()->lower()->toString();
         $per_page = max(1, min($request->integer('per_page', $perPage), $maxPerPage));
 
-        return [
-            'search' => $request->string('query')->trim()->toString() ?: null,
-            'sort' => $request->string('sort')->trim()->toString() ?: $sort,
-            'order' => in_array($reqOrder, ['asc', 'desc'], true) ? $reqOrder : $order,
-            'page' => $request->integer('page', null) ?: $page,
-            'per_page' => $per_page,
-        ];
+        return array_merge($request->all(),
+            [
+                'search' => $request->string('query')->trim()->toString() ?: null,
+                'sort' => $request->string('sort')->trim()->toString() ?: $sort,
+                'order' => in_array($reqOrder, ['asc', 'desc'], true) ? $reqOrder : $order,
+                'page' => $request->integer('page', null) ?: $page,
+                'per_page' => $per_page,
+            ]
+        );
     }
 }

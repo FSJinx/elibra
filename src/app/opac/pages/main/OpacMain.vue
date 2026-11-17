@@ -1,5 +1,5 @@
 <template>
-  <main class="flex flex-col p-10 pb-5 gap-5 w-full max-w-6xl bg-background border border-border rounded-xl overflow-hidden">
+  <main class="flex flex-col p-10 pb-5 gap-5 w-full max-w-7xl bg-background border border-border rounded-xl overflow-hidden">
     <section class="flex flex-col gap-5">
       <div class="max-w-2xl">
         <p class="text-[11px] font-semibold uppercase tracking-widest text-primary">Online Public Access Catalog</p>
@@ -9,17 +9,10 @@
 
       <Form class="" @submit="$emit('search')">
         <div class="flex items-center gap-3">
+          <OpacFilter v-model:params="params" @apply="apply" @reset="emit('reset')" />
+
           <Input id="params-search" :placeholder="`Try searching ${typedText}|`" v-model="params.query" enable-clear />
 
-          <Select id="opac-item-type" v-model="params.item_type_id" class="max-w-max">
-            <Option value="">All Item Type</Option>
-            <Option :value="item.id" v-for="item in options.item_types">{{ item.name }}</Option>
-          </Select>
-
-          <Select id="opac-category" v-model="params.item_type_category_id" class="max-w-max">
-            <Option value="">All Categories</Option>
-            <Option :value="item.id" v-for="item in options.categories?.filter((i) => i.item_type_id === params.item_type_id)">{{ item.name }}</Option>
-          </Select>
 
           <Button type="submit" icon="search" variant="primary">
             <span class="hidden sm:inline">Search</span>
@@ -117,6 +110,7 @@
 </template>
 
 <script setup lang="ts">
+import OpacFilter from '@/app/opac/pages/main/OpacFilter.vue'
 import default_book from '@/assets/images/default_book.png'
 
 const route = useRoute()
@@ -125,7 +119,7 @@ const opac = opacStore()
 const options = optionStore()
 const { typedText } = useSearchTyping()
 
-const emit = defineEmits(['search'])
+const emit = defineEmits(['search', 'reset'])
 const props = withDefaults(
   defineProps<{
     loading: boolean
@@ -144,6 +138,17 @@ function page(page = 0) {
   params.value.page = page
   emit('search')
 }
+
+function apply(value: OpacParams) {
+  Object.assign(params, value)
+  emit('search')
+}
+
+watch(
+  () => params,
+  () => console.log('main', params),
+  { deep: true },
+)
 </script>
 
 <style scoped>

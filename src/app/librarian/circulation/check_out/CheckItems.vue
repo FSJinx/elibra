@@ -1,15 +1,12 @@
 <template>
   <!-- Searching Items -->
-  <Card>
-    <CardBody>
-      <Form class="flex items-center gap-2 w-full" id="search-item" @submit="search">
+  <Table title="Items" subtitle="Preview items before adding to book bag" :data="pagination" @per_page="params.per_page = $event" @next="params.page = $event" @prev="params.page = $event">
+    <template #header>
+      <Form class="flex items-center justify-end gap-2 w-full" id="search-item" @submit="search">
         <Input class="max-w-150" type="text" enable-clear placeholder="Search by item title, accession number, call number" v-model="params.query" />
         <Button form="search-item" type="submit">Search</Button>
-      </Form>
-    </CardBody>
-  </Card>
-
-  <Table title="Items" subtitle="Preview items before adding to book bag" :data="pagination" @per_page="params.per_page = $event" @next="params.page = $event" @prev="params.page = $event">
+      </Form>    
+    </template>
     <Thead>
       <tr>
         <Th>No</Th>

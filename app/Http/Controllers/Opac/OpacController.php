@@ -43,8 +43,11 @@ class OpacController extends Controller
                 // ====== SEARCH QUERY =====
                     ->when($filters['search'] ?? null, function ($q, $s) {
                         return $q->where('title', 'LIKE', "%$s%")
-                            ->orWhere('subtitle', 'LIKE', "%$s%");
+                            ->orWhere('subtitle', 'LIKE', "%$s%")
+                            ->orWhere('call_number', 'LIKE', "%$s%")
+                            ->orWhere('isbn_issn', 'LIKE', "%$s%");
                     })
+                    ->when($filters['item_type_id'] ?? null, fn ($q, $type) => $q->where('item_type_id', $type))
                 // ====== RELEASED TO OPAC =====
                     ->where('released', true)
                 // ====== PAGINATIONS & SORTING =====

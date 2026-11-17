@@ -7,7 +7,7 @@ enum AttachmentType: string
     case ProfilePicture = 'profile_picture';
     case CoverPhoto = 'cover_photo';
     case ElectronicFile = 'electronic_file';
-    case Report = 'report';
+    case Report = 'reports';
 
     /**
      * Returns the disk of the attachment

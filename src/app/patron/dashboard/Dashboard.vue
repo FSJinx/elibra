@@ -16,7 +16,7 @@
       </section>
 
       <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label="Account summary">
-        <StatCard v-for="stat in stats" :label="stat.label" :value="stat.value" :icon="stat.icon" :variant="stat.color as Variants"/>
+        <StatCard v-for="stat in stats" :label="stat.label" :value="stat.value" :loading :icon="stat.icon" :variant="stat.color as Variants" />
       </section>
 
       <section class="grid gap-6 lg:grid-cols-[1.35fr_0.65fr]">
@@ -72,13 +72,16 @@
 
 <script setup lang="ts">
 const auth = authStore()
+const patron = patronStore()
 
-const stats = [
-  { icon: 'book', value: 3, label: 'Books currently borrowed', color: 'success' },
-  { icon: 'clock', value: 1, label: 'Due this week', color: 'warning' },
-  { icon: 'bookmark', value: 8, label: 'Saved titles', color: 'info' },
-  { icon: 'check-circle', value: 12, label: 'Books read this year', color: 'restore' },
-]
+const statsData = ref<Record<string, any[]>>()
+const loading = ref<boolean>(false)
+
+const stats = computed(() => [
+  { icon: 'book', value: statsData.value?.borrow_count, label: 'Total Borrow Count', color: 'success' },
+  { icon: 'clock', value: statsData.value?.due_this_week, label: 'Due this week', color: 'warning' },
+  { icon: 'check-circle', value: statsData.value?.active_borrowing, label: 'Active Borrowing', color: 'restore' },
+])
 
 const loans = [
   { title: 'The Design of Everyday Things', author: 'Don Norman', due: 'Due in 2 days', urgent: true },
@@ -91,6 +94,18 @@ const services = [
   { icon: 'person', title: 'Manage your profile', description: 'Update your account details', name: 'patron.profile' },
   { icon: 'journal-plus', title: 'Submit your thesis', description: 'Submit an electronic copy of your manuscript', name: 'patron.acarepo' },
 ]
+
+async function loadDashboard() {
+  loading.value = true
+  try {
+    const res = await patron.dashboard()
+    statsData.value = res.data
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(loadDashboard)
 </script>
 
 <style scoped></style>

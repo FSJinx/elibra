@@ -46,6 +46,7 @@ class ItemController extends Controller
                         return $qq->where('title', 'LIKE', "%{$search}%")
                             ->orWhere('subtitle', 'LIKE', "%{$search}%")
                             ->orWhere('isbn_issn', 'LIKE', "%{$search}%")
+                            ->orWhere('call_number', 'LIKE', "%{$search}%")
                             ->orWhereHas('authors', fn ($a) => $a->whereRaw("CONCAT_WS(' ', first_name, last_name) LIKE ?", ["%{$search}%"])->orWhereRaw("CONCAT_WS(' ', last_name, first_name) LIKE ?", ["%{$search}%"]))
                             ->orWhereHas('accessions', fn ($qq2) => $qq2->where('accession_number', 'LIKE', "%{$search}%"));
                     });

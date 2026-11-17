@@ -36,6 +36,7 @@
             <Td>
               <Status :variant="item.status">{{ item.status }}</Status>
             </Td>
+            <Td :data="parse.toMoney(item.fine_charged)" />
             <Td class="space-x-2">
               <ReturnButton :data="item" @refresh="search" v-if="['borrowed', 'overdue'].includes(item.status)" />
               <RenewButton :data="item" @refresh="search" v-if="item.status === 'borrowed'" />

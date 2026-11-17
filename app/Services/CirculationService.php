@@ -45,7 +45,14 @@ class CirculationService
             }
 
             $maxItems = $policy->max_items;
-            if ($maxItems !== null && $maxItems > 0) {
+
+            if ($maxItems !== null) {
+                if ($maxItems === 0) {
+                    throw ValidationException::withMessages([
+                        'accession_id' => ['This loan mode is not available for this patron type.'],
+                    ]);
+                }
+
                 $activeLoans = Circulation::query()
                     ->where('patron_id', $patron->id)
                     ->where('loan_mode_id', $data['loan_mode_id'])

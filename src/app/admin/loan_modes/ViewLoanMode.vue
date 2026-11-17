@@ -7,9 +7,9 @@
     </div>
 
     <div class="flex-1 flex flex-col overflow-y-auto p-5 gap-4">
-      <Card class="items-end">
+      <div class="flex justify-end items-center">
         <NewPatronLoanPolicy @refresh="fetch" />
-      </Card>
+      </div>
       <Table title="Patrons Loan Policy" subtitle="These are the current loan modes your library accomodate" :data="paginatedData" cols="5">
         <Thead>
           <tr>

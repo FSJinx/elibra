@@ -12,5 +12,10 @@ export const patronStore = defineStore('patron', {
       this.data = res.data?.data
       return res
     },
+
+    async dashboard() {
+      const res = await get(`${this.url}/dashboard`)
+      return res
+    },
   },
 })

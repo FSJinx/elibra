@@ -1,5 +1,5 @@
 <template>
-  <aside class="hidden xl:block w-100 p-5 bg-background border border-border rounded-xl overflow-y-auto">
+  <!-- <aside class="hidden xl:block w-100 p-5 bg-background border border-border rounded-xl overflow-y-auto">
     <div class="flex items-start justify-between">
       <div>
         <p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-foreground-secondary">Filters</p>
@@ -8,19 +8,18 @@
     </div>
 
     <div class="h-px bg-border my-5"></div>
-  </aside>
+  </aside> -->
 
-  <Button clas="bg-default" variant="text" left-icon="sliders" @click="open">Filter</Button>
+  <Button class="bg-default" variant="text" left-icon="sliders" @click="open">Filter</Button>
 
   <Modal ref="modal">
-    <ModalHeader use-default-layout title="Filters" subtitle="Refine your quest for knowledge" icon="books" />
+    <ModalHeader use-default-layout title="Filters" subtitle="Refine your quest for knowledge" icon="sliders" />
 
     <ModalBody class="p-5">
-      <button type="button" class="text-xs text-foreground-secondary hover:text-danger transition-colors" @click="$emit('reset')">Reset</button>
-      <Form id="opac-form" @submit="apply">
-        <Control direction="col">
-          <Label id="params-campus_id">Campus</Label>
-          <Select id="params-campus_id" title="Campus" v-model="params.campus_id">
+      <Form class="grid grid-cols-2 gap-3" id="opac-form" @submit="apply">
+        <Control col class="col-span-2">
+          <Label>Campus</Label>
+          <Select title="Campus" v-model="params.campus_id">
             <Option value="">All data</Option>
             <template v-for="item in options.campuses" :key="item.id">
               <Option :value="item.id">{{ item.name }}</Option>
@@ -28,26 +27,43 @@
           </Select>
         </Control>
 
-        <Control direction="col">
-          <Label id="params-sort">Sort results</Label>
-          <Select id="params-sort" title="Sort By" v-model="params.sort">
+        <Control id="opac-item-type" col>
+          <Label>Item Type</Label>
+          <Select v-model="params.item_type_id">
+            <Option value="">All Item Type</Option>
+            <Option :value="item.id" v-for="item in options.item_types">{{ item.name }}</Option>
+          </Select>
+        </Control>
+
+        <Control id="opac-item-category" col>
+          <Label>Item Category </Label>
+          <Select v-model="params.item_type_category_id">
+            <Option value="">All Categories</Option>
+            <Option :value="item.id" v-for="item in options.categories?.filter((i) => i.item_type_id === params.item_type_id)">{{ item.name }}</Option>
+          </Select>
+        </Control>
+
+        <Control class="col-span-2" col>
+          <Label>Sort By</Label>
+          <Select title="Sort By" v-model="params.sort">
             <Option value="">Relevance</Option>
             <Option value="title">Title</Option>
             <Option value="publication_year">Publication year</Option>
           </Select>
         </Control>
 
-        <Control direction="col">
-          <Label id="params-order">Order</Label>
-          <Select id="params-order" v-model="params.order" placeholder="Default">
+        <Control class="col-span-2" col>
+          <Label>Order</Label>
+          <Select v-model="params.order" placeholder="Default">
             <Option value="asc">Ascending</Option>
             <Option value="desc">Descending</Option>
           </Select>
         </Control>
       </Form>
     </ModalBody>
-    <ModalFooter>
-      <Button class="w-full mt-3" variant="primary" @click="$emit('apply')"> Apply filters </Button>
+    <ModalFooter class="gap-2">
+      <Button @click="emit('reset')">Reset</Button>
+      <Button variant="primary" @click="apply"> Apply filters </Button>
     </ModalFooter>
   </Modal>
 </template>
@@ -61,12 +77,11 @@ const emit = defineEmits(['apply', 'reset'])
 const options = optionStore()
 
 const modal = ref<InstanceType<typeof Modal>>()
-const params = reactive<Partial<OpacParams>>({})
+const params = reactive<Partial<OpacParams>>(model.value)
 
 function open() {
-  Object.assign(params, model.value)
+  // Object.assign(params, model.value)
   modal.value?.open()
-  close()
 }
 
 function close() {
@@ -74,7 +89,7 @@ function close() {
 }
 
 function apply() {
-  emit('apply', model.value)
+  emit('apply', params)
   close()
 }
 </script>
