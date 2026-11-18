@@ -31,6 +31,8 @@
 <script setup lang="ts">
 import Modal from '@/components/my/Modal.vue'
 
+const emit = defineEmits(['refresh'])
+
 const pop = usePopup()
 const item_type = useAdminItemTypeStore()
 const modal = ref<InstanceType<typeof Modal>>()

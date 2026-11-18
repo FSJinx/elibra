@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StorePatronTypeRequest extends BaseRequest
 {
@@ -12,7 +12,7 @@ class StorePatronTypeRequest extends BaseRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->user()?->isSuperAdmin() ?? false;
     }
 
     /**
@@ -23,7 +23,13 @@ class StorePatronTypeRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            //
+            'key' => ['required', 'string', 'max:255', Rule::unique('patron_types', 'key')],
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string', 'max:255'],
+            'validity_period' => ['required', 'integer', 'min:1'],
+            'has_campus' => ['required', 'boolean'],
+            'has_department' => ['required', 'boolean'],
+            'has_program' => ['required', 'boolean'],
         ];
     }
 }

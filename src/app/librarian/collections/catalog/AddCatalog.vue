@@ -52,6 +52,7 @@ const pop = usePopup()
 const item = itemStore()
 const drafts = draftStore()
 const route = useRoute()
+const option = optionStore()
 
 const form = ref<StoreItem>(emptyForm())
 const errors = reactive<Record<string, unknown>>({})
@@ -129,4 +130,6 @@ watch(
   (val) => (form.value.publisher_id = val?.id),
   { deep: true, immediate: true },
 )
+
+onMounted(() => option.load(['item_types', 'categories', 'languages', 'authorships']))
 </script>

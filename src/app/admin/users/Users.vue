@@ -57,7 +57,7 @@
               <Status :variant="parse.status(user.sex)">{{ user.sex }}</Status>
             </Td>
             <Td :data="user.email" class="text-left" />
-            <Td :data="user.campus?.name ?? null" class="text-left" />
+            <Td :data="user.campus?.name ?? null" />
             <Td>
               <Status :variant="parse.status(user.status)">{{ user.status }}</Status>
             </Td>

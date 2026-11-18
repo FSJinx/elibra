@@ -18,7 +18,8 @@ class SuperAdminSeeder extends Seeder
         collect([
             [
                 'uuid' => Str::uuid()->toString(),
-                'first_name' => 'Super Administrator',
+                'last_name' => 'Administrator',
+                'first_name' => 'System',
                 'sex' => 'male',
                 'role' => 'super_admin',
                 'username' => 'super',

@@ -2,7 +2,7 @@
   <div class="flex flex-col size-full overflow-hidden">
     <SectionHeader title="Libraries" description="Manage libraries in the Isabela State University" icon="building">
       <div class="flex items center justify-end">
-        <AddNewLibraryModal />
+        <AddNewLibraryModal @refresh="search"/>
       </div>
     </SectionHeader>
 
@@ -50,7 +50,6 @@ import AddNewLibraryModal from '@/app/admin/libraries/modals/AddNewLibraryModal.
 import EditLibraryModal from '@/app/admin/libraries/modals/EditLibraryModal.vue'
 
 const library = libraryStore()
-const campus = campusStore()
 const parse = useParser()
 const pop = usePopup()
 

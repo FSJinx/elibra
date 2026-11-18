@@ -24,5 +24,9 @@ export const patronTypeStore = defineStore('patron_type', {
       this.setData(res.data.data)
       return res
     },
+
+    async create(payload: Partial<StorePatronType>) {
+      return await post(this.url, payload)
+    },
   },
 })

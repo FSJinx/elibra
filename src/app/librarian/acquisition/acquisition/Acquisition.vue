@@ -2,7 +2,7 @@
   <div class="size-full flex flex-col">
     <SectionHeader title="Acquisitions" description="Manage your library's acquisition record" icon="receipt">
       <div class="flex items-center justify-end">
-        <AddNewAcquisitionButton />
+        <AddNewAcquisitionButton @refresh="search" />
       </div>
     </SectionHeader>
 

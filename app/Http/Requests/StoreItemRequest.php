@@ -62,7 +62,7 @@ class StoreItemRequest extends BaseRequest
             'authors.*.authorship_id' => ['nullable', 'integer', Rule::exists((new Authorship)->getTable(), 'id')],
 
             'publication_year' => ['sometimes', 'nullable', 'integer', 'between:1000,'.now()->year],
-            'place_of_publication' => ['sometimes', 'string'],
+            'place_of_publication' => ['sometimes', 'nullable', 'string'],
             'publisher_id' => ['sometimes', 'nullable', 'exists:publishers,id'],
             'publisher' => ['sometimes'],
 

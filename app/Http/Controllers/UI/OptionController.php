@@ -23,7 +23,7 @@ class OptionController extends Controller
      */
     public function campuses()
     {
-        $data = Campus::query()->select(['id', 'name'])->get();
+        $data = Campus::query()->select(['id', 'name', 'code'])->get();
 
         return $this->response(data: $data);
     }

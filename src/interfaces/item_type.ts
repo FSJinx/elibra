@@ -1,3 +1,7 @@
+export interface ItemTypeParams extends BaseParams {
+
+}
+
 export interface ItemType {
   id: any
   name: string
@@ -9,3 +13,5 @@ export interface ItemType {
   created_at: string
   updated_at: string
 }
+
+export interface StoreItemType extends ItemType {}

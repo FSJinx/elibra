@@ -50,7 +50,7 @@
           <p class="px-3 pb-2 pt-1 text-[11px] font-semibold uppercase tracking-widest text-foreground-secondary">General</p>
 
           <div class="flex flex-col gap-0.5">
-            <template v-for="route in routes">
+            <template v-for="route in roleRoutes(user.user?.role as string)">
               <Button as="link" variant="text" align="left" :icon="route.icon" class="optBtn px-5! gap-5 hover:bg-default cursor-pointer" :to="{ name: route.path }" @click="close"> {{ route.name }} </Button>
             </template>
           </div>
@@ -68,6 +68,12 @@
 <script setup lang="ts">
 import { ChevronDown } from '@lucide/vue'
 
+interface RoleRoute {
+  name: string
+  path: string
+  icon: string
+}
+
 const user = authStore()
 const auth = useAuth()
 const parse = useParser()
@@ -75,11 +81,35 @@ const parse = useParser()
 const open = ref(false)
 const managementProfile = ref<HTMLElement | null>(null)
 
-const routes = [
-  { name: 'Home', path: 'home', icon: 'house' },
-  { name: 'OPAC', path: 'opac', icon: 'journals' },
-  { name: 'Profile', path: '', icon: 'person' },
-]
+const routes: Record<string, RoleRoute[]> = {
+  super_admin: [
+    { name: 'Home', path: 'home', icon: 'house' },
+    { name: 'OPAC', path: 'opac', icon: 'journals' },
+    { name: 'Profile', path: 'admin.settings.profile', icon: 'person' },
+  ],
+
+  admin: [
+    { name: 'Home', path: 'home', icon: 'house' },
+    { name: 'OPAC', path: 'opac', icon: 'journals' },
+    { name: 'Profile', path: '', icon: 'person' },
+  ],
+
+  librarian: [
+    { name: 'Home', path: 'home', icon: 'house' },
+    { name: 'OPAC', path: 'opac', icon: 'journals' },
+    { name: 'Profile', path: '', icon: 'person' },
+  ],
+
+  patron: [
+    { name: 'Home', path: 'home', icon: 'house' },
+    { name: 'OPAC', path: 'opac', icon: 'journals' },
+    { name: 'Profile', path: '', icon: 'person' },
+  ],
+}
+
+const roleRoutes = computed(() => {
+  return (role: string) => routes[role] ?? []
+})
 
 const toggle = () => {
   open.value = !open.value
