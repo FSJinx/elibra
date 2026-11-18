@@ -1,4 +1,4 @@
-<template>
+  <template>
   <div class="inset-0 fixed place-content-center bg-secondary">
     <div class="flex flex-col w-full max-w-120 p-8 mx-auto sm:bg-background border border-border/50 rounded-2xl sm:drop-shadow-sm hover:drop-shadow-xl transition-all duration-200">
       <!-- Logo Header -->
@@ -53,7 +53,7 @@ const defaultStatus: Status = {
 
 const error = reactive(defaultStatus)
 
-const credentials = reactive({
+const credentials = reactive<Login>({
   username: '',
   password: '',
 })

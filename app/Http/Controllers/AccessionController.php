@@ -34,8 +34,9 @@ class AccessionController extends Controller
         $patron = Accession::query()->with(['item.itemType', 'item.coverMedia'])
             ->when($filters['search'] ?? null, fn ($q, $s) => $q->where('accession_number', 'LIKE', "%$s%"))
             // ->when($filters['loanable'], fn ($q, $s) => $q->whereNotNull('accession_number')->where('status', 'available'))
-            ->when($filters['loanable'], fn ($q, $s) => $q->whereNotNull('accession_number')->whereIn('status', ['available', 'borrowed', 'reserved']))
+            ->when($filters['loanable'], fn ($q) => $q->whereNotNull('accession_number')->whereIn('status', ['available', 'borrowed', 'reserved']))
             ->when($filters['item_id'] ?? null, fn ($q, $s) => $q->where('item_id', $s))
+            ->when($filters['library_id'] ?? null, fn ($q, $libraryId) => $q->whereHas('item', fn ($i) => $i->where('library_id', $libraryId)))
             ->paginate(
                 perPage: null
             );
@@ -63,7 +64,7 @@ class AccessionController extends Controller
             'quantity' => $request->input('quantity'),
         ]);
 
-        $accession = DB::transaction(function () use ($data){
+        $accession = DB::transaction(function () use ($data) {
             $accessions = collect();
             for ($i = 0; $i < (int) $data['quantity'] ?? 0; $i++) {
                 $accessions->push($this->accessionService->create($data));
@@ -71,7 +72,6 @@ class AccessionController extends Controller
 
             return $accessions;
         });
-
 
         return $this->response(
             'success',

@@ -2,7 +2,7 @@
   <div class="size-full flex-1 flex flex-col overflow-hidden">
     <SectionHeader title="Users" description="Manage all users of the system" icon="people">
       <div class="flex items-center justify-end">
-        <Button left-icon="plus-lg" variant="primary" as="link" :to="{ name: 'librarian.users.new' }">New User</Button>
+        <Button left-icon="plus-lg" variant="primary" as="link" :to="{ name: 'admin.users.new' }">New User</Button>
       </div>
     </SectionHeader>
 
@@ -38,6 +38,7 @@
             <th>Username</th>
             <th>Sex</th>
             <th class="text-left">Email</th>
+            <th>Campus</th>
             <th>Status</th>
             <th>Registration</th>
             <th>Actions</th>
@@ -56,6 +57,7 @@
               <Status :variant="parse.status(user.sex)">{{ user.sex }}</Status>
             </Td>
             <Td :data="user.email" class="text-left" />
+            <Td :data="user.campus?.name ?? null" class="text-left" />
             <Td>
               <Status :variant="parse.status(user.status)">{{ user.status }}</Status>
             </Td>

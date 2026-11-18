@@ -4,7 +4,7 @@ import axios, { type AxiosRequestConfig } from 'axios'
 import router from '@/router'
 import { authStore } from '@/stores/auth.store'
 
-const apiRoute = ''
+const apiRoute = 'http://localhost:8000'
 export const backendRoute = `${apiRoute}/api`
 export const storageRoute = `${apiRoute}/storage`
 

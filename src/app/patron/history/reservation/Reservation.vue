@@ -26,8 +26,8 @@
           <Td class="text-left" :data="holding.accession?.item?.title ?? null" />
           <Td :data="parse.formatDateTime(holding.created_at)" />
           <Td>
-            <Status :variant="holding.picked_up_at ? 'success' : 'info'">
-              {{ holding.picked_up_at ? 'Completed' : 'Awaiting pick-up' }}
+            <Status :variant="holding.status">
+              {{ holding.pickup_date ? 'Completed' : 'Awaiting pickup' }}
             </Status>
           </Td>
         </Tr>

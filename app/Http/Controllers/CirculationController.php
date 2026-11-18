@@ -10,6 +10,7 @@ use App\Models\Accession;
 use App\Models\Circulation;
 use App\Models\User;
 use App\Services\CirculationService;
+use App\Services\QueryService;
 use App\Services\ReportQueryService;
 use App\Services\ReportService;
 use Illuminate\Http\Request;
@@ -25,16 +26,15 @@ class CirculationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $circulations = Circulation::with([
-            'processor.user',
-            'patron.user',
-            'patron.patronType',
-            'accession.item',
-            'loanMode',
-            'returnReceivedBy',
-        ])->latest('borrowed_at')->paginate(request()->integer('per_page', 25));
+        $filters = QueryService::filters($request);
+
+        $circulations = Circulation::query()
+            ->when($filters['library_id'] ?? null, fn ($q, $libraryId) => $q->whereHas('accession.item', fn ($qq) => $qq->where('library_id', $libraryId)))
+            ->with(['processor.user',    'patron.user',    'patron.patronType',    'accession.item',    'loanMode',    'returnReceivedBy'])
+            ->latest('borrowed_at')
+            ->paginate(request()->integer('per_page', 25));
 
         return $this->response(
             'success',
@@ -100,7 +100,7 @@ class CirculationController extends Controller
     public function store(StoreCirculationRequest $request)
     {
         $validated = $request->validated();
-        $circulations = DB::transaction(function () use ($validated, $request) {
+        $circulations = DB::transaction(function () use ($validated) {
             $created = [];
 
             foreach ($validated['accessions'] as $accession) {

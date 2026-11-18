@@ -25,7 +25,7 @@
             <Label id="library-campus">Campus</Label>
             <Select id="library-campus" title="Campuses" v-model="form.campus_id">
               <Option value="" disabled>Select a campus where this library is located</Option>
-              <Option :value="c.id" v-for="c in campus.data">{{ c?.name }} ({{ c?.code }})</Option>
+              <Option :value="c.id" v-for="c in options.campuses">{{ c?.name }} ({{ c?.code }})</Option>
             </Select>
           </Control>
         </div>
@@ -66,13 +66,13 @@ const defaultBranch = (): Partial<Library> => ({
 
 const modal = ref<typeof Modal | null>(null)
 const library = libraryStore()
-const campus = campusStore()
+const options = optionStore()
 const pop = usePopup()
 const form = reactive(defaultBranch())
 const hasInputs = computed(() => Object.values(form).some((value) => value != null && String(value).length > 0))
 
 async function submit() {
-  const confirm = await pop.confirm({ text: `Are you sure you want to add ${form.name} to ${campus.getCampus(form.campus_id)?.name}?` })
+  const confirm = await pop.confirm({ text: `Are you sure you want to add ${form.name} to ${options.campuses?.find((i) => i === form.campus_id)?.name}?` })
 
   if (confirm.isConfirmed) {
     pop.load()

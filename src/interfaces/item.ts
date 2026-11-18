@@ -1,6 +1,7 @@
 export interface ItemParams extends BaseParams {
   item_type_id: any
   item_type_category_id: any
+  library_id: any
 }
 export interface Item {
   id: any

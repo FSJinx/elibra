@@ -1,5 +1,6 @@
 export interface HoldingParams extends BaseParams {
   patron_id: any
+  library_id: any
 }
 
 export interface Holding {

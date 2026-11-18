@@ -38,6 +38,7 @@ const model = defineModel<Patron | null>({ default: null })
 
 const patron = patronStore()
 const pop = usePopup()
+const auth = authStore()
 
 const pagination = ref<Pagination>()
 const searchPatron = ref()
@@ -46,7 +47,7 @@ const loading = ref<boolean>(false)
 async function search() {
   loading.value = true
   try {
-    const res = await patron.fetch({ query: searchPatron.value })
+    const res = await patron.fetch({ query: searchPatron.value, campus_id: auth.user?.campus?.id })
     pagination.value = res.data
   } finally {
     loading.value = false

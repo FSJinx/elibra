@@ -73,6 +73,7 @@
 <script setup lang="ts">
 const auth = authStore()
 const patron = patronStore()
+const parse = useParser()
 
 const statsData = ref<Record<string, any[]>>()
 const loading = ref<boolean>(false)
@@ -81,6 +82,8 @@ const stats = computed(() => [
   { icon: 'book', value: statsData.value?.borrow_count, label: 'Total Borrow Count', color: 'success' },
   { icon: 'clock', value: statsData.value?.due_this_week, label: 'Due this week', color: 'warning' },
   { icon: 'check-circle', value: statsData.value?.active_borrowing, label: 'Active Borrowing', color: 'restore' },
+  { icon: 'house', value: statsData.value?.pending_reservation, label: 'Pending Reservations', color: 'success' },
+  { icon: 'cash', value: parse.toMoney((statsData.value?.total_fines ?? 0) as number), label: 'Total Fines', color: 'danger' },
 ])
 
 const loans = [

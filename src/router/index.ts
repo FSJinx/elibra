@@ -13,7 +13,7 @@ import { errorRoutes } from '@/router/errorRoutes'
 
 const router = createRouter({
   // cast import.meta to any to access env in environments where ImportMeta types aren't defined
-  history: createWebHistory((import.meta as any).env.BASE_URL),
+  history: createWebHistory('/'),
   routes: [
     // Public Route
     ...publicRoute,

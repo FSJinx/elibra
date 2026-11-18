@@ -27,7 +27,7 @@ class UpdateAccessionRequest extends BaseRequest
     {
         $rules = [
             'accession_number' => ['sometimes', 'nullable', Rule::unique('accessions', 'accession_number')->ignore($this->route('accession'))],
-            'status' => ['sometimes', 'required', Rule::in(['available', 'reserved', 'on_load', 'lost', 'missing', 'archived', 'condemned'])],
+            'status' => ['sometimes', 'required', Rule::in(['available', 'reserved', 'borrowed', 'lost', 'missing', 'archived', 'condemned'])],
             'remarks' => ['sometimes', 'nullable', 'string', 'max:255'],
 
             'item_id' => ['sometimes', 'required', 'integer', Rule::exists((new Item)->getTable(), 'id')],

@@ -1,12 +1,3 @@
-const defaultParams: Readonly<SectionParams> = {
-  query: '',
-  sort: '',
-  page: 1,
-  per_page: '25',
-  order: 'asc',
-
-  library_id: '',
-}
 
 export const sectionStore = defineStore('section', {
   state: () => ({

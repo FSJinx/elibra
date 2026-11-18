@@ -46,6 +46,7 @@ class StoreUsersRequest extends BaseRequest
             $rules['campus_id'] = ['required', 'exists:campuses,id'];
 
             // For Library Admin
+            $rules['library_id'] = ['required', 'exists:libraries,id'];
         } elseif ($authUser->isAdmin()) {
             $rules['role'] = ['required', 'in:admin,librarian,patron'];
         }

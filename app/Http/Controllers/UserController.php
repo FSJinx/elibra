@@ -35,6 +35,7 @@ class UserController extends Controller
         $filters = QueryService::filters($request);
         $filters = array_merge($filters, [
             'role' => $request->query('role'),
+            'campus_id' => $filters['campus_id'],
         ]);
 
         return $this->response(data: $this->service->index($filters, $user));
@@ -53,7 +54,7 @@ class UserController extends Controller
             if ($user->isAdmin() || $user->isLibrarian()) {
                 $data = array_merge($request->all(), [
                     'campus_id' => $user->campus_id,
-                    'library_id' => $user->librarian->library_id,
+                    'library_id' => $user->librarian->library_id ?? $request->input('library_id'),
                 ]);
             }
 

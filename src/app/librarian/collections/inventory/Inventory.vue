@@ -51,11 +51,14 @@
 import NewInventory from '@/app/librarian/collections/inventory/modals/NewInventory.vue'
 
 const inventory = inventoryStore()
+const auth = authStore()
 const parse = useParser()
 
 const loading = ref<boolean>(false)
 const pagination = ref<Pagination>()
-const params = reactive<Partial<InventoryParams>>({})
+const params = reactive<Partial<InventoryParams>>({
+  library_id: auth.user?.library?.id,
+})
 
 async function search() {
   loading.value = true

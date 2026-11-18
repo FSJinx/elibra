@@ -58,11 +58,13 @@ import { formatDateTime } from '@/utils/date'
 
 const circulation = circulationStore()
 const parse = useParser()
+const auth = authStore()
 
 const pagination = ref<Pagination>()
 const loading = ref<boolean>(false)
 const params = ref<Partial<CirculationParams>>({
   query: '',
+  library_id: auth.user?.library?.id,
 })
 
 async function search() {

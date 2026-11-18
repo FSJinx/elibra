@@ -55,7 +55,7 @@ const data = ref<Pagination>()
 
 const params = reactive<Partial<SectionParams>>({
   query: '',
-  library_id: auth.user?.librarian?.library_id ?? null,
+  library_id: auth.user?.library?.id ?? null,
 })
 
 async function search() {
