@@ -1,4 +1,6 @@
-export interface PatronParams extends BaseParams {}
+export interface PatronParams extends BaseParams {
+  campus_id: any
+}
 
 export interface Patron {
   id: any

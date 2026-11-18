@@ -8,11 +8,10 @@
     </SectionHeader>
 
     <div class="flex-1 flex flex-col gap-4 p-5 overflow-y-auto scroll">
-      <!-- <Card>
-        <CardBody> </CardBody>
-      </Card> -->
-
       <Table title="Submissions" subtitle="Track theses submitted for approval." :data="pagination">
+        <template #header>
+          <Button @click="search">Search</Button>
+        </template>
         <Thead>
           <Th>No.</Th>
           <Th class="text-left">Title</Th>
@@ -60,16 +59,19 @@ import RejectSubmission from '@/app/librarian/collections/acarepo/modals/RejectS
 import ReviewSubmission from '@/app/librarian/collections/acarepo/modals/ReviewSubmission.vue'
 
 const parse = useParser()
-
+const auth = authStore()
 const acarepo = acaRepoStore()
 
 const pagination = ref<Pagination>()
 const loading = ref<boolean>(false)
+const params = reactive<Partial<AcaRepo>>({
+  library_id: auth.user?.library?.id,
+})
 
 async function search() {
   loading.value = false
   try {
-    const res = await acarepo.fetch()
+    const res = await acarepo.fetch(params)
     pagination.value = res.data
   } finally {
     loading.value = false

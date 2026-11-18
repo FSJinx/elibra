@@ -10,9 +10,11 @@ use App\Models\Accession;
 use App\Models\Circulation;
 use App\Models\User;
 use App\Services\CirculationService;
+use App\Services\QueryService;
 use App\Services\ReportQueryService;
 use App\Services\ReportService;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
 class CirculationController extends Controller
@@ -25,16 +27,64 @@ class CirculationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $circulations = Circulation::with([
-            'processor.user',
-            'patron.user',
-            'patron.patronType',
-            'accession.item',
-            'loanMode',
-            'returnReceivedBy',
-        ])->latest('borrowed_at')->paginate(request()->integer('per_page', 25));
+        $filters = QueryService::filters($request);
+
+        $query = Circulation::query()
+            ->when($filters['library_id'] ?? null, fn ($q, $libraryId) => $q->whereHas('accession.item', fn ($qq) => $qq->where('library_id', $libraryId)))
+            ->when($filters['patron_id'] ?? null, fn ($q, $patronId) => $q->where('patron_id', $patronId))
+            ->when(($filters['status'] ?? null) === 'active', fn ($q) => $q->whereIn('status', ['borrowed', 'overdue']))
+            ->when(($filters['status'] ?? null) && $filters['status'] !== 'active', fn ($q, $status) => $q->where('status', $status))
+            ->when($filters['query'] ?? null, function ($q, $search) {
+                $q->where(function ($searchQuery) use ($search) {
+                    $searchQuery->whereHas('accession', function ($accession) use ($search) {
+                        $accession->where('accession_number', 'LIKE', "%{$search}%")
+                            ->orWhereHas('item', fn ($item) => $item->where('title', 'LIKE', "%{$search}%"));
+                    })->orWhereHas('patron.user', function ($user) use ($search) {
+                        $user->whereRaw("CONCAT_WS(' ', first_name, middle_initial, last_name) LIKE ?", ["%{$search}%"])
+                            ->orWhereRaw("CONCAT_WS(' ', last_name, first_name) LIKE ?", ["%{$search}%"])
+                            ->orWhere('username', 'LIKE', "%{$search}%");
+                    });
+                });
+            })
+            ->with(['processor.user',    'patron.user',    'patron.patronType',    'accession.item',    'loanMode',    'returnReceivedBy'])
+            ->latest('borrowed_at');
+
+        if (($filters['group_by'] ?? null) === 'patron') {
+            $records = $query->get();
+            $groups = $records->groupBy(fn (Circulation $loan) => $loan->patron_id)
+                ->map(function ($loans) {
+                    $latest = $loans->sortByDesc('borrowed_at')->first();
+                    $patron = $latest->patron;
+
+                    return [
+                        'patron_id' => $patron?->id,
+                        'patron' => $patron,
+                        'quantity' => $loans->count(),
+                        'latest_borrowed_at' => $latest->borrowed_at,
+                        'latest_due_at' => $loans->max('due_at'),
+                        'overdue_quantity' => $loans->where('status', 'overdue')->count(),
+                        'fine_charged' => (float) $loans->sum('fine_charged'),
+                        'loans' => $loans->values(),
+                    ];
+                })
+                ->sortByDesc('latest_borrowed_at')
+                ->values();
+
+            $page = max(1, request()->integer('page', 1));
+            $perPage = request()->integer('per_page', 25);
+            $items = $groups->forPage($page, $perPage)->values();
+            $circulations = new LengthAwarePaginator(
+                $items,
+                $groups->count(),
+                $perPage,
+                $page,
+                ['path' => request()->url(), 'query' => request()->query()]
+            );
+        } else {
+            $circulations = $query->paginate(request()->integer('per_page', 25));
+        }
 
         return $this->response(
             'success',
@@ -100,7 +150,7 @@ class CirculationController extends Controller
     public function store(StoreCirculationRequest $request)
     {
         $validated = $request->validated();
-        $circulations = DB::transaction(function () use ($validated, $request) {
+        $circulations = DB::transaction(function () use ($validated) {
             $created = [];
 
             foreach ($validated['accessions'] as $accession) {

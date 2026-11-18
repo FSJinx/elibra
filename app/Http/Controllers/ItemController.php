@@ -21,6 +21,7 @@ class ItemController extends Controller
 
     public function index(Request $request)
     {
+
         $filters = QueryService::filters($request);
 
         // Complete Filter
@@ -36,42 +37,28 @@ class ItemController extends Controller
             $filters,
             now()->addHour(),
             function () use ($filters) {
-                $item = Item::query()->with('coverMedia');
-
-                $search = $filters['search'] ?? null;
+                return Item::query()
 
                 // ============== Search ============
-                $item->when($search, function ($q) use ($search) {
-                    return $q->where(function ($qq) use ($search) {
-                        return $qq->where('title', 'LIKE', "%{$search}%")
-                            ->orWhere('subtitle', 'LIKE', "%{$search}%")
-                            ->orWhere('isbn_issn', 'LIKE', "%{$search}%")
-                            ->orWhere('call_number', 'LIKE', "%{$search}%")
-                            ->orWhereHas('authors', fn ($a) => $a->whereRaw("CONCAT_WS(' ', first_name, last_name) LIKE ?", ["%{$search}%"])->orWhereRaw("CONCAT_WS(' ', last_name, first_name) LIKE ?", ["%{$search}%"]))
-                            ->orWhereHas('accessions', fn ($qq2) => $qq2->where('accession_number', 'LIKE', "%{$search}%"));
-                    });
-                });
+                    ->when($filters['search'] ?? null, fn ($q, $search) => $q->where('title', 'LIKE', "%{$search}%")
+                        ->orWhere('subtitle', 'LIKE', "%{$search}%")
+                        ->orWhere('isbn_issn', 'LIKE', "%{$search}%")
+                        ->orWhere('call_number', 'LIKE', "%{$search}%")
+                        ->orWhereRaw('JSON_SEARCH(keywords, "one", ?) IS NOT NULL', ["%{$search}%"])
+                        ->orWhereHas('authors', fn ($a) => $a->whereRaw("CONCAT_WS(' ', first_name, last_name) LIKE ?", ["%{$search}%"])->orWhereRaw("CONCAT_WS(' ', last_name, first_name) LIKE ?", ["%{$search}%"]))
+                        ->orWhereHas('accessions', fn ($qq2) => $qq2->where('accession_number', 'LIKE', "%{$search}%"))
+                    )
 
-                // ============== Item Type ============
-                $item->when($filters['item_type_id'] ?? null, function ($i, $param) {
-                    $i->where('item_type_id', $param);
-                });
+                    ->where('library_id', $filters['library_id'])
 
-                // ============== Item Category ============
-                $item->when($filters['item_type_category_id'] ?? null, function ($i, $param) {
-                    $i->where('item_type_category_id', $param);
-                });
+                    // Filters
+                    ->when($filters['item_type_id'] ?? null, fn ($i, $type) => $i->where('item_type_id', $type))
+                    ->when($filters['item_type_category_id'] ?? null, fn ($i, $category) => $i->where('item_type_category_id', $category))
+                    // ->when($filters['loanable'] ?? null, fn ($q) => $q->whereHas('accessions', fn ($qq) => $qq->whereNotNull('accession_number')))
 
-                return $item
+                    ->with(['coverMedia'])
                     ->orderBy($filters['sort'], $filters['order'])
-                    ->paginate(
-                        $filters['per_page'],
-                        [
-                            '*',
-                        ],
-                        'page',
-                        $filters['page']
-                    );
+                    ->paginate($filters['per_page'], ['*'], 'page', $filters['page']);
             }
 
         );

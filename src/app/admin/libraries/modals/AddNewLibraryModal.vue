@@ -1,5 +1,5 @@
 <template>
-  <Button variant="primary" icon="plus-lg" @click="modal?.open()">New Library</Button>
+  <Button variant="primary" icon="plus-lg" @click="open">New Library</Button>
   <Modal ref="modal" size="large" :has-inputs="hasInputs">
     <ModalHeader use-default-layout title="New Library" subtitle="Add new library to the record" icon="building-fill-add" />
 
@@ -7,7 +7,7 @@
       <Form id="library-form" class="flex flex-col p-5 gap-5" @submit="submit">
         <h1 class="text-sm uppercase tracking-wider text-muted-foreground font-medium">Library Information</h1>
 
-        <div class="grid grid-cols-2 gap-5">
+        <div class="grid grid-cols-2 items-start gap-5">
           <Control col required class="col-span-2">
             <Label id="library-name">Name</Label>
             <Input id="library-name" placeholder="e.g. University Library" v-model="form.name" />
@@ -25,7 +25,7 @@
             <Label id="library-campus">Campus</Label>
             <Select id="library-campus" title="Campuses" v-model="form.campus_id">
               <Option value="" disabled>Select a campus where this library is located</Option>
-              <Option :value="c.id" v-for="c in campus.data">{{ c?.name }} ({{ c?.code }})</Option>
+              <Option :value="c.id" v-for="c in options.campuses">{{ c?.name }} ({{ c?.code }})</Option>
             </Select>
           </Control>
         </div>
@@ -55,7 +55,13 @@
 import Form from '@/components/form/Form.vue'
 import Modal from '@/components/my/Modal.vue'
 
-const defaultBranch = (): Partial<Library> => ({
+const emit = defineEmits(['refresh'])
+
+const library = libraryStore()
+const options = optionStore()
+const pop = usePopup()
+
+const defaultForm = (): Partial<Library> => ({
   name: '',
   phone: '',
   email: '',
@@ -64,15 +70,28 @@ const defaultBranch = (): Partial<Library> => ({
   closing_hour: '',
 })
 
-const modal = ref<typeof Modal | null>(null)
-const library = libraryStore()
-const campus = campusStore()
-const pop = usePopup()
-const form = reactive(defaultBranch())
+const modal = ref<InstanceType<typeof Modal>>()
+const form = reactive(defaultForm())
 const hasInputs = computed(() => Object.values(form).some((value) => value != null && String(value).length > 0))
 
+async function open() {
+  await options.load(['campuses', 'campuses'])
+  modal.value?.open()
+}
+
+async function close() {
+  if (hasInputs.value) {
+    const confirm = await pop.confirm({ text: 'You have unsaved changes, do you really want to cancel adding?' })
+    if (!confirm.isConfirmed) return
+
+    Object.assign(form, defaultForm())
+  }
+
+  nextTick(() => modal.value?.close())
+}
+
 async function submit() {
-  const confirm = await pop.confirm({ text: `Are you sure you want to add ${form.name} to ${campus.getCampus(form.campus_id)?.name}?` })
+  const confirm = await pop.confirm({ text: `Are you sure you want to add ${form.name} to ${options.campuses?.find((i) => i === form.campus_id)?.name}?` })
 
   if (confirm.isConfirmed) {
     pop.load()
@@ -81,25 +100,15 @@ async function submit() {
       const res = await library.create(form)
 
       if (res?.status === 'success') {
-        Object.assign(form, defaultBranch())
+        Object.assign(form, defaultForm())
         nextTick(() => modal?.value?.close())
+        emit('refresh')
         return pop.success(res?.message)
       }
     } catch (e: any) {
       throw e
     }
   }
-}
-
-async function close() {
-  if (hasInputs.value) {
-    const confirm = await pop.confirm({ text: 'You have unsaved changes, do you really want to cancel adding?' })
-    if (!confirm.isConfirmed) return
-
-    Object.assign(form, defaultBranch())
-  }
-
-  nextTick(() => modal.value?.close())
 }
 </script>
 

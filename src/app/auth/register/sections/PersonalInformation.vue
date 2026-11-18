@@ -52,4 +52,6 @@ const props = defineProps<{
 const options = optionStore()
 
 const hasCampus = computed(() => options.patron_types?.find((i) => i.id === props.form.patron_type_id)?.has_campus ?? false)
+
+onMounted(async () => await options.load(['patron_types', 'campuses']))
 </script>

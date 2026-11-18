@@ -22,12 +22,14 @@ const state = () => ({
   url: 'option',
 })
 
+const pop = usePopup()
+
 export const optionStore = defineStore('option', {
   state,
 
   actions: {
     async fetch(key: Key, forced = false) {
-      if (this[key] && !forced) return
+      // if (this[key] && !forced) return
       this[key] = (await get(`${this.url}/${key}`)).data
     },
 
@@ -37,6 +39,15 @@ export const optionStore = defineStore('option', {
           .filter((k) => k !== 'url')
           .map((k) => this.fetch(k as Key)),
       )
+    },
+
+    async load(keys: Key[]) {
+      try {
+        pop.load()
+        await Promise.all(keys.map((key) => this.fetch(key)))
+      } finally {
+        pop.unload()
+      }
     },
   },
 })

@@ -1,5 +1,5 @@
 <template>
-  <Button variant="primary" data-title="Add new acquisition record" @click="modal?.open()" icon="plus-lg">New Acquisition</Button>
+  <Button variant="primary" data-title="Add new acquisition record" @click="open" icon="plus-lg">New Acquisition</Button>
 
   <Modal ref="modal" size="xlarge" :has-inputs="hasInputs">
     <ModalHeader use-default-layout title="Acquisition Form" subtitle="Create new acquisition transaction" icon="building" />
@@ -45,8 +45,11 @@
 import Modal from '@/components/my/Modal.vue'
 import { reactive } from 'vue'
 
+const emit = defineEmits(['refresh'])
+
 const pop = usePopup()
 const options = optionStore()
+const acquisition = acquisitionStore()
 
 const emptyForm = (): Partial<Acquisition> => ({
   id: null,
@@ -56,14 +59,17 @@ const emptyForm = (): Partial<Acquisition> => ({
   remarks: '',
 })
 
-const modal = ref<typeof Modal | null>()
-const acquisition = acquisitionStore()
+const modal = ref<InstanceType<typeof Modal>>()
 
 const errors = reactive<Partial<Acquisition>>(emptyForm())
 const form = reactive<Partial<Acquisition>>(emptyForm())
 const today = new Date().toISOString().split('T')[0]
 const hasInputs = computed(() => [form.dealer, form.acquisition_date, form.acquisition_mode, form.receiver_id, form.remarks].some((value) => String(value ?? '').trim().length > 0))
 
+async function open() {
+  await options.load(['acquisition_modes'])
+  modal.value?.open()
+}
 
 const clearForm = async () => {
   if (!hasInputs.value) {
@@ -93,10 +99,9 @@ async function submitForm() {
       const res = await acquisition.create(form)
       Object.assign(form, emptyForm())
       Object.assign(errors, emptyForm())
-      nextTick(() => {
-        modal.value?.close()
-      })
+      nextTick(() => modal.value?.close())
       pop.success(res.message)
+      emit('refresh')
     } catch (e: any) {
       Object.assign(errors, e.response.data.errors ?? {})
 

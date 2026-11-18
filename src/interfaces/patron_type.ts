@@ -3,11 +3,11 @@ export interface PatronType {
   key: string
   name: string
   description: string
-  validity_period: string
+  validity_period: number
 
-  has_campus: string
-  has_department: string
-  has_program: string
+  has_campus: boolean
+  has_department: boolean
+  has_program: boolean
 
   created_at: string
   updated_at: string
@@ -15,3 +15,5 @@ export interface PatronType {
 
   [key: string]: any
 }
+
+export interface StorePatronType extends PatronType {}

@@ -149,6 +149,7 @@ class UserService
                         ->orWhere('email', 'LIKE', "%$s%"))
                 // Filters
                     ->when($filters['role'], fn ($q, $r) => $q->where('role', $r))
+                    ->when($filters['campus_id'], fn ($q, $r) => $q->where('campus_id', $r))
                 // Relationship and Pagination
                     ->with(['campus', 'library', 'librarian.library', 'patron.program', 'patron.patronType'])
                     ->orderBy($filters['sort'], $filters['order'])

@@ -15,7 +15,6 @@
             <CatalogFilter :params="params" @filterApplied="apply" />
             <Button @click="reset">Reset</Button>
           </Form>
-
         </template>
         <Thead>
           <tr>
@@ -71,6 +70,7 @@ import { backendRoute } from '@/plugins/axios'
 const items = itemStore()
 const options = optionStore()
 const parse = useParser()
+const auth = authStore()
 
 const defaultParams = (): Readonly<ItemParams> => ({
   query: '',
@@ -81,6 +81,7 @@ const defaultParams = (): Readonly<ItemParams> => ({
 
   item_type_id: '',
   item_type_category_id: '',
+  library_id: auth.user?.library?.id ?? null,
 })
 
 const loading = ref<boolean>(false)

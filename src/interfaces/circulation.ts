@@ -1,6 +1,8 @@
 export interface CirculationParams extends BaseParams {
   library_id: any
   patron_id: any
+  status: 'active' | 'borrowed' | 'returned' | 'overdue' | 'lost' | 'cancelled' | ''
+  group_by: 'patron' | ''
 }
 
 export interface CheckOut {

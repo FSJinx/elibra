@@ -2,6 +2,7 @@ export interface AccessionParams extends BaseParams {
   status: string
   item_id: any
   loanable: boolean
+  library_id: any
 }
 
 export interface Accession {

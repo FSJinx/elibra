@@ -1,7 +1,9 @@
 const url = 'librarian/dashboard'
 
-export const useLibrarianDashboardStore = defineStore('librarian_dashboard', {
+export const librarianDashboardStore = defineStore('librarian_dashboard', {
   state: () => ({
+    loading: false,
+    summary: null as any,
     totalCollections: 0,
     totalPatrons: 0,
     totalLibrarians: 0,
@@ -15,6 +17,16 @@ export const useLibrarianDashboardStore = defineStore('librarian_dashboard', {
   getters: {},
 
   actions: {
+    async fetchSummary() {
+      this.loading = true
+      try {
+        const response = await get<{ data?: any }>(`${url}/summary`)
+        this.summary = response.data ?? null
+      } finally {
+        this.loading = false
+      }
+    },
+
     async fetchTotalCollections() {
       this.loadingTotalCollections = true
 
@@ -60,7 +72,13 @@ export const useLibrarianDashboardStore = defineStore('librarian_dashboard', {
     },
 
     async fetch() {
-      await Promise.all([this.fetchTotalCollections(), this.fetchTotalPatrons(), this.fetchTotalLibrarians(), this.fetchTotalCampuses()])
+      await Promise.all([
+        this.fetchSummary(),
+        this.fetchTotalCollections(),
+        this.fetchTotalPatrons(),
+        this.fetchTotalLibrarians(),
+        this.fetchTotalCampuses(),
+      ])
     },
   },
 })

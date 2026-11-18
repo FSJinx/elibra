@@ -1,4 +1,6 @@
-export interface InventoryParams extends BaseParams {}
+export interface InventoryParams extends BaseParams {
+  library_id: any
+}
 
 export interface Inventory {
   id: any

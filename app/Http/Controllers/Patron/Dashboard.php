@@ -18,6 +18,7 @@ class Dashboard extends Controller
             'due_this_week' => $this->dueThisWeek($user->patron),
             'borrow_count' => $this->borrowCount($user->patron),
             'pending_reservation' => $this->pendingReservation($user->patron),
+            'total_fines' => $this->totalFine($user->patron),
         ];
 
         return $this->response(data: $data);
@@ -41,5 +42,10 @@ class Dashboard extends Controller
     public function pendingReservation(Patron $patron)
     {
         return Holding::query()->where('reserver_id', $patron->id)->where('status', 'pending')->count('id');
+    }
+
+    public function totalFine(Patron $patron)
+    {
+        return Circulation::query()->where('patron_id', $patron->id)->sum('fine_charged');
     }
 }

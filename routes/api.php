@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AcaRepoController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AccessionController;
 use App\Http\Controllers\AcquisitionController;
 use App\Http\Controllers\AcquisitionLinesController;
@@ -395,6 +396,11 @@ Route::group(['prefix' => '/report'], function () {
 
 });
 
+// ============== SUPER ADMIN DASHBOARD ==================
+Route::group(['prefix' => '/admin/dashboard', 'middleware' => ['jwt.auth', 'role:super_admin']], function () {
+    Route::get('summary', [AdminController::class, 'dashboard']);
+});
+
 // ============== SECTION ROUTE ==================
 Route::group(['prefix' => '/section', 'middleware' => 'jwt.auth'], function () {
     // Get
@@ -447,6 +453,7 @@ Route::group(['prefix' => '/librarian', 'middleware' => ['jwt.auth', 'role:super
     // ============== DASHBOARD ROUTE ==================
     Route::group(['prefix' => 'dashboard'], function () {
         // Get
+        Route::get('summary', [DashboardController::class, 'summary']);
         Route::get('total-collections', [DashboardController::class, 'totalCollections']);
 
         Route::get('total-patrons', [DashboardController::class, 'totalPatrons']);

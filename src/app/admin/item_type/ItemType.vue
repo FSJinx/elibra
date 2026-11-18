@@ -3,18 +3,17 @@
     <SectionHeader title="Item Types" description="Manage item types for item classification and advanced searching" icon="tags" />
 
     <div class="flex-1 flex flex-col gap-3 p-5">
-      <div class="grid grid-cols-2 gap-2 p-5 bg-background border border-border rounded-xl">
-        <div class="flex items-center gap-2">
-          <Input id="search-item-type" class="max-w-100" placeholder="Search item type..." />
-          <Button @click="item_type.fetch(true)">Refresh</Button>
-        </div>
-
-        <div class="flex items-center justify-end gap-2">
-          <NewItemTypeModal />
-        </div>
+      <div class="ml-auto">
+        <NewItemTypeModal />
       </div>
 
-      <Table title="Item Types Table" subtitle="List of all item types" :data-length="item_type.data?.length">
+      <Table title="Item Types Table" subtitle="List of all item types" :loading>
+        <template #header>
+          <Form class="flex items-center gap-2 w-full justify-end" id="search-item-type" @submit="search">
+            <Input id="search-item-type" class="max-w-100" placeholder="Search item type..." />
+            <Button @click="item_type.fetch(true)">Refresh</Button>
+          </Form>
+        </template>
         <Thead>
           <tr>
             <th>No.</th>
@@ -50,6 +49,7 @@ import EditItemTypeModal from '@/app/admin/item_type/modals/UpdateItemTypeModal.
 const item_type = useAdminItemTypeStore()
 const parse = useParser()
 const pop = usePopup()
+const loading = ref<boolean>(false)
 
 async function remove(type: ItemType) {
   const confirm = await pop.confirm({ text: `Are you sure you want to delete ${type.name}?` })
@@ -65,9 +65,11 @@ async function remove(type: ItemType) {
   }
 }
 
-onBeforeMount(async () => {
+async function search(params: StoreItemType) {
   await item_type.fetch()
-})
+}
+
+onMounted(() => optionStore)
 </script>
 
 <style scoped></style>

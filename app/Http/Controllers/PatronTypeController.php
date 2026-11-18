@@ -55,7 +55,15 @@ class PatronTypeController extends Controller
      */
     public function store(StorePatronTypeRequest $request)
     {
-        //
+        $patronType = PatronType::create($request->validated());
+        CacheService::invalidate(CacheService::PATRON_TYPES);
+
+        return $this->response(
+            'success',
+            'Patron type created successfully',
+            $patronType->toArray(),
+            201
+        );
     }
 
     /**
