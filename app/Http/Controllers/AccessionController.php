@@ -34,7 +34,7 @@ class AccessionController extends Controller
         $patron = Accession::query()->with(['item.itemType', 'item.coverMedia'])
             ->when($filters['search'] ?? null, fn ($q, $s) => $q->where('accession_number', 'LIKE', "%$s%"))
             // ->when($filters['loanable'], fn ($q, $s) => $q->whereNotNull('accession_number')->where('status', 'available'))
-            ->when($filters['loanable'], fn ($q) => $q->whereNotNull('accession_number')->whereIn('status', ['available', 'borrowed', 'reserved']))
+            ->when($filters['loanable'], fn ($q) => $q->whereNotNull('accession_number')->where('status', 'available'))
             ->when($filters['item_id'] ?? null, fn ($q, $s) => $q->where('item_id', $s))
             ->when($filters['library_id'] ?? null, fn ($q, $libraryId) => $q->whereHas('item', fn ($i) => $i->where('library_id', $libraryId)))
             ->paginate(
