@@ -31,6 +31,7 @@ use App\Http\Controllers\LoanModeController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\Opac\OpacController;
 use App\Http\Controllers\OpacSearchController;
+use App\Http\Controllers\Patron\Dashboard;
 use App\Http\Controllers\PatronController;
 use App\Http\Controllers\PatronTypeController;
 use App\Http\Controllers\PatronTypeLoanPolicyController;
@@ -64,7 +65,7 @@ Route::group(['prefix' => '/auth'], function () {
     });
 });
 
-Route::get('test-pdf',  fn () => Pdf::loadHtml('<h1>Hello PDF</h1>')->stream('test.pdf'));
+Route::get('test-pdf', fn () => Pdf::loadHtml('<h1>Hello PDF</h1>')->stream('test.pdf'));
 
 /**
  *      Public Routes
@@ -477,6 +478,11 @@ Route::group(['prefix' => '/user', 'middleware' => ['jwt.auth', 'role:super_admi
 });
 
 Route::group(['prefix' => '/patron'], function () {
+    Route::group(['prefix' => 'dashboard'], function () {
+        Route::get('', [Dashboard::class, 'index'])->middleware('throttle:read');
+
+    });
+
     Route::get('', [PatronController::class, 'index'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
     Route::post('', [PatronController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
     Route::put('{patron}', [PatronController::class, 'update'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
@@ -522,7 +528,7 @@ Route::group(['prefix' => '/circulation'], function () {
     Route::get('', [CirculationController::class, 'index'])->middleware('jwt.auth', 'throttle:read');
     Route::get('review', [CirculationController::class, 'preview'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
     Route::get('generateReport', [CirculationController::class, 'generateReport'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
-    
+
     Route::get('{circulation}', [CirculationController::class, 'show'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
 
     Route::post('', [CirculationController::class, 'store'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');

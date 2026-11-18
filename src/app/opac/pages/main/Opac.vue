@@ -1,13 +1,11 @@
 <template>
-  <div class="size-full flex justify-center gap-3 mx-auto w-full p-5 overflow-hidden">
-    <OpacFilter v-model:params="params" @apply="fetch" @reset="reset" />
-    <OpacMain v-model:params="params" :data="pagination" :loading="loading" :error="error" @search="fetch" />
+  <div class="size-full flex justify-center gap-3 mx-auto p-5 overflow-hidden">
+    <OpacMain v-model:params="params" :data="pagination" :loading="loading" :error="error" @search="fetch" @reset="reset" />
   </div>
   <!-- <OpacHistory /> -->
 </template>
 
 <script setup lang="ts">
-import OpacFilter from '@/app/opac/pages/main/OpacFilter.vue'
 import OpacMain from '@/app/opac/pages/main/OpacMain.vue'
 
 const route = useRoute()

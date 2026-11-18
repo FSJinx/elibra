@@ -70,11 +70,12 @@ class AcquisitionLinesService
             $acquisitionLine->update(Arr::only($data, self::fields()));
 
             if ($newQuantity > $oldQuantity) {
-                $this->accessionService->create([
-                    'item_id' => $acquisitionLine->item_id,
-                    'acquisition_line_id' => $acquisitionLine->id,
-                    'quantity' => $newQuantity - $oldQuantity,
-                ]);
+                for ($i = 0; $i < $newQuantity - $oldQuantity; $i++) {
+                    $this->accessionService->create([
+                        'item_id' => $acquisitionLine->item_id,
+                        'acquisition_line_id' => $acquisitionLine->id,
+                    ]);
+                }
             } elseif ($newQuantity < $oldQuantity) {
                 $accessions = Accession::where('acquisition_line_id', $acquisitionLine->id)
                     ->where('status', 'available')

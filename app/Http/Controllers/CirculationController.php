@@ -108,7 +108,7 @@ class CirculationController extends Controller
                     'patron_id' => $validated['patron']['id'],
                     'accession_id' => $accession['id'],
                     'loan_mode_id' => $validated['loan_mode_id'],
-                ], $request->user());
+                ], $this->user());
             }
 
             return $created;

@@ -33,7 +33,7 @@
       <Form id="reservation-form" @submit="reserve">
         <Control id="form-pickup_date" col required>
           <Label> Date of Pickup</Label>
-          <DatePicker v-model="form.expected_pickup_date" />
+          <DatePicker v-model="form.expected_pickup_date" :min="new Date().toLocaleDateString('en-CA')" />
         </Control>
       </Form>
     </ModalBody>
@@ -57,6 +57,7 @@ const holding = holdingStore()
 
 const params = reactive<Partial<AccessionParams>>({
   loanable: true,
+  item_id: props.data?.id,
 })
 const modal = ref<InstanceType<typeof Modal>>()
 const loading = ref<boolean>(false)
