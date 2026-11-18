@@ -8,6 +8,7 @@ use App\Models\AttendanceLogs;
 use App\Services\AttendanceLogsService;
 use App\Services\QueryService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AttendanceLogsController extends Controller
 {
@@ -42,6 +43,85 @@ class AttendanceLogsController extends Controller
             );
 
         return $this->response(data: $data);
+    }
+
+    public function analytics(Request $request)
+    {
+        $libraryId = $request->integer('library_id');
+        $sectionId = $request->integer('section_id') ?: null;
+        $date = now()->toDateString();
+
+        $base = AttendanceLogs::query()
+            ->where('library_id', $libraryId)
+            ->when($sectionId, fn ($query) => $query->where('section_id', $sectionId))
+            ->whereDate('created_at', $date);
+
+        $scopeLabel = $sectionId
+            ? \App\Models\Sections::query()->whereKey($sectionId)->where('library_id', $libraryId)->value('name') ?? 'Library Section'
+            : 'General / Overall';
+
+        $hourly = [];
+        for ($hour = 7; $hour <= 21; $hour++) {
+            $male = (clone $base)
+                ->whereRaw('HOUR(created_at) = ?', [$hour])
+                ->whereHas('patron.user', fn ($query) => $query->where('sex', 'male'))
+                ->count();
+
+            $female = (clone $base)
+                ->whereRaw('HOUR(created_at) = ?', [$hour])
+                ->whereHas('patron.user', fn ($query) => $query->where('sex', 'female'))
+                ->count();
+
+            $hourly[] = [
+                'hour' => $hour,
+                'label' => now()->setTime($hour, 0)->format('g A'),
+                'male' => $male,
+                'female' => $female,
+                'total' => $male + $female,
+            ];
+        }
+
+        $statusBreakdown = (clone $base)
+            ->select('status', DB::raw('COUNT(*) as total'))
+            ->groupBy('status')
+            ->get()
+            ->map(fn ($row) => ['status' => $row->status, 'total' => (int) $row->total])
+            ->values();
+
+        $sectionBreakdown = (clone $base)
+            ->select('status', DB::raw('COUNT(*) as total'))
+            ->groupBy('status')
+            ->get()
+            ->map(fn ($row) => ['name' => $row->status === 'in' ? 'Checked in' : 'Checked out', 'total' => (int) $row->total])
+            ->values();
+
+        $topPatrons = (clone $base)
+            ->select('patron_id', DB::raw('COUNT(*) as total'))
+            ->whereNotNull('patron_id')
+            ->groupBy('patron_id')
+            ->orderByDesc('total')
+            ->with(['patron.user:id,last_name,first_name,username', 'patron.patronType:id,name'])
+            ->limit(8)
+            ->get()
+            ->map(fn (AttendanceLogs $log) => [
+                'name' => $log->patron?->user?->name->full ?? 'Unknown patron',
+                'username' => $log->patron?->user?->username,
+                'patron_type' => $log->patron?->patronType?->name,
+                'total' => (int) $log->total,
+            ])
+            ->values();
+
+        return $this->response(data: [
+            'date' => $date,
+            'scope_label' => $scopeLabel,
+            'total' => (clone $base)->count(),
+            'checked_in' => (clone $base)->where('status', 'in')->count(),
+            'checked_out' => (clone $base)->where('status', 'out')->count(),
+            'hourly' => $hourly,
+            'statuses' => $statusBreakdown,
+            'sections' => $sectionBreakdown,
+            'top_patrons' => $topPatrons,
+        ]);
     }
 
     /**

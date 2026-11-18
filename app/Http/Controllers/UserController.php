@@ -7,6 +7,11 @@ use App\Http\Requests\StoreReportRequest;
 use App\Http\Requests\StoreUsersRequest;
 use App\Http\Requests\UpdateUsersRequest;
 use App\Models\User;
+use App\Models\Librarian;
+use App\Models\Patron;
+use App\Models\Circulation;
+use App\Models\Holding;
+use App\Models\AttendanceLogs;
 use App\Services\CacheService;
 use App\Services\QueryService;
 use App\Services\ReportQueryService;
@@ -264,7 +269,22 @@ class UserController extends Controller
             ->when($filters['created_from'], fn ($q, $d) => $q->whereDate('created_at', '>=', $d))
             ->when($filters['created_to'], fn ($q, $d) => $q->whereDate('created_at', '<=', $d))
             ->when($filters['roles'] ?? null, fn ($q, $roles) => $q->whereIn('role', $roles))
-            ->where('campus_id', $user->campus_id)
+            ->when(
+                $user->librarian?->library_id,
+                function ($query) use ($user) {
+                    $libraryId = $user->librarian->library_id;
+                    $staffUserIds = Librarian::where('library_id', $libraryId)->pluck('user_id');
+                    $patronIds = Circulation::whereHas('accession.item', fn ($item) => $item->where('library_id', $libraryId))
+                        ->distinct()->pluck('patron_id')
+                        ->merge(Holding::whereHas('accession.item', fn ($item) => $item->where('library_id', $libraryId))->distinct()->pluck('reserver_id'))
+                        ->merge(AttendanceLogs::where('library_id', $libraryId)->distinct()->pluck('patron_id'))
+                        ->filter()->unique();
+                    $patronUserIds = Patron::whereIn('id', $patronIds)->pluck('user_id');
+
+                    $query->whereIn('id', $staffUserIds->merge($patronUserIds)->filter()->unique());
+                },
+                fn ($query) => $query->where('campus_id', $user->campus_id)
+            )
             // ->with(['patron', 'librarian'])
             ->orderBy('last_name', 'asc')
             ->get()

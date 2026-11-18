@@ -17,5 +17,9 @@ export const reportStore = defineStore('reports', {
       const res = await post(`${this.url}`, payload)
       return res
     },
+
+    async generate(type: string, payload: StoreReport) {
+      return await post(`${this.url}/generate/${type}`, payload)
+    },
   },
 })

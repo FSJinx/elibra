@@ -393,6 +393,7 @@ Route::group(['prefix' => '/report'], function () {
 
     // Post
     Route::post('', [ReportController::class, 'store'])->middleware('jwt.auth', 'throttle:write');
+    Route::post('generate/{type}', [ReportController::class, 'generate'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
 
 });
 
@@ -523,6 +524,7 @@ Route::group(['prefix' => '/patron-type-loan-policy'], function () {
 
 Route::group(['prefix' => '/attendance'], function () {
     Route::get('', [AttendanceLogsController::class, 'index'])->middleware('jwt.auth', 'throttle:read');
+    Route::get('analytics', [AttendanceLogsController::class, 'analytics'])->middleware('jwt.auth', 'throttle:read');
     Route::get('{attendanceLogs}', [AttendanceLogsController::class, 'show'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
 
     Route::post('', [AttendanceLogsController::class, 'store'])->withoutMiddleware(['jwt.auth', 'role:super_admin,admin,librarian'])->middleware('throttle:write');

@@ -63,7 +63,7 @@ class CirculationController extends Controller
                         'patron' => $patron,
                         'quantity' => $loans->count(),
                         'latest_borrowed_at' => $latest->borrowed_at,
-                        'latest_due_at' => $loans->max('due_at'),
+                        'latest_due_at' => $latest->due_at,
                         'overdue_quantity' => $loans->where('status', 'overdue')->count(),
                         'fine_charged' => (float) $loans->sum('fine_charged'),
                         'loans' => $loans->values(),
@@ -259,8 +259,10 @@ class CirculationController extends Controller
     public function generateReport(StoreReportRequest $request)
     {
         $filters = ReportQueryService::filters(ReportType::Circulation, $request);
+        $libraryId = $this->user()->librarian?->library_id;
 
         $data = Circulation::query()
+            ->when($libraryId, fn ($q) => $q->whereHas('accession.item', fn ($item) => $item->where('library_id', $libraryId)))
             ->when($filters['created_from'], fn ($q, $d) => $q->whereDate('created_at', '>=', $d))
             ->when($filters['created_to'], fn ($q, $d) => $q->whereDate('created_at', '<=', $d))
             ->with(['accession.item', 'patron.user', 'patron.patronType', 'processor.user'])

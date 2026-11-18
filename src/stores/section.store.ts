@@ -9,7 +9,7 @@ export const sectionStore = defineStore('section', {
 
   actions: {
     // =========== ACTIONS ============
-    async fetch(params: Partial<SectionParams>) {
+    async fetch(params?: Partial<SectionParams>) {
       const res = await get(this.url, params)
       this.data = res.data.data
       return res

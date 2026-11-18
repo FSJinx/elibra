@@ -45,6 +45,6 @@ class Acquisition extends Model
 
     public function acquisition_lines()
     {
-        return $this->hasOne(AcquisitionLines::class);
+        return $this->hasMany(AcquisitionLines::class);
     }
 }

@@ -33,8 +33,6 @@ class DatabaseSeeder extends Seeder
             ProgramsSeeder::class,
             UsersSeeder::class,
             
-            PermissionSeeder::class,
-            SystemSeeder::class,
             PublisherSeeder::class,
             AuthorSeeder::class,
             ItemSeeder::class,

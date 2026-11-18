@@ -47,7 +47,7 @@
         </Tbody>
         <template #footer />
       </Table>
-      <PatronHistoryModal ref="historyModal" :patron="historyPatron" />
+      <PatronHistoryModal ref="historyModal" :patron="historyPatron" @refresh="search" />
     </div>
   </div>
 </template>

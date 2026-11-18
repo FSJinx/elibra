@@ -1,13 +1,8 @@
 <template>
-  <Modal ref="modal" size="large">
-    <ModalHeader
-      use-default-layout
-      :title="patronName"
-      :subtitle="`Borrowing history · ${patronType}`"
-      icon="clock-history"
-    />
+  <Modal ref="modal" size="2xlarge">
+    <ModalHeader use-default-layout :title="patronName" :subtitle="`Borrowing history · ${patronType}`" icon="clock-history" />
     <ModalBody>
-      <Table title="Borrowing History" subtitle="Latest transactions appear first" :data="pagination">
+      <Table class="border-0!" title="Borrowing History" subtitle="Latest transactions appear first" :data="pagination">
         <Thead>
           <tr>
             <Th>No</Th>
@@ -32,8 +27,8 @@
               <Status :variant="loan.status">{{ loan.status }}</Status>
             </Td>
             <Td class="space-x-2">
-              <ReturnButton :data="loan" @refresh="search" v-if="['borrowed', 'overdue'].includes(loan.status)" />
-              <RenewButton :data="loan" @refresh="search" v-if="loan.status === 'borrowed'" />
+              <ReturnButton :data="loan" @refresh="refreshHistory" v-if="['borrowed', 'overdue'].includes(loan.status)" />
+              <RenewButton :data="loan" @refresh="refreshHistory" v-if="loan.status === 'borrowed'" />
             </Td>
           </Tr>
         </Tbody>
@@ -52,6 +47,7 @@ const props = defineProps<{ patron: Patron | null }>()
 const modal = ref<InstanceType<typeof Modal>>()
 const auth = authStore()
 const parse = useParser()
+const emit = defineEmits(['refresh'])
 
 const loading = ref(false)
 const pagination = ref<Pagination>()
@@ -65,6 +61,11 @@ function open() {
   search()
 }
 
+async function refreshHistory() {
+  await search()
+  emit('refresh')
+}
+
 async function search() {
   if (!props.patron?.id) return
 
@@ -76,9 +77,7 @@ async function search() {
       per_page: 100,
     })
     pagination.value = res.data
-    history.value = [...(res.data?.data ?? [])].sort((a, b) =>
-      new Date(b.borrowed_at).getTime() - new Date(a.borrowed_at).getTime(),
-    )
+    history.value = [...(res.data?.data ?? [])].sort((a, b) => new Date(b.borrowed_at).getTime() - new Date(a.borrowed_at).getTime())
   } finally {
     loading.value = false
   }

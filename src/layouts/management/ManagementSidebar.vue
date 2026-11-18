@@ -15,7 +15,7 @@
         </router-link>
 
         <!-- Navigation Menu -->
-        <nav class="flex-1 overflow-y-auto px-3 py-2 space-y-2 divide-y divide-border scrollbar-thin scrollbar-thumb-transparent hover:scrollbar-thumb-foreground/20 transition-all duration-200">
+        <nav ref="navigation" class="flex-1 overflow-y-auto px-3 py-2 space-y-2 divide-y divide-border scrollbar-thin scrollbar-thumb-transparent hover:scrollbar-thumb-foreground/20 transition-all duration-200">
           <div v-for="menu in filteredMenus" :key="menu.name" class="space-y-2 py-2">
             <h2 class="text-sm font-bold uppercase tracking-wider text-primary">
               {{ menu.name }}
@@ -23,7 +23,7 @@
 
             <!-- Menu Children -->
             <div class="space-y-1 px-2">
-              <router-link v-for="child in childrenOf(menu.children)" :key="child.path" :to="{ name: child.path }" class="relative flex items-center gap-3.5 py-2.5 px-5 rounded-md text-[13px] cursor-pointer transition-all duration-200" :class="[isActive(child.path) ? 'text-primary bg-primary-soft/50 hover:bg-primary-soft/50 ' : 'border-transparent hover:bg-slate-200 hover:text-foreground']" :aria-current="isActive(child.path) ? 'page' : undefined">
+              <router-link v-for="child in childrenOf(menu.children)" :key="child.path" :id="`sidebar-${child.path}`" :to="{ name: child.path }" class="relative flex items-center gap-3.5 py-2.5 px-5 rounded-md text-[13px] cursor-pointer transition-all duration-200" :class="[isActive(child.path) ? 'text-primary bg-primary-soft/50 hover:bg-primary-soft/50 ' : 'border-transparent hover:bg-slate-200 hover:text-foreground']" :aria-current="isActive(child.path) ? 'page' : undefined">
                 <!-- Active Indicator Bar -->
                 <div class="absolute left-0 bg-primary h-full rounded-full transition-all duration-200" :class="[isActive(child.path) ? 'w-1.25' : 'w-0']" />
 
@@ -68,7 +68,7 @@ import { LayoutDashboard } from '@lucide/vue'
 const route = useRoute()
 const auth = authStore()
 const system = systemStore()
-const parse = useParser()
+const navigation = ref<HTMLElement>()
 
 // Filtered Menu base sa Role (Reactivity preserved)
 const filteredMenus = computed(() => {
@@ -85,6 +85,37 @@ function isActive(path: string): boolean {
   const currentName = String(route.name || '')
   return currentName === path || currentName.startsWith(`${path}.`)
 }
+
+async function revealActiveItem() {
+  await nextTick()
+
+  const activeItem = navigation.value?.querySelector<HTMLElement>('[aria-current="page"]')
+  if (!activeItem || !navigation.value) return
+
+  const navRect = navigation.value.getBoundingClientRect()
+  const itemRect = activeItem.getBoundingClientRect()
+  const padding = 8
+
+  if (itemRect.top < navRect.top + padding) {
+    navigation.value.scrollBy({
+      top: itemRect.top - navRect.top - padding,
+      behavior: 'smooth',
+    })
+  } else if (itemRect.bottom > navRect.bottom - padding) {
+    navigation.value.scrollBy({
+      top: itemRect.bottom - navRect.bottom + padding,
+      behavior: 'smooth',
+    })
+  }
+}
+
+watch(
+  [() => route.name, () => system.sidebar, filteredMenus],
+  revealActiveItem,
+  { immediate: true },
+)
+
+onMounted(revealActiveItem)
 </script>
 
 <style scoped>
