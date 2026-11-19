@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AcaRepoController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AccessionController;
 use App\Http\Controllers\AcquisitionController;
 use App\Http\Controllers\AcquisitionLinesController;
@@ -392,7 +393,13 @@ Route::group(['prefix' => '/report'], function () {
 
     // Post
     Route::post('', [ReportController::class, 'store'])->middleware('jwt.auth', 'throttle:write');
+    Route::post('generate/{type}', [ReportController::class, 'generate'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
 
+});
+
+// ============== SUPER ADMIN DASHBOARD ==================
+Route::group(['prefix' => '/admin/dashboard', 'middleware' => ['jwt.auth', 'role:super_admin']], function () {
+    Route::get('summary', [AdminController::class, 'dashboard']);
 });
 
 // ============== SECTION ROUTE ==================
@@ -447,6 +454,7 @@ Route::group(['prefix' => '/librarian', 'middleware' => ['jwt.auth', 'role:super
     // ============== DASHBOARD ROUTE ==================
     Route::group(['prefix' => 'dashboard'], function () {
         // Get
+        Route::get('summary', [DashboardController::class, 'summary']);
         Route::get('total-collections', [DashboardController::class, 'totalCollections']);
 
         Route::get('total-patrons', [DashboardController::class, 'totalPatrons']);
@@ -516,6 +524,7 @@ Route::group(['prefix' => '/patron-type-loan-policy'], function () {
 
 Route::group(['prefix' => '/attendance'], function () {
     Route::get('', [AttendanceLogsController::class, 'index'])->middleware('jwt.auth', 'throttle:read');
+    Route::get('analytics', [AttendanceLogsController::class, 'analytics'])->middleware('jwt.auth', 'throttle:read');
     Route::get('{attendanceLogs}', [AttendanceLogsController::class, 'show'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:read');
 
     Route::post('', [AttendanceLogsController::class, 'store'])->withoutMiddleware(['jwt.auth', 'role:super_admin,admin,librarian'])->middleware('throttle:write');

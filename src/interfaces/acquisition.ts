@@ -1,6 +1,7 @@
 export interface AcquisitionParams extends BaseParams {
   acquisition_mode_id: any
   item_id: any
+  library_id: any
 }
 export interface Acquisition {
   id: any

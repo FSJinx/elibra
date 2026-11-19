@@ -33,7 +33,7 @@ class AcaRepoController extends Controller
         ]);
 
         $theses = AcaRepo::query()
-            // ->when($filters['library_id'] ?? null, fn ($q) => $q->where('library_id', $filters['library_id']))
+            ->when($filters['library_id'] ?? null, fn ($q) => $q->where('library_id', $filters['library_id']))
             ->when($filters['submitted_by'] ?? null, fn ($q) => $q->where('submitted_by', $filters['submitted_by']))
             ->with(['language', 'program', 'submitter.user:id,last_name,first_name', 'submitter.program', 'library'])
             ->paginate();

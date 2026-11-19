@@ -26,6 +26,7 @@ class InventoryController extends Controller
 
         $inventories = Inventory::query()
             ->when($filters['search'], fn ($i, $s) => $i->where('inventory_code', 'LIKE', "%$s%"))->with(['librarian.user', 'section'])
+            ->when($filters['library_id'] ?? null, fn ($q, $libraryId) => $q->whereHas('section', fn ($qq) => $qq->where('library_id', $libraryId)))
             ->orderBy($filters['sort'], $filters['order'])
             ->paginate();
 

@@ -15,23 +15,30 @@
           <Title :level="2">Item Preview</Title>
           <Button size="sm" class="hover:text-danger" :disabled="submitting" @click="clear">Clear Bag</Button>
         </div>
-        <Card class="w-full p-3!" v-for="item in model?.accessions">
-          <CardBody class="grid grid-cols-[1fr_5fr_1fr] gap-3">
-            <div class="max-w-15 border border-border rounded-lg overflow-hidden">
-              <img :src="item?.item?.cover_media ? `${storageRoute}/${item?.item?.cover_media}` : book" alt="" class="" />
+        <Card class="w-full p-3!" v-for="group in groupedAccessions" :key="group.itemId">
+          <CardBody class="grid grid-cols-[1fr_5fr] gap-3">
+            <div class="max-w-15 max-h-max border border-border rounded-lg overflow-hidden">
+              <img :src="group.accessions[0]?.item?.cover_media ? `${storageRoute}/${group.accessions[0]?.item?.cover_media}` : book" alt="" class="" />
             </div>
 
             <div class="flex-1 flex flex-col gap-2">
-              <Title>{{ item?.item?.title }}</Title>
-              <div class="grid grid-cols-2 text-xs mt-auto">
-                <p class="text-foreground-secondary line-clamp-1">Accession Number:</p>
-                <span class="text-foreground text-end">{{ item?.accession_number ?? 'Invalid' }}</span>
-                <p class="text-foreground-secondary line-clamp-1">Status:</p>
-                <span class="text-foreground text-end capitalize">{{ item?.status ?? 'Invalid' }}</span>
+              <div class="flex items-center justify-between gap-2">
+                <Title>{{ group.title }}</Title>
+                <span class="shrink-0 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary">
+                  Qty {{ group.accessions.length }}
+                </span>
+              </div>
+              <div class="flex flex-col gap-2">
+                <div v-for="copy in group.accessions" :key="copy.id" class="flex items-center gap-2 rounded-md border border-border px-3 py-2">
+                  <div class="min-w-0 flex-1">
+                    <p class="text-xs text-foreground-secondary">Accession Number</p>
+                    <p class="truncate text-sm font-medium">{{ copy.accession_number ?? 'Invalid' }}</p>
+                  </div>
+                  <span class="text-xs capitalize text-foreground-secondary">{{ copy.status ?? 'Invalid' }}</span>
+                  <Button class="hover:text-danger shrink-0" icon="trash" size="sm" :disabled="submitting" @click="remove(copy)" />
+                </div>
               </div>
             </div>
-
-            <Button class="hover:text-danger ml-auto" icon="trash" size="sm" @click="remove(item)"></Button>
           </CardBody>
         </Card>
       </div>
@@ -88,6 +95,24 @@ const submitting = ref(false)
 const canProceed = computed(() =>
   Boolean(model.value?.patron && model.value.accessions?.length && model.value.loan_mode_id && !submitting.value),
 )
+
+const groupedAccessions = computed(() => {
+  const groups = new Map<string, { itemId: string; title: string; accessions: Accession[] }>()
+
+  for (const copy of model.value?.accessions ?? []) {
+    const itemId = String(copy.item?.id ?? copy.item_id ?? copy.id)
+    const title = copy.item?.title ?? 'Unknown item'
+    const group = groups.get(itemId)
+
+    if (group) {
+      group.accessions.push(copy)
+    } else {
+      groups.set(itemId, { itemId, title, accessions: [copy] })
+    }
+  }
+
+  return [...groups.values()]
+})
 
 function open() {
   drawer.value?.open()

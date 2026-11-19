@@ -65,11 +65,11 @@ export const librarianMenu = [
     children: [
       { path: 'librarian.reports.circulation', name: 'Circulation', icon: 'bar-chart-line' },
       { path: 'librarian.reports.user', name: 'Users', icon: 'people' },
-      // collection_reports: { path: 'librarian.reports.collection', name: 'Collection', icon: 'pie-chart' },
-      // overdue_reports: { path: 'librarian.reports.overdue', name: 'Overdue', icon: 'exclamation-triangle' },
-      // inventory_reports: { path: 'librarian.reports.inventory', name: 'Inventory', icon: 'graph-up-arrow' },
-      // patrons_reports: { path: 'librarian.reports.patrons', name: 'Patrons', icon: 'person-lines-fill' },
-      // acquisitions_reports: { path: 'librarian.reports.acquisitions', name: 'Acquisitions', icon: 'file-earmark-bar-graph' },
+      { path: 'librarian.reports.attendance', name: 'Attendance', icon: 'person-check' },
+      { path: 'librarian.reports.collection', name: 'Collection', icon: 'journals' },
+      { path: 'librarian.reports.reservation', name: 'Reservations', icon: 'bookmark-check' },
+      { path: 'librarian.reports.inventory', name: 'Inventory', icon: 'boxes' },
+      { path: 'librarian.reports.acquisition', name: 'Acquisitions', icon: 'receipt' },
     ],
   },
 

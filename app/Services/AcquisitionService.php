@@ -23,7 +23,8 @@ class AcquisitionService
                 $query = Acquisition::query()->with(['receiver', 'acquisition_mode', 'acquisition_request'])
                     ->when($filters['search'] ?? null, fn ($q, $search) => $q->where('reference', 'like', "%{$search}%")->orWhere('dealer', 'like', "%{$search}%"))
                     ->when($filters['acquisition_mode_id'] ?? null, fn ($q, $a) => $q->where('acquisition_mode_id', $a))
-                    ->when($filters['item_id'] ?? null, fn ($q, $a) => $q->whereHas('acquisition_lines', fn ($lines) => $lines->where('item_id', $a)));
+                    ->when($filters['item_id'] ?? null, fn ($q, $a) => $q->whereHas('acquisition_lines', fn ($lines) => $lines->where('item_id', $a)))
+                    ->when($filters['library_id'] ?? null, fn ($q, $libraryId) => $q->whereHas('receiver', fn ($qq) => $qq->where('library_id', $libraryId)));
 
                 $allowedSorts = [
                     'id',

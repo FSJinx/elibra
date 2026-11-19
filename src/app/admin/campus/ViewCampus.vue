@@ -25,8 +25,7 @@ const route = useRoute()
 
 const navRoutes = [
   { name: 'Overview', route: 'admin.campus.show.overview' },
-  { name: 'Branches', route: 'admin.campus.show.branches' },
-  { name: 'Departments', route: 'admin.campus.show.departments' },
+  // { name: 'Departments', route: 'admin.campus.show.departments' },
 ]
 
 onBeforeUnmount(() => {

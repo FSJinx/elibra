@@ -34,6 +34,11 @@
 import Form from '@/components/form/Form.vue'
 import Modal from '@/components/my/Modal.vue'
 
+const emit = defineEmits(['refresh'])
+
+const campus = campusStore()
+const pop = usePopup()
+
 const defaultCampus = (): Partial<Campus> => ({
   name: '',
   code: '',
@@ -41,8 +46,6 @@ const defaultCampus = (): Partial<Campus> => ({
 })
 
 const modal = ref<typeof Modal | null>(null)
-const campus = campusStore()
-const pop = usePopup()
 const form = reactive(defaultCampus())
 const errors = ref<Campus | null>(null)
 const hasInputs = computed(() => Object.values(form).some((value) => value != null && String(value).length > 0))
@@ -68,6 +71,7 @@ async function submit() {
       Object.assign(form, defaultCampus())
       nextTick(() => modal?.value?.close())
       pop.success(res?.message)
+      emit('refresh')
     } catch (e: any) {
       const messages = e?.response?.data?.errors
       errors.value = messages

@@ -2,7 +2,7 @@
   <section class="relative flex-1 flex flex-col bg-background border border-border rounded-xl overflow-hidden scrollbar-none">
     <!-- Table Header -->
     <div class="flex items-center gap-2 border-b border-border/70 px-5 py-4">
-      <div class="mr-auto shrink-0">
+      <div class="mr-auto shrink-0" v-if="title">
         <h2 class="text-xl font-semibold">{{ title }}</h2>
 
         <p class="mt-1 text-sm text-foreground-secondary" v-if="subtitle">{{ subtitle }}</p>
@@ -47,7 +47,7 @@
 <script setup lang="ts">
 interface Props {
   data?: Pagination | undefined
-  title: string
+  title?: string
   subtitle?: string
   layout?: 'auto' | 'fixed'
   cols?: any

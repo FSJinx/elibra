@@ -3,18 +3,17 @@
     <SectionHeader title="Patron Types" description="Manage item types for item classification and advanced searching" icon="tags" />
 
     <div class="flex-1 flex flex-col gap-3 p-5">
-      <div class="grid grid-cols-2 gap-2 p-5 bg-background border border-border rounded-xl">
-        <div class="flex items-center gap-2">
-          <Input id="search-item-type" class="max-w-100" placeholder="Search item type..." />
-          <Button @click="search">Refresh</Button>
-        </div>
-
-        <div class="flex items-center justify-end gap-2">
-          <NewItemTypeModal />
-        </div>
+      <div class="flex items-center gap-2 justify-end">
+        <NewPatronType @refresh="search" />
       </div>
 
-      <Table title="Patron Types Table" subtitle="List of all item types" data-length="">
+      <Table title="Patron Types Table" subtitle="List of all item types">
+        <template #header>
+          <Form class="flex items-center justify-end w-full gap-2" id="search-patron-type" @submit="search">
+            <Input id="search-item-type" class="max-w-100" placeholder="Search item type..." />
+            <Button @click="search">Refresh</Button>
+          </Form>
+        </template>
         <Thead>
           <tr>
             <th>No.</th>
@@ -60,6 +59,8 @@
 </template>
 
 <script setup lang="ts">
+import NewPatronType from '@/app/admin/patron_type/modals/NewPatronType.vue'
+
 const patron_type = patronTypeStore()
 
 const loading = ref<boolean>(false)

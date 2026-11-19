@@ -2,7 +2,7 @@
   <div class="flex flex-col size-full">
     <SectionHeader title="Campus" description="Manage campuses of the Isabela State University" icon="buildings">
       <div class="flex items-center justify-end gap-2">
-        <AddNewCampusModal />
+        <AddNewCampusModal @refresh="search" />
         <RecentlyDeletedCampusModal />
       </div>
     </SectionHeader>
@@ -22,6 +22,7 @@
             <th>Campus Code</th>
             <th>Status</th>
             <th>Last Modified</th>
+            <th>Actions</th>
           </tr>
         </Thead>
         <Tbody :data="campus.data" :loading="loading">
@@ -33,6 +34,9 @@
               <Status :variant="c?.status">{{ c?.status }}</Status>
             </Td>
             <Td :data="parse.formatDateAgo(c?.updated_at)" />
+            <Td>
+              <Button class="text-danger!" size="sm">Delete</Button>
+            </Td>
           </Tr>
         </Tbody>
         <template #footer />

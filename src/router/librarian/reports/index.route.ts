@@ -6,11 +6,11 @@ export const librarianReport = [
     children: [
       { path: 'circulation', name: 'librarian.reports.circulation', meta: { breadcrumb: 'Circulation' }, component: () => import('@/app/librarian/reports/circulation/Circulation.vue') },
       { path: 'users', name: 'librarian.reports.user', meta: { breadcrumb: 'Users' }, component: () => import('@/app/librarian/reports/users/Users.vue') },
-      // { path: 'collection', name: 'librarian.reports.collection', meta: { breadcrumb: 'Collection' }, component: () => import('@/app/librarian/reports/Reports.vue') },
-      // { path: 'overdue', name: 'librarian.reports.overdue', meta: { breadcrumb: 'Overdue' }, component: () => import('@/app/librarian/reports/Reports.vue') },
-      // { path: 'inventory', name: 'librarian.reports.inventory', meta: { breadcrumb: 'Inventory' }, component: () => import('@/app/librarian/reports/Reports.vue') },
-      // { path: 'patrons', name: 'librarian.reports.patrons', meta: { breadcrumb: 'Patrons' }, component: () => import('@/app/librarian/reports/Reports.vue') },
-      // { path: 'acquisitions', name: 'librarian.reports.acquisitions', meta: { breadcrumb: 'Acquisitions' }, component: () => import('@/app/librarian/reports/Reports.vue') },
+      { path: 'attendance', name: 'librarian.reports.attendance', meta: { breadcrumb: 'Attendance', title: 'Attendance', reportType: 'attendance', icon: 'person-check' }, component: () => import('@/app/librarian/reports/GenericReport.vue') },
+      { path: 'collection', name: 'librarian.reports.collection', meta: { breadcrumb: 'Collection', title: 'Collection', reportType: 'item', icon: 'journals' }, component: () => import('@/app/librarian/reports/GenericReport.vue') },
+      { path: 'reservations', name: 'librarian.reports.reservation', meta: { breadcrumb: 'Reservations', title: 'Reservations', reportType: 'reservation', icon: 'bookmark-check' }, component: () => import('@/app/librarian/reports/GenericReport.vue') },
+      { path: 'inventory', name: 'librarian.reports.inventory', meta: { breadcrumb: 'Inventory', title: 'Inventory', reportType: 'inventory', icon: 'boxes' }, component: () => import('@/app/librarian/reports/GenericReport.vue') },
+      { path: 'acquisitions', name: 'librarian.reports.acquisition', meta: { breadcrumb: 'Acquisitions', title: 'Acquisitions', reportType: 'acquisition', icon: 'receipt' }, component: () => import('@/app/librarian/reports/GenericReport.vue') },
     ],
   },
 ]

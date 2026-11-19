@@ -22,14 +22,7 @@ class SectionsController extends Controller
         $user = $request->user();
         $filters = QueryService::filters($request);
 
-        $libraryId = $user->isSuperAdmin() || $user->isAdmin()
-            ? $request->query('library_id', $request->query('id'))
-            : $user->librarian?->library_id;
-
         // Complete Filter
-        $filters = array_merge($filters, [
-            'library_id' => $libraryId,
-        ]);
 
         $sections = CacheService::remember(
             CacheService::SECTIONS,
@@ -41,7 +34,7 @@ class SectionsController extends Controller
                     ->when($filters['search'] ?? null, fn ($q, $s) => $q->where(fn ($w) => $w->where('name', 'LIKE', "%$s%")))
                 // ============== Filters ============
                     ->when($user->isSuperAdmin(), fn ($q) => $q->withTrashed())
-                    ->when(! empty($filters['library_id']), fn ($q, $f) => $q->where('library_id', $filters['library_id']))
+                    ->when($filters['library_id'] ?? null, fn ($q, $libraryId) => $q->where('library_id', $libraryId))
                 // ============== Relationship ============
                     ->with(['librarian.user', 'library']);
 

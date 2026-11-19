@@ -2,7 +2,7 @@
   <div class="size-full flex flex-col">
     <SectionHeader title="Acquisitions" description="Manage your library's acquisition record" icon="receipt">
       <div class="flex items-center justify-end">
-        <AddNewAcquisitionButton />
+        <AddNewAcquisitionButton @refresh="search" />
       </div>
     </SectionHeader>
 
@@ -66,8 +66,19 @@ import SectionHeader from '@/components/my/SectionHeader.vue'
 const parse = useParser()
 const acquisition = acquisitionStore()
 const options = optionStore()
+const auth = authStore()
 
-const params = reactive(acquisition.params)
+const defaultParams = (): Partial<AcquisitionParams> => ({
+  sort: '',
+  page: 1,
+  per_page: '25',
+  order: 'asc',
+  acquisition_mode_id: '',
+
+  library_id: auth.user?.library?.id,
+})
+
+const params = reactive(defaultParams())
 const loading = ref<boolean>(false)
 const pagination = ref<Pagination>()
 

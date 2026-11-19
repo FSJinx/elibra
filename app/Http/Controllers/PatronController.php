@@ -26,10 +26,9 @@ class PatronController extends Controller
         $filters = QueryService::filters($request);
 
         $patron = Patron::query()->with(['user', 'patronType:id,name'])
-            ->when($filters['search'] ?? null, fn ($q, $s) => $q->where('ebc_number', 'LIKE', "%$s%")->orWhereHas('user', fn ($u) => $u->where('username', 'LIKE', "%$s%")->orWhere('first_name', 'LIKE', "%$s%")->orWhere('last_name', 'LIKE', "%$s%"))
-            )->paginate(
-                perPage: null
-            );
+            ->when($filters['search'] ?? null, fn ($q, $s) => $q->where('ebc_number', 'LIKE', "%$s%")->orWhereHas('user', fn ($u) => $u->where('username', 'LIKE', "%$s%")->orWhere('first_name', 'LIKE', "%$s%")->orWhere('last_name', 'LIKE', "%$s%")))
+            ->when($filters['campus_id'], fn ($q, $c) => $q->whereHas('user', fn ($qq) => $qq->where('campus_id', $c)))
+            ->paginate(perPage: null);
 
         return $this->response(
             message: $patron->isEmpty() ? 'No patrons found' : 'Patrons found',

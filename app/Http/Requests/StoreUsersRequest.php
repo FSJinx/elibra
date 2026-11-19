@@ -37,6 +37,7 @@ class StoreUsersRequest extends BaseRequest
 
             'username' => ['required', 'string', 'max:255', Rule::unique('users', 'username')],
             'patron_type_id' => ['required_if:role,patron', 'prohibited_unless:role,patron', 'nullable', 'exists:patron_types,id'],
+            'library_id' => ['nullable', 'required_if:role,admin,librarian', 'prohibited_unless:role,admin,librarian', 'exists:libraries,id'],
             // 'password' => ['required', 'string', 'min:8'],
         ];
 

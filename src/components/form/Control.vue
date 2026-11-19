@@ -9,7 +9,7 @@ interface Props {
   id?: string
   direction?: 'row' | 'col'
   required?: boolean
-  nullable?:boolean
+  nullable?: boolean
 
   col?: boolean
   row?: boolean
@@ -26,7 +26,7 @@ const direction = computed(() => {
   if (props.direction === 'col' || props.col) {
     return 'grid-cols-1 items-start'
   } else if (props.direction === 'row' || props.row) {
-    return 'grid-cols-2 items-start'
+    return 'grid-cols-[1fr_2fr] items-start'
   }
 })
 

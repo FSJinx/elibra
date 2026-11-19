@@ -48,16 +48,19 @@ import Complete from '@/app/librarian/circulation/reservations/modals/Complete.v
 const holding = holdingStore()
 const pop = usePopup()
 const parse = useParser()
+const auth = authStore()
 const deletingId = ref<Holding['id'] | null>(null)
 
 const loading = ref<boolean>(false)
 const pagination = ref<Pagination>()
-const params = reactive<Partial<HoldingParams>>({})
+const params = reactive<Partial<HoldingParams>>({
+  library_id: auth.user?.library?.id,
+})
 
 async function search() {
   loading.value = true
   try {
-    const res = await holding.fetch()
+    const res = await holding.fetch(params)
     pagination.value = res.data
   } finally {
     loading.value = false

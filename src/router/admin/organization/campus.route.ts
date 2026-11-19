@@ -43,11 +43,6 @@ export const adminCampusRoutes = [
         component: () => import('@/app/admin/campus/view/Overview.vue'),
       },
       {
-        path: 'branches',
-        name: 'admin.campus.show.branches',
-        component: () => import('@/app/admin/campus/view/Branches.vue'),
-      },
-      {
         path: 'department',
         name: 'admin.campus.show.departments',
         component: () => import('@/app/admin/campus/view/Departments.vue'),

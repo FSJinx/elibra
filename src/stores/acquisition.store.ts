@@ -1,16 +1,10 @@
-const defaultParams: Readonly<Partial<AcquisitionParams>> = {
-  sort: '',
-  page: 1,
-  per_page: '25',
-  order: 'asc',
-  acquisition_mode_id: '',
-}
+
 
 export const acquisitionStore = defineStore('acquisition', {
   state: () => ({
     data: null as Acquisition[] | null,
     currentData: null as Acquisition | null,
-    params: defaultParams as AcquisitionParams,
+    // params: defaultParams as AcquisitionParams,
 
     url: 'acquisition',
   }),

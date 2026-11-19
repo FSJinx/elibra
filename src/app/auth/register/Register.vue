@@ -75,6 +75,8 @@ watch([() => form.password_confirmation, () => form.password], () => {
     errors.password_confirmation = ''
   }
 })
+
+
 </script>
 
 <style scoped></style>

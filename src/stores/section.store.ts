@@ -1,12 +1,3 @@
-const defaultParams: Readonly<SectionParams> = {
-  query: '',
-  sort: '',
-  page: 1,
-  per_page: '25',
-  order: 'asc',
-
-  library_id: '',
-}
 
 export const sectionStore = defineStore('section', {
   state: () => ({
@@ -18,7 +9,7 @@ export const sectionStore = defineStore('section', {
 
   actions: {
     // =========== ACTIONS ============
-    async fetch(params: Partial<SectionParams>) {
+    async fetch(params?: Partial<SectionParams>) {
       const res = await get(this.url, params)
       this.data = res.data.data
       return res

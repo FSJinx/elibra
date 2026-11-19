@@ -17,9 +17,7 @@ class StoreAccessionRequest extends BaseRequest
     {
         $user = $this->user();
 
-        return
-        $user->hasPermission('accession.create') && ($user->isLibrarian() && $user->librarian->branch)
-        || $user->isAdmin();
+        return $user->isLibrarian() || $user->isAdmin();
     }
 
     /**

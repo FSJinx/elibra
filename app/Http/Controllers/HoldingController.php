@@ -37,6 +37,7 @@ class HoldingController extends Controller
                     ->where('reserver_id', $user->patron->id)
                     ->with(['accession.item', 'processor']);
             })
+            ->when($filters['library_id'] ?? null, fn ($q, $libraryId) => $q->whereHas('accession.item', fn ($qq) => $qq->where('library_id', $libraryId)))
             ->paginate(
                 $filters['per_page'],
                 ['*'],
@@ -115,7 +116,7 @@ class HoldingController extends Controller
             ]);
 
             $reservation->update([
-                'status'=> 'completed',
+                'status' => 'completed',
                 'pickup_date' => $borrowedAt,
                 'processor_id' => $request->user()->librarian?->id,
             ]);

@@ -15,30 +15,30 @@ class DatabaseSeeder extends Seeder
             // ========= PRODUCTION SEEDS =========
 
             SuperAdminSeeder::class,
+
             AcquisitionModeSeeder::class,
             ItemTypeSeeder::class,
             ItemTypeCategorySeeder::class,
-            // PermissionSeeder::class,
             PatronTypeSeeder::class,
-            // SystemSeeder::class,
             LanguageSeeder::class,
+            LoanModeSeeder::class,
             AuthorshipSeeder::class,
 
             // ========= DEVELOPMENT SEEDS =========
 
-            PublisherSeeder::class,
-            LoanModeSeeder::class,
             CampusSeeder::class,
             LibrarySeeder::class,
             SectionsSeeder::class,
             DepartmentSeeder::class,
             ProgramsSeeder::class,
             UsersSeeder::class,
+            
+            PublisherSeeder::class,
             AuthorSeeder::class,
             ItemSeeder::class,
             AcquisitionSeeder::class,
             AcquisitionLinesSeeder::class,
-            // HoldingSeeder::class,
+            HoldingSeeder::class,
         ]);
     }
 }
