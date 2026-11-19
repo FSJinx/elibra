@@ -79,10 +79,6 @@ const columnOptions: Record<string, Array<{ value: string; label: string }>> = {
     { value: 'description', label: 'Description' },
     { value: 'keywords', label: 'Keywords' },
   ],
-  inventory: [
-    { value: 'librarian', label: 'Librarian' },
-    { value: 'closed_at', label: 'Closed date' },
-  ],
   acquisition: [
     { value: 'remarks', label: 'Remarks' },
     { value: 'dealer', label: 'Dealer' },

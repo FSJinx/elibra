@@ -12,7 +12,6 @@ use App\Enums\ReportType;
 use App\Models\Acquisition;
 use App\Models\AttendanceLogs;
 use App\Models\Holding;
-use App\Models\Inventory;
 use App\Models\Item;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -80,7 +79,6 @@ class ReportController extends Controller
             ReportType::Attendance => $this->attendanceData($libraryId, $filters),
             ReportType::Reservation => $this->reservationData($libraryId, $filters),
             ReportType::Item => $this->itemData($libraryId, $filters),
-            ReportType::Inventory => $this->inventoryData($libraryId, $filters),
             ReportType::Acquisition => $this->acquisitionData($libraryId, $filters),
             default => null,
         };
@@ -164,29 +162,6 @@ class ReportController extends Controller
             ->all();
     }
 
-    private function inventoryData(int $libraryId, array $filters): array
-    {
-        return Inventory::query()
-            ->where(function ($query) use ($libraryId) {
-                $query->whereHas('section', fn ($q) => $q->where('library_id', $libraryId))
-                    ->orWhereHas('librarian', fn ($q) => $q->where('library_id', $libraryId));
-            })
-            ->when($filters['created_from'], fn ($q, $date) => $q->whereDate('created_at', '>=', $date))
-            ->when($filters['created_to'], fn ($q, $date) => $q->whereDate('created_at', '<=', $date))
-            ->with(['section', 'librarian.user'])
-            ->latest('created_at')
-            ->get()
-            ->map(fn (Inventory $inventory) => [
-                'id' => $inventory->id,
-                'reference' => $inventory->inventory_code,
-                'status' => $inventory->status,
-                'section' => $inventory->section?->name,
-                'librarian' => $inventory->librarian?->user?->name->full,
-                'closed_at' => $inventory->closed_at?->toDateTimeString(),
-                'created_at' => $inventory->created_at?->toDateTimeString(),
-            ])
-            ->all();
-    }
 
     private function acquisitionData(int $libraryId, array $filters): array
     {

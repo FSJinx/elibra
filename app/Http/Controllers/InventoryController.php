@@ -6,17 +6,14 @@ use App\Http\Requests\StoreInventoryRequest;
 use App\Http\Requests\UpdateInventoryRequest;
 use App\Models\Accession;
 use App\Models\Inventory;
-use App\Services\InventoryLineService;
+use App\Models\InventoryLine;
 use App\Services\QueryService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class InventoryController extends Controller
 {
-    public function __construct(
-        protected InventoryLineService $line
-    ) {}
-
     /**
      * Display a listing of the resource.
      */
@@ -26,7 +23,10 @@ class InventoryController extends Controller
 
         $inventories = Inventory::query()
             ->when($filters['search'], fn ($i, $s) => $i->where('inventory_code', 'LIKE', "%$s%"))->with(['librarian.user', 'section'])
-            ->when($filters['library_id'] ?? null, fn ($q, $libraryId) => $q->whereHas('section', fn ($qq) => $qq->where('library_id', $libraryId)))
+            ->when($filters['library_id'] ?? null,
+                fn ($q, $libraryId) => $q->whereHas('librarian', fn ($qq) => $qq->where('library_id', $libraryId)),
+                fn ($q) => $q->whereHas('librarian', fn ($qq) => $qq->where('library_id', $this->user()?->librarian?->library_id))
+            )
             ->orderBy($filters['sort'], $filters['order'])
             ->paginate();
 
@@ -47,29 +47,43 @@ class InventoryController extends Controller
     public function store(StoreInventoryRequest $request)
     {
         $user = $this->user()->librarian;
+        $accessions = Accession::query()
+            ->whereHas('item', fn ($query) => $query->where('library_id', $user->library_id))
+            ->with(['item.itemType', 'section'])
+            ->join('items', 'accessions.item_id', '=', 'items.id')
+            ->join('item_types', 'items.item_type_id', '=', 'item_types.id')
+            ->select('accessions.*')
+            ->orderBy('item_types.name')
+            ->orderBy('items.title')
+            ->orderBy('accessions.accession_number')
+            ->get();
 
-        if (Inventory::where('section_id', $request->input('section_id'))->where('status', 'pending')->exists()) {
-            return $this->response('error', 'This section has an on-going inventory. Select other sections or finish the pending before creating one again', [], 409);
+        if ($accessions->isEmpty()) {
+            return $this->response('error',             'No catalog copies are available for inventory.', null, 422);
         }
 
-        $hasItems = Accession::query()->whereHas('item', fn ($query) => $query->where('library_id', $user->library_id))->where('section_id', $request->boolean('shelved') ? $request->input('section_id') : null)->exists();
-
-        if (! $hasItems) {
-            return $this->response('error', 'No items stored in this section yet', null, 422);
-        }
-
-        $inventory = DB::transaction(function () use ($user, $request) {
+        $inventory = DB::transaction(function () use ($user, $accessions) {
 
             $lastInventory = Inventory::latest('id')->first();
             $nextNumber = $lastInventory ? $lastInventory->id + 1 : 1;
             $inventoryCode = 'INV-'.now()->year.'-'.str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
             $inventory = Inventory::create([
                 'inventory_code' => $inventoryCode,
-                'section_id' => $request->input('section_id'),
+                'status' => 'completed',
+                'closed_at' => now(),
                 'librarian_id' => $user->id,
             ]);
 
-            $this->line->create($inventory, $request->validated());
+            foreach ($accessions as $accession) {
+                InventoryLine::create([
+                    'inventory_id' => $inventory->id,
+                    'accession_id' => $accession->id,
+                    'current_status' => $accession->status,
+                    'current_section_id' => $accession->section_id,
+                    'new_status' => $accession->status,
+                    'new_section_id' => $accession->section_id,
+                ]);
+            }
 
             return $inventory;
         });
@@ -77,9 +91,51 @@ class InventoryController extends Controller
         return $this->response(
             'success',
             'Inventory created successfully',
-            $inventory->toArray(),
+            $inventory->load([
+                'librarian.user',
+                'lines.accession.item.itemType',
+                'lines.accession.section',
+                'lines.currentSection',
+            ]),
             201
         );
+    }
+
+    public function downloadPdf(Inventory $inventory)
+    {
+        $user = $this->user();
+        if ($inventory->librarian_id !== $user->librarian?->id) {
+            return $this->response('error',             'You are not authorized to print this inventory.', null, 403);
+        }
+
+        $inventory->load([
+            'librarian.user',
+            'lines.accession.item.itemType',
+            'lines.accession.section',
+            'lines.currentSection',
+        ]);
+
+        $inventory->setRelation('lines', $inventory->lines->sort(function ($a, $b) {
+            $aType = $a->accession?->item?->itemType?->name ?? 'Unclassified';
+            $bType = $b->accession?->item?->itemType?->name ?? 'Unclassified';
+            $aTitle = $a->accession?->item?->title ?? 'Untitled';
+            $bTitle = $b->accession?->item?->title ?? 'Untitled';
+            $aAccession = $a->accession?->accession_number ?? '';
+            $bAccession = $b->accession?->accession_number ?? '';
+            return strcasecmp($aType, $bType)
+                ?: strcasecmp($aTitle, $bTitle)
+                ?: strcasecmp($aAccession, $bAccession);
+        }));
+
+        $pdf = Pdf::loadView('inventory_sheet', [
+            'inventory' => $inventory,
+            'lines' => $inventory->lines,
+        ])->setPaper('folio', 'landscape');
+
+        return response($pdf->output(), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="'.$inventory->inventory_code.'.pdf"',
+        ]);
     }
 
     /**
@@ -87,12 +143,20 @@ class InventoryController extends Controller
      */
     public function show(Inventory $inventory)
     {
-        // $user = $this->user();
+        $user = $this->user();
+        if ($inventory->librarian_id !== $user->librarian?->id) {
+            return $this->response('error', 'You are not authorized to view this inventory.', null, 403);
+        }
 
         return $this->response(
             'success',
             'Inventory retrieved successfully',
-            $inventory->load(['librarian.user', 'section']),
+            $inventory->load([
+                'librarian.user',
+                'lines.accession.item.itemType',
+                'lines.accession.section',
+                'lines.currentSection',
+            ]),
             200
         );
     }
@@ -120,21 +184,12 @@ class InventoryController extends Controller
     {
         $user = $this->user();
 
-        if ($inventory->librarian_id !== $user->id) {
+        if ($inventory->librarian_id !== $user->librarian?->id) {
             return $this->response(
                 'error',
                 'You are not authorized to delete this inventory',
                 null,
                 403
-            );
-        }
-
-        if ($inventory->is_completed) {
-            return $this->response(
-                'error',
-                'Completed inventory cannot be deleted',
-                null,
-                422
             );
         }
 
