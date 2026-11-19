@@ -68,7 +68,6 @@ export const librarianMenu = [
       { path: 'librarian.reports.attendance', name: 'Attendance', icon: 'person-check' },
       { path: 'librarian.reports.collection', name: 'Collection', icon: 'journals' },
       { path: 'librarian.reports.reservation', name: 'Reservations', icon: 'bookmark-check' },
-      { path: 'librarian.reports.inventory', name: 'Inventory', icon: 'boxes' },
       { path: 'librarian.reports.acquisition', name: 'Acquisitions', icon: 'receipt' },
     ],
   },

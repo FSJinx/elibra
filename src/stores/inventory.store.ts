@@ -28,6 +28,11 @@ export const inventoryStore = defineStore('inventory', {
       return res
     },
 
+    async downloadPdf(id: any) {
+      const blob = await get<Blob>(`${this.url}/${id}/pdf`, null, { responseType: 'blob' })
+      return blob
+    },
+
     async update(params: Inventory) {
       const res = await put(`${this.url}/${params.id}`, params)
       return res

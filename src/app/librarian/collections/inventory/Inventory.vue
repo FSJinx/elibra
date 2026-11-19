@@ -1,14 +1,14 @@
 <template>
   <div class="flex flex-col size-full overflow-hidden">
     <!-- Header -->
-    <SectionHeader title="Stock Verification" description="Browse and verify materials on-shelf" icon="boxes">
+    <SectionHeader title="Inventory" description="Create and print shelf-checking copies of your library collection" icon="boxes">
       <div class="flex items-center justify-end gap-2">
         <NewInventory @refresh="search" />
       </div>
     </SectionHeader>
 
     <div class="flex-1 flex flex-col gap-4 p-5 overflow-y-auto scroll">
-      <Table title="Recent Inventory Tracking" subtitle="Track your inventory history here." :data="pagination">
+      <Table title="Inventory History" subtitle="Recent inventory records for manual shelf-to-shelf verification" :data="pagination">
         <template #header>
           <Form class="w-full flex items-center justify-end gap-2" id="search-inventory" @submit="search">
             <Input class="max-w-125" id="search-query" type="text" placeholder="Search by inventory id..." v-model="params.query" />
@@ -18,7 +18,6 @@
         <Thead>
           <Th>No.</Th>
           <Th>Inventory Code</Th>
-          <Th>Shelf Location</Th>
           <Th>Created By</Th>
           <Th>Date Created</Th>
           <Th>Status</Th>
@@ -29,7 +28,6 @@
           <Tr v-for="(item, index) in inventory.data" :key="item.id" :to="{ name: 'librarian.collections.inventory.view', params: { id: item.id } }">
             <Td :data="index + 1"></Td>
             <Td :data="item.inventory_code"></Td>
-            <Td :data="item.section ? item.section?.name : 'Unshelved'"></Td>
             <Td :data="item.librarian?.user?.name?.full"></Td>
             <Td :data="parse.formatDateAgo(item.created_at)"></Td>
 
@@ -37,8 +35,8 @@
               <Status :variant="item.status">{{ item.status }}</Status>
             </Td>
             <Td class="space-x-2">
-              <Button class="hover:text-primary" size="sm">Finish</Button>
-              <Button class="hover:text-danger" size="sm">Delete</Button>
+              <Button class="hover:text-primary" size="sm" left-icon="printer" @click.stop="download(item)">Print PDF</Button>
+              <Button class="hover:text-danger" size="sm" left-icon="trash" @click.stop="remove(item)">Delete</Button>
             </Td>
           </Tr>
         </Tbody>
@@ -67,6 +65,32 @@ async function search() {
     pagination.value = res.data
   } finally {
     loading.value = false
+  }
+}
+
+async function download(item: Inventory) {
+  const blob = await inventory.downloadPdf(item.id)
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = `${item.inventory_code}.pdf`
+  link.click()
+  URL.revokeObjectURL(url)
+}
+
+async function remove(item: Inventory) {
+  const pop = usePopup()
+  const confirm = await pop.confirm({ text: `Delete inventory ${item.inventory_code}?` })
+  if (!confirm.isConfirmed) return
+  pop.load()
+  try {
+    await inventory.destory(item)
+    pop.success('Inventory deleted successfully')
+    await search()
+  } catch (error: any) {
+    pop.error(error?.response?.data?.message ?? 'Unable to delete inventory')
+  } finally {
+    pop.unload()
   }
 }
 onBeforeMount(search)

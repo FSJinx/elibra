@@ -17,8 +17,6 @@ export interface Inventory {
   updated_at: string
 }
 
-export interface StoreInventory extends Partial<Inventory> {
-  shelved: boolean | null
-}
+export interface StoreInventory extends Partial<Inventory> {}
 
 export interface UpdateInventory extends Partial<Inventory> {}

@@ -2,6 +2,7 @@ export interface InventoryLineParams extends BaseParams {
   inventory_id: any
   verified: boolean | null
   status: string
+  query: string
 }
 
 export interface InventoryLine {

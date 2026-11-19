@@ -40,4 +40,9 @@ class InventoryLine extends Model
     {
         return $this->belongsTo(Librarian::class, 'verified_by');
     }
+
+    public function currentSection()
+    {
+        return $this->belongsTo(Sections::class, 'current_section_id');
+    }
 }

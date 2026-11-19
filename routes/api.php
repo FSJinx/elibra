@@ -256,6 +256,7 @@ Route::group(['prefix' => '/holidays'], function () {
 Route::group(['prefix' => '/inventory'], function () {
     // Get
     Route::get('', [InventoryController::class, 'index']);
+    Route::get('{inventory}/pdf', [InventoryController::class, 'downloadPdf']);
     Route::get('{inventory}', [InventoryController::class, 'show']);
 
     // Post
@@ -279,8 +280,6 @@ Route::group(['prefix' => '/inventory-line'], function () {
 
     // Update
     Route::put('{inventoryLine}', [InventoryLineController::class, 'update'])->middleware('throttle:write');
-    Route::put('{inventoryLine}/verify', [InventoryLineController::class, 'verify'])->middleware('jwt.auth', 'role:super_admin,admin,librarian', 'throttle:write');
-    Route::put('{inventoryLine}/unverify', [InventoryLineController::class, 'unverify'])->middleware('jwt.auth', 'throttle:write');
 
     // Delete
     Route::delete('{inventoryLine}', [InventoryLineController::class, 'destroy'])->middleware('throttle:delete');

@@ -22,6 +22,11 @@ class InventoryLineController extends Controller
     public function index(Request $request)
     {
         $user = $this->user();
+        $inventoryId = $request->integer('inventory_id');
+        $inventory = Inventory::find($inventoryId);
+        if (! $inventory || $inventory->librarian_id !== $user->librarian?->id) {
+            return $this->response('error', 'You are not authorized to view this inventory.', null, 403);
+        }
 
         $filters = QueryService::filters($request);
 
@@ -33,9 +38,22 @@ class InventoryLineController extends Controller
 
         $data = InventoryLine::query()
             ->where('inventory_id', $filters['inventory_id'])
+            ->when($filters['query'] ?? null, function ($q, $search) {
+                $q->whereHas('accession', function ($accession) use ($search) {
+                    $accession->where('accession_number', 'LIKE', "%{$search}%")
+                        ->orWhereHas('item', fn ($item) => $item->where('title', 'LIKE', "%{$search}%"));
+                });
+            })
             ->when(! is_null($filters['verified']), fn ($q) => $q->{$filters['verified'] ? 'whereNotNull' : 'whereNull'}('verified_at'))
             ->when($filters['status'], fn ($q, $status) => $q->where('current_status', $status))
-            ->with(['accession.item.itemType'])
+            ->with(['accession.item.itemType', 'accession.section', 'currentSection'])
+            ->join('accessions', 'inventory_lines.accession_id', '=', 'accessions.id')
+            ->join('items', 'accessions.item_id', '=', 'items.id')
+            ->join('item_types', 'items.item_type_id', '=', 'item_types.id')
+            ->select('inventory_lines.*')
+            ->orderBy('item_types.name')
+            ->orderBy('items.title')
+            ->orderBy('accessions.accession_number')
             ->paginate($filters['per_page']);
 
         $stats = InventoryLine::where('inventory_id', $filters['inventory_id'])

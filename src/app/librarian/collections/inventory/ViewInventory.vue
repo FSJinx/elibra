@@ -1,88 +1,114 @@
 <template>
   <div class="size-full flex flex-col overflow-hidden">
-    <SectionHeader :title="`${inventory.currentData?.inventory_code} • ${inventory.currentData?.section?.name ?? 'Unshelved'} (${parse.toCapital(inventory.currentData?.status)})`" :description="`Started: ${parse.formatDate(inventory.currentData?.created_at)} by ${inventory.currentData?.librarian?.user?.first_name}`" icon="journal">
-      <div class="flex items-center justify-end gap-2 text-sm">
-        <p class="px-3 py-1 rounded-md cursor-pointer" @click="params.verified = false" :class="[params.verified === false && 'border border-primary/50 bg-background text-primary']">Pending</p>
-        <p class="px-3 py-1 rounded-md cursor-pointer" @click="params.verified = true" :class="[params.verified === true && 'border border-primary/50 bg-background text-primary']">Verified</p>
-        <p class="px-3 py-1 rounded-md cursor-pointer" @click="params.verified = null" :class="[params.verified === null && 'border border-primary/50 bg-background text-primary']">All</p>
+    <SectionHeader
+      :title="inventory.currentData?.inventory_code ?? 'Inventory'"
+      :description="`Captured ${parse.formatDate(inventory.currentData?.created_at)} by ${inventory.currentData?.librarian?.user?.name?.full ?? 'Unknown librarian'}`"
+      icon="journal"
+    >
+      <div class="flex items-center justify-end gap-2">
+        <Button variant="primary" left-icon="printer" @click="download">Print PDF</Button>
       </div>
     </SectionHeader>
 
-    <!-- Main Content Area -->
     <main class="flex-1 flex flex-col gap-3 p-5 overflow-y-auto">
-      <div class="grid sm:grid-cols-6 items-center gap-3">
-        <StatCard :loading :label="item.label" :value="item.data" v-for="item in stats" :value-color="item.variant"></StatCard>
+      <div class="grid gap-3 sm:grid-cols-3">
+        <StatCard :loading="loading" label="Inventory copies" :value="pagination?.total ?? 0" icon="collection" variant="primary" />
+        <StatCard :loading="loading" label="Shelf locations" :value="shelfLocationCount" icon="building" variant="success" />
+        <StatCard :loading="loading" label="Capture status" value="Completed" icon="check-circle" variant="success" />
       </div>
 
-      <!-- Items Table -->
-      <Table title="Items" subtitle="Verify items in this inventory" :data="pagination" @page="params.page = $event" @per_page="params.per_page = $event">
+      <Table title="Inventory Copies" subtitle="Grouped by item type and title for shelf-to-shelf verification" :data="pagination" @page="params.page = $event" @per_page="params.per_page = $event">
         <template #header>
-          <Form class="flex-1 flex items-center justify-end gap-2" id="search-item" @submit="search">
-            <Input type="text" placeholder="Search by title" class="max-w-100" v-model="params.query" />
-            <Button form="search-item" type="submit">Search</Button>
+          <Form class="flex-1 flex items-center justify-end gap-2" @submit="search">
+            <Input type="text" placeholder="Search accession or title" class="max-w-100" v-model="params.query" />
+            <Button type="submit">Search</Button>
           </Form>
         </template>
         <Thead>
           <tr>
             <Th>No</Th>
-            <Th>Accession</Th>
+            <Th>Accession Number</Th>
             <Th class="text-left">Title</Th>
             <Th>Item Type</Th>
-            <Th>Status</Th>
-            <Th>Location</Th>
-            <Th>Actions</Th>
+            <Th>Status at Inventory</Th>
+            <Th>Shelf Location</Th>
+            <Th>Manual Check</Th>
           </tr>
         </Thead>
-        <Tbody :loading :data="lines.data">
-          <tr v-for="(item, index) in lines.data" :key="item.id" class="border-b border-border hover:bg-muted/30 transition-colors">
-            <Td :data="pagination?.from + index" />
-            <Td :data="item.accession?.accession_number ?? null" />
-            <Td class="text-left" :data="item.accession?.item?.title" />
-            <Td :data="item.accession?.item?.item_type?.name" />
-            <Td>
-              <Status :variant="item.current_status">{{ item.current_status }}</Status>
-            </Td>
-            <Td :data="item.current_section?.name ?? 'Not on the shelf'" />
-            <Td>
-              <p class="text-foreground-secondary" v-if="item.verified_at">Verified</p>
-              <VerifyInventory :data="item" @refresh="search" v-else/>
-            </Td>
-          </tr>
+        <Tbody :loading="loading" :data="lines.data" error-message="No copies were found in this inventory.">
+          <template v-for="group in groupedLines" :key="group.key">
+            <tr class="border-y border-border bg-secondary/50">
+              <td colspan="7" class="px-4 py-3">
+                <div class="flex items-center justify-between gap-3">
+                  <div>
+                    <p class="text-xs font-semibold uppercase tracking-wider text-primary">{{ group.itemType }}</p>
+                    <p class="mt-0.5 font-semibold">{{ group.title }}</p>
+                  </div>
+                  <span class="shrink-0 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary">Qty {{ group.lines.length }}</span>
+                </div>
+              </td>
+            </tr>
+            <Tr v-for="(item, index) in group.lines" :key="item.id">
+              <Td :data="index + 1" />
+              <Td :data="item.accession?.accession_number" />
+              <Td class="text-left" :data="item.accession?.item?.title" />
+              <Td :data="item.accession?.item?.item_type?.name" />
+              <Td><Status :variant="item.current_status">{{ item.current_status }}</Status></Td>
+              <Td :data="item.current_section?.name ?? item.accession?.section?.name ?? 'Unshelved'" />
+              <Td>
+                <div class="flex justify-center gap-2 text-xs">
+                  <span class="rounded-md border border-border px-2 py-1">Found □</span>
+                  <span class="rounded-md border border-border px-2 py-1">Missing □</span>
+                </div>
+              </Td>
+            </Tr>
+          </template>
         </Tbody>
-        <template #footer />
       </Table>
     </main>
   </div>
 </template>
 
 <script setup lang="ts">
-import VerifyInventory from '@/app/librarian/collections/inventory/VerifyInventory.vue'
-
-const pop = usePopup()
-const parse = useParser()
 const inventory = inventoryStore()
 const lines = inventoryLineStore()
+const parse = useParser()
 
-const defaultParams = (): Partial<InventoryLineParams> => ({
-  inventory_id: inventory?.currentData?.id ?? null,
-  verified: false,
-})
-const params = reactive(defaultParams())
-const loading = ref<boolean>(false)
+const loading = ref(false)
 const pagination = ref<Pagination>()
+const params = reactive<Partial<InventoryLineParams>>({
+  inventory_id: inventory.currentData?.id ?? null,
+  query: '',
+})
 
-const stats = computed(() => {
-  return [
-    { label: 'Total', data: pagination.value?.stats.total },
-    { label: 'Verified', data: pagination.value?.stats.verified, variant: 'text-success!' },
-    { label: 'Pending', data: pagination.value?.stats.pending, variant: 'text-info' },
-    { label: 'Missing', data: pagination.value?.stats.missing, variant: 'text-danger!' },
-  ]
+const shelfLocationCount = computed(() => {
+  const locations = new Set(
+    (lines.data ?? [])
+      .map((line) => line.current_section?.name ?? line.accession?.section?.name ?? 'Unshelved')
+      .filter(Boolean),
+  )
+  return locations.size
+})
+
+const groupedLines = computed(() => {
+  const groups = new Map<string, { key: string; itemType: string; title: string; lines: InventoryLine[] }>()
+  for (const line of lines.data ?? []) {
+    const itemType = line.accession?.item?.item_type?.name ?? 'Unclassified'
+    const title = line.accession?.item?.title ?? 'Untitled'
+    const key = `${itemType}\u0000${title}`
+    const group = groups.get(key)
+    if (group) {
+      group.lines.push(line)
+    } else {
+      groups.set(key, { key, itemType, title, lines: [line] })
+    }
+  }
+  return [...groups.values()].sort((a, b) =>
+    a.itemType.localeCompare(b.itemType) || a.title.localeCompare(b.title),
+  )
 })
 
 async function search() {
-  if (loading.value) return
-
   loading.value = true
   try {
     const res = await lines.fetch(params)
@@ -92,8 +118,16 @@ async function search() {
   }
 }
 
-watchDebounced(params, search, { deep: true, immediate: true, debounce: 300 })
-onBeforeUnmount(() => (inventory.currentData = null))
-</script>
+async function download() {
+  if (!inventory.currentData?.id) return
+  const blob = await inventory.downloadPdf(inventory.currentData.id)
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = `${inventory.currentData.inventory_code}.pdf`
+  link.click()
+  URL.revokeObjectURL(url)
+}
 
-<style scoped></style>
+watchDebounced(params, search, { deep: true, immediate: true, debounce: 300 })
+</script>
