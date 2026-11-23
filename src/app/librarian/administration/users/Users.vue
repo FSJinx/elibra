@@ -62,7 +62,7 @@
               </Status>
             </Td>
             <Td>
-              <Button size="sm" variant="text" as="link" :to="{ name: 'admin.users.view', params: { id: user.id } }"> View </Button>
+              <Button size="sm" variant="text" as="link" :to="{ name: 'librarian.users.view', params: { id: user.id } }"> View </Button>
               <Button size="sm" variant="text" class="text-danger" @click="deleteUser(user)">Delete</Button>
             </Td>
           </tr>

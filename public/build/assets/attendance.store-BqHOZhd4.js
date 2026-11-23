@@ -1,1 +1,0 @@
-import{O as e,g as t,v as n}from"./app-CsOpAVfm.js";var r=e(`attendance`,{state:()=>({data:null,url:`attendance`}),actions:{async fetch(e){let n=await t(this.url,e);return this.data=n.data.data,n},async create(e){return await n(this.url,e)}}});export{r as t};
