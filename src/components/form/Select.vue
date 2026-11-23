@@ -10,7 +10,7 @@
       aria-haspopup="listbox"
       :data-title="enableTooltip ? `${parse.toCapital(title as string)}: ${selectedOption.label}` : ''"
     >
-      <span class="line-clamp-1 mr-5">{{ selectedOption.label || placeholder }}</span>
+      <span class="line-clamp-1 mr-5">{{ selectedOption.label || placeholder || title || 'Select an option' }}</span>
       <Icon icon="chevron-down" class="ml-auto transition-all duration-300 pointer-events-none" :class="{ '-rotate-180': open }" />
     </div>
 
@@ -111,7 +111,11 @@ const updatePosition = () => {
 }
 
 watch(selectedOption, () => (model.value = selectedOption.value), { deep: true, immediate: true })
-watch(() => model, () => selectedOption.value = model.value, {deep: true, immediate: true})
+watch(
+  () => model,
+  () => (selectedOption.value = model.value),
+  { deep: true, immediate: true },
+)
 
 const toggle = () => {
   if (!props.disabled) {

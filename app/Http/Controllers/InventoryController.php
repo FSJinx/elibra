@@ -59,7 +59,7 @@ class InventoryController extends Controller
             ->get();
 
         if ($accessions->isEmpty()) {
-            return $this->response('error',             'No catalog copies are available for inventory.', null, 422);
+            return $this->response('error', 'No catalog copies are available for inventory.', null, 422);
         }
 
         $inventory = DB::transaction(function () use ($user, $accessions) {
@@ -103,11 +103,6 @@ class InventoryController extends Controller
 
     public function downloadPdf(Inventory $inventory)
     {
-        $user = $this->user();
-        if ($user->isAdmin() !== $user->isLibrarian()) {
-            return $this->response('error', 'You are not authorized to print this inventory.', null, 403);
-        }
-
         $inventory->load([
             'librarian.user',
             'lines.accession.item.itemType',
@@ -122,6 +117,7 @@ class InventoryController extends Controller
             $bTitle = $b->accession?->item?->title ?? 'Untitled';
             $aAccession = $a->accession?->accession_number ?? '';
             $bAccession = $b->accession?->accession_number ?? '';
+
             return strcasecmp($aType, $bType)
                 ?: strcasecmp($aTitle, $bTitle)
                 ?: strcasecmp($aAccession, $bAccession);
@@ -144,9 +140,6 @@ class InventoryController extends Controller
     public function show(Inventory $inventory)
     {
         $user = $this->user();
-        if ($inventory->librarian_id !== $user->librarian?->id) {
-            return $this->response('error', 'You are not authorized to view this inventory.', null, 403);
-        }
 
         return $this->response(
             'success',

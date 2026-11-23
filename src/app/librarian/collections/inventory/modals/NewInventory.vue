@@ -13,9 +13,7 @@
             </div>
             <div>
               <h3 class="font-semibold">Library-wide inventory</h3>
-              <p class="mt-1 text-sm leading-6 text-foreground-secondary">
-                This captures every catalog copy in the current library, including its accession number and shelf location. The generated PDF is for manual shelf-to-shelf verification.
-              </p>
+              <p class="mt-1 text-sm leading-6 text-foreground-secondary">This captures every catalog copy in the current library, including its accession number and shelf location. The generated PDF is for manual shelf-to-shelf verification.</p>
             </div>
           </div>
         </div>
@@ -58,21 +56,19 @@ async function submit() {
     pop.load()
     try {
       const res = await inventory.create(form.value)
-      const pdf = await inventory.downloadPdf(res.data.id)
-      const url = URL.createObjectURL(pdf)
-      const link = document.createElement('a')
-      link.href = url
-      link.download = `${res.data.inventory_code}.pdf`
-      link.click()
-      URL.revokeObjectURL(url)
-      pop.success(res.message ?? 'Inventory created successfully')
       emit('refresh')
       close()
+      pop.success(res.message ?? 'Inventory created successfully')
+
+      // const pdf = await inventory.downloadPdf(res.data.id)
+      // const url = URL.createObjectURL(pdf)
+      // const link = document.createElement('a')
+      // link.href = url
+      // link.download = `${res.data.inventory_code}.pdf`
+      // link.click()
+      // URL.revokeObjectURL(url)
     } catch (e: any) {
       pop.error(e?.response?.data?.message ?? 'Something went wrong, please try again')
-    } finally {
-      pop.unload()
-      close()
     }
   }
 }

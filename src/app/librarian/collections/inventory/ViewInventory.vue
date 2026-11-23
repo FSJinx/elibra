@@ -1,10 +1,6 @@
 <template>
   <div class="size-full flex flex-col overflow-hidden">
-    <SectionHeader
-      :title="inventory.currentData?.inventory_code ?? 'Inventory'"
-      :description="`Captured ${parse.formatDate(inventory.currentData?.created_at)} by ${inventory.currentData?.librarian?.user?.name?.full ?? 'Unknown librarian'}`"
-      icon="journal"
-    >
+    <SectionHeader :title="inventory.currentData?.inventory_code ?? 'Inventory'" :description="`Captured ${parse.formatDate(inventory.currentData?.created_at)} by ${inventory.currentData?.librarian?.user?.name?.full ?? 'Unknown librarian'}`" icon="journal">
       <div class="flex items-center justify-end gap-2">
         <Button variant="primary" left-icon="printer" @click="download">Print PDF</Button>
       </div>
@@ -40,9 +36,10 @@
             <tr class="border-y border-border bg-secondary/50">
               <td colspan="7" class="px-4 py-3">
                 <div class="flex items-center justify-between gap-3">
-                  <div>
-                    <p class="text-xs font-semibold uppercase tracking-wider text-primary">{{ group.itemType }}</p>
-                    <p class="mt-0.5 font-semibold">{{ group.title }}</p>
+                  <div class="space-x-3">
+                    <span class="font-semibold uppercase tracking-wider text-primary">{{ group.itemType }}</span>
+                   
+                    <span class="mt-0.5 font-semibold"> • {{ group.title }}</span>
                   </div>
                   <span class="shrink-0 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary">Qty {{ group.lines.length }}</span>
                 </div>
@@ -53,7 +50,9 @@
               <Td :data="item.accession?.accession_number" />
               <Td class="text-left" :data="item.accession?.item?.title" />
               <Td :data="item.accession?.item?.item_type?.name" />
-              <Td><Status :variant="item.current_status">{{ item.current_status }}</Status></Td>
+              <Td
+                ><Status :variant="item.current_status">{{ item.current_status }}</Status></Td
+              >
               <Td :data="item.current_section?.name ?? item.accession?.section?.name ?? 'Unshelved'" />
               <Td>
                 <div class="flex justify-center gap-2 text-xs">
@@ -82,11 +81,7 @@ const params = reactive<Partial<InventoryLineParams>>({
 })
 
 const shelfLocationCount = computed(() => {
-  const locations = new Set(
-    (lines.data ?? [])
-      .map((line) => line.current_section?.name ?? line.accession?.section?.name ?? 'Unshelved')
-      .filter(Boolean),
-  )
+  const locations = new Set((lines.data ?? []).map((line) => line.current_section?.name ?? line.accession?.section?.name ?? 'Unshelved').filter(Boolean))
   return locations.size
 })
 
@@ -103,9 +98,7 @@ const groupedLines = computed(() => {
       groups.set(key, { key, itemType, title, lines: [line] })
     }
   }
-  return [...groups.values()].sort((a, b) =>
-    a.itemType.localeCompare(b.itemType) || a.title.localeCompare(b.title),
-  )
+  return [...groups.values()].sort((a, b) => a.itemType.localeCompare(b.itemType) || a.title.localeCompare(b.title))
 })
 
 async function search() {

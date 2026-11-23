@@ -49,6 +49,7 @@
 import NewInventory from '@/app/librarian/collections/inventory/modals/NewInventory.vue'
 
 const inventory = inventoryStore()
+const pop = usePopup()
 const auth = authStore()
 const parse = useParser()
 
@@ -69,28 +70,34 @@ async function search() {
 }
 
 async function download(item: Inventory) {
-  const blob = await inventory.downloadPdf(item.id)
-  const url = URL.createObjectURL(blob)
-  const link = document.createElement('a')
-  link.href = url
-  link.download = `${item.inventory_code}.pdf`
-  link.click()
-  URL.revokeObjectURL(url)
+  pop.load()
+
+  try {
+    const blob = await inventory.downloadPdf(item.id)
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `${item.inventory_code}.pdf`
+    link.click()
+    URL.revokeObjectURL(url)
+    pop.unload()
+  } catch (e: any) {
+    pop.error(e.response?.data?.message)
+  }
 }
 
 async function remove(item: Inventory) {
   const pop = usePopup()
   const confirm = await pop.confirm({ text: `Delete inventory ${item.inventory_code}?` })
-  if (!confirm.isConfirmed) return
-  pop.load()
-  try {
-    await inventory.destory(item)
-    pop.success('Inventory deleted successfully')
-    await search()
-  } catch (error: any) {
-    pop.error(error?.response?.data?.message ?? 'Unable to delete inventory')
-  } finally {
-    pop.unload()
+  if (confirm.isConfirmed) {
+    pop.load()
+    try {
+      await inventory.destory(item)
+      pop.success('Inventory deleted successfully')
+      await search()
+    } catch (error: any) {
+      pop.error(error?.response?.data?.message ?? 'Unable to delete inventory')
+    }
   }
 }
 onBeforeMount(search)
