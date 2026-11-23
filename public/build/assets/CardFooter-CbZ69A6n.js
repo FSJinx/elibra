@@ -1,0 +1,1 @@
+import{O as e,T as t,u as n}from"./runtime-core.esm-bundler-DAd-BShH.js";import{D as r}from"./app-DnowGvyk.js";var i={},a={class:`card-footer -m-5 mt-0 px-5 py-5 border-t border-border bg-slate-50/25`};function o(r,i){return t(),n(`div`,a,[e(r.$slots,`default`)])}var s=r(i,[[`render`,o]]);export{s as t};

@@ -1,0 +1,1 @@
+var e=`/build/assets/default_book-CFrBYnvd.png`;export{e as t};

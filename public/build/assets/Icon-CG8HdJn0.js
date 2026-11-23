@@ -1,0 +1,1 @@
+import{T as e,gt as t,h as n,u as r}from"./runtime-core.esm-bundler-DAd-BShH.js";var i=n({__name:`Icon`,props:{icon:{}},setup(n){return(i,a)=>(e(),r(`i`,{class:t([`bi`,`bi-${n.icon}`])},null,2))}});export{i as t};

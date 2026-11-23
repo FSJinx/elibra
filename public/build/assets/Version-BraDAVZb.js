@@ -1,0 +1,1 @@
+import{T as e,W as t,Z as n,h as r,u as i,vt as a}from"./runtime-core.esm-bundler-DAd-BShH.js";var o={class:`inline-flex text-xs bg-primary-soft/25 text-primary-soft-foreground border border-primary/25 rounded-md px-3 py-1 mx-2 font-semibold italic shrink-0`},s=r({__name:`Version`,setup(r){let s=t(`Beta`);return(t,r)=>(e(),i(`span`,o,a(n(s)),1))}});export{s as t};

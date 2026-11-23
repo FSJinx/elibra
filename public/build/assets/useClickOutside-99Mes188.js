@@ -1,0 +1,1 @@
+import{C as e,S as t}from"./runtime-core.esm-bundler-DAd-BShH.js";function n(n,r){let i=e=>{let t=e.target;n?.value&&!n.value.contains(t)&&r()};e(()=>{document.addEventListener(`click`,i)}),t(()=>{document.removeEventListener(`click`,i)})}export{n as t};
