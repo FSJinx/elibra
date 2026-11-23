@@ -1,1 +1,0 @@
-import{O as e,T as t,u as n}from"./runtime-core.esm-bundler-DAd-BShH.js";import{D as r}from"./app-BXS4EMJH.js";var i={},a={class:`card-header -m-5 mb-0 px-5 py-4 border-b border-border bg-slate-50/25`};function o(r,i){return t(),n(`div`,a,[e(r.$slots,`default`)])}var s=r(i,[[`render`,o]]);export{s as t};

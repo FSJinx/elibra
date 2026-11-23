@@ -1,0 +1,1 @@
+import{O as e,g as t}from"./app-CsOpAVfm.js";var n=e(`patron`,{state:()=>({data:null,currentData:null,url:`patron`}),actions:{async fetch(e){let n=await t(`${this.url}`,e);return this.data=n.data?.data,n},async dashboard(){return await t(`${this.url}/dashboard`)}}});export{n as t};
