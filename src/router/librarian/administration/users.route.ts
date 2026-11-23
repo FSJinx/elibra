@@ -12,7 +12,7 @@ export const administrationUsers = [
   },
   {
     path: ':id',
-    component: () => import('@/app/admin/users/ViewUser.vue'),
+    component: () => import('@/app/librarian/administration/users/ViewUser.vue'),
     beforeEnter: async (to: any) => {
       const user = userStore()
       pop.load()

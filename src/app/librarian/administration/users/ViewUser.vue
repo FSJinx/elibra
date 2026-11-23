@@ -1,7 +1,7 @@
 <template>
   <div class="size-full flex flex-col overflow-hidden">
     <div class="bg-background border-b border-border p-5">
-      <Button icon="arrow-left" variant="text" @click="router.push({ name: 'librarian.users' })"></Button>
+      <Button icon="arrow-left" variant="text" @click="router.back()"></Button>
       <span class="truncate">{{ users.currentData?.first_name }}'s Profile</span>
     </div>
 

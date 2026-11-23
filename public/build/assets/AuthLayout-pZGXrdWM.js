@@ -1,1 +1,0 @@
-import{T as e,k as t,m as n,u as r}from"./runtime-core.esm-bundler-DAd-BShH.js";import{D as i}from"./app-CGy6HAB2.js";var a={},o={class:`min-h-dvh h-full w-full sm:bg-secondary sm:p-10 sm:place-content-center`};function s(i,a){let s=t(`router-view`);return e(),r(`div`,o,[n(s)])}var c=i(a,[[`render`,s]]);export{c as default};
