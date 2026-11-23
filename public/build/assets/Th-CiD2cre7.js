@@ -1,1 +1,0 @@
-import{O as e,T as t,u as n}from"./runtime-core.esm-bundler-DAd-BShH.js";import{D as r}from"./app-DnowGvyk.js";var i={};function a(r,i){return t(),n(`th`,null,[e(r.$slots,`default`)])}var o=r(i,[[`render`,a]]);export{o as t};
