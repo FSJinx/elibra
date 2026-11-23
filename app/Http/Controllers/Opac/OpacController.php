@@ -48,6 +48,8 @@ class OpacController extends Controller
                             ->orWhere('isbn_issn', 'LIKE', "%$s%");
                     })
                     ->when($filters['item_type_id'] ?? null, fn ($q, $type) => $q->where('item_type_id', $type))
+                    ->when($filters['item_type_category_id'] ?? null, fn ($q, $type) => $q->where('item_type_category_id', $type))
+                    ->when($filters['campus_id'] ?? null, fn ($q, $campus) => $q->whereHas('library', fn($qq) => $qq->where('campus_id', $campus)))
                 // ====== RELEASED TO OPAC =====
                     ->where('released', true)
                 // ====== PAGINATIONS & SORTING =====
