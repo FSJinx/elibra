@@ -6,12 +6,12 @@ use App\Enums\ReportType;
 use App\Http\Requests\StoreReportRequest;
 use App\Http\Requests\StoreUsersRequest;
 use App\Http\Requests\UpdateUsersRequest;
-use App\Models\User;
-use App\Models\Librarian;
-use App\Models\Patron;
+use App\Models\AttendanceLogs;
 use App\Models\Circulation;
 use App\Models\Holding;
-use App\Models\AttendanceLogs;
+use App\Models\Librarian;
+use App\Models\Patron;
+use App\Models\User;
 use App\Services\CacheService;
 use App\Services\QueryService;
 use App\Services\ReportQueryService;
@@ -40,7 +40,7 @@ class UserController extends Controller
         $filters = QueryService::filters($request);
         $filters = array_merge($filters, [
             'role' => $request->query('role'),
-            'campus_id' => $filters['campus_id'],
+            'campus_id' => $filters['campus_id'] ?? null,
         ]);
 
         return $this->response(data: $this->service->index($filters, $user));
@@ -117,9 +117,13 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $users)
+    public function show(User $user)
     {
-        //
+        return $this->response(data: $user->load([
+            'librarian',
+            'patron.patronType',
+            'patron.program',
+        ]));
     }
 
     /**
@@ -195,6 +199,7 @@ class UserController extends Controller
     public function rejectRegistration(Request $request, User $user)
     {
         $this->authorizeUserAccess($request, $user);
+
         $this->ensureRegistrationPending($user);
 
         $user->update([
@@ -203,7 +208,7 @@ class UserController extends Controller
         ]);
         CacheService::invalidate(CacheService::USERS);
 
-        return $this->response('success', 'User registration rejected.', $user->fresh(['campus', 'patron.program']));
+        return $this->response('success', 'User registration rejected.');
     }
 
     private function authorizeUserAccess(Request $request, User $target): void

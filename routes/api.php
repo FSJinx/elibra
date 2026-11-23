@@ -472,6 +472,7 @@ Route::group(['prefix' => '/librarian', 'middleware' => ['jwt.auth', 'role:super
 // User Routes
 Route::group(['prefix' => '/user', 'middleware' => ['jwt.auth', 'role:super_admin,admin']], function () {
     Route::get('generateReport', [UserController::class, 'generateReport']);
+    Route::get('{user:id}', [UserController::class, 'show']);
 
     Route::post('', [UserController::class, 'create'])->middleware('throttle:write');
     Route::put('{user}', [UserController::class, 'update'])->middleware('throttle:write');

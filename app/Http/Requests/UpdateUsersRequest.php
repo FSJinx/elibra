@@ -36,10 +36,10 @@ class UpdateUsersRequest extends BaseRequest
 
             'birthdate' => ['required', 'date', 'before:today'],
             'contact_number' => ['sometimes','required', 'regex:/^09\d{9}$/'],
-            'email' => ['sometimes', 'required', 'email', 'max:255', Rule::unique('users', 'email')],
+            'email' => ['sometimes', 'required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user)],
 
-            'username' => ['required', 'string', 'max:255', Rule::unique('users', 'username')],
-            'password' => ['required', 'string', 'min:8'],
+            'username' => ['required', 'string', 'max:255', Rule::unique('users', 'username')->ignore($user)],
+            'password' => ['sometimes', 'nullable', 'string', 'min:8'],
         ];
         
         if($authUser->isSuperAdmin()){

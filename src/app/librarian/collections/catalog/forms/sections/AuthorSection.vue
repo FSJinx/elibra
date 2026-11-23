@@ -61,4 +61,6 @@ watch(
     form.value?.authors?.forEach((i) => (i.authorship_id = null))
   },
 )
+
+onMounted(async () => option.load(['authorships']))
 </script>

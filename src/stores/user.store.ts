@@ -13,14 +13,20 @@ export const userStore = defineStore('users', {
       return res
     },
 
-    async show(id: any) {
-      const res = await get(`${this.url}/${id}`)
+    async show(uuid: string) {
+      const res = await get(`${this.url}/${uuid}`)
       this.currentData = res.data
       return res
     },
 
     async create(params: Partial<User>) {
       const res = await post(this.url, params)
+      return res
+    },
+
+    async update(user: User, params: Partial<User>) {
+      const res = await put(`${this.url}/${user.id}`, params)
+      this.currentData = res.data?.data ?? res.data ?? this.currentData
       return res
     },
 

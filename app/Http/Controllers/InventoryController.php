@@ -104,8 +104,8 @@ class InventoryController extends Controller
     public function downloadPdf(Inventory $inventory)
     {
         $user = $this->user();
-        if ($inventory->librarian_id !== $user->librarian?->id) {
-            return $this->response('error',             'You are not authorized to print this inventory.', null, 403);
+        if ($user->isAdmin() !== $user->isLibrarian()) {
+            return $this->response('error', 'You are not authorized to print this inventory.', null, 403);
         }
 
         $inventory->load([

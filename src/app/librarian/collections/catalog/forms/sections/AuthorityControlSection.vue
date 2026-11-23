@@ -47,4 +47,6 @@ withDefaults(
 
 const form = defineModel<Partial<Form>>({ default: {} })
 const options = optionStore()
+
+onMounted(async () => await options.load(['languages']))
 </script>

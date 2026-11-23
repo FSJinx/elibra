@@ -102,4 +102,6 @@ watch(
   () => form.value.item_type_id,
   (_, old) => old && (form.value.item_type_category_id = ''),
 )
+
+onMounted(async () => options.load(['item_types', 'categories']))
 </script>

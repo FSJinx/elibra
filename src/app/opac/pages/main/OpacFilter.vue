@@ -1,15 +1,4 @@
 <template>
-  <!-- <aside class="hidden xl:block w-100 p-5 bg-background border border-border rounded-xl overflow-y-auto">
-    <div class="flex items-start justify-between">
-      <div>
-        <p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-foreground-secondary">Filters</p>
-        <h2 class="mt-1 text-xl font-semibold tracking-tight">Refine results</h2>
-      </div>
-    </div>
-
-    <div class="h-px bg-border my-5"></div>
-  </aside> -->
-
   <Button class="bg-default" variant="text" left-icon="sliders" @click="open">Filter</Button>
 
   <Modal ref="modal">
@@ -92,4 +81,6 @@ function apply() {
   emit('apply', params)
   close()
 }
+
+onMounted(async () => await options.load(['item_types', 'campuses', 'categories']))
 </script>

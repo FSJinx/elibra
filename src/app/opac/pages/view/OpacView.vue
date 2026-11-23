@@ -30,10 +30,10 @@
           </div>
 
           <!-- Actions -->
-          <div class="flex justify-center flex-wrap gap-3">
+          <!-- <div class="flex justify-center flex-wrap gap-3">
             <Button left-icon="heart"> Add to Favorites </Button>
             <Button left-icon="share-fill" variant="text"> Share </Button>
-          </div>
+          </div> -->
         </div>
 
         <!-- Information -->
@@ -70,7 +70,7 @@
 
       <!-- Breadcrumb -->
       <div class="flex items-center gap-2 text-foreground-secondary my-5">
-        <button class="py-1 cursor-pointer hover:text-primary" size="sm" variant="text" v-for="item in pages" @click="activePage = item.path" :class="[{ 'text-primary font-semibold': activePage === item.path }]">{{ item.name }}</button>
+        <button class="py-1 cursor-pointer hover:text-primary transition duration-200" size="sm" variant="text" v-for="item in pages" @click="activePage = item.path" :class="[{ 'text-primary font-semibold': activePage === item.path }]">{{ item.name }}</button>
       </div>
 
       <!-- Details -->

@@ -13,7 +13,6 @@
 
           <Input id="params-search" :placeholder="`Try searching ${typedText}|`" v-model="params.query" enable-clear />
 
-
           <Button type="submit" icon="search" variant="primary">
             <span class="hidden sm:inline">Search</span>
           </Button>
@@ -95,7 +94,7 @@
       <div class="flex-1 flex items-center gap-3 mr-auto shrink-0">
         Showing
         <Select class="max-w-max" title="Item Per Page" v-model="params.per_page" @onChange="(emit('search'), (params.page = undefined))">
-          <Option value="25">25</Option>
+          <Option value="25" selected>25</Option>
           <Option value="50">50</Option>
           <Option value="75">75</Option>
           <Option value="100">100</Option>
@@ -113,12 +112,6 @@
 import OpacFilter from '@/app/opac/pages/main/OpacFilter.vue'
 import default_book from '@/assets/images/default_book.png'
 
-const route = useRoute()
-const parse = useParser()
-const opac = opacStore()
-const options = optionStore()
-const { typedText } = useSearchTyping()
-
 const emit = defineEmits(['search', 'reset'])
 const props = withDefaults(
   defineProps<{
@@ -131,7 +124,11 @@ const props = withDefaults(
   },
 )
 
-const params = defineModel<Partial<OpacParams>>('params', { required: true })
+const route = useRoute()
+const opac = opacStore()
+const { typedText } = useSearchTyping()
+
+const params = defineModel<Partial<OpacParams>>('params', { default: { per_page: '25' }, required: true })
 const image = computed(() => (media: any) => (media ? `${storageRoute}/${media}` : default_book))
 
 function page(page = 0) {

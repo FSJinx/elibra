@@ -1,6 +1,6 @@
 <template>
   <div v-if="isVisible" class="flex items-start gap-3 border px-3.5 py-3 rounded-lg my-1 text-sm leading-normal" :class="alertClass" role="alert" aria-live="polite">
-    <component :is="alertIcon" class="mt-0.5 size-5 shrink-0" aria-hidden="true" />
+    <component :is="alertIcon" class="mt-0.5 size-5 shrink-0" aria-hidden="true" v-if="!noIcon" />
 
     <div class="min-w-0 flex-1">
       <p v-if="title" class="font-semibold leading-5">{{ title }}</p>
@@ -22,12 +22,14 @@ interface Props {
   variant?: Variants
   title?: string
   dismissible?: boolean
+  noIcon?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   variant: 'text',
   title: '',
   dismissible: false,
+  noIcon: false,
 })
 
 const emit = defineEmits<{
@@ -38,14 +40,14 @@ const isVisible = ref(true)
 
 const alertClass = computed(() => {
   const variants: Record<Variants, string> = {
-    primary: 'bg-primary-soft text-primary-soft-foreground border-primary',
+    primary: 'bg-primary-soft/50 text-primary-soft-foreground border-primary',
     default: 'bg-background text-foreground border-border',
-    danger: 'bg-danger-soft/75 text-danger-soft-foreground border-danger',
-    info: 'bg-info-soft text-info-soft-foreground border-info',
-    restore: 'bg-restore-soft text-restore-soft-foreground border-restore',
-    success: 'bg-success-soft text-success-soft-foreground border-success',
+    danger: 'bg-danger-soft/50 text-danger-soft-foreground border-danger',
+    info: 'bg-info-soft/50 text-info-soft-foreground border-info',
+    restore: 'bg-restore-soft/50 text-restore-soft-foreground border-restore',
+    success: 'bg-success-soft/50 text-success-soft-foreground border-success',
     text: 'bg-transparent text-muted border-transparent',
-    warning: 'bg-warning-soft text-warning-soft-foreground border-warning',
+    warning: 'bg-warning-soft/50 text-warning-soft-foreground border-warning',
   }
 
   return variants[props.variant]
@@ -63,7 +65,7 @@ const alertIcon = computed(() => {
     warning: TriangleAlert,
   }
 
-  return icons[props.variant]
+  return props.noIcon ? null : icons[props.variant]
 })
 
 function dismiss() {

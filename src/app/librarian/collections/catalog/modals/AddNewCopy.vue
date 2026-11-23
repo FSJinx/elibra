@@ -44,7 +44,8 @@ const form = ref<StoreAccession>({
   section_id: '',
 })
 
-function open() {
+async function open() {
+  await options.load(['sections'])
   modal.value?.open()
   form.value.quantity = 0
 }
