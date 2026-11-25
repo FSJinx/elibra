@@ -2,7 +2,7 @@
   <div class="size-full flex-1 flex flex-col overflow-hidden">
     <SectionHeader title="Users" description="Manage all users of the system" icon="people">
       <div class="flex items-center justify-end">
-        <Button left-icon="plus-lg" variant="primary" as="link" :to="{ name: 'admin.users.new' }">New User</Button>
+        <Button left-icon="plus-lg" variant="primary" as="link" :to="{ name: 'librarian.users.new' }">New User</Button>
       </div>
     </SectionHeader>
 

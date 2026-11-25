@@ -1,1 +1,0 @@
-import{O as e,T as t,u as n}from"./runtime-core.esm-bundler-DAd-BShH.js";import{D as r}from"./app-CnbZLA4A.js";var i={},a={class:`flex justify-end p-4 border-t border-gray-300`};function o(r,i){return t(),n(`div`,a,[e(r.$slots,`default`)])}var s=r(i,[[`render`,o]]);export{s as t};
