@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\Librarian;
 
 use App\Http\Controllers\Controller;
+use App\Models\Accession;
 use App\Models\Branch;
 use App\Models\Campus;
-use App\Models\Accession;
 use App\Models\Circulation;
 use App\Models\Item;
+use App\Models\Librarian;
 use App\Models\Library;
 use App\Models\Patron;
 use App\Models\User;
-use App\Models\Librarian;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
@@ -73,7 +73,7 @@ class DashboardController extends Controller
                 ->distinct()
                 ->pluck('patron_id');
 
-            $query->whereIn('id', $patronIds);
+            $query->whereIn('patrons.id', $patronIds);
         }
 
         return $query;
@@ -166,7 +166,7 @@ class DashboardController extends Controller
                 'due_at' => $loan->due_at,
                 'returned_at' => $loan->returned_at,
                 'borrower' => $loan->patron?->user
-                    ? trim(($loan->patron->user->last_name ?? '') . ', ' . ($loan->patron->user->first_name ?? ''))
+                    ? trim(($loan->patron->user->last_name ?? '').', '.($loan->patron->user->first_name ?? ''))
                     : 'Unknown patron',
                 'patron_type' => $loan->patron?->patronType?->name,
                 'title' => $loan->accession?->item?->title,
@@ -204,7 +204,6 @@ class DashboardController extends Controller
                 'total_circulations' => (clone $circulations)->count(),
                 'patrons' => (clone $patrons)->count(),
                 'librarians' => $librarians->count(),
-                'libraries' => $libraries->count(),
                 'campuses' => $user?->isSuperAdmin() ? Campus::count() : ($user?->isAdmin() ? 1 : (int) ($user->librarian?->library?->campus_id ? 1 : 0)),
                 'fine_balance' => (float) (clone $circulations)->sum('fine_charged'),
             ],

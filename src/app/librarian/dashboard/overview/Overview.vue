@@ -26,11 +26,10 @@
           <StatCard label="Overdue loans" :value="metrics.overdue_loans" icon="clock-history" variant="danger" :loading="dashboard.loading" />
           <StatCard label="Borrowed today" :value="metrics.borrowed_today" icon="box-arrow-in-right" variant="info" :loading="dashboard.loading" />
           <StatCard label="Returned today" :value="metrics.returned_today" icon="box-arrow-left" variant="success" :loading="dashboard.loading" />
-          <StatCard label="Library patrons" :value="metrics.patrons" icon="people" variant="restore" :loading="dashboard.loading" />
           <StatCard label="Total circulation records" :value="metrics.total_circulations" icon="arrow-repeat" variant="primary" :loading="dashboard.loading" />
           <StatCard label="Borrowed copies" :value="metrics.borrowed_copies" icon="box-arrow-right" variant="warning" :loading="dashboard.loading" />
+          <StatCard label="Total Patrons" :value="metrics.patrons" icon="people" variant="restore" :loading="dashboard.loading" />
           <StatCard label="Librarians" :value="metrics.librarians" icon="person-workspace" variant="info" :loading="dashboard.loading" />
-          <StatCard label="Libraries" :value="metrics.libraries" icon="building" variant="success" :loading="dashboard.loading" />
         </div>
       </section>
 
