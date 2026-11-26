@@ -17,7 +17,7 @@
           {{ item.name }}
 
           <!-- Active Indicator -->
-          <span class="absolute bottom-0 h-0.75 rounded-full bg-primary transition-all duration-200" :class="active(item.path) ? 'w-full' : 'w-0 group-hover:w-full'" />
+          <span class="absolute bottom-0 ovh-0.75 rounded-full bg-primary transition-all duration-200" :class="active(item.path) ? 'w-full' : 'w-0 group-hover:w-full'" />
         </router-link>
       </nav>
     </div>

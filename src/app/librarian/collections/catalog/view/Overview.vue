@@ -13,7 +13,7 @@
           <div class="">
             <p class="text-sm uppercase font-medium tracking-wider text-muted-foreground">{{ item_type?.name }}</p>
             <Title :level="1" class="my-2">{{ props.data?.title }}</Title>
-            <p class="text-sm">{{ props.data.description ?? 'No description or abstract provided for this material.' }}</p>
+            <p class="text-sm line-clamp-2">{{ props.data.description ?? 'No description or abstract provided for this material.' }}</p>
           </div>
 
           <div class="action-buttons flex justify-end gap-2">
