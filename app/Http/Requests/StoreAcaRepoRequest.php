@@ -35,12 +35,25 @@ class StoreAcaRepoRequest extends BaseRequest
             $libraryRule->where('campus_id', $this->user()->campus_id);
         }
 
+        if ($this->hasFile('electronic_file')) {
+            $electronicFileRules = [
+                $this->isMethod('POST') ? 'required' : 'sometimes',
+                'file',
+                'mimes:pdf',
+                'max:20480',
+            ];
+        } else {
+            $electronicFileRules = $this->isMethod('POST')
+                ? ['required', 'string']
+                : ['sometimes', 'string'];
+        }
+
         $rules = [
             'title' => ['required', 'string', 'max:255'],
             'category' => ['required', Rule::in(['ut', 'gt'])],
             'description' => ['required', 'string'],
             'doi' => ['nullable', 'string', 'max:255'],
-            'electronic_file' => $this->hasFile('electronic_file') ? ['file', 'required', 'mimes:pdf', 'max:20480'] : ['required', 'string'],
+            'electronic_file' => $electronicFileRules,
             'library_id' => [$this->isMethod('POST') ? 'required' : 'sometimes', $libraryRule],
             'keywords' => ['required', 'array'],
             'keywords.*' => ['string', 'max:255'],

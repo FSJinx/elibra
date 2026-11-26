@@ -62,6 +62,7 @@ class HoldingActionsTest extends TestCase
             $table->string('status');
             $table->unsignedBigInteger('item_id');
             $table->timestamps();
+            $table->softDeletes();
         });
         Schema::create('loan_modes', function (Blueprint $table) {
             $table->id();
@@ -76,11 +77,13 @@ class HoldingActionsTest extends TestCase
         });
         Schema::create('holdings', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('reserved_by');
+            $table->unsignedBigInteger('reserver_id');
             $table->unsignedBigInteger('accession_id');
-            $table->unsignedBigInteger('processed_by')->nullable();
-            $table->dateTime('pickup_date');
-            $table->timestamp('picked_up_at')->nullable();
+            $table->unsignedBigInteger('processor_id')->nullable();
+            $table->string('status')->default('pending');
+            $table->string('status_remark')->nullable();
+            $table->dateTime('expected_pickup_date');
+            $table->dateTime('pickup_date')->nullable();
             $table->timestamps();
         });
         Schema::create('circulations', function (Blueprint $table) {
@@ -121,9 +124,9 @@ class HoldingActionsTest extends TestCase
         ]);
         DB::table('holdings')->insert([
             'id' => 1,
-            'reserved_by' => 1,
+            'reserver_id' => 1,
             'accession_id' => 1,
-            'pickup_date' => '2026-10-30 09:00:00',
+            'expected_pickup_date' => '2026-10-30 09:00:00',
             'created_at' => now(),
             'updated_at' => now(),
         ]);

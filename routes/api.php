@@ -605,9 +605,9 @@ Route::get('/try', [TestController::class, 'index']);
 // OPAC Routes
 Route::group(['prefix' => '/opac'], function () {
     Route::get('', [OpacController::class, 'index']);
-    Route::get('{item}', [OpacController::class, 'show']);
     Route::get('search', [OpacSearchController::class, 'search'])->middleware('throttle:read');
     Route::get('item/{itemId}', [OpacSearchController::class, 'show'])->middleware('throttle:read');
+    Route::get('{item}', [OpacController::class, 'show']);
 });
 
 // Media Routes

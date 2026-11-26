@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\AcaRepo;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UpdateAcaRepoRequest extends StoreAcaRepoRequest
 {
@@ -39,5 +40,33 @@ class UpdateAcaRepoRequest extends StoreAcaRepoRequest
     public function rules(): array
     {
         return parent::rules();
+    }
+
+    protected function failedAuthorization()
+    {
+        $user = $this->user();
+        $acaRepo = $this->route('acaRepo');
+
+        if ($user !== null && $user->isPatron()) {
+            $status = $acaRepo instanceof AcaRepo ? $acaRepo->status : null;
+
+            if ($status === 'rejected') {
+                throw new HttpResponseException(
+                    response()->json([
+                        'status' => 'error',
+                        'message' => 'You are not authorized to update this academic repository submission.',
+                    ], 403)
+                );
+            }
+
+            throw new HttpResponseException(
+                response()->json([
+                    'status' => 'error',
+                    'message' => 'You are not authorized to manage academic repositories.',
+                ], 401)
+            );
+        }
+
+        parent::failedAuthorization();
     }
 }

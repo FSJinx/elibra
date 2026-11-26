@@ -85,6 +85,7 @@ class AcaRepoService
     {
         return $this->create(array_merge($data, [
             'status' => 'pending',
+            'on_catalog' => false,
         ]));
     }
 }

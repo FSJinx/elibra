@@ -21,7 +21,8 @@ class OpacSearchTest extends TestCase
         foreach ([
             '1_create_campuses_table.php', '1_create_libraries_table.php',
             '3_create_items_table.php', '3_create_item_authors_table.php',
-            '3_create_item_publishers_table.php', '4_create_item_types_table.php',
+            '3_create_item_publishers_table.php',
+            '4_create_item_types_table.php',
             '4_create_item_type_categories_table.php', '5_create_authors_table.php',
             '5_create_languages_table.php', '5_create_publishers_table.php',
             '6_create_accessions_table.php', '100_create_catalog_indices_table.php',

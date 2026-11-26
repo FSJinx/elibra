@@ -60,12 +60,15 @@ class AcaRepoController extends Controller
     public function store(StoreAcaRepoRequest $request)
     {
         $user = $request->user();
-        $patron = $user->patron;
-        $data = [
-            ...$request->validated(),
-            'submitted_by' => $patron->id,
-            'program_id' => $patron->program_id,
-        ];
+        $patron = $user->isPatron() ? $user->patron : null;
+        $data = [...$request->validated()];
+
+        if ($patron) {
+            $data['submitted_by'] = $patron->id;
+            $data['program_id'] = $patron->program_id;
+        } else {
+            $data['submitted_by'] = $user->id;
+        }
 
         $acaRepo = $user->isPatron()
             ? $this->acaRepoService->submitAcaRepo($data)
@@ -176,6 +179,11 @@ class AcaRepoController extends Controller
      */
     public function destroy(AcaRepo $acaRepo)
     {
+        $user = $this->user();
+        if (! $user || ! ($user->isSuperAdmin() || $user->isAdmin() || $user->isLibrarian())) {
+            return $this->response('error', 'You are not authorized to manage academic repositories.', null, 401);
+        }
+
         if (! $this->acaRepoService->delete($acaRepo)) {
             return $this->response(
                 'error',

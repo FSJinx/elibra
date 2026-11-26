@@ -16,6 +16,7 @@ class CatalogSearchService
         'library.campus',
         'language',
         'publisher',
+        'itemPublishers.publisher',
     ];
 
     public function __construct(
@@ -89,8 +90,14 @@ class CatalogSearchService
         }
 
         $sort = $filters['sort'] ?? null;
-        if (in_array($sort, ['title', 'publication_year'], true)) {
-            $items->orderBy($sort === 'title' ? 'items.title' : 'publication_year', $filters['order'] ?? 'asc');
+        if ($sort === 'title') {
+            $items->orderBy('items.title', $filters['order'] ?? 'asc');
+        }
+        if ($sort === 'publication_year') {
+            $direction = strtoupper($filters['order'] ?? 'asc') === 'DESC' ? 'DESC' : 'ASC';
+            $items->orderByRaw(
+                'COALESCE((SELECT MAX(year_published) FROM item_publishers WHERE item_publishers.item_id = items.id), items.publication_year) '.$direction
+            );
         }
         $results = $items
             ->orderBy('items.id')
@@ -121,7 +128,12 @@ class CatalogSearchService
             }
         }
         if (! empty($filters['publication_year'])) {
-            $items->where('publication_year', $filters['publication_year']);
+            $items->where(function (Builder $years) use ($filters) {
+                $years->where('items.publication_year', $filters['publication_year'])
+                    ->orWhereHas('itemPublishers', fn (Builder $publishers) =>
+                        $publishers->where('year_published', $filters['publication_year'])
+                    );
+            });
         }
     }
 
@@ -172,6 +184,18 @@ class CatalogSearchService
     private function formatItem(Item $item): array
     {
         $publisher = $item->publisher;
+        $pivotPublisher = $item->itemPublishers
+            ->first(fn ($itemPublisher) => $itemPublisher->publisher !== null);
+        $publicationYear = $item->itemPublishers
+            ->pluck('year_published')
+            ->filter()
+            ->max();
+
+        if ($pivotPublisher?->publisher) {
+            $publisher = $pivotPublisher->publisher;
+        }
+
+        $publicationYear = $publicationYear ?? $item->publication_year;
         // ->pluck('publisher.name')
         // ->filter()
         // ->unique()
@@ -205,6 +229,7 @@ class CatalogSearchService
             'item_type_category_id' => $item->item_type_category_id,
             'library' => $item->library?->name,
             'library_id' => $item->library_id,
+            'branch_id' => $item->library_id,
 
             // Compatibility with existing OPAC location labels and filters.
             'campus' => $item->library?->campus?->name,
@@ -213,8 +238,8 @@ class CatalogSearchService
             'language' => $item->language?->name,
             'language_id' => $item->language_id,
 
-            'publication_year' => $item->publication_year === null ? null : (int) $item->publication_year,
-            'publisher' => $publisher,
+            'publication_year' => $publicationYear === null ? null : (int) $publicationYear,
+            'publisher' => $publisher?->name,
             'isbn_issn' => $item->isbn_issn,
             'edition' => $item->edition,
             'doi' => $item->doi,

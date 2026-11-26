@@ -15,6 +15,7 @@ class CatalogSearchRequest extends BaseRequest
             'query' => ['nullable',    'string',    'max:255'],
             'campus_id' => ['nullable',    'integer',    'exists:campuses,id'],
             'library_id' => ['nullable',    'integer',    'exists:libraries,id'],
+            'branch_id' => ['nullable', 'integer', 'exists:libraries,id'],
             'item_type_id' => ['nullable', 'integer', 'exists:item_types,id'],
             'item_type_category_id' => ['nullable', 'integer', 'exists:item_type_categories,id'],
             'department_id' => ['nullable', 'integer', 'exists:departments,id'],

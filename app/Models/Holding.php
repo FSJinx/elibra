@@ -13,7 +13,7 @@ class Holding extends Model
     protected $fillable = [
         'reserver_id',
         'accession_id',
-        'processed_by',
+        'processor_id',
         'expected_pickup_date',
         'pickup_date',
 

@@ -92,6 +92,11 @@ class Item extends Model
         return $this->belongsTo(Publisher::class);
     }
 
+    public function itemPublishers()
+    {
+        return $this->hasMany(ItemPublisher::class);
+    }
+
     public function department()
     {
         return $this->belongsTo(Department::class);

@@ -81,7 +81,7 @@ class CirculationService
                 'loan_mode_id' => $data['loan_mode_id'],
             ]);
 
-            $accession->update(['status' => 'borrowed']);
+            $accession->update(['status' => 'on_load']);
 
             return $circulation;
         });
@@ -218,7 +218,7 @@ class CirculationService
                 'return_received_by' => $receivedBy->librarian?->id,
             ]);
 
-            if (in_array($accession->status, ['borrowed'], true)) {
+            if (in_array($accession->status, ['borrowed', 'on_load'], true)) {
                 $accession->update(['status' => 'available']);
             }
 

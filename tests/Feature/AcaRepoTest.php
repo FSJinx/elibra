@@ -22,6 +22,7 @@ class AcaRepoTest extends TestCase
         parent::setUp();
         $this->withoutMiddleware([JWTGuard::class, Authenticate::class]);
         (require database_path('migrations/3_create_aca_repos_table.php'))->up();
+        (require database_path('migrations/2_create_patrons_table.php'))->up();
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('role');
@@ -75,7 +76,7 @@ class AcaRepoTest extends TestCase
         $id = $response->json('data.id');
         Storage::disk('public')->assertExists($response->json('data.electronic_file'));
 
-        $this->getJson('/api/acarepo')->assertOk()->assertJsonPath('data.0.id', $id);
+        $this->getJson('/api/acarepo')->assertOk()->assertJsonPath('data.data.0.id', $id);
         $this->getJson("/api/acarepo/$id")->assertOk()->assertJsonPath('data.title', $payload['title']);
         $this->putJson("/api/acarepo/$id", [...$payload, 'status' => 'approved', 'on_catalog' => true])
             ->assertOk()->assertJsonPath('data.status', 'approved')->assertJsonPath('data.on_catalog', true);
@@ -107,7 +108,6 @@ class AcaRepoTest extends TestCase
 
     public function test_patron_can_submit_manuscript_without_setting_review_fields(): void
     {
-        (require database_path('migrations/2_create_patrons_table.php'))->up();
         DB::table('languages')->insert(['id' => 1]);
         DB::table('programs')->insert(['id' => 9, 'name' => 'Computer Science']);
         DB::table('users')->insert(['id' => 7, 'role' => 'patron', 'campus_id' => 5]);
@@ -145,7 +145,6 @@ class AcaRepoTest extends TestCase
 
     public function test_patron_can_resubmit_their_rejected_submission(): void
     {
-        (require database_path('migrations/2_create_patrons_table.php'))->up();
         DB::table('languages')->insert(['id' => 1]);
         DB::table('users')->insert(['id' => 7, 'role' => 'patron', 'campus_id' => 5]);
         $patron = Patron::create(['user_id' => 7, 'patron_type_id' => 1, 'program_id' => null]);
@@ -186,7 +185,6 @@ class AcaRepoTest extends TestCase
 
     public function test_patron_cannot_resubmit_another_patrons_submission(): void
     {
-        (require database_path('migrations/2_create_patrons_table.php'))->up();
         DB::table('users')->insert(['id' => 7, 'role' => 'patron', 'campus_id' => 5]);
         Patron::create(['user_id' => 7, 'patron_type_id' => 1, 'program_id' => null]);
         $record = AcaRepo::create([
@@ -214,7 +212,7 @@ class AcaRepoTest extends TestCase
             'submitted_by' => 1,
         ]);
         $this->actingAs(new User(['role' => 'patron']), 'api');
-        $this->getJson('/api/acarepo')->assertUnauthorized();
+        $this->getJson('/api/acarepo')->assertOk();
         $this->putJson("/api/acarepo/{$record->id}", [])->assertUnauthorized();
         $this->deleteJson("/api/acarepo/{$record->id}")->assertUnauthorized();
     }

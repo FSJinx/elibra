@@ -56,20 +56,35 @@ class AccessionSeeder extends Seeder
                     $nextSequences[$prefix] = $lastSequence + 1;
                 }
 
-                $accessionNumber = $prefix.str_pad(
-                    (string) $nextSequences[$prefix],
-                    3,
-                    '0',
-                    STR_PAD_LEFT
-                );
-                $nextSequences[$prefix]++;
+                do {
+                    $accessionNumber = $prefix.str_pad(
+                        (string) $nextSequences[$prefix],
+                        3,
+                        '0',
+                        STR_PAD_LEFT
+                    );
+                    $nextSequences[$prefix]++;
+                } while (in_array($accessionNumber, $existingNumbers, true));
+
                 $existingNumbers[] = $accessionNumber;
 
                 return $accessionNumber;
             };
 
+            foreach (Accession::query()
+                ->whereNull('accession_number')
+                ->orderBy('id')
+                ->get() as $accession) {
+                $item = Item::query()->with('itemTypeCategory')->findOrFail($accession->item_id);
+                $accession->update([
+                    'accession_number' => $generateNumber($item),
+                ]);
+            }
+
             foreach (Item::query()->with('itemTypeCategory')->orderBy('id')->get() as $item) {
-                $itemAccessions = $accessionsByItem->get($item->id, collect());
+                $itemAccessions = Accession::query()
+                    ->where('item_id', $item->id)
+                    ->get();
 
                 if ($itemAccessions->isEmpty()) {
                     Accession::create([
@@ -77,16 +92,6 @@ class AccessionSeeder extends Seeder
                         'status' => 'available',
                         'item_id' => $item->id,
                     ]);
-
-                    continue;
-                }
-
-                foreach ($itemAccessions as $accession) {
-                    if (trim((string) $accession->accession_number) === '') {
-                        $accession->update([
-                            'accession_number' => $generateNumber($item),
-                        ]);
-                    }
                 }
             }
         });

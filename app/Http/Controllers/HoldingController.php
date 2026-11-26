@@ -118,9 +118,8 @@ class HoldingController extends Controller
             $reservation->update([
                 'status' => 'completed',
                 'pickup_date' => $borrowedAt,
-                'processor_id' => $request->user()->librarian?->id,
             ]);
-            $accession->update(['status' => 'borrowed']);
+            $accession->update(['status' => 'on_load']);
 
             return $loan;
         });
